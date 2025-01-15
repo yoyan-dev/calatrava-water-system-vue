@@ -27,26 +27,34 @@
 
     - should only use in used page
 
-3.  Version control
+3.  Routing
 
+    - routing name should be meaning full
+    - use kebab-case
+    - 1 or two words only
+
+4.  Version control
+
+    - IMPORTANT! always git fetch and git pull before starting writing your code
     - always branch out for creating pages
-    - work on single page only
+    - work on single page only it's ui and bussiness logics
     - always git pull
     - use git conventional naming
     - commit message should be meaningful
 
-4.  Variable
+5.  Variable
 
     - same as component naming meaningful
     - camelCase
     - write self documenting code
 
-5.  Format
+6.  Format
 
+    - don't use arrow functions ex. const functionName = () => {}
     - script must be line 1
     - there should be hirearchy for composable or functions
 
-6.  Styling
+7.  Styling
 
     - don't use fractional sizes example w-3/2 or w-[60%] (except 100%)
     - don't forget it to make responsive (TBD)
