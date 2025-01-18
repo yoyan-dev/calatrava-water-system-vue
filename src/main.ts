@@ -9,6 +9,8 @@ import '@/assets/base.css';
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import Button from 'primevue/button';
+import Splitter from 'primevue/splitter';
+import SplitterPanel from 'primevue/splitterpanel';
 
 const app = createApp(App);
 app.use(VueFire, {
@@ -21,6 +23,8 @@ app.use(PrimeVue, {
 
 // component here:
 app.component('Button', Button);
+app.component('Splitter', Splitter);
+app.component('SplitterPanel', SplitterPanel);
 
 app.use(createPinia());
 app.use(router);

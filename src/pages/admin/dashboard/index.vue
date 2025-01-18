@@ -1,3 +1,3 @@
 <template>
-	<div>Auth page</div>
+	<div>Dashboard</div>
 </template>
