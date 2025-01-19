@@ -32,7 +32,7 @@
 				<Button label="Sign Out" />
 			</div>
 		</aside>
-		<div>
+		<div class="w-full bg-surface-0 dark:bg-surface-950">
 			<slot />
 		</div>
 	</main>
