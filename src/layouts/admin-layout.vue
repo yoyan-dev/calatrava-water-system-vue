@@ -1,3 +1,9 @@
+<script setup lang="ts">
+	import { useRoute } from 'vue-router';
+
+	const route = useRoute();
+</script>
+
 <template>
 	<main class="flex h-screen w-full">
 		<aside class="w-64 h-full transition-transform border-r shadow-lg">
@@ -12,18 +18,24 @@
 				<ul class="space-y-2 font-medium grow">
 					<li>
 						<a
-							class="flex items-center p-2 rounded-lg bg-primary-500 text-white cursor-pointer hover:bg-primary-400">
+							href="/admin"
+							:class="route.name == 'admin' ? 'bg-primary-500' : ''"
+							class="flex items-center p-2 rounded-lg text-white cursor-pointer hover:bg-primary-400">
 							<span>Dashboard</span>
 						</a>
 					</li>
 					<li>
 						<a
-							class="flex items-center p-2 text-gray-900 rounded-lg hover:text-white hover:bg-primary-400 cursor-pointer">
+							href="/admin/user"
+							:class="route.name == 'admin-user' ? 'bg-primary-500' : ''"
+							class="flex items-center p-2 text-gray-900 rounded-lg hover:text-white hover:bg-primary-400 dark:text-white cursor-pointer">
 							<span class="flex-1 whitespace-nowrap">Users</span>
 						</a>
 					</li>
 					<li>
 						<a
+							href="/admin/transaction"
+							:class="route.name == 'admin-transaction' ? 'bg-primary-500' : ''"
 							class="flex items-center p-2 text-gray-900 rounded-lg hover:text-white dark:text-white hover:bg-primary-400 cursor-pointer">
 							<span class="flex-1 whitespace-nowrap">Transactions</span>
 						</a>
@@ -32,7 +44,7 @@
 				<Button label="Sign Out" />
 			</div>
 		</aside>
-		<div class="w-full bg-surface-0 dark:bg-surface-950">
+		<div class="w-full bg-surface-0 dark:bg-surface-950 overflow-auto">
 			<slot />
 		</div>
 	</main>
