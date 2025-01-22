@@ -5,8 +5,7 @@ const productDialog = ref(false);
 const submitted = ref(false);
 
 const props = defineProps({
-    product: Object,
-    isNew: Boolean
+    user: Object,
 })
 
 
