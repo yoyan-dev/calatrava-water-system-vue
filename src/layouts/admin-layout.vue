@@ -13,7 +13,7 @@
 				<a class="flex items-center ps-2.5 mb-5">
 					<span
 						class="self-center text-xl font-semibold whitespace-nowrap dark:text-white"
-						>CWSs</span
+						>CWS</span
 					>
 				</a>
 				<ul class="space-y-2 font-medium grow">
