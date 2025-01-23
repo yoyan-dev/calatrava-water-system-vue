@@ -3,8 +3,9 @@ import { ref, onMounted } from 'vue';
 import { FilterMatchMode } from '@primevue/core/api';
 import { useToast } from 'primevue/usetoast';
 import { ProductService } from '@/service/ProductService';
-import CreateOrUpdateTransaction from '@/components/transaction/createOrUpdate/index.vue'
-import DeleteTransaction from '@/components/transaction/delete/index.vue'
+import CreateModal from '@/pages/admin/transaction/_components/modals/create-modal.vue'
+import UpdateModal from './_components/modals/update-modal.vue';
+import DeleteModal from '@/pages/admin/transaction/_components/modals/delete-modal.vue'
 
 onMounted(() => {
     ProductService.getProducts().then((data) => (products.value = data));
@@ -67,12 +68,11 @@ const getStatusLabel = (status) => {
     <div class="bg-surface-50 dark:bg-surface-950 p-5">
         <div class="bg-surface-0 dark:bg-surface-900 p-6 shadow rounded-border">
             <div class="text-3xl font-medium text-surface-900 dark:text-surface-0 mb-2">Transactions</div>
-            <div class="font-medium text-surface-500 dark:text-surface-300 mb-4">Vivamus id nisl interdum, blandit augue sit amet, eleifend mi.</div>
             <div>
                 <div>
                     <Toolbar class="mb-6">
                         <template #start>
-                            <create-or-update-transaction product="" :isNew="true"/>
+                            <CreateModal/>
                             <Button label="Delete" icon="pi pi-trash" severity="danger" outlined @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
                         </template>
 
@@ -128,8 +128,8 @@ const getStatusLabel = (status) => {
                         <Column :exportable="false" >
                             <template #body="slotProps">
                                 <div class="flex">
-                                    <create-or-update-transaction :product="slotProps.data" :isNew="false"/>
-                                    <DeleteTransaction :product="slotProps.data"/>
+                                    <UpdateModal :product="slotProps.data" :isNew="false"/>
+                                    <DeleteModal :product="slotProps.data"/>
                                 </div>
                             </template>
                         </Column>
