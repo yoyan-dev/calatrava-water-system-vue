@@ -29,6 +29,8 @@ import RadioButton from 'primevue/radiobutton';
 import Select from 'primevue/select';
 import Avatar from 'primevue/avatar';
 import AvatarGroup from 'primevue/avatargroup';   //Optional for grouping
+import ScrollPanel from 'primevue/scrollpanel';
+
 
 
 
@@ -58,6 +60,8 @@ app.component('Textarea', Textarea);
 app.component('RadioButton', RadioButton);
 app.component('Select', Select);
 app.component('Avatar', Avatar);
+app.component('AvatarGroup', AvatarGroup);
+app.component('ScrollPanel', ScrollPanel);
 
 app.use(createPinia());
 app.use(router);

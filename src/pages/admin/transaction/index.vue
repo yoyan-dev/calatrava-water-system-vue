@@ -65,7 +65,7 @@ const getStatusLabel = (status) => {
 </script>
 
 <template>
-    <div class="bg-surface-50 dark:bg-surface-950 p-5">
+    <div>
         <div class="bg-surface-0 dark:bg-surface-900 p-6 shadow rounded-border">
             <div class="text-3xl font-medium text-surface-900 dark:text-surface-0 mb-2">Transactions</div>
             <div>
