@@ -6,7 +6,7 @@
 
 <template>
 	<main class="flex h-screen w-full">
-		<aside class="w-64 h-full transition-transform border-r shadow-lg">
+		<aside class="w-64 h-full transition-transform border-r shadow-lg sm:display-hidden md:hidden lg:block xl:block">	
 			<div
 				class="h-full p-4 overflow-y-auto flex flex-col bg-gray-200 dark:bg-gray-800 shadow-lg">
 				<a class="flex items-center ps-2.5 mb-5">

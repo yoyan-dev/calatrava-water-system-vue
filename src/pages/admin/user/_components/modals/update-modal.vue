@@ -40,7 +40,7 @@ function saveUser () {
 </script>
 <template>
     <div>
-        <Button :label="isNew? 'New' : ''" :icon="isNew? 'pi pi-plus' : 'pi pi-pencil'" class="mr-2" @click="productUser = true;" />
+        <Button icon="pi pi-pencil" text class="mr-2" @click="productUser = true;" />
         <Dialog v-model:visible="productUser" :style="{ width: '450px' }" header="Product Details" :modal="true">
             <div class="flex flex-col gap-6">
                 <img v-if="product.image" :src="`https://primefaces.org/cdn/primevue/images/product/${product.image}`" :alt="product.image" class="block m-auto pb-4" />
