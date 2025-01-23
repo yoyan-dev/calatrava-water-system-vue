@@ -8,11 +8,13 @@ onMounted(() => {
 
 const products = ref();
 
+const value = ref('All');
+const options = ref(['All', 'Unpaid', 'Paid']);
 </script>
 
 <template>
-    <div class="px-10 py-3 flex flex-col gap-10">
-        <div class="card">
+    <div class="sm:px-0 md:px-5 lg:px-10 xl:px-10 sm:py-0 md:py-1 lg:py-3 xl:lg:py-3 flex flex-col gap-10">
+        <div>
             <Toolbar style="border-radius: 3rem; padding: 1rem 1rem 1rem 1.5rem" class="bg-gray-100">
                 <template #start>
                     <div class="flex items-center gap-2">
@@ -36,11 +38,7 @@ const products = ref();
                 <div>
                     <Toolbar>
                         <template #start>
-                            <div class="bg-gray-50 rounded-full">
-                                <Button label="Paid" class="mr-2" severity="secondary" rounded text />
-                                <Button label="Unpaid" class="mr-2" severity="secondary" rounded text />
-                                <Button label="All" severity="info" variant="light" rounded text />
-                            </div>
+                            <SelectButton v-model="value" :options="options"/>
                         </template>
 
                         <template #end>
@@ -55,11 +53,11 @@ const products = ref();
                 </div>
                 <div>
                     <div class="card">
-                        <DataTable :value="products" tableStyle="min-width: 50rem">
-                            <Column field="code" header="Code"></Column>
-                            <Column field="name" header="Name"></Column>
-                            <Column field="category" header="Category"></Column>
-                            <Column field="quantity" header="Quantity"></Column>
+                        <DataTable :value="products" size="small">
+                            <Column field="code" header="Bill Date"></Column>
+                            <Column field="name" header="Water Bill"></Column>
+                            <Column field="category" header="Due Date"></Column>
+                            <Column field="quantity" header="Status"></Column>
                         </DataTable>
                     </div>
                 </div>
