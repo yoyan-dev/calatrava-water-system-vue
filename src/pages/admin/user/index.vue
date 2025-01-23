@@ -31,9 +31,6 @@ function deleteSelectedUsers () {
     selectedUsers.value = null;
     toast.add({severity:'success', summary: 'Successful', detail: 'users Deleted', life: 3000});
 };
-
-
-
 </script>
 
 <template>
