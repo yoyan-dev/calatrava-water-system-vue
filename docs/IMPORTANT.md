@@ -1,6 +1,6 @@
 <!-- Best practice for architecture or design patter -->
 
-1.  components
+1.  components(global component)
 
     - should only use for shared pages
     - Meaningful: not over specific, not overly abstract.
@@ -13,19 +13,19 @@
       example:
       <!-- recommended -->
 
-      <app-header></app-header>
-      <user-list></user-list>
-      <range-slider></range-slider>
+      app-header.vue
+      user-list.vue
+      range-slider.vue
 
       <!-- avoid -->
 
-      <btn-group></btn-group> <!-- short, but unpronounceable. use `button-group` instead -->
-      <ui-slider></ui-slider> <!-- all components are ui elements, so is meaningless -->
-      <slider></slider> <!-- not custom element spec compliant -->
+      btn-group.vue <!-- short, but unpronounceable. use `button-group` instead -->
+      ui-slider.vue <!-- all components are ui elements, so is meaningless -->
+      slider.vue <!-- not custom element spec compliant -->
 
 2.  \_components
 
-    - should only use in used page
+    - should only per page
 
 3.  Routing
 
@@ -51,11 +51,19 @@
 6.  Format
 
     - don't use arrow functions ex. const functionName = () => {}
-    - script must be line 1
-    - there should be hirearchy for composable or functions
+    - script must be in line 1
+    - there should be hirearchy in script
+      1. state and composables (ref)
+      2. getters (computed)
+      3. actions (functions)
+      4. lifecyle hooks e.g onMounted, watch etc.
+    - no abbreviation
+    - store should use fetch,add,update,remove and include context or target use plural and singular
+    - actions and v-models should be pastensed e.g onSelectChanged, onSumbitted etc.
+    - Be explicit about what the action does.
 
 7.  Styling
 
     - don't use fractional sizes example w-3/2 or w-[60%] (except 100%)
     - don't forget it to make responsive (TBD)
-    - consistent spacing we'll be using 4,8,12,16 etc but for more use case it's okay to not follow
+    - consistent spacing, we'll be using 4,8,12,16 etc but for more use case it's okay to not follow
