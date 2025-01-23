@@ -49,6 +49,7 @@ function deleteSelectedUsers () {
                         v-model:selection="selectedUsers"
                         :value="users"
                         dataKey="id"
+                        size="small"
                         :paginator="true"
                         :rows="10"
                         :filters="filters"
