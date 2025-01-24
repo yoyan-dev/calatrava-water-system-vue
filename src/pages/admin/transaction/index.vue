@@ -1,59 +1,46 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { FilterMatchMode } from '@primevue/core/api';
-import { useToast } from 'primevue/usetoast';
-import { ProductService } from '@/service/ProductService';
-import Header from '@/pages/admin/transaction/_components/Header.vue';
-import CreateModal from '@/pages/admin/transaction/_components/modals/create-modal.vue'
-import UpdateModal from './_components/modals/update-modal.vue';
-import DeleteModal from '@/pages/admin/transaction/_components/modals/delete-modal.vue'
-import { formatToPeso } from '@/composables/currencyFormat';
+    import { ref, onMounted } from 'vue';
+    import { FilterMatchMode } from '@primevue/core/api';
+    import { useToast } from 'primevue/usetoast';
+    import { ProductService } from '@/service/ProductService';
+    import Header from '@/pages/admin/transaction/_components/Header.vue';
+    import CreateModal from '@/pages/admin/transaction/_components/modals/create-modal.vue'
+    import UpdateModal from '@/pages/admin/transaction/_components/modals/update-modal.vue';
+    import DeleteModal from '@/pages/admin/transaction/_components/modals/delete-modal.vue'
+    import { formatToPeso } from '@/composables/currencyFormat';
+    import { useTransactionStore } from '@/stores/transaction';
 
-onMounted(() => {
-    ProductService.getProducts().then((data: Object) => (waterBills.value = data));
-});
+    const store = useTransactionStore()
+    const toast = useToast();
+    const dt = ref();
+    const selectedWaterBill = ref();
+    const filters = ref({
+        'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
+    });
 
-const toast = useToast();
-const dt = ref();
-const waterBills = ref();
-const deleteWaterBillDialog = ref(false);
-const product = ref({});
-const selectedWaterBill = ref();
-const filters = ref({
-    'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
-});
+    function exportCSV () {
+        dt.value.exportCSV();
+    };
 
-function exportCSV () {
-    dt.value.exportCSV();
-};
+    function getStatusLabel (status: String) {
+        switch (status) {
+            case 'INSTOCK':
+                return 'success';
 
-function confirmDeleteSelected () {
-    deleteWaterBillDialog.value = true;
-};
+            case 'LOWSTOCK':
+                return 'warn';
 
-function deleteSelectedWaterBill () {
-    waterBills.value = waterBills.value.filter((val: Object) => !selectedWaterBill.value.includes(val));
-    deleteWaterBillDialog.value = false;
-    selectedWaterBill.value = null;
-    toast.add({severity:'success', summary: 'Successful', detail: 'waterBills Deleted', life: 3000});
-};
+            case 'OUTOFSTOCK':
+                return 'danger';
 
-function getStatusLabel (status: String) {
-    switch (status) {
-        case 'INSTOCK':
-            return 'success';
+            default:
+                return null;
+        }
+    };
 
-        case 'LOWSTOCK':
-            return 'warn';
-
-        case 'OUTOFSTOCK':
-            return 'danger';
-
-        default:
-            return null;
-    }
-};
-
+    onMounted(() => {
+        store.fetchTransactions();
+    });
 </script>
 
 <template>
@@ -66,7 +53,7 @@ function getStatusLabel (status: String) {
                     <DataTable
                     ref="dt"
                     v-model:selection="selectedWaterBill"
-                    :value="waterBills"
+                    :value="store.transactions"
                     dataKey="id"
                     size="small"
                     :paginator="true"
@@ -100,46 +87,34 @@ function getStatusLabel (status: String) {
                         </template>
 
                         <Column selectionMode="multiple"  :exportable="false"></Column>
-                        <Column field="code" header="Bill No." sortable ></Column>
-                        <Column field="name" header="Billing Date" sortable ></Column>
+                        <Column field="billNo" header="Bill No." sortable ></Column>
+                        <Column field="billingDate" header="Billing Date" sortable ></Column>
                         <!-- <Column header="Image">
                             <template #body="slotProps">
                                 <img :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`" :alt="slotProps.data.image" class="rounded" style="width: 64px" />
                             </template>
                         </Column> -->
-                        <Column field="price" header="Water Bill" sortable >
+                        <Column field="waterBill" header="Water Bill" sortable >
                             <template #body="slotProps">
-                                {{ formatToPeso(slotProps.data.price) }}
+                                {{ formatToPeso(slotProps.data.waterBill) }}
                             </template>
                         </Column>
-                        <Column field="category" header="Area" sortable ></Column>
-                        <Column field="inventoryStatus" header="Status" sortable>
-                            <template #body="slotProps">
+                        <Column field="area" header="Area" sortable ></Column>
+                        <Column field="status" header="Status" sortable>
+                            <!-- <template #body="slotProps">
                                 <Tag :value="slotProps.data.inventoryStatus" :severity="getStatusLabel(slotProps.data.inventoryStatus)" />
-                            </template>
+                            </template> -->
                         </Column>
                         <Column :exportable="false" header="Actions">
                             <template #body="slotProps">
                                 <div class="flex">
-                                    <Button icon="pi pi-eye" severity="secondary" text @click="deleteWaterBillDialog = false" />
-                                    <UpdateModal :waterBill="slotProps.data"/>
-                                    <DeleteModal :waterBill="slotProps.data"/>
+                                    <Button icon="pi pi-eye" severity="secondary" text />
+                                    <UpdateModal v-bind="slotProps.data" />
+                                    <DeleteModal :id="slotProps.data.id"/>
                                 </div>
                             </template>
                         </Column>
                     </DataTable>
-
-
-                    <Dialog v-model:visible="deleteWaterBillDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
-                        <div class="flex items-center gap-4">
-                            <i class="pi pi-exclamation-triangle !text-3xl" />
-                            <span v-if="product">Are you sure you want to delete the selected water bills?</span>
-                        </div>
-                        <template #footer>
-                            <Button label="No" icon="pi pi-times" text @click="deleteWaterBillDialog = false" />
-                            <Button label="Yes" icon="pi pi-check" text @click="deleteSelectedWaterBill" />
-                        </template>
-                    </Dialog>
                 </div>
             </div>
         </div>

@@ -43,6 +43,7 @@
 				<Button
 					label="No"
 					icon="pi pi-times"
+					severity="danger"
 					text
 					@click="isOpen = false" />
 				<Button
