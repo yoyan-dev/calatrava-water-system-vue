@@ -1,14 +1,14 @@
 <script setup>
 import { ref } from 'vue';
 
-const deleteProductDialog = ref(false);
+const deleteUsersDialog = ref(false);
 const props = defineProps({
-    product: Object
+    user: Object
 })
 
-const deleteProduct = () => {
+function deleteUser () {
     // products.value = products.value.filter(val => val.id !== product.value.id);
-    // deleteProductDialog.value = false;
+    // deleteUsersDialog.value = false;
     // product.value = {};
     // toast.add({severity:'success', summary: 'Successful', detail: 'Product Deleted', life: 3000});
 };
@@ -16,8 +16,8 @@ const deleteProduct = () => {
 </script>
 <template>
     <div>
-        <Button icon="pi pi-trash" outlined rounded severity="danger" @click="deleteProductDialog = true" />
-        <Dialog v-model:visible="deleteProductDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
+        <Button icon="pi pi-trash" text  severity="danger" @click="deleteUsersDialog = true" />
+        <Dialog v-model:visible="deleteUsersDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
             <div class="flex items-center gap-4">
                 <i class="pi pi-exclamation-triangle !text-3xl" />
                 <span v-if="product"
@@ -26,8 +26,8 @@ const deleteProduct = () => {
                 >
             </div>
             <template #footer>
-                <Button label="No" icon="pi pi-times" text @click="deleteProductDialog = false" />
-                <Button label="Yes" icon="pi pi-check" @click="deleteProduct" />
+                <Button label="No" icon="pi pi-times" text @click="deleteUsersDialog = false" />
+                <Button label="Yes" icon="pi pi-check" @click="deleteUser" />
             </template>
         </Dialog>
     </div>

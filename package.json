@@ -11,6 +11,7 @@
     "type-check": "vue-tsc --build"
   },
   "dependencies": {
+    "@vueuse/core": "^12.4.0",
     "firebase": "^11.1.0",
     "pinia": "^2.3.0",
     "primeicons": "^7.0.0",

@@ -1,21 +1,20 @@
 <script setup>
 import { ref } from 'vue';
 
-const productDialog = ref(false);
+const productUser = ref(false);
 const submitted = ref(false);
 
 const props = defineProps({
-    product: Object,
-    isNew: Boolean
+    user: Object,
 })
 
 
-const hideDialog = () => {
-    productDialog.value = false;
+function hideDialog () {
+    productUser.value = false;
     submitted.value = false;
 };
 
-const saveProduct = () => {
+function saveUser () {
     submitted.value = true;
     toast.add({severity:'success', summary: 'Successful', detail: 'Product Updated', life: 3000});
 
@@ -33,7 +32,7 @@ const saveProduct = () => {
     //         toast.add({severity:'success', summary: 'Successful', detail: 'Product Created', life: 3000});
     //     }
 
-    //     productDialog.value = false;
+    //     productUser.value = false;
     //     product.value = {};
     // }
 };
@@ -41,8 +40,8 @@ const saveProduct = () => {
 </script>
 <template>
     <div>
-        <Button :label="isNew? 'New' : ''" :icon="isNew? 'pi pi-plus' : 'pi pi-pencil'" class="mr-2" @click="productDialog = true;" />
-        <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Product Details" :modal="true">
+        <Button icon="pi pi-pencil" text class="mr-2" @click="productUser = true;" />
+        <Dialog v-model:visible="productUser" :style="{ width: '450px' }" header="Product Details" :modal="true">
             <div class="flex flex-col gap-6">
                 <img v-if="product.image" :src="`https://primefaces.org/cdn/primevue/images/product/${product.image}`" :alt="product.image" class="block m-auto pb-4" />
                 <div>
@@ -95,7 +94,7 @@ const saveProduct = () => {
     
             <template #footer>
                 <Button label="Cancel" icon="pi pi-times" text @click="hideDialog" />
-                <Button label="Save" icon="pi pi-check" @click="saveProduct" />
+                <Button label="Save" icon="pi pi-check" @click="saveUser" />
             </template>
         </Dialog>
     </div>

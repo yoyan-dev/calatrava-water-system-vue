@@ -1,51 +1,43 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { FilterMatchMode } from '@primevue/core/api';
 import { useToast } from 'primevue/usetoast';
 import { ProductService } from '@/service/ProductService';
-import CreateOrUpdateTransaction from '@/components/transaction/createOrUpdate/index.vue'
-import DeleteTransaction from '@/components/transaction/delete/index.vue'
+import CreateModal from '@/pages/admin/transaction/_components/modals/create-modal.vue'
+import UpdateModal from './_components/modals/update-modal.vue';
+import DeleteModal from '@/pages/admin/transaction/_components/modals/delete-modal.vue'
+import { formatToPeso } from '@/composables/currencyFormat';
 
 onMounted(() => {
-    ProductService.getProducts().then((data) => (products.value = data));
+    ProductService.getProducts().then((data: Object) => (waterBills.value = data));
 });
 
 const toast = useToast();
 const dt = ref();
-const products = ref();
-const deleteProductsDialog = ref(false);
+const waterBills = ref();
+const deleteWaterBillDialog = ref(false);
 const product = ref({});
-const selectedProducts = ref();
+const selectedWaterBill = ref();
 const filters = ref({
     'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
 });
 
-const statuses = ref([
-    {label: 'INSTOCK', value: 'instock'},
-    {label: 'LOWSTOCK', value: 'lowstock'},
-    {label: 'OUTOFSTOCK', value: 'outofstock'}
-]);
-
-const formatCurrency = (value) => {
-    if(value)
-        return value.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
-    return;
-};
-
-const exportCSV = () => {
+function exportCSV () {
     dt.value.exportCSV();
 };
-const confirmDeleteSelected = () => {
-    deleteProductsDialog.value = true;
-};
-const deleteSelectedProducts = () => {
-    products.value = products.value.filter(val => !selectedProducts.value.includes(val));
-    deleteProductsDialog.value = false;
-    selectedProducts.value = null;
-    toast.add({severity:'success', summary: 'Successful', detail: 'Products Deleted', life: 3000});
+
+function confirmDeleteSelected () {
+    deleteWaterBillDialog.value = true;
 };
 
-const getStatusLabel = (status) => {
+function deleteSelectedWaterBill () {
+    waterBills.value = waterBills.value.filter((val: Object) => !selectedWaterBill.value.includes(val));
+    deleteWaterBillDialog.value = false;
+    selectedWaterBill.value = null;
+    toast.add({severity:'success', summary: 'Successful', detail: 'waterBills Deleted', life: 3000});
+};
+
+function getStatusLabel (status: String) {
     switch (status) {
         case 'INSTOCK':
             return 'success';
@@ -64,86 +56,88 @@ const getStatusLabel = (status) => {
 </script>
 
 <template>
-    <div class="bg-surface-50 dark:bg-surface-950 p-5">
+    <div>
         <div class="bg-surface-0 dark:bg-surface-900 p-6 shadow rounded-border">
-            <div class="text-3xl font-medium text-surface-900 dark:text-surface-0 mb-2">Transactions</div>
-            <div class="font-medium text-surface-500 dark:text-surface-300 mb-4">Vivamus id nisl interdum, blandit augue sit amet, eleifend mi.</div>
+            <div class="text-3xl font-medium text-surface-900 dark:text-surface-0 mb-2">Wate Bills</div>
+            <div class="font-medium text-surface-500 dark:text-surface-300 mb-4">Manage Water Bill List</div>
             <div>
                 <div>
-                    <Toolbar class="mb-6">
-                        <template #start>
-                            <create-or-update-transaction product="" :isNew="true"/>
-                            <Button label="Delete" icon="pi pi-trash" severity="danger" outlined @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
-                        </template>
-
-                        <template #end>
-                            <FileUpload mode="basic" accept="image/*" :maxFileSize="1000000" label="Import" customUpload chooseLabel="Import" class="mr-2" auto :chooseButtonProps="{ severity: 'secondary' }" />
-                            <Button label="Export" icon="pi pi-upload" severity="secondary" @click="exportCSV($event)" />
-                        </template>
-                    </Toolbar>
-
+                    
                     <DataTable
-                        ref="dt"
-                        v-model:selection="selectedProducts"
-                        :value="products"
-                        dataKey="id"
-                        :paginator="true"
-                        :rows="10"
-                        :filters="filters"
-                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        :rowsPerPageOptions="[5, 10, 25]"
-                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+                    ref="dt"
+                    v-model:selection="selectedWaterBill"
+                    :value="waterBills"
+                    dataKey="id"
+                    size="small"
+                    :paginator="true"
+                    :rows="10"
+                    :filters="filters"
+                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                    :rowsPerPageOptions="[5, 10, 25]"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} water bills"
                     >
                         <template #header>
-                            <div class="flex flex-wrap gap-2 items-center justify-between">
-                                <h4 class="m-0">Manage Products</h4>
-                                <IconField>
-                                    <InputIcon>
-                                        <i class="pi pi-search" />
-                                    </InputIcon>
-                                    <InputText v-model="filters['global'].value" placeholder="Search..." />
-                                </IconField>
+                            <div>
+                                <Toolbar>
+                                    <template #start>
+                                        <CreateModal/>
+                                        <Button label="Delete" icon="pi pi-trash" severity="danger" outlined @click="confirmDeleteSelected" :disabled="!selectedWaterBill || !selectedWaterBill.length" />
+                                    </template>
+                                    
+                                    <template #end>
+                                        <div class="flex gap-5">
+                                            <IconField>
+                                                <InputIcon>
+                                                    <i class="pi pi-search" />
+                                                </InputIcon>
+                                            </IconField>
+                                            <InputText v-model="filters['global'].value" placeholder="Search..." />
+                                            <Button label="Export" icon="pi pi-upload" severity="secondary" @click="exportCSV($event)" />
+                                        </div>
+                                    </template>
+                                </Toolbar>
                             </div>
                         </template>
 
                         <Column selectionMode="multiple"  :exportable="false"></Column>
-                        <Column field="code" header="Code" sortable ></Column>
-                        <Column field="name" header="Name" sortable ></Column>
-                        <Column header="Image">
+                        <Column field="code" header="Bill No." sortable ></Column>
+                        <Column field="name" header="Billing Date" sortable ></Column>
+                        <!-- <Column header="Image">
                             <template #body="slotProps">
                                 <img :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`" :alt="slotProps.data.image" class="rounded" style="width: 64px" />
                             </template>
-                        </Column>
-                        <Column field="price" header="Price" sortable >
+                        </Column> -->
+                        <Column field="price" header="Water Bill" sortable >
                             <template #body="slotProps">
-                                {{ formatCurrency(slotProps.data.price) }}
+                                {{ formatToPeso(slotProps.data.price) }}
                             </template>
                         </Column>
-                        <Column field="category" header="Category" sortable ></Column>
+                        <Column field="category" header="Area" sortable ></Column>
                         <Column field="inventoryStatus" header="Status" sortable>
                             <template #body="slotProps">
                                 <Tag :value="slotProps.data.inventoryStatus" :severity="getStatusLabel(slotProps.data.inventoryStatus)" />
                             </template>
                         </Column>
-                        <Column :exportable="false" >
+                        <Column :exportable="false" header="Actions">
                             <template #body="slotProps">
                                 <div class="flex">
-                                    <create-or-update-transaction :product="slotProps.data" :isNew="false"/>
-                                    <DeleteTransaction :product="slotProps.data"/>
+                                    <Button icon="pi pi-eye" severity="secondary" text @click="deleteWaterBillDialog = false" />
+                                    <UpdateModal :waterBill="slotProps.data"/>
+                                    <DeleteModal :waterBill="slotProps.data"/>
                                 </div>
                             </template>
                         </Column>
                     </DataTable>
 
 
-                    <Dialog v-model:visible="deleteProductsDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
+                    <Dialog v-model:visible="deleteWaterBillDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
                         <div class="flex items-center gap-4">
                             <i class="pi pi-exclamation-triangle !text-3xl" />
-                            <span v-if="product">Are you sure you want to delete the selected products?</span>
+                            <span v-if="product">Are you sure you want to delete the selected water bills?</span>
                         </div>
                         <template #footer>
-                            <Button label="No" icon="pi pi-times" text @click="deleteProductsDialog = false" />
-                            <Button label="Yes" icon="pi pi-check" text @click="deleteSelectedProducts" />
+                            <Button label="No" icon="pi pi-times" text @click="deleteWaterBillDialog = false" />
+                            <Button label="Yes" icon="pi pi-check" text @click="deleteSelectedWaterBill" />
                         </template>
                     </Dialog>
                 </div>
