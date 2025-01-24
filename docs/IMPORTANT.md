@@ -1,6 +1,6 @@
 <!-- Best practice for architecture or design patter -->
 
-1.  components
+1.  components(global component)
 
     - should only use for shared pages
     - Meaningful: not over specific, not overly abstract.
@@ -13,15 +13,15 @@
       example:
       <!-- recommended -->
 
-      <app-header></app-header>
-      <user-list></user-list>
-      <range-slider></range-slider>
+      app-header.vue
+      user-list.vue
+      range-slider.vue
 
       <!-- avoid -->
 
-      <btn-group></btn-group> <!-- short, but unpronounceable. use `button-group` instead -->
-      <ui-slider></ui-slider> <!-- all components are ui elements, so is meaningless -->
-      <slider></slider> <!-- not custom element spec compliant -->
+      btn-group.vue <!-- short, but unpronounceable. use `button-group` instead -->
+      ui-slider.vue <!-- all components are ui elements, so is meaningless -->
+      slider.vue <!-- not custom element spec compliant -->
 
 2.  \_components
 
