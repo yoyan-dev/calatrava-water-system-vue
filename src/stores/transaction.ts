@@ -5,14 +5,16 @@ import type { Resident } from '@/types/resident';
 export const useTransactionStore = defineStore('transaction', () => {
     const transactions = ref<Resident[]>([]);
 
-    function fetchResidents() {
+    function fetchTransactions() {
         transactions.value = [
-            { id: '1', firstName: 'test', middleName: 'tst', lastName: 'erf' },
+            { id: '1', billNo: 1, billingDate: '01-01-2025', waterBill: 100 },
         ];
     }
 
     function addTransaction(transaction: Resident) {
         transaction.id = (transactions.value.length + 1).toString();
+        transaction.billNo = transactions.value.length + 1
+        transaction.billingDate = new Date().toLocaleDateString();
         transactions.value.push(transaction);
     }
 
@@ -27,7 +29,7 @@ export const useTransactionStore = defineStore('transaction', () => {
 
     return {
         transactions,
-        fetchResidents,
+        fetchTransactions,
         addTransaction,
         deleteTransaction,
         updateTransaction,
