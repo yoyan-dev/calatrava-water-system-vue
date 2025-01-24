@@ -1,33 +1,38 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
+import { useResidentStore } from '@/stores/residentStore';
+import { useToast } from 'primevue/usetoast';
 
-const deleteUsersDialog = ref(false);
+const toast = useToast()
+const residentStore = useResidentStore()
+
+const deleteResidentDialog = ref(false);
 const props = defineProps({
-    user: Object
+    resident: Object
 })
 
-function deleteUser () {
-    // products.value = products.value.filter(val => val.id !== product.value.id);
-    // deleteUsersDialog.value = false;
-    // product.value = {};
-    // toast.add({severity:'success', summary: 'Successful', detail: 'Product Deleted', life: 3000});
+function deleteResident () {
+    residentStore.deleteResident(props.resident.id)
+    console.log(props.resident.id)
+    toast.add({severity:'success', summary: 'Successful', detail: 'Resident Deleted', life: 3000});
+    deleteResidentDialog.value = false;
 };
 
 </script>
 <template>
     <div>
-        <Button icon="pi pi-trash" text  severity="danger" @click="deleteUsersDialog = true" />
-        <Dialog v-model:visible="deleteUsersDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
+        <Button icon="pi pi-trash" text  severity="danger" @click="deleteResidentDialog = true" />
+        <Dialog v-model:visible="deleteResidentDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
             <div class="flex items-center gap-4">
                 <i class="pi pi-exclamation-triangle !text-3xl" />
-                <span v-if="product"
-                    >Are you sure you want to delete <b>{{ props.product.name }}</b
+                <span v-if="resident"
+                    >Are you sure you want to delete <b>{{ props.resident.firstName }}</b
                     >?</span
                 >
             </div>
             <template #footer>
-                <Button label="No" icon="pi pi-times" text @click="deleteUsersDialog = false" />
-                <Button label="Yes" icon="pi pi-check" @click="deleteUser" />
+                <Button label="No" icon="pi pi-times" text @click="deleteResidentDialog = false" />
+                <Button label="Yes" icon="pi pi-check" @click="deleteResident" />
             </template>
         </Dialog>
     </div>

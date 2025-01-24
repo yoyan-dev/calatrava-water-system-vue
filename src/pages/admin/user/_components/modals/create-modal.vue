@@ -1,70 +1,58 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
+import { Resident } from '@/types/resident';
+import { useResidentStore } from '@/stores/residentStore';
 
+const residentStore = useResidentStore()
 const isOpen = ref(false)
+const isSubmitted = ref(false)
 
-const user = {
-    name: '',
-}
+const resident = ref<Resident>({})
 
 function onSubmit () {
-    toast.add({severity:'success', summary: 'Successful', detail: 'user Updated', life: 3000});
-
-};
+    isSubmitted.value = true
+    residentStore.createResident(resident.value)
+    isOpen.value = false
+    resident.value = {}
+    isSubmitted.value = false
+}
 
 </script>
 <template>
     <div>
         <Button label="New" icon="pi pi-plus" class="mr-2" @click="isOpen = true;" />
-        <Dialog v-model:visible="isOpen" :style="{ width: '450px' }" header="user Details" :modal="true">
+        <Dialog v-model:visible="isOpen" :style="{ width: '450px' }" header="resident Details" :modal="true">
             <div class="flex flex-col gap-6">
-                <!-- <img v-if="user.image" :src="`https://primefaces.org/cdn/primevue/images/user/${user.image}`" :alt="user.image" class="block m-auto pb-4" /> -->
+                <!-- <img v-if="resident.image" :src="`https://primefaces.org/cdn/primevue/images/resident/${resident.image}`" :alt="resident.image" class="block m-auto pb-4" /> -->
                 <div>
-                    <label for="name" class="block font-bold mb-3">Name</label>
-                    <InputText id="name" v-model.trim="user.name" required="true" autofocus :invalid="submitted && !user.name" fluid />
-                    <!-- <small v-if="submitted && !user.name" class="text-red-500">Name is required.</small> -->
+                    <label for="name" class="block font-bold mb-3">Firstname</label>
+                    <InputText id="name" v-model.trim="resident.firstName" required="true" autofocus :invalid="isSubmitted && !resident.firstName" fluid />
+                    <small v-if="isSubmitted && !resident.firstName" class="text-red-500">firstname is required.</small>
                 </div>
                 <div>
-                    <label for="description" class="block font-bold mb-3">Description</label>
-                    <Textarea id="description" v-model="user.description" required="true" rows="3" cols="20" fluid />
+                    <label for="name" class="block font-bold mb-3">Middle name</label>
+                    <InputText id="name" v-model.trim="resident.middleName" required="true" autofocus :invalid="isSubmitted && !resident.middleName" fluid />
+                    <small v-if="isSubmitted && !resident.middleName" class="text-red-500">Middle name is required.</small>
                 </div>
                 <div>
+                    <label for="name" class="block font-bold mb-3">Lastname</label>
+                    <InputText id="name" v-model.trim="resident.lastName" required="true" autofocus :invalid="isSubmitted && !resident.lastName" fluid />
+                    <small v-if="isSubmitted && !resident.lastName" class="text-red-500">Last name is required.</small>
+                </div>
+                <div>
+                    <label for="name" class="block font-bold mb-3">Address</label>
+                    <InputText id="name" v-model.trim="resident.address" required="true" autofocus :invalid="isSubmitted && !resident.address" fluid />
+                    <small v-if="isSubmitted && !resident.address" class="text-red-500">Address is required.</small>
+                </div>
+                <div>
+                    <label for="name" class="block font-bold mb-3">Classification</label>
+                    <InputText id="name" v-model.trim="resident.classification" required="true" autofocus :invalid="isSubmitted && !resident.classification" fluid />
+                    <small v-if="isSubmitted && !resident.classification" class="text-red-500">Classification is required.</small>
+                </div>
+                <!-- <div>
                     <label for="inventoryStatus" class="block font-bold mb-3">Inventory Status</label>
-                    <Select id="inventoryStatus" v-model="user.inventoryStatus" :options="statuses" optionLabel="label" placeholder="Select a Status" fluid></Select>
-                </div>
-    
-                <div>
-                    <span class="block font-bold mb-4">Category</span>
-                    <div class="grid grid-cols-12 gap-4">
-                        <div class="flex items-center gap-2 col-span-6">
-                            <RadioButton id="category1" v-model="user.category" name="category" value="Accessories" />
-                            <label for="category1">Accessories</label>
-                        </div>
-                        <div class="flex items-center gap-2 col-span-6">
-                            <RadioButton id="category2" v-model="user.category" name="category" value="Clothing" />
-                            <label for="category2">Clothing</label>
-                        </div>
-                        <div class="flex items-center gap-2 col-span-6">
-                            <RadioButton id="category3" v-model="user.category" name="category" value="Electronics" />
-                            <label for="category3">Electronics</label>
-                        </div>
-                        <div class="flex items-center gap-2 col-span-6">
-                            <RadioButton id="category4" v-model="user.category" name="category" value="Fitness" />
-                            <label for="category4">Fitness</label>
-                        </div>
-                    </div>
-                </div>
-    
-                <div class="grid grid-cols-12 gap-4">
-                    <div class="col-span-6">
-                        <label for="price" class="block font-bold mb-3">Price</label>
-                        <InputNumber id="price" v-model="user.price" mode="currency" currency="USD" locale="en-US" fluid />
-                    </div>
-                    <div class="col-span-6">
-                        <label for="quantity" class="block font-bold mb-3">Quantity</label>
-                        <InputNumber id="quantity" v-model="user.quantity" integeronly fluid />
-                    </div>
-                </div>
+                    <Select id="inventoryStatus" v-model="resident.inventoryStatus" :options="statuses" optionLabel="label" placeholder="Select a Status" fluid></Select>
+                </div> -->
             </div>
     
             <template #footer>
