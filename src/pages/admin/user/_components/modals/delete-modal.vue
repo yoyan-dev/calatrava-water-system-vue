@@ -37,7 +37,7 @@
 			@submit.prevent="deleteResident">
 			<div class="flex items-center gap-4">
 				<i class="pi pi-exclamation-triangle !text-3xl" />
-				<span>Are you sure you want to delete user?</span>
+				<span>Are you sure you want to delete resident?</span>
 			</div>
 			<div class="w-full flex gap-4 justify-end items-center">
 				<Button

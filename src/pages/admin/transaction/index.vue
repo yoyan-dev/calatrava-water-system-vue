@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue';
 import { FilterMatchMode } from '@primevue/core/api';
 import { useToast } from 'primevue/usetoast';
 import { ProductService } from '@/service/ProductService';
+import Header from '@/pages/admin/transaction/_components/Header.vue';
 import CreateModal from '@/pages/admin/transaction/_components/modals/create-modal.vue'
 import UpdateModal from './_components/modals/update-modal.vue';
 import DeleteModal from '@/pages/admin/transaction/_components/modals/delete-modal.vue'
@@ -58,8 +59,7 @@ function getStatusLabel (status: String) {
 <template>
     <div>
         <div class="bg-surface-0 dark:bg-surface-900 p-6 shadow rounded-border">
-            <div class="text-3xl font-medium text-surface-900 dark:text-surface-0 mb-2">Wate Bills</div>
-            <div class="font-medium text-surface-500 dark:text-surface-300 mb-4">Manage Water Bill List</div>
+            <Header/>
             <div>
                 <div>
                     

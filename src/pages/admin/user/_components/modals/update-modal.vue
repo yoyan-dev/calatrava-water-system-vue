@@ -40,7 +40,7 @@
 	<Dialog
 		v-model:visible="isOpen"
 		:style="{ width: '450px' }"
-		header="Product Details"
+		header="Update Resident Details"
 		modal>
 		<form
 			@submit.prevent="onSubmit"
@@ -104,6 +104,44 @@
 						>Last name is required.</small
 					>
 				</div>
+				<div>
+						<label
+							for="name"
+							class="block font-bold mb-3"
+							>Address</label
+						>
+						<InputText
+							id="name"
+							v-model.trim="resident.address"
+							required="true"
+							autofocus
+							:invalid="isLoading && !resident.address"
+							fluid />
+						<small
+							v-if="isLoading && !resident.address"
+							class="text-red-500"
+							>Address is required.</small
+						>
+					</div>
+					<div>
+						<label
+							for="name"
+							class="block font-bold mb-3"
+							>Classification</label
+						>
+						<InputText
+							id="name"
+							v-model.trim="resident.classification"
+							required="true"
+							autofocus
+							:invalid="isLoading && !resident.classification"
+							fluid />
+						<small
+							v-if="isLoading && !resident.classification"
+							class="text-red-500"
+							>Classification is required.</small
+						>
+					</div>
 			</div>
 
 			<div class="w-full flex justify-end gap-4">

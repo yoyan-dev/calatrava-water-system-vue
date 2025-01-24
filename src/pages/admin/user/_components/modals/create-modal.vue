@@ -27,7 +27,7 @@
 		<Dialog
 			v-model:visible="isOpen"
 			:style="{ width: '450px' }"
-			header="resident Details"
+			header="Resident Details"
 			modal>
 			<form
 				@submit.prevent="onSubmit"
