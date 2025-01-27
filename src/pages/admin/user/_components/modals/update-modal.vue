@@ -148,6 +148,7 @@
 				<Button
 					label="Cancel"
 					icon="pi pi-times"
+					severity="danger"
 					text
 					@click="isOpen = false" />
 				<Button
