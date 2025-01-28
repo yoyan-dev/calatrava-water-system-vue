@@ -3,7 +3,7 @@
     import { FilterMatchMode } from '@primevue/core/api';
     import { useToast } from 'primevue/usetoast';
     import { ProductService } from '@/service/ProductService';
-    import Header from '@/pages/admin/transaction/_components/Header.vue';
+    import Header from '@/pages/admin/transaction/_components/header.vue';
     import CreateModal from '@/pages/admin/transaction/_components/modals/create-modal.vue'
     import UpdateModal from '@/pages/admin/transaction/_components/modals/update-modal.vue';
     import DeleteModal from '@/pages/admin/transaction/_components/modals/delete-modal.vue'

@@ -1,31 +1,48 @@
 <script setup lang="ts">
 	import { useRoute, RouterLink } from 'vue-router';
+    import { ref } from "vue";
 
 	const route = useRoute();
+    const visible = ref(false);
+    const items = ref([
+        {
+            label: 'Bill',
+            icon: 'pi pi-money-bill',
+            route: '/resident'
+        },
+        {
+            label: 'Concern',
+            icon: 'pi pi-question-circle',
+            route: '/concern'
+        }
+    ]);
 </script>
 
 <template>
     <div>
-        <Toolbar style="border-radius: 3rem; padding: 1rem 1rem 1rem 1.5rem" class="bg-gray-100">
+        <Toolbar>
             <template #start>
                 <div class="flex items-center gap-2">
                     <Avatar image="/logo.jpeg" class="mr-2" size="large" shape="circle" />
-                    <RouterLink to="/admin">
-                        <a
-                            :class="route.name == 'resident' ? 'text-primary' : ''"
-                            class="flex items-center p-2 rounded-lg text-black hover:text-primary cursor-pointer ">
-                            <span>Invoice</span>
-                        </a>
-                    </RouterLink>
-                    <Button label="Payment" text plain />
-                    <Button label="Concern" text plain />
+                    <div class="card flex justify-center">
+                    </div>
                 </div>
             </template>
-
+            
             <template #end>
-                <div class="flex items-center gap-2">
-                    <Avatar image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png" style="width: 32px; height: 32px" />
-                </div>
+                <Drawer v-model:visible="visible" header="CWS">
+                    <Menu :model="items">
+                        <template #item="{ item, props }">
+                            <router-link v-slot="{ href, navigate }" :to="item.route" custom >
+                                <a v-ripple :href="href" v-bind="props.action" @click="navigate">
+                                    <span :class="item.icon" />
+                                    <span class="ml-2">{{ item.label }}</span>
+                                </a>
+                            </router-link>
+                        </template>
+                    </Menu>
+                </Drawer>
+                <Button icon="pi pi-align-center" @click="visible = true" variant="light"/>
             </template>
         </Toolbar>
     </div>
