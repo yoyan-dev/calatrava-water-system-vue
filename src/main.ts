@@ -31,9 +31,8 @@ import Avatar from 'primevue/avatar';
 import AvatarGroup from 'primevue/avatargroup';   //Optional for grouping
 import ScrollPanel from 'primevue/scrollpanel';
 import SelectButton from 'primevue/selectbutton';
-
-
-
+import Drawer from 'primevue/drawer';
+import Menu from 'primevue/menu';
 
 
 const app = createApp(App);
@@ -65,6 +64,9 @@ app.component('Avatar', Avatar);
 app.component('AvatarGroup', AvatarGroup);
 app.component('ScrollPanel', ScrollPanel);
 app.component('SelectButton', SelectButton);
+app.component('Drawer', Drawer);
+app.component('Menu', Menu);
+
 
 app.use(createPinia());
 app.use(router);
