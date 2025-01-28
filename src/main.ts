@@ -33,7 +33,7 @@ import ScrollPanel from 'primevue/scrollpanel';
 import SelectButton from 'primevue/selectbutton';
 import Drawer from 'primevue/drawer';
 import Menu from 'primevue/menu';
-
+import InputNumber from 'primevue/inputnumber';
 
 const app = createApp(App);
 app.use(VueFire, {
@@ -66,6 +66,7 @@ app.component('ScrollPanel', ScrollPanel);
 app.component('SelectButton', SelectButton);
 app.component('Drawer', Drawer);
 app.component('Menu', Menu);
+app.component('InputNumber', InputNumber);
 
 
 app.use(createPinia());

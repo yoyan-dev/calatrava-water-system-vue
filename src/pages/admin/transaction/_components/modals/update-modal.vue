@@ -50,7 +50,7 @@ function onSubmit() {
         <!-- <img v-if="waterBill.image" :src="`https://primefaces.org/cdn/primevue/images/product/${waterBill.image}`" :alt="waterBill.image" class="block m-auto pb-4" /> -->
         <div>
           <label for="name" class="block font-bold mb-3">Water Bill</label>
-          <InputText
+          <InputNumber
             id="name"
             v-model.trim="transaction.waterBill"
             required="true"

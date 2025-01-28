@@ -1,11 +1,11 @@
-<script setup lang="ts">
+<script setup>
     import { ref, onMounted } from 'vue';
     import { ProductService } from '@/service/ProductService';
     import Header from '@/pages/resident/_components/header.vue';
 
     
     onMounted(() => {
-        ProductService.getProductsMini().then((data: Any) => (products.value = data));
+        ProductService.getProductsMini().then((data) => (products.value = data));
     });
 
     const products = ref();

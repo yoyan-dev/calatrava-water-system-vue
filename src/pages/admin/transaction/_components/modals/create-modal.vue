@@ -15,7 +15,7 @@ function onSubmit() {
   isSubmitted.value = true;
   store.addTransaction(transaction.value);
   isOpen.value = false;
-  transaction.value = {};
+  transaction.value = { }; 
   isLoading.value = false;
   isSubmitted.value = false;
 }
@@ -30,19 +30,17 @@ function onSubmit() {
       :modal="true"
     >
       <div class="flex flex-col gap-6">
-        <!-- <img v-if="waterBill.image" :src="`https://primefaces.org/cdn/primevue/images/waterBill/${waterBill.image}`" :alt="waterBill.image" class="block m-auto pb-4" /> -->
         <div>
           <label for="name" class="block font-bold mb-3">Water Bill</label>
-          <InputText
-            id="name"
+          <InputNumber
             type="number"
             v-model.trim="transaction.waterBill"
             required="true"
             autofocus
-            :invalid="submitted && !transaction.waterBill"
+            :invalid="isSubmitted && !transaction.waterBill"
             fluid
           />
-          <small v-if="submitted && !transaction.waterBill" class="text-red-500"
+          <small v-if="isSubmitted && !transaction.waterBill" class="text-red-500"
             >Name is required.</small
           >
         </div>
