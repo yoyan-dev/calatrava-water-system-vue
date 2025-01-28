@@ -33,6 +33,7 @@ function onSubmit() {
         <div>
           <label for="name" class="block font-bold mb-3">Water Bill</label>
           <InputNumber
+            id="name"
             type="number"
             v-model.trim="transaction.waterBill"
             required="true"

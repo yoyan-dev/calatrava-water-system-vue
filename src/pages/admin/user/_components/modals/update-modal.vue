@@ -121,7 +121,7 @@
 							v-if="isSubmitted && !resident.address"
 							class="text-red-500"
 							>Address is required.</small
-						> -->
+						>  -->
 					</div>
 					<div>
 						<label
