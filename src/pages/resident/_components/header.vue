@@ -42,7 +42,9 @@
                         </template>
                     </Menu>
                 </Drawer>
-                <Button icon="pi pi-align-center" @click="visible = true" variant="light"/>
+
+                <Button icon="pi pi-align-center" @click="visible = true" text/>
+
             </template>
         </Toolbar>
     </div>

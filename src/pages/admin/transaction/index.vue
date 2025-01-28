@@ -3,7 +3,7 @@
     import { FilterMatchMode } from '@primevue/core/api';
     import { useToast } from 'primevue/usetoast';
     import { ProductService } from '@/service/ProductService';
-    import Header from '@/pages/admin/transaction/_components/Header.vue';
+    import Header from '@/pages/admin/transaction/_components/header.vue';
     import CreateModal from '@/pages/admin/transaction/_components/modals/create-modal.vue'
     import UpdateModal from '@/pages/admin/transaction/_components/modals/update-modal.vue';
     import DeleteModal from '@/pages/admin/transaction/_components/modals/delete-modal.vue'
@@ -68,7 +68,7 @@
                                 <Toolbar>
                                     <template #start>
                                         <CreateModal/>
-                                        <Button label="Delete" icon="pi pi-trash" severity="danger" outlined @click="confirmDeleteSelected" :disabled="!selectedWaterBill || !selectedWaterBill.length" />
+                                        <Button label="Delete" icon="pi pi-trash" severity="danger" outlined :disabled="!selectedWaterBill || !selectedWaterBill.length" />
                                     </template>
                                     
                                     <template #end>
@@ -79,7 +79,7 @@
                                                 </InputIcon>
                                             </IconField>
                                             <InputText v-model="filters['global'].value" placeholder="Search..." />
-                                            <Button label="Export" icon="pi pi-upload" severity="secondary" @click="exportCSV($event)" />
+                                            <!-- <Button label="Export" icon="pi pi-upload" severity="secondary" @click="exportCSV($event)" /> -->
                                         </div>
                                     </template>
                                 </Toolbar>
