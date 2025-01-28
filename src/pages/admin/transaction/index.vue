@@ -68,7 +68,7 @@
                                 <Toolbar>
                                     <template #start>
                                         <CreateModal/>
-                                        <Button label="Delete" icon="pi pi-trash" severity="danger" outlined @click="confirmDeleteSelected" :disabled="!selectedWaterBill || !selectedWaterBill.length" />
+                                        <Button label="Delete" icon="pi pi-trash" severity="danger" outlined :disabled="!selectedWaterBill || !selectedWaterBill.length" />
                                     </template>
                                     
                                     <template #end>
@@ -79,7 +79,7 @@
                                                 </InputIcon>
                                             </IconField>
                                             <InputText v-model="filters['global'].value" placeholder="Search..." />
-                                            <Button label="Export" icon="pi pi-upload" severity="secondary" @click="exportCSV($event)" />
+                                            <!-- <Button label="Export" icon="pi pi-upload" severity="secondary" @click="exportCSV($event)" /> -->
                                         </div>
                                     </template>
                                 </Toolbar>
