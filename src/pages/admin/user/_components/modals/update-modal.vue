@@ -115,10 +115,10 @@
 							v-model.trim="resident.address"
 							required="true"
 							autofocus
-							:invalid="isLoading && !resident.address"
+							:invalid="isSubmitted && !resident.address"
 							fluid />
 						<small
-							v-if="isLoading && !resident.address"
+							v-if="isSubmitted && !resident.address"
 							class="text-red-500"
 							>Address is required.</small
 						>  -->
@@ -134,10 +134,10 @@
 							v-model.trim="resident.classification"
 							required="true"
 							autofocus
-							:invalid="isLoading && !resident.classification"
+							:invalid="isSubmitted && !resident.classification"
 							fluid />
 						<small
-							v-if="isLoading && !resident.classification"
+							v-if="isSubmitted && !resident.classification"
 							class="text-red-500"
 							>Classification is required.</small
 						> -->
