@@ -37,7 +37,14 @@
 
 		<DataTable
 			:value="store.residents"
-			size="small">
+			size="small"
+            :paginator="true"
+            :rows="10"
+            :filters="filters"
+            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+            :rowsPerPageOptions="[5, 10, 25]"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} residents"
+			>
 			<template #empty>
 				<div class="flex items-center justify-center p-4">
 					No residents found.
