@@ -5,7 +5,7 @@
 
     
     onMounted(() => {
-        ProductService.getProductsMini().then((data: Array) => (products.value = data));
+        ProductService.getProductsMini().then((data: Any) => (products.value = data));
     });
 
     const products = ref();
@@ -17,8 +17,8 @@
 <template>
     <div class="sm:px-0 md:px-5 lg:px-10 xl:px-10 sm:py-0 md:py-1 lg:py-3 xl:lg:py-3 flex flex-col gap-10 bg-surface-50 dark:bg-surface-950">
         <Header/>
-        <div class="bg-white p-5">
-            <div class="bg-surface-0 dark:bg-surface-900 p-6 shadow rounded-border">
+        <div class="bg-white sm:w-screen md:w-auto lg:w-auto">
+            <div class="bg-surface-0 dark:bg-surface-900 py-6 shadow rounded-border px-2">
                 <div class="text-3xl font-medium text-surface-900 dark:text-surface-0 mb-2">Invoice</div>
                 <div>
                     <Toolbar>
@@ -27,17 +27,19 @@
                         </template>
 
                         <template #end>
-                            <IconField>
-                                <InputIcon>
-                                    <i class="pi pi-search" />
-                                </InputIcon>
-                                <InputText placeholder="Search" />
-                            </IconField>
+                            <div class="w-full">
+                                <IconField>
+                                    <InputIcon>
+                                        <i class="pi pi-search" />
+                                    </InputIcon>
+                                    <InputText placeholder="Search" />
+                                </IconField>
+                            </div>
                         </template>
                     </Toolbar>
                 </div>
                 <div>
-                    <div class="card">
+                    <div>
                         <DataTable :value="products" size="small">
                             <Column field="code" header="Bill Date"></Column>
                             <Column field="name" header="Water Bill"></Column>
