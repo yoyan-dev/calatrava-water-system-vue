@@ -36,60 +36,81 @@
 					<!-- <img v-if="resident.image" :src="`https://primefaces.org/cdn/primevue/images/resident/${resident.image}`" :alt="resident.image" class="block m-auto pb-4" /> -->
 					<div>
 						<label
-							for="name"
+							for="acc-no"
 							class="block font-bold mb-3"
-							>Firstname</label
+							>Account Number</label
 						>
 						<InputText
-							id="name"
-							v-model.trim="resident.firstName"
+							id="acc-no"
+							v-model.trim="resident.accountNumber"
 							required="true"
 							autofocus
-							:invalid="isLoading && !resident.firstName"
+							:invalid="isLoading && !resident.accountNumber"
 							fluid />
 						<small
-							v-if="isLoading && !resident.firstName"
+							v-if="isLoading && !resident.accountNumber"
 							class="text-red-500"
-							>firstname is required.</small
+							>Account Number is required.</small
 						>
 					</div>
-					<div>
-						<label
-							for="name"
-							class="block font-bold mb-3"
-							>Middle name</label
-						>
-						<InputText
-							id="name"
-							v-model.trim="resident.middleName"
-							required="true"
-							autofocus
-							:invalid="isLoading && !resident.middleName"
-							fluid />
-						<small
-							v-if="isLoading && !resident.middleName"
-							class="text-red-500"
-							>Middle name is required.</small
-						>
-					</div>
-					<div>
-						<label
-							for="name"
-							class="block font-bold mb-3"
-							>Lastname</label
-						>
-						<InputText
-							id="name"
-							v-model.trim="resident.lastName"
-							required="true"
-							autofocus
-							:invalid="isLoading && !resident.lastName"
-							fluid />
-						<small
-							v-if="isLoading && !resident.lastName"
-							class="text-red-500"
-							>Last name is required.</small
-						>
+					<div class="flex gap-5">
+						<div>
+							<label
+								for="name"
+								class="block font-bold mb-3"
+								>Firstname</label
+							>
+							<InputText
+								id="name"
+								v-model.trim="resident.firstName"
+								required="true"
+								autofocus
+								:invalid="isLoading && !resident.firstName"
+								fluid />
+							<small
+								v-if="isLoading && !resident.firstName"
+								class="text-red-500"
+								>firstname is required.</small
+							>
+						</div>
+						<div>
+							<label
+								for="name"
+								class="block font-bold mb-3"
+								>Middle name</label
+							>
+							<InputText
+								id="name"
+								v-model.trim="resident.middleName"
+								required="true"
+								autofocus
+								:invalid="isLoading && !resident.middleName"
+								fluid />
+							<small
+								v-if="isLoading && !resident.middleName"
+								class="text-red-500"
+								>Middle name is required.</small
+							>
+						</div>
+						<div>
+							<label
+								for="name"
+								class="block font-bold mb-3"
+								>Lastname</label
+							>
+							<InputText
+								id="name"
+								v-model.trim="resident.lastName"
+								required="true"
+								autofocus
+								:invalid="isLoading && !resident.lastName"
+								fluid />
+							<small
+								v-if="isLoading && !resident.lastName"
+								class="text-red-500"
+								>Last name is required.</small
+							>
+						</div>
 					</div>
 					<div>
 						<label
