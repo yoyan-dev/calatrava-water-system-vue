@@ -7,9 +7,19 @@ export const useResidentStore = defineStore('resident', () => {
 
 	function fetchResidents() {
 		residents.value = [
-			{ id: '1', accountNo: '0126-7237', firstName: 'Jeremy', middleName: 'Chua', lastName: 'Maglinte',  address: 'San Carlos City', classification: 'Residential', },
+			{
+				id: '1',
+				accountNo: '0126-7237',
+				firstName: 'Jeremy',
+				middleName: 'Chua',
+				lastName: 'Maglinte',
+				address: 'San Carlos City',
+				classification: 'Residential',
+			},
 		];
 	}
+
+	function fetchResident(uid: string) {}
 
 	function addResident(resident: Resident) {
 		resident.id = (residents.value.length + 1).toString();
