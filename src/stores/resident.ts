@@ -1,34 +1,50 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import type { Resident } from '@/types/resident';
+import { useFirestore } from 'vuefire';
+import {
+	addDoc,
+	collection,
+	deleteDoc,
+	doc,
+	getDocs,
+} from 'firebase/firestore';
 
 export const useResidentStore = defineStore('resident', () => {
+	const db = useFirestore();
 	const residents = ref<Resident[]>([]);
+	const isLoading = ref(false);
 
-	function fetchResidents() {
-		residents.value = [
-			{
-				id: '1',
-				accountNo: '0126-7237',
-				firstName: 'Jeremy',
-				middleName: 'Chua',
-				lastName: 'Maglinte',
-				address: 'San Carlos City',
-				classification: 'Residential',
-			},
-		];
+	async function fetchResidents() {
+		isLoading.value = true;
+		const querySnapshot = await getDocs(collection(db, 'residents'));
+		const residentsDocs: Resident[] = querySnapshot.docs.map((doc) => ({
+			...doc.data(),
+			uid: doc.id,
+		}));
+		console.log(residentsDocs);
+		residents.value = residentsDocs;
+		isLoading.value = false;
 	}
 
 	function fetchResident(uid: string) {}
 
-	function addResident(resident: Resident) {
+	async function addResident(resident: Resident) {
+		isLoading.value = true;
 		resident.id = (residents.value.length + 1).toString();
-		residents.value.push({ waterBill: 10, ...resident });
-		console.log(resident);
+		const docRef = await addDoc(collection(db, 'residents'), {
+			...resident,
+		});
+		residents.value.push({ waterBill: 10, ...resident, uid: docRef.id });
+		isLoading.value = false;
+		console.log(docRef);
 	}
 
-	function deleteResident(id: string) {
-		residents.value = residents.value.filter((val) => val.id !== id);
+	async function deleteResident(uid: string) {
+		isLoading.value = true;
+		await deleteDoc(doc(db, 'residents', uid));
+		residents.value = residents.value.filter((val) => val.uid !== uid);
+		isLoading.value = false;
 	}
 
 	function updateResident(resident: Resident) {
@@ -38,6 +54,8 @@ export const useResidentStore = defineStore('resident', () => {
 
 	return {
 		residents,
+		isLoading,
+		fetchResident,
 		fetchResidents,
 		addResident,
 		deleteResident,

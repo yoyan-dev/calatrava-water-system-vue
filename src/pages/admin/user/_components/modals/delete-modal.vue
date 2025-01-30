@@ -9,7 +9,7 @@
 	const isOpen = ref(false);
 
 	function deleteResident() {
-		store.deleteResident(props.id ?? '');
+		store.deleteResident(props.uid!);
 		toast.add({
 			severity: 'success',
 			summary: 'Successful',
@@ -19,7 +19,7 @@
 		isOpen.value = false;
 	}
 
-	const props = defineProps<{ id?: string }>();
+	const props = defineProps<{ uid?: string }>();
 </script>
 <template>
 	<Button

@@ -42,13 +42,13 @@
 						>
 						<InputText
 							id="acc-no"
-							v-model.trim="resident.accountNo"
+							v-model.trim="resident.accountNumber"
 							required="true"
 							autofocus
-							:invalid="isLoading && !resident.accountNo"
+							:invalid="isLoading && !resident.accountNumber"
 							fluid />
 						<small
-							v-if="isLoading && !resident.accountNo"
+							v-if="isLoading && !resident.accountNumber"
 							class="text-red-500"
 							>Account Number is required.</small
 						>

@@ -25,13 +25,12 @@
 		<DataTable
 			:value="store.residents"
 			size="small"
-            :paginator="true"
-            :rows="10"
-            :filters="filters"
-            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            :rowsPerPageOptions="[5, 10, 25]"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} residents"
-			>
+			:paginator="true"
+			:rows="10"
+			:filters="filters"
+			paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+			:rowsPerPageOptions="[5, 10, 25]"
+			currentPageReportTemplate="Showing {first} to {last} of {totalRecords} residents">
 			<template #empty>
 				<div class="flex items-center justify-center p-4">
 					No residents found.
@@ -56,7 +55,7 @@
 				</Toolbar>
 			</template>
 			<Column
-				field="accountNo"
+				field="accountNumber"
 				header="Account No.">
 			</Column>
 			<Column header="Name">
@@ -86,11 +85,10 @@
 				<template #body="slotProps">
 					<div class="flex">
 						<UpdateModal v-bind="slotProps.data" />
-						<DeleteModal :id="slotProps.data.id" />
+						<DeleteModal :uid="slotProps.data.uid" />
 					</div>
 				</template>
 			</Column>
 		</DataTable>
-
 	</div>
 </template>
