@@ -42,7 +42,7 @@ export const useTransactionStore = defineStore('transaction', () => {
 
 	function updateTransaction(transaction: Resident, uid: string) {
 		const result = transactions.value.find(
-			(item) => item.id === transaction.id,
+			(item) => item.uid === transaction.uid,
 		);
 		Object.assign(result || {}, transaction);
 	}

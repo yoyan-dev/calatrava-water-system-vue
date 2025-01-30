@@ -20,15 +20,3 @@ export interface Resident {
 	previousMeterUsage?: number;
 	waterConsumption?: number;
 }
-
-export interface CurrentBilling {
-	readingDate?: any;
-	dueDate?: any;
-	disconnectionDate?: any;
-}
-
-export interface Concern {
-	id?: string;
-	name?: string;
-	message?: string;
-}
