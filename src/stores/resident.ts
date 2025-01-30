@@ -8,6 +8,7 @@ import {
 	deleteDoc,
 	doc,
 	getDocs,
+	updateDoc,
 } from 'firebase/firestore';
 
 export const useResidentStore = defineStore('resident', () => {
@@ -46,8 +47,11 @@ export const useResidentStore = defineStore('resident', () => {
 		isLoading.value = false;
 	}
 
-	function updateResident(resident: Resident) {
-		const result = residents.value.find((item) => item.id === resident.id);
+	async function updateResident(resident: Resident, uid: string) {
+		await updateDoc(doc(db, 'residents', uid), {
+			...resident,
+		});
+		const result = residents.value.find((item) => item.uid === uid);
 		Object.assign(result || {}, resident);
 	}
 

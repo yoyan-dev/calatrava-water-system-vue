@@ -26,7 +26,9 @@
 						<RouterLink to="/admin/dashboard">
 							<a
 								:class="
-									route.name == 'admin' ? 'bg-primary-500 text-white' : ''
+									route.name == 'admin-dashboard'
+										? 'bg-primary-500 text-white'
+										: ''
 								"
 								class="flex items-center p-2 rounded-lg text-black hover:text-white cursor-pointer hover:bg-primary-400">
 								<span>Dashboard</span>
@@ -37,7 +39,9 @@
 						<RouterLink to="/admin/user">
 							<a
 								:class="
-									route.name == 'admin-user' ? 'bg-primary-500 text-white' : ''
+									route.name == 'admin-users' || route.name == 'admin-user'
+										? 'bg-primary-500 text-white'
+										: ''
 								"
 								class="flex items-center p-2 text-gray-900 rounded-lg hover:text-white hover:bg-primary-400 dark:text-white cursor-pointer">
 								<span class="flex-1 whitespace-nowrap">Users</span>
