@@ -7,6 +7,7 @@ import {
 	collection,
 	deleteDoc,
 	doc,
+	getDoc,
 	getDocs,
 	updateDoc,
 } from 'firebase/firestore';
@@ -14,6 +15,7 @@ import {
 export const useResidentStore = defineStore('resident', () => {
 	const db = useFirestore();
 	const residents = ref<Resident[]>([]);
+	const resident = ref<Resident>({});
 	const isLoading = ref(false);
 
 	async function fetchResidents() {
@@ -27,7 +29,12 @@ export const useResidentStore = defineStore('resident', () => {
 		isLoading.value = false;
 	}
 
-	function fetchResident(uid: string) {}
+	async function fetchResident(uid: string) {
+		isLoading.value = true;
+		const docSnap = await getDoc(doc(db, 'residents', uid));
+		resident.value = { ...docSnap.data(), uid: docSnap.id };
+		isLoading.value = false;
+	}
 
 	async function addResident(resident: Resident) {
 		isLoading.value = true;
