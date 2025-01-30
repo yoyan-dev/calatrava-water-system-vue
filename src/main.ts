@@ -36,7 +36,6 @@ import Menu from 'primevue/menu';
 import Carousel from 'primevue/carousel';
 import InputNumber from 'primevue/inputnumber';
 
-
 const app = createApp(App);
 app.use(VueFire, {
 	firebaseApp,

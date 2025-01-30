@@ -26,3 +26,9 @@ export interface CurrentBilling {
 	dueDate?: any;
 	disconnectionDate?: any;
 }
+
+export interface Concern {
+	id?: string;
+	name?: string;
+	message?: string;
+}

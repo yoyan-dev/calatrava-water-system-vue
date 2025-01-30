@@ -23,9 +23,11 @@
 			<Toolbar>
 				<template #start>
 					<div class="flex items-center gap-2 font-semibold">
-						<Avatar image="/logo.jpeg" class="mr-2" size="large" shape="circle" />
-						<RouterLink to="/resident"  :class="route.name == 'resident-home' ? 'text-primary-500' : ''" class="invisible md:visible  lg:visible">Bill</RouterLink>
-						<RouterLink to="/resident/concern"  :class="route.name == 'resident-concern' ? 'text-primary-500' : ''" class="invisible md:visible  lg:visible">Concern</RouterLink>
+						<div class="flex items-center">
+							<Avatar image="/logo.jpeg" class="mr-2" size="large" shape="circle" />
+							<h1 class="block md:hidden lg:hidden xl:hidden text-xl">C<span class="text-primary">W</span>S</h1>
+							<h1 class="hidden md:block lg:block xl:block text-xl">Calatrava <span class="text-primary">Water</span> System</h1>
+						</div>
 
 					</div>
 				</template>
@@ -44,6 +46,10 @@
 						</Menu>
 					</Drawer>
 					<Button icon="pi pi-align-center" @click="visible = true" class="visible md:invisible lg:invisible xl:invisible"/>
+					<div class="flex gap-5">
+						<RouterLink to="/resident"  :class="route.name == 'resident-home' ? 'text-primary-500' : ''" class="hidden md:block  lg:block">Bill</RouterLink>
+						<RouterLink to="/resident/concern"  :class="route.name == 'resident-concern' ? 'text-primary-500' : ''" class="hidden md:block  lg:block">Concern</RouterLink>
+					</div>
 				</template>
 			</Toolbar>
 		</div>
