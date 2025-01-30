@@ -18,14 +18,15 @@
 	]);
 </script>
 <template>
-	<main class="relative">
+	<main class="relative bg-gray-100">
 		<div class="sticky top-0 z-10">
 			<Toolbar>
 				<template #start>
-					<div class="flex items-center gap-2">
+					<div class="flex items-center gap-2 font-semibold">
 						<Avatar image="/logo.jpeg" class="mr-2" size="large" shape="circle" />
-						<div class="card flex justify-center">
-						</div>
+						<RouterLink to="/resident"  :class="route.name == 'resident-home' ? 'text-primary-500' : ''" class="invisible md:visible  lg:visible">Bill</RouterLink>
+						<RouterLink to="/resident/concern"  :class="route.name == 'resident-concern' ? 'text-primary-500' : ''" class="invisible md:visible  lg:visible">Concern</RouterLink>
+
 					</div>
 				</template>
 				
@@ -33,16 +34,16 @@
 					<Drawer v-model:visible="visible" header="CWS">
 						<Menu :model="items">
 							<template #item="{ item, props }">
-								<router-link v-slot="{ href, navigate }" :to="item.route" custom >
+								<RouterLink v-slot="{ href, navigate }" :to="item.route" custom >
 									<a v-ripple :href="href" v-bind="props.action" @click="navigate">
 										<span :class="item.icon" />
 										<span class="ml-2">{{ item.label }}</span>
 									</a>
-								</router-link>
+								</RouterLink>
 							</template>
 						</Menu>
 					</Drawer>
-					<Button icon="pi pi-align-center" @click="visible = true"/>
+					<Button icon="pi pi-align-center" @click="visible = true" class="visible md:invisible lg:invisible xl:invisible"/>
 				</template>
 			</Toolbar>
 		</div>
