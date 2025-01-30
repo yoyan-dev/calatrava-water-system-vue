@@ -1,6 +1,7 @@
 export interface Resident {
 	id?: string;
 	uid?: string;
+	accountNo?: string;
 	firstName?: string;
 	lastName?: string;
 	middleName?: string;
