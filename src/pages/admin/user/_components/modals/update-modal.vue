@@ -22,12 +22,17 @@
 		firstName: props.firstName,
 		middleName: props.middleName,
 		lastName: props.lastName,
+		address: props.address,
+		classification: props.classification,
 	});
 
+	const isLoading = ref(false);
 	function onSubmit() {
+		isLoading.value = true;
 		isSubmitted.value = true;
 		store.updateResident(resident);
 		isOpen.value = false;
+		isLoading.value = false;
 	}
 </script>
 
@@ -47,62 +52,64 @@
 			class="flex flex-col gap-4">
 			<div class="flex flex-col gap-4">
 				<!-- <img v-if="product.image" :src="`https://primefaces.org/cdn/primevue/images/product/${product.image}`" :alt="product.image" class="block m-auto pb-4" /> -->
-				<div>
-					<label
-						for="name"
-						class="block font-bold mb-3"
-						>Firstname</label
-					>
-					<InputText
-						id="name"
-						v-model.trim="resident.firstName"
-						required="true"
-						autofocus
-						:invalid="isSubmitted && !resident.firstName"
-						fluid />
-					<small
-						v-if="isSubmitted && !resident.firstName"
-						class="text-red-500"
-						>firstname is required.</small
-					>
-				</div>
-				<div>
-					<label
-						for="name"
-						class="block font-bold mb-3"
-						>Middle name</label
-					>
-					<InputText
-						id="name"
-						v-model.trim="resident.middleName"
-						required="true"
-						autofocus
-						:invalid="isSubmitted && !resident.middleName"
-						fluid />
-					<small
-						v-if="isSubmitted && !resident.middleName"
-						class="text-red-500"
-						>Middle name is required.</small
-					>
-				</div>
-				<div>
-					<label
-						for="name"
-						class="block font-bold mb-3"
-						>Lastname</label
-					>
-					<InputText
-						id="name"
-						v-model.trim="resident.lastName"
-						required="true"
-						autofocus
-						:invalid="isSubmitted && !resident.lastName"
-						fluid />
-					<small
-						v-if="isSubmitted && !resident.lastName"
-						class="text-red-500"
-						>Last name is required.</small
-					>
+				<div class="flex gap-5">
+					<div>
+						<label
+							for="name"
+							class="block font-bold mb-3"
+							>Firstname</label
+						>
+						<InputText
+							id="name"
+							v-model.trim="resident.firstName"
+							required="true"
+							autofocus
+							:invalid="isSubmitted && !resident.firstName"
+							fluid />
+						<small
+							v-if="isSubmitted && !resident.firstName"
+							class="text-red-500"
+							>firstname is required.</small
+						>
+					</div>
+					<div>
+						<label
+							for="name"
+							class="block font-bold mb-3"
+							>Middle name</label
+						>
+						<InputText
+							id="name"
+							v-model.trim="resident.middleName"
+							required="true"
+							autofocus
+							:invalid="isSubmitted && !resident.middleName"
+							fluid />
+						<small
+							v-if="isSubmitted && !resident.middleName"
+							class="text-red-500"
+							>Middle name is required.</small
+						>
+					</div>
+					<div>
+						<label
+							for="name"
+							class="block font-bold mb-3"
+							>Lastname</label
+						>
+						<InputText
+							id="name"
+							v-model.trim="resident.lastName"
+							required="true"
+							autofocus
+							:invalid="isSubmitted && !resident.lastName"
+							fluid />
+						<small
+							v-if="isSubmitted && !resident.lastName"
+							class="text-red-500"
+							>Last name is required.</small
+						>
+					</div>
 				</div>
 				<div>
 						<label
@@ -115,13 +122,13 @@
 							v-model.trim="resident.address"
 							required="true"
 							autofocus
-							:invalid="isLoading && !resident.address"
+							:invalid="isSubmitted && !resident.address"
 							fluid />
 						<small
-							v-if="isLoading && !resident.address"
+							v-if="isSubmitted && !resident.address"
 							class="text-red-500"
 							>Address is required.</small
-						>
+						> 
 					</div>
 					<div>
 						<label
@@ -134,10 +141,10 @@
 							v-model.trim="resident.classification"
 							required="true"
 							autofocus
-							:invalid="isLoading && !resident.classification"
+							:invalid="isSubmitted && !resident.classification"
 							fluid />
 						<small
-							v-if="isLoading && !resident.classification"
+							v-if="isSubmitted && !resident.classification"
 							class="text-red-500"
 							>Classification is required.</small
 						>
@@ -154,7 +161,9 @@
 				<Button
 					label="Save"
 					icon="pi pi-check"
-					type="submit" />
+					type="submit" 
+					:loading="isLoading"
+					/>
 			</div>
 		</form>
 	</Dialog>

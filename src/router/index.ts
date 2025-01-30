@@ -16,6 +16,18 @@ const router = createRouter({
 			path: '/resident',
 			name: 'resident',
 			component: () => import('@/pages/resident/index.vue'),
+			children: [
+				{
+					path: '',
+					name: 'resident-home',
+					component: () => import('@/pages/resident/home/index.vue'),
+				},
+				{
+					path: 'concern',
+					name: 'resident-concern',
+					component: () => import('@/pages/resident/concern/index.vue'),
+				},
+			],
 		},
 		{
 			path: '/admin',
@@ -38,6 +50,11 @@ const router = createRouter({
 					component: () => import('@/pages/admin/transaction/index.vue'),
 				},
 			],
+		},
+		{
+			path: '/:pathMatch(.*)*',
+			name: 'not-found',
+			component: () => import('@/pages/error.vue'),
 		},
 	],
 });

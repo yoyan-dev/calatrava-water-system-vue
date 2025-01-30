@@ -7,7 +7,7 @@ export const useResidentStore = defineStore('resident', () => {
 
 	function fetchResidents() {
 		residents.value = [
-			{ id: '1', firstName: 'test', middleName: 'tst', lastName: 'erf' },
+			{ id: '1', accountNo: '0126-7237', firstName: 'Jeremy', middleName: 'Chua', lastName: 'Maglinte',  address: 'San Carlos City', classification: 'Residential', },
 		];
 	}
 
