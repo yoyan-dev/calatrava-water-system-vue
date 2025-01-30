@@ -33,7 +33,7 @@ import ScrollPanel from 'primevue/scrollpanel';
 import SelectButton from 'primevue/selectbutton';
 import Drawer from 'primevue/drawer';
 import Menu from 'primevue/menu';
-
+import Carousel from 'primevue/carousel';
 import InputNumber from 'primevue/inputnumber';
 
 
@@ -68,7 +68,7 @@ app.component('ScrollPanel', ScrollPanel);
 app.component('SelectButton', SelectButton);
 app.component('Drawer', Drawer);
 app.component('Menu', Menu);
-
+app.component('Carousel', Carousel);
 app.component('InputNumber', InputNumber);
 
 
