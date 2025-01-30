@@ -48,13 +48,11 @@ const router = createRouter({
 					path: 'user',
 					name: 'admin-users',
 					component: () => import('@/pages/admin/user/index.vue'),
-					children: [
-						{
-							path: '/:id',
-							name: 'admin-user',
-							component: () => import('@/pages/admin/user/[uid].vue'),
-						},
-					],
+				},
+				{
+					path: 'user/:uid',
+					name: 'admin-user',
+					component: () => import('@/pages/admin/user/profile/index.vue'),
 				},
 				{
 					path: 'transaction',

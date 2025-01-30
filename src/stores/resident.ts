@@ -22,7 +22,6 @@ export const useResidentStore = defineStore('resident', () => {
 			...doc.data(),
 			uid: doc.id,
 		}));
-		console.log(residentsDocs);
 		residents.value = residentsDocs;
 		isLoading.value = false;
 	}
