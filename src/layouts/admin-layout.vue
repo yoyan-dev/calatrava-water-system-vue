@@ -52,6 +52,7 @@
 						<RouterLink to="/admin/transaction">
 							<a
 								:class="
+									route.name == 'admin-transactions' ||
 									route.name == 'admin-transaction'
 										? 'bg-primary-500 text-white'
 										: ''

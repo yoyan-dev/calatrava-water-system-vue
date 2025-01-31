@@ -60,6 +60,11 @@ const router = createRouter({
 					component: () => import('@/pages/admin/transaction/index.vue'),
 				},
 				{
+					path: 'transaction/create',
+					name: 'admin-transaction-create',
+					component: () => import('@/pages/admin/transaction/create/index.vue'),
+				},
+				{
 					path: 'transaction/:uid',
 					name: 'admin-transaction',
 					component: () => import('@/pages/admin/transaction/detail/index.vue'),
