@@ -67,8 +67,10 @@
                             <div>
                                 <Toolbar>
                                     <template #start>
-                                        <CreateModal/>
-                                        <Button label="Delete" icon="pi pi-trash" severity="danger" outlined :disabled="!selectedWaterBill || !selectedWaterBill.length" />
+                                        <RouterLink to="/admin/transaction/create">
+                                            <Button label="Create" icon="pi pi-plus" severity="primary" />
+                                        </RouterLink>
+                                        <!-- <Button label="Delete" icon="pi pi-trash" severity="danger" outlined :disabled="!selectedWaterBill || !selectedWaterBill.length" /> -->
                                     </template>
                                     
                                     <template #end>
@@ -77,8 +79,8 @@
                                                 <InputIcon>
                                                     <i class="pi pi-search" />
                                                 </InputIcon>
+                                                <InputText v-model="filters['global'].value" placeholder="Search..." />
                                             </IconField>
-                                            <InputText v-model="filters['global'].value" placeholder="Search..." />
                                             <!-- <Button label="Export" icon="pi pi-upload" severity="secondary" @click="exportCSV($event)" /> -->
                                         </div>
                                     </template>

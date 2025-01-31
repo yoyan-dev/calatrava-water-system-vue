@@ -35,6 +35,8 @@ import Drawer from 'primevue/drawer';
 import Menu from 'primevue/menu';
 import Carousel from 'primevue/carousel';
 import InputNumber from 'primevue/inputnumber';
+import DatePicker from 'primevue/datepicker';
+
 
 const app = createApp(App);
 app.use(VueFire, {
@@ -69,6 +71,7 @@ app.component('Drawer', Drawer);
 app.component('Menu', Menu);
 app.component('Carousel', Carousel);
 app.component('InputNumber', InputNumber);
+app.component('DatePicker', DatePicker);
 
 
 
