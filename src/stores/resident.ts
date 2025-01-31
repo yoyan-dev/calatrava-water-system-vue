@@ -64,6 +64,7 @@ export const useResidentStore = defineStore('resident', () => {
 
 	return {
 		residents,
+		resident,
 		isLoading,
 		fetchResident,
 		fetchResidents,
