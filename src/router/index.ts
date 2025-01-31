@@ -31,18 +31,28 @@ const router = createRouter({
 		},
 		{
 			path: '/admin',
+			name: 'admin-auth',
+			component: () => import('@/pages/admin/Auth.vue'),
+		},
+		{
+			path: '/admin',
 			name: 'admin',
 			component: () => import('@/pages/admin/index.vue'),
 			children: [
 				{
-					path: '',
+					path: 'dashboard',
 					name: 'admin-dashboard',
 					component: () => import('@/pages/admin/dashboard/index.vue'),
 				},
 				{
 					path: 'user',
-					name: 'admin-user',
+					name: 'admin-users',
 					component: () => import('@/pages/admin/user/index.vue'),
+				},
+				{
+					path: 'user/:uid',
+					name: 'admin-user',
+					component: () => import('@/pages/admin/user/profile/index.vue'),
 				},
 				{
 					path: 'transaction',

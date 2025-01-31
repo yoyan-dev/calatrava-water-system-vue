@@ -1,37 +1,58 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import type { Resident } from '@/types/resident';
+import {
+	addDoc,
+	collection,
+	deleteDoc,
+	doc,
+	Timestamp,
+} from 'firebase/firestore';
+import { useFirestore } from 'vuefire';
 
 export const useTransactionStore = defineStore('transaction', () => {
-    const transactions = ref<Resident[]>([]);
+	const db = useFirestore();
+	const transactions = ref<Resident[]>([]);
+	const isLoading = ref(false);
 
-    function fetchTransactions() {
-        transactions.value = [
-            { id: '1', billNo: 1, billingDate: '01-01-2025', waterBill: 100 },
-        ];
-    }
+	function fetchTransactions() {
+		transactions.value = [
+			{ id: '1', billNumber: 1, billingDate: '01-01-2025', waterBill: 100 },
+		];
+	}
 
-    function addTransaction(transaction: Resident) {
-        transaction.id = (transactions.value.length + 1).toString();
-        transaction.billNo = transactions.value.length + 1
-        transaction.billingDate = new Date().toLocaleDateString();
-        transactions.value.push(transaction);
-    }
+	async function addTransaction(transaction: Resident) {
+		isLoading.value = true;
+		transaction.id = (transactions.value.length + 1).toString();
+		transaction.billNumber = Number(transaction.id);
+		transaction.billingDate = Timestamp.now();
+		const docRef = await addDoc(collection(db, 'transactions'), {
+			...transaction,
+		});
+		transactions.value.push({ ...transaction, uid: docRef.id });
+		isLoading.value = false;
+	}
 
-    function deleteTransaction(id: string) {
-        transactions.value = transactions.value.filter((val) => val.id !== id);
-    }
+	async function deleteTransaction(uid: string) {
+		isLoading.value = true;
+		await deleteDoc(doc(db, 'transactions', uid));
+		transactions.value = transactions.value.filter((item) => item.uid !== uid);
+		isLoading.value = false;
+	}
 
-    function updateTransaction(transaction: Resident) {
-        const result = transactions.value.find((item) => item.id === transaction.id);
-        Object.assign(result || {}, transaction);
-    }
+	function updateTransaction(transaction: Resident, uid: string) {
+		const result = transactions.value.find(
+			(item) => item.uid === transaction.uid,
+		);
+		Object.assign(result || {}, transaction);
+	}
 
-    return {
-        transactions,
-        fetchTransactions,
-        addTransaction,
-        deleteTransaction,
-        updateTransaction,
-    };
+	return {
+		transactions,
+		isLoading,
+		fetchTransactions,
+		addTransaction,
+		deleteTransaction,
+		updateTransaction,
+	};
 });

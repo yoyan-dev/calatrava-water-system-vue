@@ -1,13 +1,13 @@
 export interface Resident {
 	id?: string;
 	uid?: string;
-	accountNo?: string;
+	accountNumber?: string;
 	firstName?: string;
 	lastName?: string;
 	middleName?: string;
 	address?: string;
 	classification?: string;
-	billNo?: number;
+	billNumber?: number;
 	billingDate?: any;
 	waterBill?: number;
 	envFee?: number;
@@ -19,10 +19,4 @@ export interface Resident {
 	currentReading?: number;
 	previousMeterUsage?: number;
 	waterConsumption?: number;
-}
-
-export interface CurrentBilling {
-	readingDate?: any;
-	dueDate?: any;
-	disconnectionDate?: any;
 }
