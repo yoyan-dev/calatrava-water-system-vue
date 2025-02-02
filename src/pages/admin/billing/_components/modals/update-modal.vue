@@ -1,9 +1,9 @@
 <script setup lang="ts">
 	import { reactive, ref } from 'vue';
-	import { useTransactionStore } from '@/stores/transaction';
+	import { useBillingStore } from '@/stores/billing';
 	import type { Resident } from '@/types/resident';
 
-	const store = useTransactionStore();
+	const store = useBillingStore();
 	const isOpen = ref(false);
 	const isSubmitted = ref(false);
 	const isLoading = ref(false);
