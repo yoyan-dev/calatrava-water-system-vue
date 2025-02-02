@@ -13,8 +13,14 @@
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
 
-	onMounted(() => {
-		store.fetchResidents();
+	function onPageChange(event: any) {
+		store.fetchResidents(event);
+	}
+
+	onMounted(async () => {
+		await store.fetchResidents({ first: 0, rows: 10, page: 0 });
+		await store.fetchTotalResidents();
+		console.log(store.totalResidents);
 	});
 </script>
 
@@ -25,12 +31,10 @@
 		<DataTable
 			:value="store.residents"
 			size="small"
-			:paginator="true"
-			:rows="10"
+			dataKey="id"
+			:rows="store.rowsPerPage"
 			:filters="filters"
-			paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-			:rowsPerPageOptions="[5, 10, 25]"
-			currentPageReportTemplate="Showing {first} to {last} of {totalRecords} residents">
+			:loading="store.isLoading">
 			<template #empty>
 				<div class="flex items-center justify-center p-4">
 					No residents found.
@@ -90,5 +94,10 @@
 				</template>
 			</Column>
 		</DataTable>
+		<Paginator
+			:rows="store.rowsPerPage"
+			:totalRecords="store.totalResidents"
+			:rowsPerPageOptions="[10, 20, 30]"
+			@page="onPageChange"></Paginator>
 	</div>
 </template>

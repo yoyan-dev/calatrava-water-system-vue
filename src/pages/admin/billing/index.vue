@@ -101,11 +101,6 @@
 							field="billingDate"
 							header="Billing Date"
 							sortable></Column>
-						<!-- <Column header="Image">
-                            <template #body="slotProps">
-                                <img :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`" :alt="slotProps.data.image" class="rounded" style="width: 64px" />
-                            </template>
-                        </Column> -->
 						<Column
 							field="waterBill"
 							header="Water Bill"
