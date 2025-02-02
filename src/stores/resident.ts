@@ -25,8 +25,10 @@ export const useResidentStore = defineStore('resident', () => {
 	const totalResidents = ref(0);
 	const rowsPerPage = ref(10);
 	const lastVisible = ref<any>(null);
+	const lastVisiblePages = ref<any[]>([]);
 	const firstVisible = ref<any>(null);
 	const currentPage = ref(0);
+	const firstPage = ref(0);
 
 	async function fetchTotalResidents() {
 		const snapshot = await getCountFromServer(collection(db, 'residents'));
@@ -39,28 +41,42 @@ export const useResidentStore = defineStore('resident', () => {
 		const { first, rows, page } = event;
 		rowsPerPage.value = rows;
 		currentPage.value = page;
+		firstPage.value = first;
 
+		console.log(lastVisible.value);
 		let residentsQuery;
-		if (page === 0 || !lastVisible.value) {
+
+		if (page === 0) {
+			lastVisiblePages.value = [];
 			residentsQuery = query(
 				collection(db, 'residents'),
 				orderBy('firstName', 'asc'),
 				limit(rows),
 			);
-		} else {
+		} else if (page > lastVisiblePages.value.length - 1) {
 			residentsQuery = query(
 				collection(db, 'residents'),
 				orderBy('firstName', 'asc'),
 				startAfter(lastVisible.value),
 				limit(rows),
 			);
+		} else {
+			residentsQuery = query(
+				collection(db, 'residents'),
+				orderBy('firstName', 'asc'),
+				startAfter(lastVisiblePages.value[page - 1]),
+				limit(rows),
+			);
 		}
 
 		const querySnapshot = await getDocs(residentsQuery);
 
-		firstVisible.value = querySnapshot.docs[0] || null;
-		lastVisible.value =
-			querySnapshot.docs[querySnapshot.docs.length - 1] || null;
+		if (!querySnapshot.empty) {
+			firstVisible.value = querySnapshot.docs[0];
+			lastVisible.value = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+			lastVisiblePages.value[page] = lastVisible.value;
+		}
 
 		residents.value = querySnapshot.docs.map((doc) => ({
 			...doc.data(),
@@ -112,6 +128,7 @@ export const useResidentStore = defineStore('resident', () => {
 		lastVisible,
 		firstVisible,
 		currentPage,
+		firstPage,
 		fetchTotalResidents,
 		fetchResident,
 		fetchResidents,

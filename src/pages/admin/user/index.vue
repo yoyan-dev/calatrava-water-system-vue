@@ -98,6 +98,22 @@
 			:rows="store.rowsPerPage"
 			:totalRecords="store.totalResidents"
 			:rowsPerPageOptions="[10, 20, 30]"
-			@page="onPageChange"></Paginator>
+			@page="onPageChange"
+			template="PrevPageLink PageLinks NextPageLink  RowsPerPageDropdown"
+			:pt="{
+				root: 'justify-between',
+				contentStart: 'flex items-center justify-start m-0',
+			}">
+			<template #start="slotProps">
+				Showing {{ slotProps.state.first + 1 }} to
+				{{
+					Math.min(
+						slotProps.state.first + slotProps.state.rows,
+						store.totalResidents,
+					)
+				}}
+				of {{ store.totalResidents }} residents
+			</template>
+		</Paginator>
 	</div>
 </template>
