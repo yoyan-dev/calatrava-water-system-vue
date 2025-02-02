@@ -15,75 +15,73 @@ import {
 	limit,
 	startAfter,
 	getCountFromServer,
+	Timestamp,
+	startAt,
 } from 'firebase/firestore';
+import useSearchKeywords from '@/composables/useSearchKeywords';
 
 export const useResidentStore = defineStore('resident', () => {
 	const db = useFirestore();
+	const { generateKeywords } = useSearchKeywords();
 	const residents = ref<Resident[]>([]);
 	const resident = ref<Resident>({});
 	const isLoading = ref(false);
 	const totalResidents = ref(0);
-	const rowsPerPage = ref(10);
-	const lastVisible = ref<any>(null);
-	const lastVisiblePages = ref<any[]>([]);
-	const firstVisible = ref<any>(null);
+	const pageSize = ref(10);
+	const lastVisible = ref<any>();
 	const currentPage = ref(0);
-	const firstPage = ref(0);
 
 	async function fetchTotalResidents() {
 		const snapshot = await getCountFromServer(collection(db, 'residents'));
 		totalResidents.value = snapshot.data().count;
 	}
 
-	async function fetchResidents(event: any = { first: 0, rows: 10, page: 0 }) {
+	async function fetchResidents(event: any) {
 		isLoading.value = true;
 
-		const { first, rows, page } = event;
-		rowsPerPage.value = rows;
-		currentPage.value = page;
-		firstPage.value = first;
+		const firstRecordIndex = event.first;
+		const page = event.page;
+		console.log(event);
 
-		console.log(lastVisible.value);
-		let residentsQuery;
+		let residentQuery;
 
 		if (page === 0) {
-			lastVisiblePages.value = [];
-			residentsQuery = query(
+			residentQuery = query(
 				collection(db, 'residents'),
-				orderBy('firstName', 'asc'),
-				limit(rows),
-			);
-		} else if (page > lastVisiblePages.value.length - 1) {
-			residentsQuery = query(
-				collection(db, 'residents'),
-				orderBy('firstName', 'asc'),
-				startAfter(lastVisible.value),
-				limit(rows),
+				orderBy('firstName'),
+				limit(pageSize.value),
 			);
 		} else {
-			residentsQuery = query(
+			residentQuery = query(
 				collection(db, 'residents'),
-				orderBy('firstName', 'asc'),
-				startAfter(lastVisiblePages.value[page - 1]),
-				limit(rows),
+				orderBy('firstName'),
+				startAfter(lastVisible.value),
+				limit(pageSize.value),
 			);
 		}
 
-		const querySnapshot = await getDocs(residentsQuery);
+		try {
+			const snapshot = await getDocs(residentQuery);
 
-		if (!querySnapshot.empty) {
-			firstVisible.value = querySnapshot.docs[0];
-			lastVisible.value = querySnapshot.docs[querySnapshot.docs.length - 1];
+			const newResidents = snapshot.docs.map((doc) => ({
+				uid: doc.id,
+				...doc.data(),
+			}));
 
-			lastVisiblePages.value[page] = lastVisible.value;
+			residents.value = newResidents;
+
+			if (snapshot.docs.length > 0) {
+				lastVisible.value = snapshot.docs[snapshot.docs.length - 1];
+				console.log('Last Visible:', lastVisible.value);
+			} else {
+				lastVisible.value = null;
+			}
+			console.log(lastVisible.value);
+		} catch (error) {
+			console.error('Error fetching students:', error);
+		} finally {
+			isLoading.value = false;
 		}
-
-		residents.value = querySnapshot.docs.map((doc) => ({
-			...doc.data(),
-			uid: doc.id,
-		}));
-
-		isLoading.value = false;
 	}
 
 	async function fetchResident(uid: string) {
@@ -95,9 +93,12 @@ export const useResidentStore = defineStore('resident', () => {
 
 	async function addResident(resident: Resident) {
 		isLoading.value = true;
-		resident.id = (residents.value.length + 1).toString();
+		const fullName =
+			resident.firstName + ' ' + resident.middleName + ' ' + resident.lastName;
+		resident.searchKeyword = generateKeywords(fullName);
 		const docRef = await addDoc(collection(db, 'residents'), {
 			...resident,
+			createtedAt: Timestamp.now(),
 		});
 		residents.value.push({ waterBill: 10, ...resident, uid: docRef.id });
 		isLoading.value = false;
@@ -123,12 +124,10 @@ export const useResidentStore = defineStore('resident', () => {
 		residents,
 		resident,
 		isLoading,
-		rowsPerPage,
 		totalResidents,
 		lastVisible,
-		firstVisible,
 		currentPage,
-		firstPage,
+		pageSize,
 		fetchTotalResidents,
 		fetchResident,
 		fetchResidents,

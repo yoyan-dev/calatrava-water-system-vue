@@ -1,3 +1,5 @@
+import type { Timestamp } from 'firebase/firestore';
+
 export interface Resident {
 	id?: string;
 	uid?: string;
@@ -19,4 +21,7 @@ export interface Resident {
 	currentReading?: number;
 	previousMeterUsage?: number;
 	waterConsumption?: number;
+	searchKeyword?: string[];
+	createdAt?: any;
+	updatedAt?: any;
 }
