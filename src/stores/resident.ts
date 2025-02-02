@@ -9,7 +9,12 @@ import {
 	doc,
 	getDoc,
 	getDocs,
+	orderBy,
+	query,
 	updateDoc,
+	limit,
+	startAfter,
+	getCountFromServer,
 } from 'firebase/firestore';
 
 export const useResidentStore = defineStore('resident', () => {
@@ -17,15 +22,67 @@ export const useResidentStore = defineStore('resident', () => {
 	const residents = ref<Resident[]>([]);
 	const resident = ref<Resident>({});
 	const isLoading = ref(false);
+	const totalResidents = ref(0);
+	const rowsPerPage = ref(10);
+	const lastVisible = ref<any>(null);
+	const lastVisiblePages = ref<any[]>([]);
+	const firstVisible = ref<any>(null);
+	const currentPage = ref(0);
+	const firstPage = ref(0);
 
-	async function fetchResidents() {
+	async function fetchTotalResidents() {
+		const snapshot = await getCountFromServer(collection(db, 'residents'));
+		totalResidents.value = snapshot.data().count;
+	}
+
+	async function fetchResidents(event: any = { first: 0, rows: 10, page: 0 }) {
 		isLoading.value = true;
-		const querySnapshot = await getDocs(collection(db, 'residents'));
-		const residentsDocs: Resident[] = querySnapshot.docs.map((doc) => ({
+
+		const { first, rows, page } = event;
+		rowsPerPage.value = rows;
+		currentPage.value = page;
+		firstPage.value = first;
+
+		console.log(lastVisible.value);
+		let residentsQuery;
+
+		if (page === 0) {
+			lastVisiblePages.value = [];
+			residentsQuery = query(
+				collection(db, 'residents'),
+				orderBy('firstName', 'asc'),
+				limit(rows),
+			);
+		} else if (page > lastVisiblePages.value.length - 1) {
+			residentsQuery = query(
+				collection(db, 'residents'),
+				orderBy('firstName', 'asc'),
+				startAfter(lastVisible.value),
+				limit(rows),
+			);
+		} else {
+			residentsQuery = query(
+				collection(db, 'residents'),
+				orderBy('firstName', 'asc'),
+				startAfter(lastVisiblePages.value[page - 1]),
+				limit(rows),
+			);
+		}
+
+		const querySnapshot = await getDocs(residentsQuery);
+
+		if (!querySnapshot.empty) {
+			firstVisible.value = querySnapshot.docs[0];
+			lastVisible.value = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+			lastVisiblePages.value[page] = lastVisible.value;
+		}
+
+		residents.value = querySnapshot.docs.map((doc) => ({
 			...doc.data(),
 			uid: doc.id,
 		}));
-		residents.value = residentsDocs;
+
 		isLoading.value = false;
 	}
 
@@ -64,7 +121,15 @@ export const useResidentStore = defineStore('resident', () => {
 
 	return {
 		residents,
+		resident,
 		isLoading,
+		rowsPerPage,
+		totalResidents,
+		lastVisible,
+		firstVisible,
+		currentPage,
+		firstPage,
+		fetchTotalResidents,
 		fetchResident,
 		fetchResidents,
 		addResident,

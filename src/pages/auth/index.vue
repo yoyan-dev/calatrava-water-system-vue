@@ -7,12 +7,14 @@
 	const auth = useFirebaseAuth();
 
 	const initialValues = ref({
-		accountNumber: ''
+		accountNumber: '',
 	});
 
 	async function onFormSubmit() {
 		const { data, error } = await useFetch<any>(
-			`${import.meta.env.VITE_API_URL}/api/auth/${initialValues.value.accountNumber}`,
+			`${import.meta.env.VITE_API_URL}/api/auth/${
+				initialValues.value.accountNumber
+			}`,
 		);
 		const res = JSON.parse(data.value);
 
@@ -37,15 +39,13 @@
 				<div class="flex flex-col gap-1">
 					<InputText
 						name="acc-no"
-						placeholder="Enter account no." 
-						v-model="initialValues.accountNumber"
-					/>
+						placeholder="Enter account no."
+						v-model="initialValues.accountNumber" />
 					<!-- <Message v-if="$form.username?.invalid" severity="error" size="small" variant="simple">{{ $form.username.error?.message }}</Message> -->
 				</div>
 				<Button
-					@click="onFormSubmit('0001223')"
-					label="Submit" 
-				/>
+					@click="onFormSubmit()"
+					label="Submit" />
 			</Form>
 		</div>
 	</div>
