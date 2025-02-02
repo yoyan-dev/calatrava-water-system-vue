@@ -9,7 +9,7 @@
 	const isOpen = ref(false);
 
 	function deleteTransaction() {
-		store.deleteTransaction(props.id ?? '');
+		store.deleteBilling(props.uid ?? '');
 		toast.add({
 			severity: 'success',
 			summary: 'Successful',
@@ -19,7 +19,7 @@
 		isOpen.value = false;
 	}
 
-	const props = defineProps<{ id?: string }>();
+	const props = defineProps<{ uid?: string }>();
 </script>
 <template>
 	<div>
@@ -35,8 +35,8 @@
 			:modal="true">
 			<div class="flex items-center gap-4">
 				<i class="pi pi-exclamation-triangle !text-3xl" />
-				<span v-if="id"
-					>Are you sure you want to delete <b>transaction</b>?</span
+				<span v-if="uid"
+					>Are you sure you want to delete <b>Water Bill</b>?</span
 				>
 			</div>
 			<template #footer>

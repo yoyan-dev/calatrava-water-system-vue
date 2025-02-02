@@ -1,10 +1,12 @@
 <script setup lang="ts">
 	import { ref, watch, onMounted } from 'vue';
-	import { useTransactionStore } from '@/stores/billing';
+	import { useBillingStore } from '@/stores/billing';
 	import { useResidentStore } from '@/stores/resident';
 	import type { Resident } from '@/types/resident';
+	import { useRouter } from 'vue-router';
 
-	const transactionStore = useTransactionStore();
+	const router = useRouter()
+	const transactionStore = useBillingStore();
 	const residentStore = useResidentStore();
 	const isLoading = ref(false);
 	const isSubmitted = ref(false);
@@ -31,10 +33,12 @@
 	function onSubmit() {
 		isLoading.value = true;
 		isSubmitted.value = true;
-		transactionStore.addTransaction(transaction.value);
+		transaction.value.billingDate = new Date(transaction.value.billingDate); // Ensure billingDate is a Date object
+		transactionStore.addBilling(transaction.value);
 		transaction.value = {};
 		isLoading.value = false;
 		isSubmitted.value = false;
+		router.push('/admin/billings');
 	}
 </script>
 
@@ -43,10 +47,10 @@
 		<form @submit.prevent="onSubmit">
 			<div
 				class="text-xl font-medium text-surface-900 dark:text-surface-0 mb-2">
-				Add Transaction
+				Create Water Billing
 			</div>
 			<div class="flex gap-5">
-				<div class="flex flex-col gap-2">
+				<div class="flex flex-col gap-2 bg-gray-50 p-2 px-5 rounded-md">
 					<div>
 						<label
 							for="account-number"
@@ -61,115 +65,91 @@
 							placeholder="Select Account Number"
 							class="w-full md:w-56" />
 					</div>
-					<div>
-						<label
-							for="first-name"
-							class="block"
-							>First Name</label
-						>
-						<InputText
-							id="first-name"
-							v-model.trim="transaction.firstName"
-							size="small"
-							required />
-					</div>
-					<div>
-						<label
-							for="middle-name"
-							class="block"
-							>Middle Name</label
-						>
-						<InputText
-							id="middle-name"
-							v-model.trim="transaction.middleName"
-							size="small" />
-					</div>
-					<div>
-						<label
-							for="last-name"
-							class="block"
-							>Last Name</label
-						>
-						<InputText
-							id="last-name"
-							v-model.trim="transaction.lastName"
-							required
-							size="small" />
-					</div>
-					<div>
-						<label
-							for="address"
-							class="block"
-							>Address</label
-						>
-						<InputText
-							id="address"
-							v-model.trim="transaction.address"
-							required
-							size="small" />
-					</div>
-					<div>
-						<label
-							for="classification"
-							class="block"
-							>Classification</label
-						>
-						<InputText
-							id="classification"
-							v-model.trim="transaction.classification"
-							required
-							size="small" />
+					<div v-if="transaction.accountNumber
+					">
+						<div class="flex items-center gap-4 px-3 pr-7 shadow-sm border rounded-md bg-white">
+							<Avatar icon="pi pi-user" style="background-color: #dee9fc; color: #1a2551" shape="circle" />
+							<div>
+								<h1 class="font-semibold">{{ transaction.firstName }} {{ transaction.middleName }} {{ transaction.lastName }}</h1>
+								<span class="text-gray-400">{{ transaction.accountNumber }}</span>
+							</div>
+						</div>
+						<div>
+							<label
+								for="address"
+								class="block text-slate-600"
+								>Address</label
+							>
+							<span class="pl-5">{{ transaction.address }}</span>
+						</div>
+						<div>
+							<label
+								for="address"
+								class="block text-slate-600"
+								>Classification</label
+							>
+							<span class="pl-5">{{ transaction.classification }}</span>
+						</div>
 					</div>
 				</div>
 				<div>
-					<div class="flex gap-5">
+					<!-- <div class="flex gap-5">
 						<div>
 							<label
-								for="electric-bill"
+								for="
+								"
 								class="block"
 								>Stubout</label
 							>
 							<InputNumber
-								id="electric-bill"
+								id="
+								"
 								v-model.trim="transaction.waterBill"
 								required
 								size="small" />
 						</div>
 						<div>
 							<label
-								for="electric-bill"
+								for="
+								"
 								class="block"
 								>Meter No.</label
 							>
 							<InputNumber
-								id="electric-bill"
+								id="
+								"
 								v-model.trim="transaction.waterBill"
 								required
 								size="small" />
 						</div>
-					</div>
-					<div>
+					</div> -->
+					<!-- <div>
 						<label
-							for="electric-bill"
+							for="
+							"
 							class="block"
 							>Water Reader</label
 						>
 						<InputNumber
-							id="electric-bill"
+							id="
+							"
 							v-model.trim="transaction.waterBill"
 							required
 							size="small" />
-					</div>
+					</div> -->
 					<div>
 						<label
-							for="electric-bill"
+							for="
+							"
 							class="block"
 							>Bill Number</label
 						>
 						<InputNumber
-							id="electric-bill"
-							v-model.trim="transaction.waterBill"
+							id="
+							"
+							v-model.trim="transaction.billNumber"
 							required
+							:useGrouping="false"
 							size="small" />
 					</div>
 					<div class="flex gap-5">
@@ -183,128 +163,141 @@
 								id="water-bill"
 								v-model.trim="transaction.waterBill"
 								required
+								mode="currency" currency="PHP"
+								:minFractionDigits="2"
 								size="small" />
 						</div>
 						<div>
 							<label
-								for="electric-bill"
+								for="previous-reading"
 								class="block"
 								>Previous Reading</label
 							>
 							<InputNumber
-								id="electric-bill"
-								v-model.trim="transaction.waterBill"
+								id="previous-reading"
+								v-model.trim="transaction.previousReading"
 								required
+								:minFractionDigits="0"
 								size="small" />
 						</div>
 					</div>
 					<div class="flex gap-5">
 						<div>
 							<label
-								for="water-bill"
+								for="env-fee"
 								class="block"
 								>Env. fee</label
 							>
 							<InputNumber
-								id="water-bill"
-								v-model.trim="transaction.waterBill"
+								id="env-fee"
+								v-model.trim="transaction.envFee"
 								required
+								mode="currency" currency="PHP"
+								:minFractionDigits="2"
 								size="small" />
 						</div>
 						<div>
 							<label
-								for="electric-bill"
+								for="current-reading"
 								class="block"
 								>Current Reading</label
 							>
 							<InputNumber
-								id="electric-bill"
-								v-model.trim="transaction.waterBill"
+								id="current-reading"
+								v-model.trim="transaction.currentReading"
 								required
+								:minFractionDigits="0"
 								size="small" />
 						</div>
 					</div>
 					<div class="flex gap-5">
 						<div>
 							<label
-								for="water-bill"
+								for="arrears"
 								class="block"
 								>Arrears</label
 							>
 							<InputNumber
-								id="water-bill"
-								v-model.trim="transaction.waterBill"
+								id="arrears"
+								v-model.trim="transaction.arrears"
 								required
+								:minFractionDigits="2"
 								size="small" />
 						</div>
 						<div>
 							<label
-								for="electric-bill"
+								for="previous-meter-usage"
 								class="block"
 								>Prev meter usage</label
 							>
 							<InputNumber
-								id="electric-bill"
-								v-model.trim="transaction.waterBill"
+								id="previous-meter-usage"
+								v-model.trim="transaction.previousMeterUsage"
 								required
+								:minFractionDigits="0"
 								size="small" />
 						</div>
 					</div>
 					<div class="flex gap-5">
 						<div>
 							<label
-								for="water-bill"
+								for="env-fee-arrears"
 								class="block"
 								>Env. fee arrears</label
 							>
 							<InputNumber
-								id="water-bill"
-								v-model.trim="transaction.waterBill"
+								id="env-fee-arrears"
+								v-model.trim="transaction.envFeeArrears"
 								required
+								mode="currency" currency="PHP"
+								:minFractionDigits="2"
 								size="small" />
 						</div>
 						<div>
 							<label
-								for="electric-bill"
+								for="water-consumption"
 								class="block"
 								>water consumption</label
 							>
 							<InputNumber
-								id="electric-bill"
-								v-model.trim="transaction.waterBill"
+								id="water-consumption"
+								v-model.trim="transaction.waterConsumption"
 								required
+								:minFractionDigits="0"
 								size="small" />
 						</div>
 					</div>
 					<div class="flex gap-5">
 						<div>
 							<label
-								for="water-bill"
+								for="amortization"
 								class="block"
 								>Amortization</label
 							>
 							<InputNumber
-								id="water-bill"
-								v-model.trim="transaction.waterBill"
+								id="amortization"
+								v-model.trim="transaction.amortization"
 								required
+								:minFractionDigits="2"
 								size="small" />
 						</div>
 						<div>
 							<label
-								for="electric-bill"
+								for="billing-amount"
 								class="block"
 								>Billing amount</label
 							>
 							<InputNumber
-								id="electric-bill"
-								v-model.trim="transaction.waterBill"
+								id="billing-amount"
+								v-model.trim="transaction.billingAmmount"
 								required
+								:minFractionDigits="2"
 								size="small" />
 						</div>
 					</div>
 				</div>
 				<div>
-					<div>
+					<!-- <div>
 						<label
 							for="water-bill"
 							class="block"
@@ -315,23 +308,27 @@
 							v-model.trim="transaction.waterBill"
 							required
 							size="small" />
-					</div>
+					</div> -->
 					<div>Current Billing schedule</div>
 					<DatePicker
 						v-model="transaction.billingDate"
 						showIcon
 						fluid
 						:showOnFocus="false"
-						size="small" />
+						size="small"
+						format="MM-DD-YYYY" />
 					<!-- <DatePicker v-model="transaction.waterBill" showIcon fluid :showOnFocus="false" />
           <DatePicker v-model="transaction.waterBill" showIcon fluid :showOnFocus="false" />
           <DatePicker v-model="transaction.waterBill" showIcon fluid :showOnFocus="false" /> -->
 				</div>
 			</div>
-			<Button
-				label="Submit"
-				type="submit"
-				:loading="isLoading" />
+			<div class="flex justify-end">
+				<Button
+					label="Submit"
+					type="submit"
+					:loading="isLoading" />
+			</div>
+
 		</form>
 	</div>
 </template>

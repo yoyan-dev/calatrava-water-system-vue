@@ -65,6 +65,11 @@ const router = createRouter({
 					component: () => import('@/pages/admin/billing/create/index.vue'),
 				},
 				{
+					path: 'billing/update/:uid',
+					name: 'admin-billing-update',
+					component: () => import('@/pages/admin/billing/update/index.vue'),
+				},
+				{
 					path: 'billing/:uid',
 					name: 'admin-billing',
 					component: () => import('@/pages/admin/billing/detail/index.vue'),

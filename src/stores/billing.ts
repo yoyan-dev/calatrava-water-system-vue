@@ -7,6 +7,8 @@ import {
 	deleteDoc,
 	doc,
 	Timestamp,
+	getDoc,
+	getDocs
 } from 'firebase/firestore';
 import { useFirestore } from 'vuefire';
 
@@ -15,10 +17,14 @@ export const useBillingStore = defineStore('billing', () => {
 	const billings = ref<Resident[]>([]);
 	const isLoading = ref(false);
 
-	function fetchBillings() {
-		billings.value = [
-			{ id: '1', billNumber: 1, billingDate: '01-01-2025', waterBill: 100 },
-		];
+	async function fetchBillings() {
+		isLoading.value = true;
+		const querySnapshot = await getDocs(collection(db, 'billings'));
+		billings.value = querySnapshot.docs.map((doc: any) => ({
+			uid: doc.id,
+			...doc.data(),
+		})) as Resident[];
+		isLoading.value = false;
 	}
 
 	async function addBilling(billing: Resident) {
@@ -40,6 +46,19 @@ export const useBillingStore = defineStore('billing', () => {
 		isLoading.value = false;
 	}
 
+	async function fetchBillingById(uid: string) {
+		isLoading.value = true;
+		const docRef = doc(db, 'billings', uid);
+		const docSnap = await getDoc(docRef);
+		if (docSnap.exists()) {
+			isLoading.value = false;
+			return { uid: docSnap.id, ...docSnap.data() } as Resident;
+		} else {
+			isLoading.value = false;
+			throw new Error('No such document!');
+		}
+	}
+
 	function updateBilling(billing: Resident, uid: string) {
 		const result = billings.value.find((item) => item.uid === billing.uid);
 		Object.assign(result || {}, billing);
@@ -51,6 +70,7 @@ export const useBillingStore = defineStore('billing', () => {
 		fetchBillings,
 		addBilling,
 		deleteBilling,
+		fetchBillingById,
 		updateBilling,
 	};
 });

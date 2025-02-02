@@ -3,8 +3,6 @@
 	import { FilterMatchMode } from '@primevue/core/api';
 	import { useToast } from 'primevue/usetoast';
 	import Header from '@/pages/admin/billing/_components/header.vue';
-	import CreateModal from '@/pages/admin/billing/_components/modals/create-modal.vue';
-	import UpdateModal from '@/pages/admin/billing/_components/modals/update-modal.vue';
 	import DeleteModal from '@/pages/admin/billing/_components/modals/delete-modal.vue';
 	import { formatToPeso } from '@/composables/currencyFormat';
 	import { useBillingStore } from '@/stores/billing';
@@ -94,7 +92,7 @@
 							selectionMode="multiple"
 							:exportable="false"></Column>
 						<Column
-							field="billNo"
+							field="billNumber"
 							header="Bill No."
 							sortable></Column>
 						<Column
@@ -110,7 +108,7 @@
 							</template>
 						</Column>
 						<Column
-							field="area"
+							field="address"
 							header="Area"
 							sortable></Column>
 						<Column
@@ -126,12 +124,18 @@
 							header="Actions">
 							<template #body="slotProps">
 								<div class="flex">
-									<Button
-										icon="pi pi-eye"
-										severity="secondary"
+									<RouterLink :to="`/admin/billing/${slotProps.data.uid}`">
+										<Button
+											icon="pi pi-eye"
+											severity="secondary"
+											text />
+									</RouterLink>
+									<RouterLink :to="`/admin/billing/update/${slotProps.data.uid}`">
+										<Button icon="pi pi-pen-to-square"
+										severity="success"
 										text />
-									<UpdateModal v-bind="slotProps.data" />
-									<DeleteModal :id="slotProps.data.id" />
+									</RouterLink>
+									<DeleteModal :uid="slotProps.data.uid" />
 								</div>
 							</template>
 						</Column>
