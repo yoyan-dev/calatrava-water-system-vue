@@ -36,7 +36,7 @@
 						</RouterLink>
 					</li>
 					<li>
-						<RouterLink to="/admin/user">
+						<RouterLink to="/admin/users">
 							<a
 								:class="
 									route.name == 'admin-users' || route.name == 'admin-user'
@@ -49,16 +49,16 @@
 						</RouterLink>
 					</li>
 					<li>
-						<RouterLink to="/admin/transaction">
+						<RouterLink to="/admin/billings">
 							<a
 								:class="
-									route.name == 'admin-transactions' ||
-									route.name == 'admin-transaction'
+									route.name == 'admin-billings' ||
+									route.name == 'admin-billing'
 										? 'bg-primary-500 text-white'
 										: ''
 								"
 								class="flex items-center p-2 text-gray-900 rounded-lg hover:text-white dark:text-white hover:bg-primary-400 cursor-pointer">
-								<span class="flex-1 whitespace-nowrap">Transactions</span>
+								<span class="flex-1 whitespace-nowrap">Billings</span>
 							</a>
 						</RouterLink>
 					</li>
