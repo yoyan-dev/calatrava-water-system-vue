@@ -23,47 +23,55 @@
 				</a>
 				<ul class="space-y-2 font-medium grow">
 					<li>
-						<RouterLink to="/admin/dashboard">
+						<RouterLink to="/admin/dashboard" 
+						:class="
+							route.name == 'admin-dashboard'
+								? 'bg-primary-500 text-white'
+								: ''
+						"
+						class="flex items-center px-2 rounded-lg text-black hover:text-white cursor-pointer hover:bg-primary-400">
+							<i class="pi pi-chart-bar"></i>
 							<a
-								:class="
-									route.name == 'admin-dashboard'
-										? 'bg-primary-500 text-white'
-										: ''
-								"
-								class="flex items-center p-2 rounded-lg text-black hover:text-white cursor-pointer hover:bg-primary-400">
+								class="flex items-center p-2 rounded-lg hover:text-white cursor-pointer hover:bg-primary-400">
 								<span>Dashboard</span>
 							</a>
 						</RouterLink>
 					</li>
 					<li>
-						<RouterLink to="/admin/users">
+						<RouterLink to="/admin/users" 
+						:class="
+							route.name == 'admin-users' || route.name == 'admin-user'
+								? 'bg-primary-500 text-white'
+								: ''
+						"
+						class="flex items-center px-2 rounded-lg text-black hover:text-white cursor-pointer hover:bg-primary-400">
+							<i class="pi pi-users"></i>
 							<a
-								:class="
-									route.name == 'admin-users' || route.name == 'admin-user'
-										? 'bg-primary-500 text-white'
-										: ''
-								"
-								class="flex items-center p-2 text-gray-900 rounded-lg hover:text-white hover:bg-primary-400 dark:text-white cursor-pointer">
-								<span class="flex-1 whitespace-nowrap">Users</span>
+								class="flex items-center p-2 rounded-lg hover:text-white cursor-pointer hover:bg-primary-400">
+								<span>Users</span>
 							</a>
 						</RouterLink>
 					</li>
 					<li>
-						<RouterLink to="/admin/billings">
+						<RouterLink to="/admin/billings" 
+							:class="
+								route.name == 'admin-billings' ||
+								route.name == 'admin-billing' ||
+								route.name == 'admin-billing-create' ||
+								route.name == 'admin-billing-update'
+									? 'bg-primary-500 text-white'
+									: ''
+							"
+						class="flex items-center px-2 rounded-lg text-black hover:text-white cursor-pointer hover:bg-primary-400">
+							<i class="pi pi-users"></i>
 							<a
-								:class="
-									route.name == 'admin-billings' ||
-									route.name == 'admin-billing'
-										? 'bg-primary-500 text-white'
-										: ''
-								"
-								class="flex items-center p-2 text-gray-900 rounded-lg hover:text-white dark:text-white hover:bg-primary-400 cursor-pointer">
-								<span class="flex-1 whitespace-nowrap">Billings</span>
+								class="flex items-center p-2 rounded-lg hover:text-white cursor-pointer hover:bg-primary-400">
+								<span>Billings</span>
 							</a>
 						</RouterLink>
 					</li>
 				</ul>
-				<Button label="Sign Out" />
+				<Button icon="pi pi-sign-out" label="Sign Out" />
 			</div>
 		</aside>
 		<div
