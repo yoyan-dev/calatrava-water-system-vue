@@ -8,19 +8,13 @@
 	import Header from './_components/header.vue';
 
 	const store = useResidentStore();
-	const selectedResidents = ref();
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
 
-	function onPageChange(event: any) {
-		store.fetchResidents(event);
-	}
-
-	onMounted(async () => {
-		await store.fetchResidents({ first: 0, rows: 10, page: 0 });
-		await store.fetchTotalResidents();
-		console.log(store.totalResidents);
+	onMounted(() => {
+		store.fetchResidents({ first: 0, page: 0 });
+		store.fetchTotalResidents();
 	});
 </script>
 
@@ -31,8 +25,8 @@
 		<DataTable
 			:value="store.residents"
 			size="small"
-			dataKey="id"
-			:rows="store.rowsPerPage"
+			dataKey="accountNumber"
+			:rows="store.pageSize"
 			:filters="filters"
 			:loading="store.isLoading">
 			<template #empty>
@@ -58,6 +52,11 @@
 					</template>
 				</Toolbar>
 			</template>
+			<column header="id">
+				<template #body="slotProps"
+					><span>{{ slotProps.index + 1 }}</span></template
+				>
+			</column>
 			<Column
 				field="accountNumber"
 				header="Account No.">
@@ -95,10 +94,12 @@
 			</Column>
 		</DataTable>
 		<Paginator
-			:rows="store.rowsPerPage"
+			:rows="store.pageSize"
 			:totalRecords="store.totalResidents"
 			:rowsPerPageOptions="[10, 20, 30]"
-			@page="onPageChange"
+			:showFirstLast="true"
+			:showJumpToPage="true"
+			@page="store.fetchResidents"
 			template="PrevPageLink PageLinks NextPageLink  RowsPerPageDropdown"
 			:pt="{
 				root: 'justify-between',
