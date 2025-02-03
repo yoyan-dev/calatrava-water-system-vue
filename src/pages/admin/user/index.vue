@@ -13,7 +13,7 @@
 	});
 
 	onMounted(() => {
-		store.fetchResidents({ first: 0, page: 0 });
+		store.fetchResidents();
 		store.fetchTotalResidents();
 	});
 </script>
@@ -26,7 +26,9 @@
 			:value="store.residents"
 			size="small"
 			dataKey="accountNumber"
-			:rows="store.pageSize"
+			scrollable
+			scrollHeight="450px"
+			:virtualScrollerOptions="{ itemSize: 46 }"
 			:filters="filters"
 			:loading="store.isLoading">
 			<template #empty>
@@ -93,28 +95,12 @@
 				</template>
 			</Column>
 		</DataTable>
-		<Paginator
-			:rows="store.pageSize"
+		<!-- <Paginator
+			:rows="10"
 			:totalRecords="store.totalResidents"
 			:rowsPerPageOptions="[10, 20, 30]"
-			:showFirstLast="true"
-			:showJumpToPage="true"
-			@page="store.fetchResidents"
-			template="PrevPageLink PageLinks NextPageLink  RowsPerPageDropdown"
-			:pt="{
-				root: 'justify-between',
-				contentStart: 'flex items-center justify-start m-0',
-			}">
-			<template #start="slotProps">
-				Showing {{ slotProps.state.first + 1 }} to
-				{{
-					Math.min(
-						slotProps.state.first + slotProps.state.rows,
-						store.totalResidents,
-					)
-				}}
-				of {{ store.totalResidents }} residents
-			</template>
-		</Paginator>
+			@page="store.onPageChange"
+			template="PrevPageLink CurrentPageReport NextPageLink  RowsPerPageDropdown"
+			currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" /> -->
 	</div>
 </template>

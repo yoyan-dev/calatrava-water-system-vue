@@ -27,56 +27,27 @@ export const useResidentStore = defineStore('resident', () => {
 	const resident = ref<Resident>({});
 	const isLoading = ref(false);
 	const totalResidents = ref(0);
-	const pageSize = ref(10);
-	const lastVisible = ref<any>();
-	const currentPage = ref(0);
 
 	async function fetchTotalResidents() {
 		const snapshot = await getCountFromServer(collection(db, 'residents'));
 		totalResidents.value = snapshot.data().count;
 	}
 
-	async function fetchResidents(event: any) {
+	async function fetchResidents(event?: any) {
 		isLoading.value = true;
 
-		const firstRecordIndex = event.first;
-		const page = event.page;
-		console.log(event);
-
-		let residentQuery;
-
-		if (page === 0) {
-			residentQuery = query(
-				collection(db, 'residents'),
-				orderBy('firstName'),
-				limit(pageSize.value),
-			);
-		} else {
-			residentQuery = query(
-				collection(db, 'residents'),
-				orderBy('firstName'),
-				startAfter(lastVisible.value),
-				limit(pageSize.value),
-			);
-		}
+		const residentQuery = query(
+			collection(db, 'residents'),
+			orderBy('firstName'),
+		);
 
 		try {
 			const snapshot = await getDocs(residentQuery);
 
-			const newResidents = snapshot.docs.map((doc) => ({
+			residents.value = snapshot.docs.map((doc) => ({
 				uid: doc.id,
 				...doc.data(),
 			}));
-
-			residents.value = newResidents;
-
-			if (snapshot.docs.length > 0) {
-				lastVisible.value = snapshot.docs[snapshot.docs.length - 1];
-				console.log('Last Visible:', lastVisible.value);
-			} else {
-				lastVisible.value = null;
-			}
-			console.log(lastVisible.value);
 		} catch (error) {
 			console.error('Error fetching students:', error);
 		} finally {
@@ -125,9 +96,6 @@ export const useResidentStore = defineStore('resident', () => {
 		resident,
 		isLoading,
 		totalResidents,
-		lastVisible,
-		currentPage,
-		pageSize,
 		fetchTotalResidents,
 		fetchResident,
 		fetchResidents,
