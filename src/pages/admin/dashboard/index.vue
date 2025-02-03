@@ -18,7 +18,53 @@
 </script>
 
 <template>
-	<div>Dashboard</div>
-	<BarChart :data="barData" />
-	<LineChart :data="lineData" />
+	<div class="p-5 bg-white rounded-md flex flex-col gap-5">
+		<div class="text-lg">Dashboard</div>
+		<div class="grid grid-cols-3 gap-5">
+			<div class="bg-white p-5 shadow-sm border rounded-md relative">
+				<div class="text-xl font-medium text-surface-900 dark:text-surface-0 mb-2">
+					Total Residents
+				</div>
+				<div class="text-4xl font-semibold text-primary-500 dark:text-primary-400">
+					100
+				</div>
+				<div class="absolute top-2 right-2">
+					<i class="pi pi-users text-gray-400 text-5xl"></i>
+				</div>
+			</div>
+			<div class="bg-white p-5 shadow-sm border rounded-md relative">
+				<div class="text-xl font-medium text-surface-900 dark:text-surface-0 mb-2">
+					Total Billings
+				</div>
+				<div class="text-4xl font-semibold text-primary-500 dark:text-primary-400">
+					100
+				</div>
+				<div class="absolute top-2 right-2">
+					<i class="pi pi-money-bill text-gray-400 text-5xl"></i>
+				</div>
+			</div>
+			<div class="bg-white p-5 shadow-sm border rounded-md relative">
+				<div class="text-xl font-medium text-surface-900 dark:text-surface-0 mb-2">
+					Total Payments
+				</div>	
+				<div class="text-4xl font-semibold text-primary-500 dark:text-primary-400">
+					100
+				</div>
+				<div class="text-sm text-gray-400 dark:text-gray-500">
+					Total amount of payments
+				</div>
+				<div class="absolute top-2 right-2">
+					<i class="pi pi-money-bill text-gray-400 text-5xl"></i>
+				</div>
+			</div>
+		</div>
+		<div class="flex gap-10">
+			<div class="flex-1 shadow-sm border rounded-md p-5 bg-white">
+				<BarChart :data="barData" />
+			</div>
+			<div class="flex-1 shadow-sm border rounded-md p-5 bg-white">
+				<LineChart :data="lineData" />
+			</div>
+		</div>
+	</div>
 </template>

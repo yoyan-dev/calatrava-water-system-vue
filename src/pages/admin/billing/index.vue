@@ -21,7 +21,7 @@
 
 	function getStatusLabel(status: String) {
 		switch (status) {
-			case 'INSTOCK':
+			case 'Paid':
 				return 'success';
 
 			case 'LOWSTOCK':
@@ -115,9 +115,9 @@
 							field="status"
 							header="Status"
 							sortable>
-							<!-- <template #body="slotProps">
-                                <Tag :value="slotProps.data.inventoryStatus" :severity="getStatusLabel(slotProps.data.inventoryStatus)" />
-                            </template> -->
+							<template>
+                                <Tag value="PAID" severity="success" />
+                            </template>
 						</Column>
 						<Column
 							:exportable="false"
