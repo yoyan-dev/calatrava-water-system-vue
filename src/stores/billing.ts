@@ -8,13 +8,14 @@ import {
 	doc,
 	Timestamp,
 	getDoc,
-	getDocs
+	getDocs,
 } from 'firebase/firestore';
 import { useFirestore } from 'vuefire';
 
 export const useBillingStore = defineStore('billing', () => {
 	const db = useFirestore();
 	const billings = ref<Resident[]>([]);
+	const billing = ref<Resident>();
 	const isLoading = ref(false);
 
 	function formatTimestampToDate(timestamp: Timestamp): string {
@@ -61,17 +62,10 @@ export const useBillingStore = defineStore('billing', () => {
 	}
 
 	async function fetchBillingById(uid: string) {
+		isLoading.value = true;
 		try {
-			isLoading.value = true;
-			const docRef = doc(db, 'billings', uid);
-			const docSnap = await getDoc(docRef);
-			if (docSnap.exists()) {
-				const data = docSnap.data();
-				data.billingDate = formatTimestampToDate(data.billingDate);
-				return { uid: docSnap.id, ...data } as Resident;
-			} else {
-				throw new Error('No such document!');
-			}
+			const docSnap = await getDoc(doc(db, 'billings', uid));
+			billing.value = { ...docSnap.data(), uid: docSnap.id };
 		} catch (error) {
 			console.error('Error fetching billing by ID:', error);
 			throw error;

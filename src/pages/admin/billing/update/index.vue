@@ -9,15 +9,9 @@
 	const route = useRoute();
 	const store = useBillingStore();
 	const billingId = route.params.uid as string;
-	let billing = reactive<Resident>({});
 
 	onMounted(() => {
-		try {
-			const result = store.fetchBillingById(billingId);
-			billing = result as Resident;
-		} catch (error) {
-			console.error(error);
-		}
+		store.fetchBillingById(billingId);
 	});
 
 	function onSubmit() {
