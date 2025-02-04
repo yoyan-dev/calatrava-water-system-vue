@@ -2,16 +2,24 @@
 	import { ref } from 'vue';
 	import { useResidentStore } from '@/stores/resident';
 	import type { Resident } from '@/types/resident';
+	import { Toast, useToast } from 'primevue';
 
 	const store = useResidentStore();
+	const toast = useToast();
 	const isOpen = ref(false);
 	const isLoading = ref(false);
 
 	const resident = ref<Resident>({});
 
-	function onSubmit() {
+	async function onSubmit() {
 		isLoading.value = true;
-		store.addResident(resident.value);
+		const response = await store.addResident(resident.value);
+		toast.add({
+			severity: response.status,
+			summary: response.statusMessage,
+			detail: response.message,
+			life: 3000,
+		});
 		isOpen.value = false;
 		resident.value = {};
 		isLoading.value = false;
@@ -19,6 +27,7 @@
 </script>
 <template>
 	<div>
+		<Toast position="bottom-right" />
 		<Button
 			label="New"
 			icon="pi pi-plus"
