@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { onMounted, ref } from 'vue';
+	import { onMounted, ref, watch } from 'vue';
 	import { FilterMatchMode } from '@primevue/core/api';
 	import CreateModal from './_components/modals/create-modal.vue';
 	import DeleteModal from './_components/modals/delete-modal.vue';
@@ -28,7 +28,6 @@
 			dataKey="accountNumber"
 			scrollable
 			scrollHeight="450px"
-			:virtualScrollerOptions="{ itemSize: 46 }"
 			:filters="filters"
 			:loading="store.isLoading">
 			<template #empty>

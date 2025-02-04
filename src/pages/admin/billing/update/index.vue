@@ -9,27 +9,20 @@
 	const route = useRoute();
 	const store = useBillingStore();
 	const billingId = route.params.uid as string;
-	let billing = reactive<Resident>({});
 
 	onMounted(() => {
-		try {
-			const result = store.fetchBillingById(billingId);
-			billing = result as Resident;
-		} catch (error) {
-			console.error(error);
-		}
+		store.fetchBillingById(billingId);
 	});
 
 	function onSubmit() {
-		billing.billingDate = Timestamp.now();
-		store.updateBilling(billing as Resident, billingId);
+		store.updateBilling(store.billing as Resident, billingId);
 		router.push('/admin/billings');
 	}
 </script>
 
 <template>
 	<div
-		v-if="billing"
+		v-if="store.billing"
 		class="bg-white p-5 rounded-sm">
 		<form @submit.prevent="onSubmit">
 			<div
@@ -46,10 +39,12 @@
 							shape="circle" />
 						<div>
 							<h1 class="font-semibold">
-								{{ billing.firstName }} {{ billing.middleName }}
-								{{ billing.lastName }}
+								{{ store.billing.firstName }} {{ store.billing.middleName }}
+								{{ store.billing.lastName }}
 							</h1>
-							<span class="text-gray-400">{{ billing.accountNumber }}</span>
+							<span class="text-gray-400">{{
+								store.billing.accountNumber
+							}}</span>
 						</div>
 					</div>
 					<div>
@@ -58,7 +53,7 @@
 							class="block text-slate-600"
 							>Address</label
 						>
-						<span class="pl-5">{{ billing.address }}</span>
+						<span class="pl-5">{{ store.billing.address }}</span>
 					</div>
 					<div>
 						<label
@@ -66,7 +61,7 @@
 							class="block text-slate-600"
 							>Classification</label
 						>
-						<span class="pl-5">{{ billing.classification }}</span>
+						<span class="pl-5">{{ store.billing.classification }}</span>
 					</div>
 				</div>
 				<div>
@@ -78,7 +73,7 @@
 						>
 						<InputNumber
 							id="billNumber"
-							v-model.trim="billing.billNumber"
+							v-model.trim="store.billing.billNumber"
 							required
 							:useGrouping="false"
 							size="small" />
@@ -92,7 +87,7 @@
 							>
 							<InputNumber
 								id="waterBill"
-								v-model.trim="billing.waterBill"
+								v-model.trim="store.billing.waterBill"
 								required
 								mode="currency"
 								currency="PHP"
@@ -107,7 +102,7 @@
 							>
 							<InputNumber
 								id="previousReading"
-								v-model.trim="billing.previousReading"
+								v-model.trim="store.billing.previousReading"
 								required
 								:minFractionDigits="0"
 								size="small" />
@@ -122,7 +117,7 @@
 							>
 							<InputNumber
 								id="envFee"
-								v-model.trim="billing.envFee"
+								v-model.trim="store.billing.envFee"
 								required
 								mode="currency"
 								currency="PHP"
@@ -137,7 +132,7 @@
 							>
 							<InputNumber
 								id="currentReading"
-								v-model.trim="billing.currentReading"
+								v-model.trim="store.billing.currentReading"
 								required
 								:minFractionDigits="0"
 								size="small" />
@@ -152,7 +147,7 @@
 							>
 							<InputNumber
 								id="arrears"
-								v-model.trim="billing.arrears"
+								v-model.trim="store.billing.arrears"
 								required
 								:minFractionDigits="2"
 								size="small" />
@@ -165,7 +160,7 @@
 							>
 							<InputNumber
 								id="previousMeterUsage"
-								v-model.trim="billing.previousMeterUsage"
+								v-model.trim="store.billing.previousMeterUsage"
 								required
 								:minFractionDigits="0"
 								size="small" />
@@ -180,7 +175,7 @@
 							>
 							<InputNumber
 								id="envFeeArrears"
-								v-model.trim="billing.envFeeArrears"
+								v-model.trim="store.billing.envFeeArrears"
 								required
 								mode="currency"
 								currency="PHP"
@@ -195,7 +190,7 @@
 							>
 							<InputNumber
 								id="waterConsumption"
-								v-model.trim="billing.waterConsumption"
+								v-model.trim="store.billing.waterConsumption"
 								required
 								:minFractionDigits="0"
 								size="small" />
@@ -210,7 +205,7 @@
 							>
 							<InputNumber
 								id="amortization"
-								v-model.trim="billing.amortization"
+								v-model.trim="store.billing.amortization"
 								required
 								:minFractionDigits="2"
 								size="small" />
@@ -223,7 +218,7 @@
 							>
 							<InputNumber
 								id="billingAmount"
-								v-model.trim="billing.billingAmmount"
+								v-model.trim="store.billing.billingAmmount"
 								required
 								:minFractionDigits="2"
 								size="small" />
@@ -233,7 +228,7 @@
 				<div>
 					<div>Current Billing Schedule</div>
 					<DatePicker
-						v-model="billing.billingDate"
+						v-model="store.billing.billingDate"
 						showIcon
 						fluid
 						:showOnFocus="false"

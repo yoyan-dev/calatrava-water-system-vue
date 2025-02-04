@@ -12,13 +12,11 @@ import {
 	orderBy,
 	query,
 	updateDoc,
-	limit,
-	startAfter,
 	getCountFromServer,
 	Timestamp,
-	startAt,
 } from 'firebase/firestore';
 import useSearchKeywords from '@/composables/useSearchKeywords';
+import type { StoreResponse } from '@/types/store-response';
 
 export const useResidentStore = defineStore('resident', () => {
 	const db = useFirestore();
@@ -44,10 +42,13 @@ export const useResidentStore = defineStore('resident', () => {
 		try {
 			const snapshot = await getDocs(residentQuery);
 
-			residents.value = snapshot.docs.map((doc) => ({
-				uid: doc.id,
-				...doc.data(),
-			}));
+			residents.value = snapshot.docs.map((doc) => {
+				const { searchKeyword, createdAt, createtedAt, ...rest } = doc.data();
+				return {
+					uid: doc.id,
+					...rest,
+				};
+			});
 		} catch (error) {
 			console.error('Error fetching students:', error);
 		} finally {
@@ -62,18 +63,36 @@ export const useResidentStore = defineStore('resident', () => {
 		isLoading.value = false;
 	}
 
-	async function addResident(resident: Resident) {
+	async function addResident(resident: Resident): Promise<StoreResponse> {
 		isLoading.value = true;
-		const fullName =
-			resident.firstName + ' ' + resident.middleName + ' ' + resident.lastName;
-		resident.searchKeyword = generateKeywords(fullName);
-		const docRef = await addDoc(collection(db, 'residents'), {
-			...resident,
-			createtedAt: Timestamp.now(),
-		});
-		residents.value.push({ waterBill: 10, ...resident, uid: docRef.id });
-		isLoading.value = false;
-		console.log(docRef);
+		try {
+			// const fullName =
+			// 	resident.firstName +
+			// 	' ' +
+			// 	resident.middleName +
+			// 	' ' +
+			// 	resident.lastName;
+			// resident.searchKeyword = generateKeywords(fullName);
+			const docRef = await addDoc(collection(db, 'residents'), {
+				...resident,
+				createdAt: Timestamp.now(),
+				classification: 'resedential',
+			});
+			residents.value.push({ waterBill: 10, ...resident, uid: docRef.id });
+			return {
+				status: 'success',
+				statusMessage: 'Success message',
+				message: 'Successfully added resident',
+			};
+		} catch (error: any) {
+			return {
+				status: 'error',
+				statusMessage: 'Error message',
+				message: 'Something went wrong',
+			};
+		} finally {
+			isLoading.value = false;
+		}
 	}
 
 	async function deleteResident(uid: string) {

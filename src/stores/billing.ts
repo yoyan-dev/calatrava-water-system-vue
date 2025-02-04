@@ -8,13 +8,14 @@ import {
 	doc,
 	Timestamp,
 	getDoc,
-	getDocs
+	getDocs,
 } from 'firebase/firestore';
 import { useFirestore } from 'vuefire';
 
 export const useBillingStore = defineStore('billing', () => {
 	const db = useFirestore();
 	const billings = ref<Resident[]>([]);
+	const billing = ref<Resident>();
 	const isLoading = ref(false);
 
 	function formatTimestampToDate(timestamp: Timestamp): string {
@@ -29,11 +30,10 @@ export const useBillingStore = defineStore('billing', () => {
 		try {
 			isLoading.value = true;
 			const querySnapshot = await getDocs(collection(db, 'billings'));
-			billings.value = querySnapshot.docs.map((doc: any) => {
-				const data = doc.data();
-				data.billingDate = formatTimestampToDate(data.billingDate);
-				return { uid: doc.id, ...data };
-			}) as Resident[];
+			billings.value = querySnapshot.docs.map((doc) => ({
+				uid: doc.id,
+				...doc.data(),
+			})) as Resident[];
 		} catch (error) {
 			console.error('Error fetching billings:', error);
 		} finally {
@@ -45,9 +45,9 @@ export const useBillingStore = defineStore('billing', () => {
 		isLoading.value = true;
 		billing.id = (billings.value.length + 1).toString();
 		billing.billNumber = Number(billing.id);
-		billing.billingDate = Timestamp.now();
 		const docRef = await addDoc(collection(db, 'billings'), {
 			...billing,
+			createdAt: Timestamp.now(),
 		});
 		billings.value.push({ ...billing, uid: docRef.id });
 		isLoading.value = false;
@@ -61,17 +61,10 @@ export const useBillingStore = defineStore('billing', () => {
 	}
 
 	async function fetchBillingById(uid: string) {
+		isLoading.value = true;
 		try {
-			isLoading.value = true;
-			const docRef = doc(db, 'billings', uid);
-			const docSnap = await getDoc(docRef);
-			if (docSnap.exists()) {
-				const data = docSnap.data();
-				data.billingDate = formatTimestampToDate(data.billingDate);
-				return { uid: docSnap.id, ...data } as Resident;
-			} else {
-				throw new Error('No such document!');
-			}
+			const docSnap = await getDoc(doc(db, 'billings', uid));
+			billing.value = { ...docSnap.data(), uid: docSnap.id };
 		} catch (error) {
 			console.error('Error fetching billing by ID:', error);
 			throw error;
@@ -87,6 +80,7 @@ export const useBillingStore = defineStore('billing', () => {
 
 	return {
 		billings,
+		billing,
 		isLoading,
 		fetchBillings,
 		addBilling,

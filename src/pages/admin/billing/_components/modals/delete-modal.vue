@@ -8,8 +8,8 @@
 
 	const isOpen = ref(false);
 
-	function deleteTransaction() {
-		store.deleteBilling(props.uid ?? '');
+	function deleteTransaction(uid: string) {
+		store.deleteBilling(uid);
 		toast.add({
 			severity: 'success',
 			summary: 'Successful',
@@ -19,7 +19,7 @@
 		isOpen.value = false;
 	}
 
-	const props = defineProps<{ uid?: string }>();
+	const props = defineProps<{ uid: string }>();
 </script>
 <template>
 	<div>
@@ -49,7 +49,7 @@
 				<Button
 					label="Yes"
 					icon="pi pi-check"
-					@click="deleteTransaction" />
+					@click="deleteTransaction(props.uid)" />
 			</template>
 		</Dialog>
 	</div>
