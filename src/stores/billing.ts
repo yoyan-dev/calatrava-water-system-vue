@@ -17,14 +17,28 @@ export const useBillingStore = defineStore('billing', () => {
 	const billings = ref<Resident[]>([]);
 	const isLoading = ref(false);
 
+	function formatTimestampToDate(timestamp: Timestamp): string {
+		const date = timestamp.toDate();
+		const month = String(date.getMonth() + 1).padStart(2, '0');
+		const day = String(date.getDate()).padStart(2, '0');
+		const year = date.getFullYear();
+		return `${month}-${day}-${year}`;
+	}
+
 	async function fetchBillings() {
-		isLoading.value = true;
-		const querySnapshot = await getDocs(collection(db, 'billings'));
-		billings.value = querySnapshot.docs.map((doc: any) => ({
-			uid: doc.id,
-			...doc.data(),
-		})) as Resident[];
-		isLoading.value = false;
+		try {
+			isLoading.value = true;
+			const querySnapshot = await getDocs(collection(db, 'billings'));
+			billings.value = querySnapshot.docs.map((doc: any) => {
+				const data = doc.data();
+				data.billingDate = formatTimestampToDate(data.billingDate);
+				return { uid: doc.id, ...data };
+			}) as Resident[];
+		} catch (error) {
+			console.error('Error fetching billings:', error);
+		} finally {
+			isLoading.value = false;
+		}
 	}
 
 	async function addBilling(billing: Resident) {
@@ -47,15 +61,22 @@ export const useBillingStore = defineStore('billing', () => {
 	}
 
 	async function fetchBillingById(uid: string) {
-		isLoading.value = true;
-		const docRef = doc(db, 'billings', uid);
-		const docSnap = await getDoc(docRef);
-		if (docSnap.exists()) {
+		try {
+			isLoading.value = true;
+			const docRef = doc(db, 'billings', uid);
+			const docSnap = await getDoc(docRef);
+			if (docSnap.exists()) {
+				const data = docSnap.data();
+				data.billingDate = formatTimestampToDate(data.billingDate);
+				return { uid: docSnap.id, ...data } as Resident;
+			} else {
+				throw new Error('No such document!');
+			}
+		} catch (error) {
+			console.error('Error fetching billing by ID:', error);
+			throw error;
+		} finally {
 			isLoading.value = false;
-			return { uid: docSnap.id, ...docSnap.data() } as Resident;
-		} else {
-			isLoading.value = false;
-			throw new Error('No such document!');
 		}
 	}
 
@@ -72,5 +93,6 @@ export const useBillingStore = defineStore('billing', () => {
 		deleteBilling,
 		fetchBillingById,
 		updateBilling,
+		formatTimestampToDate,
 	};
 });

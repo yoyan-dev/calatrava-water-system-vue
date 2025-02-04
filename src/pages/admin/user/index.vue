@@ -8,19 +8,13 @@
 	import Header from './_components/header.vue';
 
 	const store = useResidentStore();
-	const selectedResidents = ref();
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
 
-	function onPageChange(event: any) {
-		store.fetchResidents(event);
-	}
-
-	onMounted(async () => {
-		await store.fetchResidents({ first: 0, rows: 10, page: 0 });
-		await store.fetchTotalResidents();
-		console.log(store.totalResidents);
+	onMounted(() => {
+		store.fetchResidents();
+		store.fetchTotalResidents();
 	});
 </script>
 
@@ -31,8 +25,10 @@
 		<DataTable
 			:value="store.residents"
 			size="small"
-			dataKey="id"
-			:rows="store.rowsPerPage"
+			dataKey="accountNumber"
+			scrollable
+			scrollHeight="450px"
+			:virtualScrollerOptions="{ itemSize: 46 }"
 			:filters="filters"
 			:loading="store.isLoading">
 			<template #empty>
@@ -58,6 +54,11 @@
 					</template>
 				</Toolbar>
 			</template>
+			<column header="id">
+				<template #body="slotProps"
+					><span>{{ slotProps.index + 1 }}</span></template
+				>
+			</column>
 			<Column
 				field="accountNumber"
 				header="Account No.">
@@ -94,26 +95,12 @@
 				</template>
 			</Column>
 		</DataTable>
-		<Paginator
-			:rows="store.rowsPerPage"
+		<!-- <Paginator
+			:rows="10"
 			:totalRecords="store.totalResidents"
 			:rowsPerPageOptions="[10, 20, 30]"
-			@page="onPageChange"
-			template="PrevPageLink PageLinks NextPageLink  RowsPerPageDropdown"
-			:pt="{
-				root: 'justify-between',
-				contentStart: 'flex items-center justify-start m-0',
-			}">
-			<template #start="slotProps">
-				Showing {{ slotProps.state.first + 1 }} to
-				{{
-					Math.min(
-						slotProps.state.first + slotProps.state.rows,
-						store.totalResidents,
-					)
-				}}
-				of {{ store.totalResidents }} residents
-			</template>
-		</Paginator>
+			@page="store.onPageChange"
+			template="PrevPageLink CurrentPageReport NextPageLink  RowsPerPageDropdown"
+			currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" /> -->
 	</div>
 </template>

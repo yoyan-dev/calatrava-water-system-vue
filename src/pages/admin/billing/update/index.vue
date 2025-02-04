@@ -1,31 +1,28 @@
 <script setup lang="ts">
-	import { ref, onMounted } from 'vue';
+	import { ref, onMounted, reactive } from 'vue';
 	import { useRoute, useRouter } from 'vue-router';
 	import { useBillingStore } from '@/stores/billing';
 	import type { Resident } from '@/types/resident';
+	import { Timestamp } from 'firebase/firestore';
 
 	const router = useRouter();
 	const route = useRoute();
 	const store = useBillingStore();
 	const billingId = route.params.uid as string;
-	const billing = ref<Resident | null>(null);
+	let billing = reactive<Resident>({});
 
-	onMounted(async () => {
+	onMounted(() => {
 		try {
-			const result = await store.fetchBillingById(billingId);
-			billing.value = result as Resident;
+			const result = store.fetchBillingById(billingId);
+			billing = result as Resident;
 		} catch (error) {
 			console.error(error);
 		}
 	});
 
 	function onSubmit() {
-		if (!billing.value) {
-			console.error('Billing data is not available.');
-			return;
-		}
-		billing.value.billingDate = new Date(billing.value.billingDate);
-		store.updateBilling(billing.value as Resident, billingId);
+		billing.billingDate = Timestamp.now();
+		store.updateBilling(billing as Resident, billingId);
 		router.push('/admin/billings');
 	}
 </script>
