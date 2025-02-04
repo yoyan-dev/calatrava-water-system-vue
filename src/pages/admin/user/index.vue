@@ -15,7 +15,6 @@
 	onMounted(() => {
 		store.fetchResidents();
 		store.fetchTotalResidents();
-		console.log(store.residents);
 	});
 </script>
 

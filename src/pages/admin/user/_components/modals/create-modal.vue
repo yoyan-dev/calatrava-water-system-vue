@@ -2,7 +2,7 @@
 	import { ref } from 'vue';
 	import { useResidentStore } from '@/stores/resident';
 	import type { Resident } from '@/types/resident';
-	import { Toast, useToast } from 'primevue';
+	import { useToast } from 'primevue';
 
 	const store = useResidentStore();
 	const toast = useToast();
@@ -27,7 +27,6 @@
 </script>
 <template>
 	<div>
-		<Toast position="bottom-right" />
 		<Button
 			label="New"
 			icon="pi pi-plus"
@@ -49,11 +48,12 @@
 							class="block font-bold mb-3"
 							>Account Number</label
 						>
-						<InputText
+						<InputNumber
 							id="acc-no"
 							v-model.trim="resident.accountNumber"
 							required="true"
 							autofocus
+							inputId="withoutgrouping"
 							:invalid="isLoading && !resident.accountNumber"
 							fluid />
 						<small
@@ -144,25 +144,21 @@
 						<label
 							for="name"
 							class="block font-bold mb-3"
-							>Classification</label
+							>First Reading</label
 						>
-						<InputText
-							id="name"
-							v-model.trim="resident.classification"
+						<InputNumber
+							v-model.trim="resident.currentReading"
 							required="true"
 							autofocus
-							:invalid="isLoading && !resident.classification"
+							inputId="integeronly"
+							:invalid="isLoading && !resident.currentReading"
 							fluid />
 						<small
-							v-if="isLoading && !resident.classification"
+							v-if="isLoading && !resident.currentReading"
 							class="text-red-500"
-							>Classification is required.</small
+							>Reading is required.</small
 						>
 					</div>
-					<!-- <div>
-											<label for="inventoryStatus" class="block font-bold mb-3">Inventory Status</label>
-											<Select id="inventoryStatus" v-model="resident.inventoryStatus" :options="statuses" optionLabel="label" placeholder="Select a Status" fluid></Select>
-									</div> -->
 				</div>
 
 				<div class="w-full flex items-center justify-end gap-4">

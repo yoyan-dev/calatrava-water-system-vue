@@ -37,6 +37,7 @@ import Carousel from 'primevue/carousel';
 import InputNumber from 'primevue/inputnumber';
 import DatePicker from 'primevue/datepicker';
 import Paginator from 'primevue/paginator';
+import { Tag } from 'primevue';
 
 const app = createApp(App);
 app.use(VueFire, {
@@ -73,6 +74,7 @@ app.component('Carousel', Carousel);
 app.component('InputNumber', InputNumber);
 app.component('DatePicker', DatePicker);
 app.component('Paginator', Paginator);
+app.component('Tag', Tag);
 
 app.use(createPinia());
 app.use(router);

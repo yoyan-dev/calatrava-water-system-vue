@@ -3,7 +3,7 @@ import type { Timestamp } from 'firebase/firestore';
 export interface Resident {
 	id?: string;
 	uid?: string;
-	accountNumber?: string;
+	accountNumber?: number;
 	firstName?: string;
 	lastName?: string;
 	middleName?: string;

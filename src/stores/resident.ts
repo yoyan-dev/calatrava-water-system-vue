@@ -43,7 +43,7 @@ export const useResidentStore = defineStore('resident', () => {
 			const snapshot = await getDocs(residentQuery);
 
 			residents.value = snapshot.docs.map((doc) => {
-				const { searchKeyword, createdAt, ...rest } = doc.data();
+				const { searchKeyword, createdAt, createtedAt, ...rest } = doc.data();
 				return {
 					uid: doc.id,
 					...rest,
@@ -76,12 +76,13 @@ export const useResidentStore = defineStore('resident', () => {
 			const docRef = await addDoc(collection(db, 'residents'), {
 				...resident,
 				createdAt: Timestamp.now(),
+				classification: 'resedential',
 			});
 			residents.value.push({ waterBill: 10, ...resident, uid: docRef.id });
 			return {
 				status: 'success',
 				statusMessage: 'Success message',
-				message: 'Something went wrong',
+				message: 'Successfully added resident',
 			};
 		} catch (error: any) {
 			return {
