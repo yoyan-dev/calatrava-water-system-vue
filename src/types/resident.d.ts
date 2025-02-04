@@ -1,4 +1,5 @@
 import type { Timestamp } from 'firebase/firestore';
+import type { Billing } from './billing';
 
 export interface Resident {
 	id?: string;
@@ -24,4 +25,5 @@ export interface Resident {
 	searchKeyword?: string[];
 	createdAt?: any;
 	updatedAt?: any;
+	currentBilling?: Billing;
 }
