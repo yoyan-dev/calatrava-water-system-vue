@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { ref, onMounted } from 'vue';
-    import ConcernList from './_components/concern-list.vue';
+    // import ConcernList from './_components/concern-list.vue';
     import { useConcernStore } from "@/stores/concern";
 
     const store = useConcernStore();
@@ -45,13 +45,13 @@
                     <Button label="Send" severity="primary" icon="pi pi-send" iconPos="right" @click="submitConcern"/>
                 </div>
             </div>
-            <div class="shadow rounded-border p-2 md:p-3 lg:p-6  bg-white ">
+            <!-- <div class="shadow rounded-border p-2 md:p-3 lg:p-6  bg-white ">
                 <div
                     class="text-xl font-medium text-surface-900 dark:text-surface-0 mb-2">
                     List of concerns
                 </div><hr/>
                 <ConcernList :concerns="store.concerns"/>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>

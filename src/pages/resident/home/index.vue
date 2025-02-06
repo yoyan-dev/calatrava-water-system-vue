@@ -17,14 +17,14 @@
 
 <template>
 	<div class="p-2 md:p-4 lg:p-5">
-		<div class="p-0 md:p-3 lg:p-6 shadow rounded-border flex flex-col md:flex-row lg:flex-row bg-white ">
+		<div class="p-0 md:p-3 lg:p-6  flex flex-col md:flex-row lg:flex-row bg-white border rounded-lg">
 			<div class="lg:flex-1 md:flex-1 flex flex-col gap-5 p-5">
 				<div class="flex justify-between items-center">
 					<div
 						class="text-2xl font-medium text-surface-900 dark:text-surface-0 mb-2">
 						Bill Details
 					</div>
-					<span class="border p-2 rounded-md shadow-md">January 01, 2025</span>
+					<Tag severity="secondary" value="January 01, 2025"></Tag>
 				</div>
 				<div class="flex justify-between items-center">
 					<div class="flex items-center gap-4 px-3 pr-7 shadow-sm border rounded-md">
@@ -34,21 +34,23 @@
 							<span class="text-gray-400">0234-1823</span>
 						</div>
 					</div>
-					<Button label="Pay Bill" severity="primary" icon="pi pi-money-bill" />
+					<Button label="Pay Bill" size="small" severity="primary" icon="pi pi-money-bill" />
 				</div>
 
 			</div>
 			<div class="lg:flex-1 md:flex-1 bg-gray-50 rounded-md p-5 flex flex-col gap-5">
-				<div>
-					<div class="flex justify-between">
-						<h1 class="text-xl">Current Bill</h1>
-						<Button
-							label="Previous"
-							severity="primary"
-							class="p-button-sm" 
-						/>
-					</div>
-					<p class="text-gray-500">January 01, 2025 - January 31, 2025</p>
+				<div class="card">
+					<Toolbar>
+						<template #start>
+							<div>
+								<h1 class="text-xl">Current Bill</h1>
+							</div>
+						</template>
+						<template #end>
+							<Button icon="pi pi-chevron-left" label="current" class="mr-2" severity="primary" text />
+							<Button icon="pi pi-chevron-right" iconPos="right" label="previous" severity="primary" text />
+						</template>
+					</Toolbar>
 				</div>
 				<WaterBill/>
 			</div>

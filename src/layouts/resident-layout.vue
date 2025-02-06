@@ -18,7 +18,7 @@
 	]);
 </script>
 <template>
-	<main class="relative bg-gray-100">
+	<main class="relative bg-white h-screen">
 		<div class="sticky top-0 z-10">
 			<Toolbar>
 				<template #start>
@@ -46,7 +46,7 @@
 						</Menu>
 					</Drawer>
 					<Button icon="pi pi-align-center" @click="visible = true" class="visible md:invisible lg:invisible xl:invisible"/>
-					<div class="flex gap-5">
+					<div class="flex gap-5" :class="visible? 'px-5' : ''">
 						<RouterLink to="/resident"  :class="route.name == 'resident-home' ? 'text-primary-500' : ''" class="hidden md:block  lg:block">Bill</RouterLink>
 						<RouterLink to="/resident/concern"  :class="route.name == 'resident-concern' ? 'text-primary-500' : ''" class="hidden md:block  lg:block">Concern</RouterLink>
 					</div>
