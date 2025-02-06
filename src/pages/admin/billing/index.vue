@@ -36,12 +36,12 @@
 </script>
 
 <template>
-	<div class="bg-surface-0 dark:bg-surface-900 p-6 shadow rounded-border">
+	<div class="bg-surface-0 dark:bg-surface-900 p-6 border rounded-lg">
 		<Header />
 		<div class="flex flex-col gap-3">
 			<div>
 				<Toolbar>
-					<template #start>
+					<template #end>
 						<RouterLink to="/admin/billing/create">
 							<Button
 								label="Create"
@@ -51,7 +51,7 @@
 						<!-- <Button label="Delete" icon="pi pi-trash" severity="danger" outlined :disabled="!selectedWaterBill || !selectedWaterBill.length" /> -->
 					</template>
 	
-					<template #end>
+					<template #start>
 						<div class="flex gap-5">
 							<IconField>
 								<InputIcon>

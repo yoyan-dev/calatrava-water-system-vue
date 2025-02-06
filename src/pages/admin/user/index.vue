@@ -19,7 +19,7 @@
 </script>
 
 <template>
-	<div class="bg-surface-0 dark:bg-surface-900 p-6 shadow rounded-border">
+	<div class="bg-surface-0 dark:bg-surface-900 p-6 border rounded-lg">
 		<Header />
 		<div class="flex flex-col gap-3">
 			<Toolbar>

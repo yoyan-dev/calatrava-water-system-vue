@@ -7,9 +7,9 @@
 <template>
 	<main class="flex h-screen w-full font-sans">
 		<aside
-			class="w-64 h-full transition-transform border-r shadow-lg hidden lg:block">
+			class="w-64 h-full transition-transform border-r  hidden lg:block">
 			<div
-				class="h-full p-4 overflow-y-auto flex flex-col bg-gray-200 dark:bg-gray-800 shadow-lg">
+				class="h-full p-4 overflow-y-auto flex flex-col bg-gray-100 dark:bg-gray-800 shadow-lg">
 				<a class="flex items-center ps-2.5 mb-5">
 					<span
 						class="self-center flex items-center text-2xl font-semibold whitespace-nowrap dark:text-white"
@@ -75,7 +75,7 @@
 			</div>
 		</aside>
 		<div
-			class="w-full flex flex-col gap-5 bg-surface-50 dark:bg-surface-950 p-5 overflow-auto">
+			class="w-full flex flex-col gap-5  dark:bg-surface-950 p-5 overflow-auto">
 			<Toolbar style="border-radius: 3rem; padding: 1rem 1rem 1rem 1.5rem">
 				<template #start>
 					<div class="flex gap-2 items-center">

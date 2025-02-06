@@ -43,7 +43,7 @@
 </script>
 
 <template>
-	<div class="bg-white p-5 rounded-sm">
+	<div class="bg-white p-5 border rounded-lg">
 		<form @submit.prevent="onSubmit">
 			<div
 				class="text-xl font-medium text-surface-900 dark:text-surface-0 mb-2">
