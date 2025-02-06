@@ -5,7 +5,7 @@
 </script>
 
 <template>
-	<main class="flex h-screen w-full">
+	<main class="flex h-screen w-full font-sans">
 		<aside
 			class="w-64 h-full transition-transform border-r shadow-lg hidden lg:block">
 			<div
@@ -97,9 +97,7 @@
 				</template>
 			</Toolbar>
 
-			<ScrollPanel class="h-screen">
-				<slot />
-			</ScrollPanel>
+			<slot />
 		</div>
 	</main>
 </template>

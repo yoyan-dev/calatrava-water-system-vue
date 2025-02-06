@@ -38,100 +38,95 @@
 <template>
 	<div class="bg-surface-0 dark:bg-surface-900 p-6 shadow rounded-border">
 		<Header />
-
-		<DataTable
-			:value="store.billings"
-			:loading="store.isLoading"
-			dataKey="uid"
-			size="small"
-			:rows="10"
-			:filters="filters">
-			<template #header>
-				<div>
-					<Toolbar>
-						<template #start>
-							<RouterLink to="/admin/billing/create">
-								<Button
-									label="Create"
-									icon="pi pi-plus"
-									severity="primary" />
-							</RouterLink>
-							<!-- <Button label="Delete" icon="pi pi-trash" severity="danger" outlined :disabled="!selectedWaterBill || !selectedWaterBill.length" /> -->
+		<div class="flex flex-col gap-3">
+			<div>
+				<Toolbar>
+					<template #start>
+						<RouterLink to="/admin/billing/create">
+							<Button
+								label="Create"
+								icon="pi pi-plus"
+								severity="primary" />
+						</RouterLink>
+						<!-- <Button label="Delete" icon="pi pi-trash" severity="danger" outlined :disabled="!selectedWaterBill || !selectedWaterBill.length" /> -->
+					</template>
+	
+					<template #end>
+						<div class="flex gap-5">
+							<IconField>
+								<InputIcon>
+									<i class="pi pi-search" />
+								</InputIcon>
+								<InputText
+									v-model="filters['global'].value"
+									placeholder="Search..." />
+							</IconField>
+							<!-- <Button label="Export" icon="pi pi-upload" severity="secondary" @click="exportCSV($event)" /> -->
+						</div>
+					</template>
+				</Toolbar>
+			</div>
+			<div class="border rounded-md">
+				<DataTable
+					:value="store.billings"
+					:loading="store.isLoading"
+					dataKey="uid"
+					size="small"
+					:rows="10"
+					:filters="filters">
+					<Column
+						field="billNumber"
+						header="Bill No."></Column>
+					<Column
+						field="uid"
+						header="UID"></Column>
+					<Column
+						field="billingDate"
+						header="Billing Date">
+						<template #body="slotProps">
+							{{ formatTimestamp(slotProps.data.billingDate) }}
 						</template>
-
-						<template #end>
-							<div class="flex gap-5">
-								<IconField>
-									<InputIcon>
-										<i class="pi pi-search" />
-									</InputIcon>
-									<InputText
-										v-model="filters['global'].value"
-										placeholder="Search..." />
-								</IconField>
-								<!-- <Button label="Export" icon="pi pi-upload" severity="secondary" @click="exportCSV($event)" /> -->
+					</Column>
+					<Column
+						field="waterBill"
+						header="Water Bill">
+						<template #body="slotProps">
+							{{ `₱${slotProps.data.waterBill}` }}
+						</template>
+					</Column>
+					<Column
+						field="address"
+						header="Area"></Column>
+					<Column
+						field="status"
+						header="Status">
+						<template>
+							<Tag
+								value="PAID"
+								severity="success" />
+						</template>
+					</Column>
+					<Column header="Actions">
+						<template #body="slotProps">
+							<div class="flex">
+								<RouterLink :to="`/admin/billing/${slotProps.data.uid}`">
+									<Button
+										icon="pi pi-eye"
+										severity="secondary"
+										text />
+								</RouterLink>
+								<RouterLink :to="`/admin/billing/update/${slotProps.data.uid}`">
+									<Button
+										icon="pi pi-pen-to-square"
+										severity="success"
+										text />
+								</RouterLink>
+								<DeleteModal :uid="slotProps.data.uid" />
 							</div>
 						</template>
-					</Toolbar>
-				</div>
-			</template>
-
-			<Column
-				field="billNumber"
-				header="Bill No."
-				sortable></Column>
-			<Column
-				field="uid"
-				header="UID"></Column>
-			<Column
-				field="billingDate"
-				header="Billing Date"
-				sortable>
-				<template #body="slotProps">
-					{{ formatTimestamp(slotProps.data.billingDate) }}
-				</template>
-			</Column>
-			<Column
-				field="waterBill"
-				header="Water Bill"
-				sortable>
-				<template #body="slotProps">
-					{{ `₱${slotProps.data.waterBill}` }}
-				</template>
-			</Column>
-			<Column
-				field="address"
-				header="Area"
-				sortable></Column>
-			<Column
-				field="status"
-				header="Status"
-				sortable>
-				<template>
-					<Tag
-						value="PAID"
-						severity="success" />
-				</template>
-			</Column>
-			<Column header="Actions">
-				<template #body="slotProps">
-					<div class="flex">
-						<RouterLink :to="`/admin/billing/${slotProps.data.uid}`">
-							<Button
-								icon="pi pi-eye"
-								severity="secondary"
-								text />
-						</RouterLink>
-						<RouterLink :to="`/admin/billing/update/${slotProps.data.uid}`">
-							<Button
-								icon="pi pi-pen-to-square"
-								severity="success"
-								text />
-						</RouterLink>
-						<DeleteModal :uid="slotProps.data.uid" />
-					</div>
-				</template>
-			</Column>
-		</DataTable>
+					</Column>
+				</DataTable>
+			</div>
+		</div>
 	</div>
 </template>
