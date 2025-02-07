@@ -38,6 +38,8 @@ import InputNumber from 'primevue/inputnumber';
 import DatePicker from 'primevue/datepicker';
 import Paginator from 'primevue/paginator';
 import { Tag } from 'primevue';
+import TieredMenu from 'primevue/tieredmenu';
+import Popover from 'primevue/popover';
 
 const app = createApp(App);
 app.use(VueFire, {
@@ -75,6 +77,8 @@ app.component('InputNumber', InputNumber);
 app.component('DatePicker', DatePicker);
 app.component('Paginator', Paginator);
 app.component('Tag', Tag);
+app.component('TieredMenu', TieredMenu);
+app.component('Popover', Popover);
 
 app.use(createPinia());
 app.use(router);
