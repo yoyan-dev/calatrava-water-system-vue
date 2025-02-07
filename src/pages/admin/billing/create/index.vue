@@ -30,6 +30,7 @@
 			transaction.value = { ...findResident };
 		}
 	});
+
 	function onSubmit() {
 		isLoading.value = true;
 		isSubmitted.value = true;

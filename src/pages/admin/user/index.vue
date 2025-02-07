@@ -3,6 +3,7 @@
 	import { FilterMatchMode } from '@primevue/core/api';
 	import CreateModal from './_components/modals/create-modal.vue';
 	import DeleteModal from './_components/modals/delete-modal.vue';
+	import deleteSelectedModal from './_components/modals/delete-selected-modal.vue';
 	import UpdateModal from './_components/modals/update-modal.vue';
 	import { useResidentStore } from '@/stores/resident';
 	import Header from './_components/header.vue';
@@ -12,6 +13,7 @@
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
 
+	const selectedResidents = ref()
 	onMounted(() => {
 		store.fetchResidents();
 		store.fetchTotalResidents();
@@ -36,13 +38,15 @@
 				</template>
 				<template #end>
 					<CreateModal />
+					<deleteSelectedModal :selectedResidents="selectedResidents" v-if="selectedResidents || selectedResidents.length"/>
 				</template>
 			</Toolbar>
 			<div class="card border rounded-md">
 				<DataTable
 					:value="store.residents"
+					v-model:selection="selectedResidents"
 					size="small"
-					dataKey="accountNumber"
+					dataKey="uid"
 					scrollable
 					scrollHeight="450px"
 					:filters="filters"
@@ -52,6 +56,7 @@
 							No residents found.
 						</div>
 					</template>
+					<Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
 					<column header="id">
 						<template #body="slotProps"
 							><span>{{ slotProps.index + 1 }}</span></template
