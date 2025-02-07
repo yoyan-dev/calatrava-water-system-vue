@@ -51,14 +51,19 @@ export const useBillingStore = defineStore('billing', () => {
 
 	async function addBilling(billing: Billing) {
 		isLoading.value = true;
-		billing.id = (billings.value.length + 1).toString();
-		billing.billNumber = Number(billing.id);
-		const docRef = await addDoc(collection(db, 'billings'), {
-			...billing,
-			createdAt: Timestamp.now(),
-		});
-		billings.value.push({ ...billing, uid: docRef.id });
-		isLoading.value = false;
+		try {
+			billing.id = (billings.value.length + 1).toString();
+			billing.billNumber = Number(billing.id);
+			const docRef = await addDoc(collection(db, 'billings'), {
+				...billing,
+				createdAt: Timestamp.now(),
+			});
+			billings.value.push({ ...billing, uid: docRef.id });
+		} catch (error: any) {
+			console.log(error);
+		} finally {
+			isLoading.value = false;
+		}
 	}
 
 	async function deleteBilling(uid: string) {

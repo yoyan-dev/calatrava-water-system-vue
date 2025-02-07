@@ -5,7 +5,7 @@
 	import type { Resident } from '@/types/resident';
 	import { useRouter } from 'vue-router';
 
-	const router = useRouter()
+	const router = useRouter();
 	const transactionStore = useBillingStore();
 	const residentStore = useResidentStore();
 	const isLoading = ref(false);
@@ -27,6 +27,7 @@
 			const findResident = residentStore.residents.find(
 				(resident: any) => resident.accountNumber === newAccountNumber,
 			);
+			console.log(findResident);
 			transaction.value = { ...findResident };
 		}
 	});
@@ -65,13 +66,21 @@
 							placeholder="Select Account Number"
 							class="w-full md:w-56" />
 					</div>
-					<div v-if="transaction.accountNumber
-					">
-						<div class="flex items-center gap-4 px-3 pr-7 shadow-sm border rounded-md bg-white">
-							<Avatar icon="pi pi-user" style="background-color: #dee9fc; color: #1a2551" shape="circle" />
+					<div v-if="transaction.accountNumber">
+						<div
+							class="flex items-center gap-4 px-3 pr-7 shadow-sm border rounded-md bg-white">
+							<Avatar
+								icon="pi pi-user"
+								style="background-color: #dee9fc; color: #1a2551"
+								shape="circle" />
 							<div>
-								<h1 class="font-semibold">{{ transaction.firstName }} {{ transaction.middleName }} {{ transaction.lastName }}</h1>
-								<span class="text-gray-400">{{ transaction.accountNumber }}</span>
+								<h1 class="font-semibold">
+									{{ transaction.firstName }} {{ transaction.middleName }}
+									{{ transaction.lastName }}
+								</h1>
+								<span class="text-gray-400">{{
+									transaction.accountNumber
+								}}</span>
 							</div>
 						</div>
 						<div>
@@ -119,7 +128,8 @@
 								id="water-bill"
 								v-model.trim="transaction.waterBill"
 								required
-								mode="currency" currency="PHP"
+								mode="currency"
+								currency="PHP"
 								:minFractionDigits="2"
 								size="small" />
 						</div>
@@ -148,7 +158,8 @@
 								id="env-fee"
 								v-model.trim="transaction.envFee"
 								required
-								mode="currency" currency="PHP"
+								mode="currency"
+								currency="PHP"
 								:minFractionDigits="2"
 								size="small" />
 						</div>
@@ -205,7 +216,8 @@
 								id="env-fee-arrears"
 								v-model.trim="transaction.envFeeArrears"
 								required
-								mode="currency" currency="PHP"
+								mode="currency"
+								currency="PHP"
 								:minFractionDigits="2"
 								size="small" />
 						</div>
@@ -284,7 +296,6 @@
 					type="submit"
 					:loading="isLoading" />
 			</div>
-
 		</form>
 	</div>
 </template>
