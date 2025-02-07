@@ -1,23 +1,27 @@
 <script setup lang="ts">
 	import { ref } from 'vue';
-	import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'; 
+	import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 	import { useRouter } from 'vue-router';
 
 	const initialValues = ref({
 		email: '',
-		password: '', 
+		password: '',
 	});
 
-	const router = useRouter()
-	const auth = getAuth(); 
+	const router = useRouter();
+	const auth = getAuth();
 
 	async function onFormSubmit() {
 		try {
 			const { email, password } = initialValues.value;
-			const userCredential = await signInWithEmailAndPassword(auth, email, password);
+			const userCredential = await signInWithEmailAndPassword(
+				auth,
+				email,
+				password,
+			);
 			console.log('User signed in:', userCredential.user);
-			if(userCredential){
-				router.push('/admin/dashboard')
+			if (userCredential) {
+				router.push('/admin/dashboard');
 			}
 		} catch (error) {
 			console.error('Error signing in:', error);
@@ -35,9 +39,7 @@
 				size="xlarge"
 				shape="circle" />
 			<div class="text-4xl font-medium mb-12">Welcome</div>
-			<Form
-				:initialValues="initialValues"
-				class="flex justify-center flex-col gap-4">
+			<form class="flex justify-center flex-col gap-4">
 				<div class="flex flex-col gap-1">
 					<InputText
 						name="email"
@@ -52,8 +54,10 @@
 						placeholder="Password" />
 					<!-- <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">{{ $form.email.error?.message }}</Message> -->
 				</div>
-                <Button label="Submit" @click="onFormSubmit" />
-			</Form>
+				<Button
+					label="Submit"
+					@click="onFormSubmit" />
+			</form>
 		</div>
 	</div>
 </template>
