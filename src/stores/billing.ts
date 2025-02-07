@@ -60,7 +60,7 @@ export const useBillingStore = defineStore('billing', () => {
 		isLoading.value = false;
 	}
 
-	async function fetchBillingById(uid: string) {
+	async function fetchBilling(uid: string) {
 		isLoading.value = true;
 		try {
 			const docSnap = await getDoc(doc(db, 'billings', uid));
@@ -75,7 +75,7 @@ export const useBillingStore = defineStore('billing', () => {
 	}
 
 	function updateBilling(billing: Resident, uid: string) {
-		const result = billings.value.find((item) => item.uid === billing.uid);
+		const result = billings.value.find((item) => item.uid === uid);
 		Object.assign(result || {}, billing);
 	}
 
@@ -86,7 +86,7 @@ export const useBillingStore = defineStore('billing', () => {
 		fetchBillings,
 		addBilling,
 		deleteBilling,
-		fetchBillingById,
+		fetchBilling,
 		updateBilling,
 		formatTimestampToDate,
 	};

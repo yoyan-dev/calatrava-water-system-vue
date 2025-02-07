@@ -15,12 +15,10 @@ import {
 	getCountFromServer,
 	Timestamp,
 } from 'firebase/firestore';
-import useSearchKeywords from '@/composables/useSearchKeywords';
 import type { StoreResponse } from '@/types/store-response';
 
 export const useResidentStore = defineStore('resident', () => {
 	const db = useFirestore();
-	const { generateKeywords } = useSearchKeywords();
 	const residents = ref<Resident[]>([]);
 	const resident = ref<Resident>({});
 	const isLoading = ref(false);
