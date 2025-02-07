@@ -50,7 +50,7 @@
 				Create Water Billing
 			</div>
 			<div class="flex gap-5">
-				<div class="flex flex-col gap-2 bg-gray-50 p-2 px-5 rounded-md">
+				<div class="flex flex-col gap-2 bg-gray-50 p-2 px-5 rounded-md flex-1">
 					<div>
 						<label
 							for="account-number"
@@ -92,51 +92,7 @@
 						</div>
 					</div>
 				</div>
-				<div>
-					<!-- <div class="flex gap-5">
-						<div>
-							<label
-								for="
-								"
-								class="block"
-								>Stubout</label
-							>
-							<InputNumber
-								id="
-								"
-								v-model.trim="transaction.waterBill"
-								required
-								size="small" />
-						</div>
-						<div>
-							<label
-								for="
-								"
-								class="block"
-								>Meter No.</label
-							>
-							<InputNumber
-								id="
-								"
-								v-model.trim="transaction.waterBill"
-								required
-								size="small" />
-						</div>
-					</div> -->
-					<!-- <div>
-						<label
-							for="
-							"
-							class="block"
-							>Water Reader</label
-						>
-						<InputNumber
-							id="
-							"
-							v-model.trim="transaction.waterBill"
-							required
-							size="small" />
-					</div> -->
+				<div class="p-5 border rounded-lg flex-1">
 					<div>
 						<label
 							for="
@@ -296,7 +252,7 @@
 						</div>
 					</div>
 				</div>
-				<div>
+				<div class="p-5 border rounded-lg flex-1">
 					<!-- <div>
 						<label
 							for="water-bill"
