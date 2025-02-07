@@ -13,7 +13,7 @@
 	console.log(billingId);
 
 	onMounted(() => {
-		store.fetchBillingById(billingId);
+		store.fetchBilling(billingId);
 		console.log(store.billing);
 	});
 

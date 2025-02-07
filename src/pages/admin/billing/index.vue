@@ -3,6 +3,7 @@
 	import { FilterMatchMode } from '@primevue/core/api';
 	import Header from '@/pages/admin/billing/_components/header.vue';
 	import DeleteModal from '@/pages/admin/billing/_components/modals/delete-modal.vue';
+	import DeleteSelected from '@/pages/admin/billing/_components/modals/delete-selected-modal.vue';
 	import ViewReciept from '@/pages/admin/billing/_components/modals/view-reciept.vue';
 	import { formatToPeso } from '@/composables/currencyFormat';
 	import { useBillingStore } from '@/stores/billing';
@@ -48,6 +49,7 @@
 	onMounted(() => {
 		store.fetchBillings();
 	});
+
 </script>
 
 <template>
@@ -57,13 +59,15 @@
 			<div>
 				<Toolbar>
 					<template #end>
-						<RouterLink to="/admin/billing/create">
-							<Button
-								label="Create"
-								icon="pi pi-plus"
-								severity="primary" />
-						</RouterLink>
-						<!-- <Button label="Delete" icon="pi pi-trash" severity="danger" outlined :disabled="!selectedWaterBill || !selectedWaterBill.length" /> -->
+						<div class="flex gap-3">
+							<RouterLink to="/admin/billing/create">
+								<Button
+									label="Create"
+									icon="pi pi-plus"
+									severity="primary" />
+							</RouterLink>
+							<DeleteSelected :selectedBills="selectedWaterBill" v-if="selectedWaterBill"/>
+						</div>
 					</template>
 	
 					<template #start>
@@ -85,10 +89,12 @@
 				<DataTable
 					:value="store.billings"
 					:loading="store.isLoading"
-					dataKey="uid"
+					v-model:selection="selectedWaterBill"
+					dataKey="billNumber"
 					size="small"
 					:rows="10"
 					:filters="filters">
+					<Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
 					<Column
 						field="billNumber"
 						header="Bill No."></Column>
