@@ -18,14 +18,6 @@ export const useBillingStore = defineStore('billing', () => {
 	const billing = ref<Resident>();
 	const isLoading = ref(false);
 
-	function formatTimestampToDate(timestamp: Timestamp): string {
-		const date = timestamp.toDate();
-		const month = String(date.getMonth() + 1).padStart(2, '0');
-		const day = String(date.getDate()).padStart(2, '0');
-		const year = date.getFullYear();
-		return `${month}-${day}-${year}`;
-	}
-
 	async function fetchBillings() {
 		try {
 			isLoading.value = true;
@@ -88,6 +80,5 @@ export const useBillingStore = defineStore('billing', () => {
 		deleteBilling,
 		fetchBilling,
 		updateBilling,
-		formatTimestampToDate,
 	};
 });
