@@ -144,7 +144,7 @@
 							>Address is required.</small
 						>
 					</div>
-					<div>
+					<!-- <div>
 						<label
 							for="name"
 							class="block font-bold mb-3"
@@ -162,7 +162,7 @@
 							class="text-red-500"
 							>Reading is required.</small
 						>
-					</div>
+					</div> -->
 				</div>
 
 				<div class="w-full flex items-center justify-end gap-4">

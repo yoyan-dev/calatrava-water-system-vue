@@ -77,7 +77,11 @@ export const useResidentStore = defineStore('resident', () => {
 				createdAt: Timestamp.now(),
 				classification: 'resedential',
 			});
-			residents.value.push({ ...resident, uid: docRef.id });
+			residents.value.push({
+				...resident,
+				uid: docRef.id,
+				classification: 'resedential',
+			});
 			return {
 				status: 'success',
 				statusMessage: 'Success message',
