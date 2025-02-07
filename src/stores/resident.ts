@@ -14,6 +14,7 @@ import {
 	updateDoc,
 	getCountFromServer,
 	Timestamp,
+	writeBatch,
 } from 'firebase/firestore';
 import type { StoreResponse } from '@/types/store-response';
 
@@ -100,6 +101,28 @@ export const useResidentStore = defineStore('resident', () => {
 		isLoading.value = false;
 	}
 
+	async function deleteResidents(uids: string[]) {
+		isLoading.value = true;
+		const batch = writeBatch(db);
+
+		uids.forEach((uid) => {
+			const docRef = doc(db, 'residents', uid);
+			batch.delete(docRef);
+		});
+
+		try {
+			await batch.commit();
+			residents.value = residents.value.filter(
+				(val) => !uids.includes(val.uid ?? ''),
+			);
+			console.log('Residents deleted successfully');
+		} catch (error) {
+			console.error('Error deleting residents:', error);
+		} finally {
+			isLoading.value = false;
+		}
+	}
+
 	async function updateResident(resident: Resident, uid: string) {
 		await updateDoc(doc(db, 'residents', uid), {
 			...resident,
@@ -118,6 +141,7 @@ export const useResidentStore = defineStore('resident', () => {
 		fetchResidents,
 		addResident,
 		deleteResident,
+		deleteResidents,
 		updateResident,
 	};
 });

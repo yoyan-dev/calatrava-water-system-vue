@@ -9,13 +9,15 @@ import {
 	Timestamp,
 	getDoc,
 	getDocs,
+	writeBatch,
 } from 'firebase/firestore';
 import { useFirestore } from 'vuefire';
+import type { Billing } from '@/types/billing';
 
 export const useBillingStore = defineStore('billing', () => {
 	const db = useFirestore();
-	const billings = ref<Resident[]>([]);
-	const billing = ref<Resident>();
+	const billings = ref<Billing[]>([]);
+	const billing = ref<Billing>();
 	const isLoading = ref(false);
 
 	async function fetchBillings() {
@@ -25,7 +27,7 @@ export const useBillingStore = defineStore('billing', () => {
 			billings.value = querySnapshot.docs.map((doc) => ({
 				uid: doc.id,
 				...doc.data(),
-			})) as Resident[];
+			})) as Billing[];
 		} catch (error) {
 			console.error('Error fetching billings:', error);
 		} finally {
@@ -33,7 +35,21 @@ export const useBillingStore = defineStore('billing', () => {
 		}
 	}
 
-	async function addBilling(billing: Resident) {
+	async function fetchBilling(uid: string) {
+		isLoading.value = true;
+		try {
+			const docSnap = await getDoc(doc(db, 'billings', uid));
+			console.log(docSnap.data());
+			billing.value = { ...docSnap.data(), uid: docSnap.id };
+		} catch (error) {
+			console.error('Error fetching billing by ID:', error);
+			throw error;
+		} finally {
+			isLoading.value = false;
+		}
+	}
+
+	async function addBilling(billing: Billing) {
 		isLoading.value = true;
 		billing.id = (billings.value.length + 1).toString();
 		billing.billNumber = Number(billing.id);
@@ -52,21 +68,29 @@ export const useBillingStore = defineStore('billing', () => {
 		isLoading.value = false;
 	}
 
-	async function fetchBilling(uid: string) {
+	async function deleteBillings(uids: string[]) {
 		isLoading.value = true;
+		const batch = writeBatch(db);
+
+		uids.forEach((uid) => {
+			const docRef = doc(db, 'billings', uid);
+			batch.delete(docRef);
+		});
+
 		try {
-			const docSnap = await getDoc(doc(db, 'billings', uid));
-			console.log(docSnap.data());
-			billing.value = { ...docSnap.data(), uid: docSnap.id };
+			await batch.commit();
+			billings.value = billings.value.filter(
+				(val) => !uids.includes(val.uid ?? ''),
+			);
+			console.log('Billings deleted successfully');
 		} catch (error) {
-			console.error('Error fetching billing by ID:', error);
-			throw error;
+			console.error('Error deleting billings:', error);
 		} finally {
 			isLoading.value = false;
 		}
 	}
 
-	function updateBilling(billing: Resident, uid: string) {
+	function updateBilling(billing: Billing, uid: string) {
 		const result = billings.value.find((item) => item.uid === uid);
 		Object.assign(result || {}, billing);
 	}
@@ -77,8 +101,9 @@ export const useBillingStore = defineStore('billing', () => {
 		isLoading,
 		fetchBillings,
 		addBilling,
-		deleteBilling,
 		fetchBilling,
+		deleteBilling,
+		deleteBillings,
 		updateBilling,
 	};
 });
