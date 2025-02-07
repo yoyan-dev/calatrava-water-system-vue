@@ -1,15 +1,26 @@
 import type { Timestamp } from 'firebase/firestore';
 
 export interface Billing {
+	id?: string;
+	uid?: string;
 	billNumber?: number;
+	meterReader?: string;
+	billingDate?: Timestamp;
 	waterBill?: string;
 	environmentFee?: string;
 	billingAmount?: string;
-	billingDate?: Timestamp;
+	curentReading?: number;
+	previousReading?: number;
+	previousMeterUsage?: number;
 	waterConsumption?: number;
+	readingDate?: Timestamp;
+	distributionDate?: Timestamp;
 	dueDate?: Timestamp;
 	disconnectionDate?: Timestamp;
-	meterReader?: string;
-	reading?: number;
+	status?: BillingStatus;
 	createdAt?: Timestamp;
+	environmentFeeArrears?: number;
+	amortization?: number;
 }
+
+type BillingStatus = 'pending' | 'paid' | undefined;

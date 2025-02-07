@@ -26,4 +26,5 @@ export interface Resident {
 	createdAt?: any;
 	updatedAt?: any;
 	currentBilling?: Billing;
+	billings?: Billing[];
 }
