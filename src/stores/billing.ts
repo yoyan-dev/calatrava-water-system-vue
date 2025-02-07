@@ -64,6 +64,7 @@ export const useBillingStore = defineStore('billing', () => {
 		isLoading.value = true;
 		try {
 			const docSnap = await getDoc(doc(db, 'billings', uid));
+			console.log(docSnap.data());
 			billing.value = { ...docSnap.data(), uid: docSnap.id };
 		} catch (error) {
 			console.error('Error fetching billing by ID:', error);

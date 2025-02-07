@@ -10,8 +10,11 @@
 	const store = useBillingStore();
 	const billingId = route.params.uid as string;
 
+	console.log(billingId);
+
 	onMounted(() => {
 		store.fetchBillingById(billingId);
+		console.log(store.billing);
 	});
 
 	function onSubmit() {
