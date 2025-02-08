@@ -5,6 +5,7 @@
 	import DeleteModal from './_components/modals/delete-modal.vue';
 	import deleteSelectedModal from './_components/modals/delete-selected-modal.vue';
 	import UpdateModal from './_components/modals/update-modal.vue';
+	import ViewModal from './_components/modals/view-modal.vue';
 	import { useResidentStore } from '@/stores/resident';
 	import Header from './_components/header.vue';
 
@@ -13,7 +14,7 @@
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
 
-	const selectedResidents = ref()
+	const selectedResidents = ref([]);
 	onMounted(() => {
 		store.fetchResidents();
 		store.fetchTotalResidents();
@@ -22,7 +23,7 @@
 
 <template>
 	<div class="bg-surface-0 dark:bg-surface-900 p-6 border rounded-lg">
-		<Header />
+		<Header :totalResident="store.residents.length"/>
 		<div class="flex flex-col gap-3">
 			<Toolbar>
 				
@@ -38,7 +39,7 @@
 				</template>
 				<template #end>
 					<CreateModal />
-					<deleteSelectedModal :selectedResidents="selectedResidents" v-if="selectedResidents || selectedResidents.length"/>
+					<deleteSelectedModal :selectedResidents="selectedResidents" v-if="selectedResidents && selectedResidents.length"/>
 				</template>
 			</Toolbar>
 			<div class="card border rounded-md">
@@ -86,6 +87,7 @@
 					<Column :exportable="false">
 						<template #body="slotProps">
 							<div class="flex">
+								<ViewModal v-bind="slotProps.data"/>
 								<UpdateModal v-bind="slotProps.data" />
 								<DeleteModal :uid="slotProps.data.uid" />
 							</div>

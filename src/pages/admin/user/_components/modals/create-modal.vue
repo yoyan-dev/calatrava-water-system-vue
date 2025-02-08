@@ -35,16 +35,12 @@
 		<Dialog
 			v-model:visible="isOpen"
 			:style="{ width: '450px' }"
-			header="Resident Details"
+			header="Create Resident"
 			modal>
-			<span class="text-surface-500 dark:text-surface-400 block mb-8"
-				>Create resident.</span
-			>
 			<form
 				@submit.prevent="onSubmit"
 				class="flex flex-col gap-4">
 				<div class="flex flex-col gap-4">
-					<!-- <img v-if="resident.image" :src="`https://primefaces.org/cdn/primevue/images/resident/${resident.image}`" :alt="resident.image" class="block m-auto pb-4" /> -->
 					<div>
 						<label
 							for="acc-no"
