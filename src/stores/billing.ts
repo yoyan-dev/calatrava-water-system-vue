@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { defineStore } from 'pinia';
 import {
 	addDoc,
@@ -9,29 +9,51 @@ import {
 	getDoc,
 	getDocs,
 	writeBatch,
+	updateDoc,
 } from 'firebase/firestore';
 import { useFirestore } from 'vuefire';
 import type { Billing } from '@/types/billing';
 import type { StoreResponse } from '@/types/store-response';
-import { is } from 'date-fns/locale';
-import type { Resident } from '@/types/resident';
 
 export const useBillingStore = defineStore('billing', () => {
 	const db = useFirestore();
-	const billings = ref<Resident[]>([]);
+
+	// State
+	const billings = ref<Billing[]>([]);
 	const billing = ref<Billing>();
 	const isLoading = ref(false);
 
+	// Getters
+	const fetchCurrentBillings = computed(() => {
+		const now = new Date();
+		const currentMonth = now.getMonth() + 1;
+		const currentYear = now.getFullYear();
+
+		return billings.value
+			.filter((item) => {
+				const billingDate = (item.billingDate as Timestamp).toDate();
+				return (
+					billingDate.getMonth() + 1 === currentMonth &&
+					billingDate.getFullYear() === currentYear
+				);
+			})
+			.map((item) => ({ ...item }));
+	});
+
+	// Actions
 	async function fetchBillings() {
+		isLoading.value = true;
 		try {
-			isLoading.value = true;
-			const querySnapshot = await getDocs(collection(db, 'residents'));
-			billings.value = querySnapshot.docs.map((doc) => ({
+			const querySnapshot = await getDocs(collection(db, 'billings'));
+			const billingSnapshot = querySnapshot.docs.map((doc) => ({
+				...doc.data(),
 				uid: doc.id,
-				...doc.data().currentBilling,
-			})) as Resident[];
+			}));
+
+			billings.value = billingSnapshot;
 		} catch (error) {
 			console.error('Error fetching billings:', error);
+			billings.value = [];
 		} finally {
 			isLoading.value = false;
 		}
@@ -51,20 +73,46 @@ export const useBillingStore = defineStore('billing', () => {
 		}
 	}
 
-	async function addBilling(payload: Resident): Promise<StoreResponse> {
+	async function addBilling(
+		payload: Billing,
+		selected: any,
+	): Promise<StoreResponse> {
 		isLoading.value = true;
 		try {
-			if (!payload.currentBilling) {
+			if (!payload) {
 				throw new Error('Current billing information is missing');
 			}
-
-			payload.currentBilling.id = (billings.value.length + 1).toString();
-			payload.currentBilling.billNumber = Number(payload.currentBilling.id);
+			console.log(payload, selected);
+			payload.id = (billings.value.length + 1).toString();
+			payload.billNumber = Number(payload.id);
 			const docRef = await addDoc(collection(db, 'billings'), {
-				...billing,
+				...payload,
+				residentAccountNumber: selected.accountNumber,
+				residentUid: selected.uid,
 				createdAt: Timestamp.now(),
 			});
-			billings.value.push({ ...billing, uid: docRef.id });
+			// const residentSnap = await updateDoc(doc(db, 'residents'), {
+			// 	currentBilling: { ...payload },
+			// });
+			// const existingBilling = billings.value.find(
+			// 	(billing) => billing.residentAccountNumber === accountNumber,
+			// );
+			// if (existingBilling) {
+			// 	billings.value = billings.value.filter(
+			// 		(b) => b.residentAccountNumber !== accountNumber,
+			// 	);
+			// 	billings.value.push({
+			// 		...payload,
+			// 		residentAccountNumber: accountNumber,
+			// 		uid: docRef.id,
+			// 	});
+			// } else {
+			// 	billings.value.push({
+			// 		...payload,
+			// 		residentAccountNumber: accountNumber,
+			// 		uid: docRef.id,
+			// 	});
+			// }
 			return {
 				status: 'success',
 				statusMessage: 'Success message',
@@ -144,6 +192,7 @@ export const useBillingStore = defineStore('billing', () => {
 		billings,
 		billing,
 		isLoading,
+		fetchCurrentBillings,
 		fetchBillings,
 		addBilling,
 		fetchBilling,
