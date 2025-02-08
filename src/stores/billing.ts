@@ -51,6 +51,7 @@ export const useBillingStore = defineStore('billing', () => {
 			}));
 
 			billings.value = billingSnapshot;
+			console.log(billings.value);
 		} catch (error) {
 			console.error('Error fetching billings:', error);
 			billings.value = [];

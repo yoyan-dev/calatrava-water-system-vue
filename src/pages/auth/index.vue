@@ -25,7 +25,7 @@
 			);
 			const res = JSON.parse(data.value);
 
-			const user = await signInWithCustomToken(auth!, res.data);
+			const user = await signInWithCustomToken(auth!, res);
 			if (user) {
 				router.push('/resident');
 				console.log(user);
@@ -40,14 +40,15 @@
 	<div
 		class="px-6 py-20 h-screen md:px-12 lg:px-20 flex items-center justify-center bg-[linear-gradient(-225deg,var(--p-primary-500),var(--p-primary-700)_48%,var(--p-primary-800))] dark:bg-[linear-gradient(-225deg,var(--p-primary-400),var(--p-primary-600)_48%,var(--p-primary-800))]">
 		<div
-			class="p-12 shadow text-center lg:w-[30rem] backdrop-blur-md rounded-xl bg-slate-300">
+			class="p-12 shadow text-center lg:w-[30rem] backdrop-blur-md rounded-xl border bg-white">
 			<Avatar
 				image="/logo.jpeg"
 				class="mr-2"
 				size="xlarge"
 				shape="circle" />
-			<div class="text-4xl font-medium mb-12">Welcome</div>
-			<form class="flex justify-center flex-col gap-4">
+			<div class="text-2xl font-medium">CALATRAVA WATER SYSTEM</div>
+			<div class="text-xl text-slate-500 mb-12">Welcome</div>
+			<form @submit.prevent="onFormSubmit" class="flex justify-center flex-col gap-4">
 				<div class="flex flex-col gap-1">
 					<InputText
 						name="accountNumber"
@@ -63,7 +64,7 @@
 					>
 				</div>
 				<Button
-					@click="onFormSubmit()"
+					type="submit"
 					label="Submit"
 					:loading="isLoading" />
 			</form>

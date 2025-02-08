@@ -1,11 +1,15 @@
-<script setup>
-import { ref, onMounted } from "vue";
+<script setup lang="ts">
+    import { ref, onMounted } from "vue";
+    import ViewWaterBillModal from "@/pages/resident/home/_components/modals/view-bill-modal.vue";
 
 </script>
 <template>
     <div>
         <div class="bg-white p-5 border rounded-lg flex flex-col gap-3">
-            <h1 class="font-semibold text-xl">263623-32732</h1>
+            <div class="flex justify-between">
+                <h1 class="font-semibold text-xl">263623-32732</h1>
+                <ViewWaterBillModal/>
+            </div>
             <hr>
             <div class="flex justify-between">
                 <div>
@@ -19,12 +23,12 @@ import { ref, onMounted } from "vue";
             </div>
             <div>
                 <label class="text-surface-500">Bill Period</label><br>
-                <Tag severity="secondary" value="January 01, 2025"></Tag> - <Tag severity="secondary" value="January 31, 2025"></Tag>
+                <span>January 01, 2025 - January 31, 2025"</span>
             </div>
             <div class="flex justify-between">
                 <div>
                     <label class="text-surface-500">Due Date</label><br>
-                    <Tag severity="secondary" value="February 15, 2025"></Tag>
+                    <span>February 15, 2025</span>
                 </div>
                 <div>
                     <label class="text-surface-500">Amount</label><br>

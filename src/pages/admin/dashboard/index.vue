@@ -1,7 +1,11 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue';
 	import BarChart from './_components/bar-chart.vue';
 	import LineChart from './_components/line-chart.vue';
+	import ConcernList from './_components/concern-list.vue';
+	import { useConcernStore } from '@/stores/concern';
 
+	const store = useConcernStore()
 	const barData = [
 		{ x: 1, y: 10, y1: 20, y2: 30 },
 		{ x: 2, y: 20, y1: 30, y2: 40 },
@@ -15,6 +19,10 @@
 		{ x: 1, y: 2 },
 		{ x: 2, y: 1 },
 	];
+
+	onMounted(() => {
+        store.getConcerns();
+    });
 </script>
 
 <template>
@@ -65,6 +73,10 @@
 			<div class="flex-1 shadow-sm border rounded-md p-5 bg-white">
 				<LineChart :data="lineData" />
 			</div>
+		</div>
+		<div>
+			<span>List of concers</span>
+			<ConcernList :concerns="store.concerns"/>
 		</div>
 	</div>
 </template>

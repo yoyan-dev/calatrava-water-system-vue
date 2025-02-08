@@ -1,12 +1,14 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import type { Billing } from '@/types/billing';
 
-const billings = ref();
+const billings = ref<Billing[]>([]);
 const columns = [
-    { field: 'code', header: 'Code' },
-    { field: 'name', header: 'Name' },
-    { field: 'category', header: 'Category' },
-    { field: 'quantity', header: 'Quantity' }
+    { field: 'billNumber', header: 'Bill No.' },
+    { field: 'billingDate', header: 'Billing Date' },
+    { field: 'waterBill', header: 'Water Bill' },
+    { field: 'area', header: 'Area' },
+    { field: 'status', header: 'Status' }
 ];
 
 </script>

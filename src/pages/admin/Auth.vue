@@ -38,7 +38,8 @@
 				class="mr-2"
 				size="xlarge"
 				shape="circle" />
-			<div class="text-4xl font-medium mb-12">Welcome</div>
+			<div class="text-2xl font-medium">CALATRAVA WATER SYSTEM</div>
+			<div class="text-xl text-slate-500 mb-12">Welcome</div>
 			<form class="flex justify-center flex-col gap-4">
 				<div class="flex flex-col gap-1">
 					<InputText

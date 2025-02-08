@@ -137,25 +137,6 @@
 						>Address is required.</small
 					>
 				</div>
-				<div>
-					<label
-						for="name"
-						class="block font-bold mb-3"
-						>Classification</label
-					>
-					<InputText
-						id="name"
-						v-model.trim="resident.classification"
-						required="true"
-						autofocus
-						:invalid="isSubmitted && !resident.classification"
-						fluid />
-					<small
-						v-if="isSubmitted && !resident.classification"
-						class="text-red-500"
-						>Classification is required.</small
-					>
-				</div>
 			</div>
 
 			<div class="w-full flex justify-end gap-4">
