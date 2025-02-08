@@ -35,13 +35,12 @@
 		<Dialog
 			v-model:visible="isOpen"
 			:style="{ width: '450px' }"
-			header="Resident Details"
+			header="Create Resident"
 			modal>
 			<form
 				@submit.prevent="onSubmit"
 				class="flex flex-col gap-4">
 				<div class="flex flex-col gap-4">
-					<!-- <img v-if="resident.image" :src="`https://primefaces.org/cdn/primevue/images/resident/${resident.image}`" :alt="resident.image" class="block m-auto pb-4" /> -->
 					<div>
 						<label
 							for="acc-no"
@@ -54,6 +53,7 @@
 							required="true"
 							autofocus
 							inputId="withoutgrouping"
+							:useGrouping="false"
 							:invalid="isLoading && !resident.accountNumber"
 							fluid />
 						<small
@@ -140,7 +140,7 @@
 							>Address is required.</small
 						>
 					</div>
-					<div>
+					<!-- <div>
 						<label
 							for="name"
 							class="block font-bold mb-3"
@@ -158,19 +158,17 @@
 							class="text-red-500"
 							>Reading is required.</small
 						>
-					</div>
+					</div> -->
 				</div>
 
 				<div class="w-full flex items-center justify-end gap-4">
 					<Button
 						label="Cancel"
-						icon="pi pi-times"
 						severity="danger"
 						text
 						@click="isOpen = false" />
 					<Button
 						label="Save"
-						icon="pi pi-check"
 						type="submit" />
 				</div>
 			</form>

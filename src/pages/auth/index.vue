@@ -47,9 +47,7 @@
 				size="xlarge"
 				shape="circle" />
 			<div class="text-4xl font-medium mb-12">Welcome</div>
-			<Form
-				:initialValues="initialValues"
-				class="flex justify-center flex-col gap-4">
+			<form class="flex justify-center flex-col gap-4">
 				<div class="flex flex-col gap-1">
 					<InputText
 						name="accountNumber"
@@ -68,7 +66,7 @@
 					@click="onFormSubmit()"
 					label="Submit"
 					:loading="isLoading" />
-			</Form>
+			</form>
 		</div>
 	</div>
 </template>

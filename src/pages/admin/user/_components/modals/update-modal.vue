@@ -46,8 +46,14 @@
 	<Dialog
 		v-model:visible="isOpen"
 		:style="{ width: '450px' }"
-		header="Update Resident Details"
 		modal>
+		<template #header>
+			<div class="inline-flex items-center justify-center gap-2">
+				<Avatar icon="pi pi-user" class="mr-2" size="normal" />
+				<span class="font-bold whitespace-nowrap">{{ resident.firstName }} {{ resident.lastName }}</span>
+			</div>
+		</template>
+		<span class="text-surface-500 dark:text-surface-400 block mb-8">Update resident information.</span>
 		<form
 			@submit.prevent="onSubmit"
 			class="flex flex-col gap-4">
@@ -155,13 +161,11 @@
 			<div class="w-full flex justify-end gap-4">
 				<Button
 					label="Cancel"
-					icon="pi pi-times"
 					severity="danger"
 					text
 					@click="isOpen = false" />
 				<Button
 					label="Save"
-					icon="pi pi-check"
 					type="submit"
 					:loading="isLoading" />
 			</div>

@@ -14,13 +14,12 @@ import {
 	updateDoc,
 	getCountFromServer,
 	Timestamp,
+	writeBatch,
 } from 'firebase/firestore';
-import useSearchKeywords from '@/composables/useSearchKeywords';
 import type { StoreResponse } from '@/types/store-response';
 
 export const useResidentStore = defineStore('resident', () => {
 	const db = useFirestore();
-	const { generateKeywords } = useSearchKeywords();
 	const residents = ref<Resident[]>([]);
 	const resident = ref<Resident>({});
 	const isLoading = ref(false);
@@ -78,13 +77,18 @@ export const useResidentStore = defineStore('resident', () => {
 				createdAt: Timestamp.now(),
 				classification: 'resedential',
 			});
-			residents.value.push({ waterBill: 10, ...resident, uid: docRef.id });
+			residents.value.push({
+				...resident,
+				uid: docRef.id,
+				classification: 'resedential',
+			});
 			return {
 				status: 'success',
 				statusMessage: 'Success message',
 				message: 'Successfully added resident',
 			};
 		} catch (error: any) {
+			console.log(error);
 			return {
 				status: 'error',
 				statusMessage: 'Error message',
@@ -95,19 +99,76 @@ export const useResidentStore = defineStore('resident', () => {
 		}
 	}
 
-	async function deleteResident(uid: string) {
+	async function deleteResident(uid: string): Promise<StoreResponse> {
 		isLoading.value = true;
-		await deleteDoc(doc(db, 'residents', uid));
-		residents.value = residents.value.filter((val) => val.uid !== uid);
-		isLoading.value = false;
+		try {
+			await deleteDoc(doc(db, 'residents', uid));
+			residents.value = residents.value.filter((val) => val.uid !== uid);
+			return {
+				status: 'success',
+				statusMessage: 'Success message',
+				message: 'Successfully deleted resident',
+			};
+		} catch (error: any) {
+			console.log(error);
+			return {
+				status: 'error',
+				statusMessage: 'Error message',
+				message: 'Something went wrong',
+			};
+		} finally {
+			isLoading.value = false;
+		}
 	}
 
-	async function updateResident(resident: Resident, uid: string) {
-		await updateDoc(doc(db, 'residents', uid), {
-			...resident,
+	async function deleteResidents(uids: string[]) {
+		isLoading.value = true;
+		const batch = writeBatch(db);
+
+		uids.forEach((uid) => {
+			const docRef = doc(db, 'residents', uid);
+			batch.delete(docRef);
 		});
-		const result = residents.value.find((item) => item.uid === uid);
-		Object.assign(result || {}, resident);
+
+		try {
+			await batch.commit();
+			residents.value = residents.value.filter(
+				(val) => !uids.includes(val.uid ?? ''),
+			);
+			console.log('Residents deleted successfully');
+		} catch (error) {
+			console.error('Error deleting residents:', error);
+		} finally {
+			isLoading.value = false;
+		}
+	}
+
+	async function updateResident(
+		resident: Resident,
+		uid: string,
+	): Promise<StoreResponse> {
+		isLoading.value = true;
+		try {
+			await updateDoc(doc(db, 'residents', uid), {
+				...resident,
+			});
+			const result = residents.value.find((item) => item.uid === uid);
+			Object.assign(result || {}, resident);
+			return {
+				status: 'success',
+				statusMessage: 'Success message',
+				message: 'Successfully deleted resident',
+			};
+		} catch (error: any) {
+			console.log(error);
+			return {
+				status: 'error',
+				statusMessage: 'Error message',
+				message: 'Something went wrong',
+			};
+		} finally {
+			isLoading.value = false;
+		}
 	}
 
 	return {
@@ -120,6 +181,7 @@ export const useResidentStore = defineStore('resident', () => {
 		fetchResidents,
 		addResident,
 		deleteResident,
+		deleteResidents,
 		updateResident,
 	};
 });
