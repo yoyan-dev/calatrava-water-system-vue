@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { ref, onMounted } from 'vue';
+	import { ref, onMounted, watchEffect } from 'vue';
 	import { FilterMatchMode } from '@primevue/core/api';
 	import Header from '@/pages/admin/billing/_components/header.vue';
 	import DeleteModal from '@/pages/admin/billing/_components/modals/delete-modal.vue';
@@ -11,14 +11,14 @@
 	import { useRouter } from 'vue-router';
 
 	const store = useBillingStore();
-	const router = useRouter()
+	const router = useRouter();
 	const { formatTimestamp } = useFirebaseTimestamp();
 	const selectedWaterBill = ref();
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
 
-	const menu = ref()
+	const menu = ref();
 
 	const items = ref([
 		{
@@ -26,9 +26,9 @@
 		},
 	]);
 
-	function toggle (event: any) {
+	function toggle(event: any) {
 		menu.value.toggle(event);
-	};
+	}
 
 	function getStatusLabel(status: String) {
 		switch (status) {
@@ -50,6 +50,7 @@
 		store.fetchBillings();
 	});
 
+	watchEffect(() => console.log(store.fetchCurrentBillings));
 </script>
 
 <template>
@@ -66,10 +67,12 @@
 									icon="pi pi-plus"
 									severity="primary" />
 							</RouterLink>
-							<DeleteSelected :selectedBills="selectedWaterBill" v-if="selectedWaterBill"/>
+							<DeleteSelected
+								:selectedBills="selectedWaterBill"
+								v-if="selectedWaterBill" />
 						</div>
 					</template>
-	
+
 					<template #start>
 						<div class="flex gap-5">
 							<IconField>
@@ -80,21 +83,28 @@
 									v-model="filters['global'].value"
 									placeholder="Search..." />
 							</IconField>
-							<!-- <Button label="Export" icon="pi pi-upload" severity="secondary" @click="exportCSV($event)" /> -->
 						</div>
 					</template>
 				</Toolbar>
 			</div>
 			<div class="border rounded-md">
 				<DataTable
-					:value="store.billings"
+					:value="store.fetchCurrentBillings"
 					:loading="store.isLoading"
 					v-model:selection="selectedWaterBill"
 					dataKey="billNumber"
 					size="small"
 					:rows="10"
 					:filters="filters">
-					<Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
+					<template #empty>
+						<div class="flex items-center justify-center p-4">
+							No billing found.
+						</div>
+					</template>
+					<Column
+						selectionMode="multiple"
+						style="width: 3rem"
+						:exportable="false"></Column>
 					<Column
 						field="billNumber"
 						header="Bill No."></Column>
@@ -113,22 +123,29 @@
 						header="Water Bill">
 						<template #body="slotProps">
 							<span class="px-2 py-1 rounded-md bg-primary-50 text-primary">
-								<i name="pi pi-money-bill"></i>{{ `₱ ${slotProps.data.waterBill}` }}
+								<i name="pi pi-money-bill"></i
+								>{{ `₱ ${slotProps.data.waterBill}` }}
 							</span>
 						</template>
 					</Column>
 					<Column
 						field="address"
 						header="Area"></Column>
-					<Column
-						header="Status">
+					<Column header="Status">
 						<template #body>
-							<Tag severity="warn" value="Unpaid"></Tag>
+							<Tag
+								severity="warn"
+								value="Unpaid"></Tag>
 						</template>
 					</Column>
 					<Column header="Actions">
 						<template #body="slotProps">
-							<Button type="button" severity="secondary" icon="pi pi-ellipsis-v" @click="toggle"  text/>
+							<Button
+								type="button"
+								severity="secondary"
+								icon="pi pi-ellipsis-v"
+								@click="toggle"
+								text />
 
 							<Popover ref="menu">
 								<label>Actions</label>
@@ -141,7 +158,8 @@
 											size="small"
 											text />
 									</RouterLink>
-									<RouterLink :to="`/admin/billing/update/${slotProps.data.uid}`">
+									<RouterLink
+										:to="`/admin/billing/update/${slotProps.data.uid}`">
 										<Button
 											icon="pi pi-pen-to-square"
 											severity="secondary"
@@ -150,7 +168,7 @@
 											text />
 									</RouterLink>
 									<RouterLink to="">
-										<ViewReciept/>
+										<ViewReciept />
 									</RouterLink>
 									<RouterLink to="">
 										<Button
