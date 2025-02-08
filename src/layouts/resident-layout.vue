@@ -18,7 +18,7 @@
 	]);
 </script>
 <template>
-	<main class="relative bg-gray-100">
+	<main class="relative bg-gray-100 h-screen">
 		<div class="sticky top-0 z-10">
 			<Toolbar>
 				<template #start>
