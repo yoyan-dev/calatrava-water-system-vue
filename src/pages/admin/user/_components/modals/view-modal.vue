@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, reactive } from "vue";
 import type { Resident } from "@/types/resident";
+import UpdateModal from "./update-modal.vue";
+import BillingTable from "../billing-table.vue"
 
 const visible = ref(false);
 
@@ -33,26 +35,33 @@ const props = defineProps<{
     <div class="flex">
       <div class="p-5 border rounded-lg">
         <Avatar icon="pi pi-user" class="mr-2" size="xlarge" />
-        <div class="flex flex-col">
-          <span class="text-xl">{{
-            `${props.firstName} ${props.middleName} ${props.lastName}`
-          }}</span>
-          <span class="text-slate-600">{{ props.accountNumber }}</span>
+        <div class="flex justify-between items-start">
+            <div class="flex flex-col">
+              <span class="text-xl">{{
+                `${props.firstName} ${props.middleName} ${props.lastName}`
+              }}</span>
+              <span class="text-slate-600">Acc-no. {{ props.accountNumber }}</span>
+            </div>
         </div>
       </div>
-      <div class="p-5">
-        <div class="flex flex-col">
-          <span class="text-slate-500">Classification</span>
-          <span class="pl-5">{{ props.classification }}</span>
-        </div>
-        <div class="flex flex-col">
-          <span class="text-slate-500">Address</span>
-          <span class="pl-5">{{ props.address }}</span>
+      <div class="px-5 flex-1">
+        <div class="flex justify-between items-start">
+            <div class="flex flex-col">
+              <span class="text-slate-500">Classification</span>
+              <span>{{ props.classification }}</span>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-slate-500">Address</span>
+              <span>{{ props.address }}</span>
+            </div>
+            <UpdateModal v-bind="props" />
         </div>
       </div>
     </div>
     <div class="py-5">
-      <div class="text-xl">List of Billings</div>
+      <div class="p-2 border rounded-lg">
+          <BillingTable/>
+      </div>
     </div>
   </Dialog>
 </template>

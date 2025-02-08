@@ -39,7 +39,7 @@
 
 <template>
 	<Button
-		icon="pi pi-pencil"
+		icon="pi pi-pen-to-square"
 		text
 		class="mr-2"
 		@click="isOpen = true" />
