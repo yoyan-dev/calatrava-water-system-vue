@@ -37,6 +37,9 @@
 			:style="{ width: '450px' }"
 			header="Resident Details"
 			modal>
+			<span class="text-surface-500 dark:text-surface-400 block mb-8"
+				>Create resident.</span
+			>
 			<form
 				@submit.prevent="onSubmit"
 				class="flex flex-col gap-4">
@@ -54,6 +57,7 @@
 							required="true"
 							autofocus
 							inputId="withoutgrouping"
+							:useGrouping="false"
 							:invalid="isLoading && !resident.accountNumber"
 							fluid />
 						<small
@@ -140,7 +144,7 @@
 							>Address is required.</small
 						>
 					</div>
-					<div>
+					<!-- <div>
 						<label
 							for="name"
 							class="block font-bold mb-3"
@@ -158,19 +162,17 @@
 							class="text-red-500"
 							>Reading is required.</small
 						>
-					</div>
+					</div> -->
 				</div>
 
 				<div class="w-full flex items-center justify-end gap-4">
 					<Button
 						label="Cancel"
-						icon="pi pi-times"
 						severity="danger"
 						text
 						@click="isOpen = false" />
 					<Button
 						label="Save"
-						icon="pi pi-check"
 						type="submit" />
 				</div>
 			</form>

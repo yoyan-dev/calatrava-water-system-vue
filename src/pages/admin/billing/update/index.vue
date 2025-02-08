@@ -10,8 +10,11 @@
 	const store = useBillingStore();
 	const billingId = route.params.uid as string;
 
+	console.log(billingId);
+
 	onMounted(() => {
-		store.fetchBillingById(billingId);
+		store.fetchBilling(billingId);
+		console.log(store.billing);
 	});
 
 	function onSubmit() {
@@ -23,7 +26,7 @@
 <template>
 	<div
 		v-if="store.billing"
-		class="bg-white p-5 rounded-sm">
+		class="bg-white p-5 border rounded-lg">
 		<form @submit.prevent="onSubmit">
 			<div
 				class="text-xl font-medium text-surface-900 dark:text-surface-0 mb-2">

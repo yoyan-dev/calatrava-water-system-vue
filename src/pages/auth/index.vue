@@ -1,25 +1,39 @@
 <script setup lang="ts">
+	import { useRouter } from 'vue-router';
 	import { useFetch } from '@vueuse/core';
 	import { signInWithCustomToken } from 'firebase/auth';
 	import { ref } from 'vue';
 	import { useFirebaseAuth } from 'vuefire';
 
 	const auth = useFirebaseAuth();
+	const router = useRouter();
+	const isSubmitted = ref(false);
+	const isLoading = ref(false);
 
 	const initialValues = ref({
 		accountNumber: '',
 	});
 
 	async function onFormSubmit() {
-		const { data, error } = await useFetch<any>(
-			`${import.meta.env.VITE_API_URL}/api/auth/${
-				initialValues.value.accountNumber
-			}`,
-		);
-		const res = JSON.parse(data.value);
+		isLoading.value = true;
+		isSubmitted.value = true;
+		try {
+			const { data, error } = await useFetch<any>(
+				`${import.meta.env.VITE_API_URL}/api/auth/${
+					initialValues.value.accountNumber
+				}`,
+			);
+			const res = JSON.parse(data.value);
 
-		const user = await signInWithCustomToken(auth!, res.data);
-		console.log(user);
+			const user = await signInWithCustomToken(auth!, res.data);
+			if (user) {
+				router.push('/resident');
+				console.log(user);
+			}
+		} catch (e) {
+			console.error(e);
+		}
+		isLoading.value = false;
 	}
 </script>
 <template>
@@ -33,20 +47,26 @@
 				size="xlarge"
 				shape="circle" />
 			<div class="text-4xl font-medium mb-12">Welcome</div>
-			<Form
-				:initialValues="initialValues"
-				class="flex justify-center flex-col gap-4">
+			<form class="flex justify-center flex-col gap-4">
 				<div class="flex flex-col gap-1">
 					<InputText
-						name="acc-no"
+						name="accountNumber"
 						placeholder="Enter account no."
+						:invalid="!initialValues.accountNumber && isSubmitted"
 						v-model="initialValues.accountNumber" />
-					<!-- <Message v-if="$form.username?.invalid" severity="error" size="small" variant="simple">{{ $form.username.error?.message }}</Message> -->
+					<Message
+						v-if="!initialValues.accountNumber && isSubmitted"
+						severity="error"
+						size="small"
+						variant="simple"
+						>Please enter your account number.</Message
+					>
 				</div>
 				<Button
 					@click="onFormSubmit()"
-					label="Submit" />
-			</Form>
+					label="Submit"
+					:loading="isLoading" />
+			</form>
 		</div>
 	</div>
 </template>

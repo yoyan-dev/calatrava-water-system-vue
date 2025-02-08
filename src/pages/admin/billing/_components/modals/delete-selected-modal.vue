@@ -8,8 +8,8 @@
 
 	const isOpen = ref(false);
 
-	function onDelete(uid: string) {
-		store.deleteBilling(uid);
+	function onDelete() {
+		console.log(props.selectedBills)
 		toast.add({
 			severity: 'success',
 			summary: 'Successful',
@@ -19,7 +19,7 @@
 		isOpen.value = false;
 	}
 
-	const props = defineProps<{ uid: string }>();
+	const props = defineProps<{ selectedBills: any }>();
 </script>
 <template>
 	<div>
@@ -27,8 +27,6 @@
 			icon="pi pi-trash"
 			severity="danger"
 			label="delete"
-			text
-			size="small"
 			@click="isOpen = true" />
 		<Dialog
 			v-model:visible="isOpen"
@@ -37,21 +35,21 @@
 			:modal="true">
 			<div class="flex items-center gap-4">
 				<i class="pi pi-exclamation-triangle !text-3xl" />
-				<span v-if="uid"
-					>Are you sure you want to delete <b>Water Bill</b>?</span
+				<span
+					>Are you sure you want to delete this selected <b>Water Bills</b>?</span
 				>
 			</div>
 			<template #footer>
 				<Button
 					label="No"
 					severity="danger"
-					icon="pi pi-times"
 					text
+					size="small"
 					@click="isOpen = false" />
 				<Button
+					size="small"
 					label="Yes"
-					icon="pi pi-check"
-					@click="onDelete(props.uid)" />
+					@click="onDelete" />
 			</template>
 		</Dialog>
 	</div>
