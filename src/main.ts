@@ -40,6 +40,7 @@ import Paginator from 'primevue/paginator';
 import { Tag } from 'primevue';
 import TieredMenu from 'primevue/tieredmenu';
 import Popover from 'primevue/popover';
+import FileUpload from 'primevue/fileupload';
 
 const app = createApp(App);
 app.use(VueFire, {
@@ -79,6 +80,7 @@ app.component('Paginator', Paginator);
 app.component('Tag', Tag);
 app.component('TieredMenu', TieredMenu);
 app.component('Popover', Popover);
+app.component('FileUpload', FileUpload);
 
 app.use(createPinia());
 app.use(router);

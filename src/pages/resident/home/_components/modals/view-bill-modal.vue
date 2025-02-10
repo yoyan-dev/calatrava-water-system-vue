@@ -1,4 +1,10 @@
+<script setup lang="ts">
+    import payBillModal from './pay-bill-modal.vue';
+    import { ref } from "vue";
 
+    const visible = ref(false);
+    
+</script>
 <template>
     <Button
         icon="pi pi-money-bill"
@@ -16,45 +22,41 @@
             </div>
         </div>
         <div class="flex flex-col gap-1 px-5">
-            <span>Account Number: 2616352</span>
-            <span>Name:           Nenwell Era</span>
-            <span>Bill Number:    2616352</span>
-            <span>Address:        Calatrava</span>
-            <span>Meter No:       2616352</span>
-            <span>Stub out:       2616352</span>
-            <span>Class type:     Residential</span>
-            <span>Billing Month:      January 01, 2025</span>
-            <span>Billing Period:     January 01, 2025 to January 30, 2025</span>
-            <span>Reading Date:       January 01, 2025</span>
-            <span>Due Date:           January 01, 2025</span>
-            <span>Disconnection Date: January 01, 2025</span>
+            <span><strong>Account Number:</strong> 2616352</span>
+            <span><strong>Name:</strong> Nenwell Era</span>
+            <span><strong>Bill Number:</strong> 2616352</span>
+            <span><strong>Address:</strong> Calatrava</span>
+            <span><strong>Meter No:</strong> 2616352</span>
+            <span><strong>Stub out:</strong> 2616352</span>
+            <span><strong>Class type:</strong> Residential</span>
+            <span><strong>Billing Month:</strong> January 01, 2025</span>
+            <span><strong>Billing Period:</strong> January 01, 2025 to January 30, 2025</span>
+            <span><strong>Reading Date:</strong> January 01, 2025</span>
+            <span><strong>Due Date:</strong> January 01, 2025</span>
+            <span><strong>Disconnection Date:</strong> January 01, 2025</span>
             <div class="flex flex-col gap-1">
                 <h1 class="font-semibold">Reading</h1>
-                <span>Previous Reading ---- 3536</span>
-                <span>Current Reading ----- 3536</span>
-                <span>consumption --------- 3536</span>
+                <span><strong>Previous Reading:</strong> 3536</span>
+                <span><strong>Current Reading:</strong> 3536</span>
+                <span><strong>Consumption:</strong> 3536</span>
                 <hr>
-                <span>Current Charge ------------- 3536</span>
-                <span>Environmental Fee ---------- 3536</span>
-                <span>Water Bill Arrears --------- 3536</span>
-                <span>Env. fee Arrears ----------- 3536</span>
-                <span>Amortization --------------- 3536</span>
-                <span>Total Amount Due ----------- 3536</span>
-                <span>UNTIL DUE date ------------- 3536</span>
+                <span><strong>Current Charge:</strong> 3536</span>
+                <span><strong>Environmental Fee:</strong> 3536</span>
+                <span><strong>Water Bill Arrears:</strong> 3536</span>
+                <span><strong>Env. Fee Arrears:</strong> 3536</span>
+                <span><strong>Amortization:</strong> 3536</span>
+                <span><strong>Total Amount Due:</strong> 3536</span>
+                <span><strong>Until Due Date:</strong> 3536</span>
             </div>
-            <span>Meter Reader: Joselito B. Rodriguez</span>
+            <span><strong>Meter Reader:</strong> Joselito B. Rodriguez</span>
             <div class="text-center py-5">
-                *Please pay your water bill on or befor due date. <br>
+                *Please pay your water bill on or before the due date. <br>
                 Water service will be disconnected if payment<br>
-                is not made three (3) days before due date*<br>
-
+                is not made three (3) days before the due date*<br>
+            </div>
+            <div>
+                <payBillModal/>
             </div>
         </div>
     </Dialog>
 </template>
-
-<script setup>
-import { ref } from "vue";
-
-const visible = ref(false);
-</script>
