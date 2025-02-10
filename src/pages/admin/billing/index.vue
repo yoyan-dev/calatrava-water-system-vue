@@ -115,8 +115,7 @@
 						field="billingDate"
 						header="Billing Date">
 						<template #body="slotProps">
-							<!-- {{ formatTimestamp(slotProps.data.billingDate) }} -->
-							{{ slotProps.data.billingDate }}
+							{{ formatTimestamp(slotProps.data.billingDate) }}
 						</template>
 					</Column>
 					<Column

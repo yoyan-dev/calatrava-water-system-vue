@@ -1,66 +1,72 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, watchEffect, reactive } from "vue";
-import { useBillingStore } from "@/stores/billing";
-import { useResidentStore } from "@/stores/resident";
-import type { Resident } from "@/types/resident";
-import { useRouter } from "vue-router";
-import type { Billing } from "@/types/billing";
+  import { ref, watch, onMounted, watchEffect, reactive } from "vue";
+  import { useBillingStore } from "@/stores/billing";
+  import { useResidentStore } from "@/stores/resident";
+  import type { Resident } from "@/types/resident";
+  import { useRouter } from "vue-router";
+  import type { Billing } from "@/types/billing";
+  import { useToast } from "primevue";
 
-const router = useRouter();
-const billingStore = useBillingStore();
-const residentStore = useResidentStore();
-const isLoading = ref(false);
+  const toast = useToast()
+  const router = useRouter();
+  const billingStore = useBillingStore();
+  const residentStore = useResidentStore();
+  const isLoading = ref(false);
 
-const resident = ref<Resident>({});
-const billing = reactive<Billing>({
-  waterBill: undefined,
-  billNumber: undefined,
-  previousReading: undefined,
-  environmentFee: undefined,
-  currentReading: undefined,
-  arrears: undefined,
-  previousMeterUsage: undefined,
-  environmentFeeArrears: undefined,
-  waterConsumption: undefined,
-  amortization: undefined,
-  billingAmount: undefined,
-});
+  const resident = ref<Resident>({});
+  const billing = reactive<Billing>({
+    waterBill: undefined,
+    billNumber: undefined,
+    previousReading: undefined,
+    environmentFee: undefined,
+    currentReading: undefined,
+    arrears: undefined,
+    previousMeterUsage: undefined,
+    environmentFeeArrears: undefined,
+    waterConsumption: undefined,
+    amortization: undefined,
+    billingAmount: undefined,
 
-const selected = ref<{ accountNumber: any; uid: string }>();
-const selectOptions = ref<{ accountNumber: any; uid: string }[]>([]);
+  });
 
-function onSubmit() {
-  isLoading.value = true;
+  const selected = ref<{ accountNumber: any; uid: string }>();
+  const selectOptions = ref<{ accountNumber: any; uid: string }[]>([]);
 
-  // resident.value.billingDate = new Date(resident.value.billingDate);
-  billingStore.addBilling(billing, selected.value);
-  resident.value = {};
-  isLoading.value = false;
+  async function onSubmit() {
+    isLoading.value = true;
+    const result = await billingStore.addBilling(billing, selected.value);
+    isLoading.value = false;
 
-  router.push("/admin/billings");
-}
+    toast.add({
+        severity: result.status,
+        summary: result.statusMessage,
+        detail: result.message,
+        life: 3000,
+      });
+    router.push("/admin/billings");
+  }
 
-watchEffect(() => {
-  selectOptions.value = residentStore.residents.map((item: Resident) => ({
-    accountNumber: item.accountNumber,
-    uid: item.uid ?? "",
-  }));
-});
+  watchEffect(() => {
+    selectOptions.value = residentStore.residents.map((item: Resident) => ({
+      accountNumber: item.accountNumber,
+      uid: item.uid ?? "",
+    }));
+  });
 
-watch(selected, () => {
-  const findResident = residentStore.residents.find(
-    (resident: Resident) => resident.uid == selected.value?.uid
-  );
-  resident.value = { ...findResident };
-});
+  watch(selected, () => {
+    const findResident = residentStore.residents.find(
+      (resident: Resident) => resident.uid == selected.value?.uid
+    );
+    resident.value = { ...findResident };
+  });
 
-onMounted(() => {
-  residentStore.fetchResidents();
-});
+  onMounted(() => {
+    residentStore.fetchResidents();
+  });
 </script>
 
 <template>
-  <div class="bg-white p-5 border rounded-lg">
+  <div class="">
     <form @submit.prevent="onSubmit">
       <div
         class="text-xl font-medium text-surface-900 dark:text-surface-0 mb-2"
@@ -82,6 +88,9 @@ onMounted(() => {
             />
           </div>
           <div v-if="resident.accountNumber">
+            <div class="text-xl font-medium text-surface-900 dark:text-surface-0 mb-2">
+              Resident Details
+            </div>
             <div
               class="flex items-center gap-4 px-3 pr-7 shadow-sm border rounded-md bg-white"
             >
@@ -95,30 +104,56 @@ onMounted(() => {
                   {{ resident.firstName }} {{ resident.middleName }}
                   {{ resident.lastName }}
                 </h1>
-                <span class="text-gray-400">{{ resident.accountNumber }}</span>
+                <span class="text-gray-400 font-thin">{{ resident.accountNumber }}</span>
               </div>
             </div>
             <div>
-              <label for="address" class="block text-slate-600">Address</label>
-              <span class="pl-5">{{ resident.address }}</span>
+              <label for="address" class="block text-slate-600">Address: {{ resident.address }}</label>
             </div>
-            <div>
+            <!-- <div>
               <label for="address" class="block text-slate-600"
-                >Classification</label
+                >Classification: {{ resident.classification }}</label
               >
-              <span class="pl-5">{{ resident.classification }}</span>
+            </div> -->
+            <div class="pt-2 border-t mt-2">
+              <div class="text-xl font-medium text-surface-900 dark:text-surface-0 mb-2 mt-2">
+                Previous Billing Schedule
+              </div>
+              <div class="flex flex-col gap-1 text-gray-700 font-thin">
+                <span>Reading Date: January 01, 2025</span>
+                <span>Distribution Dat: January 01, 2025</span>
+                <span>Due Dat: January 01, 2025</span>
+                <span>Disconnection Dat: January 01, 2025</span>
+              </div>
             </div>
           </div>
         </div>
-        <div class="p-5 border rounded-lg flex-1">
+        <div class="p-5 border rounded-lg flex-1 text-gray-700">
           <div>
-            <label class="block">Bill Number</label>
-            <InputNumber
+            <div class="text-xl font-medium text-surface-900 dark:text-surface-0 mb-2">
+              Billing Details
+            </div>
+          </div>
+          <div class="flex gap-5">
+            <div>
+              <label class="block">Bill Number</label>
+              <InputNumber
               v-model="billing.billNumber"
               required
               :useGrouping="false"
-              size="small"
-            />
+                size="small"
+                />
+            </div>
+            <div>
+              <label class="block">Billing Date</label>
+              <DatePicker
+                v-model="billing.billingDate"
+                showIcon
+                fluid
+                :showOnFocus="false"
+                size="small"
+                format="MM-DD-YYYY"/>
+            </div>
           </div>
           <div class="flex gap-5">
             <div>
@@ -245,34 +280,63 @@ onMounted(() => {
             </div>
           </div>
         </div>
-        <div class="p-5 border rounded-lg flex-1">
-          <!-- <div>
-						<label
-							for="water-bill"
-							class="block"
-							>Area</label
-						>
-						<InputNumber
-							id="water-bill"
-							required
-							size="small" />
-					</div> -->
-          <div>Current Billing schedule</div>
-          <DatePicker
-            showIcon
-            fluid
-			v-mode="billing.billingDate"
-            :showOnFocus="false"
-            size="small"
-            format="MM-DD-YYYY"
-          />
-          <!-- <DatePicker v-model="resident.waterBill" showIcon fluid :showOnFocus="false" />
-          <DatePicker v-model="resident.waterBill" showIcon fluid :showOnFocus="false" />
-          <DatePicker v-model="resident.waterBill" showIcon fluid :showOnFocus="false" /> -->
+        <div class="p-5 border rounded-lg flex-1 text-gray-700">
+          <div>
+            <label class="block">Meter Reader</label>
+            <InputText placeholder="Enter meter reader"/>
+          </div>
+            <div class="text-xl font-medium text-surface-900 dark:text-surface-0 mb-2 mt-2">
+              Dates
+            </div>
+            <div>
+              <label class="block text-lg text-surface-900">Current Billing Schedule</label>
+              <div>
+                <label class="block">Reading Date</label>
+                <DatePicker
+                  showIcon
+                  fluid
+                  :showOnFocus="false"
+                  size="small"
+                  format="MM-DD-YYYY"
+                  />
+              </div>
+              <div>
+                <label class="block">Distribution Date</label>
+                <DatePicker
+                v-model="billing.distributionDate"
+                showIcon
+                fluid
+                :showOnFocus="false"
+                size="small"
+                format="MM-DD-YYYY"
+                />
+              </div>
+              <div>
+                <label class="block">Due Date</label>
+                <DatePicker
+                showIcon
+                fluid
+                :showOnFocus="false"
+                size="small"
+                format="MM-DD-YYYY"
+                    />
+              </div>
+              <div>
+                <label class="block">Disconnection Date</label>
+                <DatePicker
+                v-model="billing.disconnectionDate"
+                showIcon
+                fluid
+                :showOnFocus="false"
+                size="small"
+                format="MM-DD-YYYY"
+                />
+              </div>
+            </div>
+            <div class="flex justify-end mt-3">
+              <Button label="Submit" type="submit" :loading="isLoading" />
+            </div>
         </div>
-      </div>
-      <div class="flex justify-end">
-        <Button label="Submit" type="submit" :loading="isLoading" />
       </div>
     </form>
   </div>
