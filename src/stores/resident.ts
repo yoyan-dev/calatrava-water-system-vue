@@ -48,6 +48,7 @@ export const useResidentStore = defineStore('resident', () => {
 					...rest,
 				};
 			});
+			console.log(residents.value);
 		} catch (error) {
 			console.error('Error fetching students:', error);
 		} finally {

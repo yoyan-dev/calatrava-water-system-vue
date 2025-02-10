@@ -5,6 +5,7 @@
 	import DeleteModal from '@/pages/admin/billing/_components/modals/delete-modal.vue';
 	import DeleteSelected from '@/pages/admin/billing/_components/modals/delete-selected-modal.vue';
 	import ViewReciept from '@/pages/admin/billing/_components/modals/view-reciept.vue';
+	import viewBillModal from './_components/modals/view-bill-modal.vue';
 	import { formatToPeso } from '@/composables/currencyFormat';
 	import { useBillingStore } from '@/stores/billing';
 	import useFirebaseTimestamp from '@/composables/useFirebaseTimestamp';
@@ -13,7 +14,7 @@
 	const store = useBillingStore();
 	const router = useRouter();
 	const { formatTimestamp } = useFirebaseTimestamp();
-	const selectedWaterBill = ref();
+	const selectedWaterBill = ref([]);
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
@@ -69,7 +70,7 @@
 							</RouterLink>
 							<DeleteSelected
 								:selectedBills="selectedWaterBill"
-								v-if="selectedWaterBill" />
+								v-if="selectedWaterBill.length" />
 						</div>
 					</template>
 
@@ -150,13 +151,8 @@
 							<Popover ref="menu">
 								<label>Actions</label>
 								<div class="flex flex-col">
-									<RouterLink :to="`/admin/billing/${slotProps.data.uid}`">
-										<Button
-											icon="pi pi-eye"
-											severity="secondary"
-											label="view"
-											size="small"
-											text />
+									<RouterLink to="">
+										<viewBillModal v-bind="slotProps.data"/>
 									</RouterLink>
 									<RouterLink
 										:to="`/admin/billing/update/${slotProps.data.uid}`">

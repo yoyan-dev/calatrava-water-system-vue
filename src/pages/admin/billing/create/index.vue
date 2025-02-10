@@ -13,7 +13,16 @@
   const residentStore = useResidentStore();
   const isLoading = ref(false);
 
-  const resident = ref<Resident>({});
+  const resident = ref<Resident>({
+  });
+
+  const previousBilling = ref({
+    readingDate: 'January 01, 2025',
+    distributionDate: 'January 01, 2025',
+    dueDate: 'January 01, 2025',
+    disconnectionDate: 'January 01, 2025',
+  })
+
   const billing = reactive<Billing>({
     waterBill: undefined,
     billNumber: undefined,
@@ -97,18 +106,17 @@
               <Avatar
                 icon="pi pi-user"
                 style="background-color: #dee9fc; color: #1a2551"
-                shape="circle"
               />
               <div>
                 <h1 class="font-semibold">
                   {{ resident.firstName }} {{ resident.middleName }}
                   {{ resident.lastName }}
                 </h1>
-                <span class="text-gray-400 font-thin">{{ resident.accountNumber }}</span>
+                <span class="text-gray-700 font-thin">{{ resident.accountNumber }}</span>
               </div>
             </div>
             <div>
-              <label for="address" class="block text-slate-600">Address: {{ resident.address }}</label>
+              <label for="address" class="block text-slate-600 my-2">Area: {{ resident.address }}</label>
             </div>
             <!-- <div>
               <label for="address" class="block text-slate-600"
@@ -120,10 +128,10 @@
                 Previous Billing Schedule
               </div>
               <div class="flex flex-col gap-1 text-gray-700 font-thin">
-                <span>Reading Date: January 01, 2025</span>
-                <span>Distribution Dat: January 01, 2025</span>
-                <span>Due Dat: January 01, 2025</span>
-                <span>Disconnection Dat: January 01, 2025</span>
+                <span>Reading Date: {{ previousBilling.readingDate }}</span>
+                <span>Distribution Dat: {{ previousBilling.distributionDate }}</span>
+                <span>Due Dat: {{ previousBilling.dueDate}}</span>
+                <span>Disconnection Dat: {{ previousBilling.disconnectionDate }}</span>
               </div>
             </div>
           </div>
@@ -294,6 +302,7 @@
                 <label class="block">Reading Date</label>
                 <DatePicker
                   showIcon
+                  v-model="billing.readingDate"
                   fluid
                   :showOnFocus="false"
                   size="small"
@@ -315,6 +324,7 @@
                 <label class="block">Due Date</label>
                 <DatePicker
                 showIcon
+                v-model="billing.dueDate"
                 fluid
                 :showOnFocus="false"
                 size="small"

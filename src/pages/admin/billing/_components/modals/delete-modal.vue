@@ -45,12 +45,12 @@
 				<Button
 					label="No"
 					severity="danger"
-					icon="pi pi-times"
+					size="small"
 					text
 					@click="isOpen = false" />
 				<Button
 					label="Yes"
-					icon="pi pi-check"
+					size="small"
 					@click="onDelete(props.uid)" />
 			</template>
 		</Dialog>
