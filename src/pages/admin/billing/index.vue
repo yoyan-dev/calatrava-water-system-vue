@@ -19,7 +19,7 @@
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
 
-	const menu = ref();
+	const menu = ref<any[]>([]);
 
 	const items = ref([
 		{
@@ -27,8 +27,8 @@
 		},
 	]);
 
-	function toggle(event: any) {
-		menu.value.toggle(event);
+	function onToggled(event: Event, index: number) {
+		menu.value[index].toggle(event);
 	}
 
 	function getStatusLabel(status: String) {
@@ -106,12 +106,14 @@
 						selectionMode="multiple"
 						style="width: 3rem"
 						:exportable="false"></Column>
+					<Column header="Bill No.">
+						<template #body="slotProps">
+							{{ slotProps.index + 1 }}
+						</template>
+					</Column>
 					<Column
-						field="billNumber"
-						header="Bill No."></Column>
-					<Column
-						field="uid"
-						header="UID"></Column>
+						field="residentUid"
+						header="AccountNumber"></Column>
 					<Column
 						field="billingDate"
 						header="Billing Date">
@@ -145,15 +147,15 @@
 								type="button"
 								severity="secondary"
 								icon="pi pi-ellipsis-v"
-								@click="toggle"
+								@click="onToggled($event, slotProps.index)"
 								text />
 
-							<Popover ref="menu">
+							<Popover :ref="(el) => (menu[slotProps.index] = el)">
 								<label>Actions</label>
 								<div class="flex flex-col">
-									<RouterLink to="">
-										<viewBillModal v-bind="slotProps.data" />
-									</RouterLink>
+									{{ slotProps.index }}
+									<viewBillModal :billing="slotProps.data" />
+
 									<RouterLink
 										:to="`/admin/billing/update/${slotProps.data.uid}`">
 										<Button

@@ -16,6 +16,7 @@ import {
 	Timestamp,
 	writeBatch,
 	where,
+	setDoc,
 } from 'firebase/firestore';
 import type { StoreResponse } from '@/types/store-response';
 
@@ -31,7 +32,7 @@ export const useResidentStore = defineStore('resident', () => {
 		totalResidents.value = snapshot.data().count;
 	}
 
-	async function fetchResidents(event?: any) {
+	async function fetchResidents() {
 		isLoading.value = true;
 
 		const residentQuery = query(
@@ -86,14 +87,17 @@ export const useResidentStore = defineStore('resident', () => {
 				};
 			}
 
-			const docRef = await addDoc(collection(db, 'residents'), {
-				...resident,
-				createdAt: Timestamp.now(),
-				classification: 'resedential',
-			});
+			await setDoc(
+				doc(db, 'residents', resident.accountNumber?.toString() ?? ''),
+				{
+					...resident,
+					createdAt: Timestamp.now(),
+					classification: 'resedential',
+				},
+			);
 			residents.value.push({
 				...resident,
-				uid: docRef.id,
+				uid: resident.accountNumber?.toString(),
 				classification: 'resedential',
 			});
 
