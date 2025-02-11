@@ -31,11 +31,12 @@ export const useBillingStore = defineStore('billing', () => {
 
 		return billings.value
 			.filter((item) => {
-				const billingDate = (item.billingDate as Timestamp).toDate();
-				return (
-					billingDate.getMonth() + 1 === currentMonth &&
-					billingDate.getFullYear() === currentYear
-				);
+				// const billingDate = (item.billingDate as Timestamp).toDate();
+				// return (
+				// 	billingDate.getMonth() + 1 === currentMonth &&
+				// 	billingDate.getFullYear() === currentYear
+				// );
+				return item.billingDate
 			})
 			.map((item) => ({ ...item }));
 	});
@@ -51,6 +52,7 @@ export const useBillingStore = defineStore('billing', () => {
 			}));
 
 			billings.value = billingSnapshot;
+			console.log(billings.value);
 		} catch (error) {
 			console.error('Error fetching billings:', error);
 			billings.value = [];

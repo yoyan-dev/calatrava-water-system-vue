@@ -1,15 +1,15 @@
 <script setup lang="ts">
 	import { ref } from 'vue';
-	import { useBillingStore } from '@/stores/billing';
+	import { useResidentStore } from '@/stores/resident';
 	import { useToast } from 'primevue/usetoast';
 
 	const toast = useToast();
-	const store = useBillingStore();
+	const store = useResidentStore();
 
 	const isOpen = ref(false);
 
-	function onDelete(uid: string) {
-		store.deleteBilling(uid);
+	function onDelete() {
+		console.log(props.selectedResidents)
 		toast.add({
 			severity: 'success',
 			summary: 'Successful',
@@ -19,7 +19,7 @@
 		isOpen.value = false;
 	}
 
-	const props = defineProps<{ uid: string }>();
+	const props = defineProps<{ selectedResidents: any }>();
 </script>
 <template>
 	<div>
@@ -27,8 +27,6 @@
 			icon="pi pi-trash"
 			severity="danger"
 			label="delete"
-			text
-			size="small"
 			@click="isOpen = true" />
 		<Dialog
 			v-model:visible="isOpen"
@@ -37,21 +35,21 @@
 			:modal="true">
 			<div class="flex items-center gap-4">
 				<i class="pi pi-exclamation-triangle !text-3xl" />
-				<span v-if="uid"
-					>Are you sure you want to delete <b>Water Bill</b>?</span
+				<span
+					>Are you sure you want to delete this selected <b>Residents</b>?</span
 				>
 			</div>
 			<template #footer>
 				<Button
 					label="No"
 					severity="danger"
-					size="small"
 					text
+					size="small"
 					@click="isOpen = false" />
 				<Button
-					label="Yes"
 					size="small"
-					@click="onDelete(props.uid)" />
+					label="Yes"
+					@click="onDelete" />
 			</template>
 		</Dialog>
 	</div>

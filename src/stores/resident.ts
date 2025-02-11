@@ -48,6 +48,7 @@ export const useResidentStore = defineStore('resident', () => {
 					...rest,
 				};
 			});
+			console.log(residents.value);
 		} catch (error) {
 			console.error('Error fetching students:', error);
 		} finally {
@@ -72,6 +73,18 @@ export const useResidentStore = defineStore('resident', () => {
 			// 	' ' +
 			// 	resident.lastName;
 			// resident.searchKeyword = generateKeywords(fullName);
+			const exists = residents.value.some(
+				(item: Resident) => item.accountNumber === resident.accountNumber,
+			);
+
+			if (exists) {
+				return {
+					status: 'error',
+					statusMessage: 'Duplicate account number',
+					message: 'The account number already exists.',
+				};
+			}
+
 			const docRef = await addDoc(collection(db, 'residents'), {
 				...resident,
 				createdAt: Timestamp.now(),
@@ -82,6 +95,7 @@ export const useResidentStore = defineStore('resident', () => {
 				uid: docRef.id,
 				classification: 'resedential',
 			});
+
 			return {
 				status: 'success',
 				statusMessage: 'Success message',
@@ -135,9 +149,18 @@ export const useResidentStore = defineStore('resident', () => {
 			residents.value = residents.value.filter(
 				(val) => !uids.includes(val.uid ?? ''),
 			);
-			console.log('Residents deleted successfully');
+			return {
+				status: 'success',
+				statusMessage: 'Success message',
+				message: 'Successfully deleted residents',
+			};
 		} catch (error) {
 			console.error('Error deleting residents:', error);
+			return {
+				status: 'error',
+				statusMessage: 'Error message',
+				message: 'Something went wrong',
+			};
 		} finally {
 			isLoading.value = false;
 		}

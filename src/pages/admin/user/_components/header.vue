@@ -1,3 +1,10 @@
+<script setup lang="ts">
+
+const props = defineProps<{
+	totalResident: number;
+}>();
+
+</script>
 <template>
 	<div class="flex justify-between">
 		<div>
@@ -10,7 +17,7 @@
 		</div>
 		<div>
 			<div class="text-sm px-3 py-2 text-slate-600 bg-gray-50 rounded-full">
-				100 Residents
+				{{ totalResident }} Residents
 			</div>
 		</div>
 	</div>
