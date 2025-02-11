@@ -15,6 +15,7 @@ import {
 	getCountFromServer,
 	Timestamp,
 	writeBatch,
+	where,
 } from 'firebase/firestore';
 import type { StoreResponse } from '@/types/store-response';
 
@@ -116,8 +117,20 @@ export const useResidentStore = defineStore('resident', () => {
 	async function deleteResident(uid: string): Promise<StoreResponse> {
 		isLoading.value = true;
 		try {
+			const billingQuery = query(
+				collection(db, 'billings'),
+				where('residentUid', '==', uid),
+			);
+			const billingSnapshot = await getDocs(billingQuery);
+
+			const batch = writeBatch(db);
+			billingSnapshot.forEach((doc) => batch.delete(doc.ref));
+			await batch.commit();
+
 			await deleteDoc(doc(db, 'residents', uid));
+
 			residents.value = residents.value.filter((val) => val.uid !== uid);
+
 			return {
 				status: 'success',
 				statusMessage: 'Success message',

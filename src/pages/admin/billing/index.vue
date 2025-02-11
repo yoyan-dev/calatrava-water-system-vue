@@ -152,7 +152,7 @@
 								<label>Actions</label>
 								<div class="flex flex-col">
 									<RouterLink to="">
-										<viewBillModal v-bind="slotProps.data"/>
+										<viewBillModal v-bind="slotProps.data" />
 									</RouterLink>
 									<RouterLink
 										:to="`/admin/billing/update/${slotProps.data.uid}`">
@@ -174,7 +174,7 @@
 											label="mark as paid"
 											text />
 									</RouterLink>
-									<DeleteModal :uid="slotProps.data.uid" />
+									<DeleteModal :uid="slotProps.data.residentUid" />
 								</div>
 							</Popover>
 						</template>
