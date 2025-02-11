@@ -1,24 +1,33 @@
 <script setup lang="ts">
     import { ref, onMounted } from "vue";
     import ViewWaterBillModal from "@/pages/resident/home/_components/modals/view-bill-modal.vue";
+    import type { Billing } from "@/types/billing";
+    import type { Resident } from "@/types/resident";
+    import useFirebaseTimestamp from "@/composables/useFirebaseTimestamp";
+    import { formatToPeso } from "@/composables/currencyFormat";
 
+    const { formatTimestamp } = useFirebaseTimestamp()
+    const props = defineProps<{
+        resident: Resident;
+		billing: Billing;
+	}>();
 </script>
 <template>
     <div>
         <div class="bg-white p-5 border rounded-lg flex flex-col gap-3">
             <div class="flex justify-between">
-                <h1 class="font-semibold text-xl">263623-32732</h1>
-                <ViewWaterBillModal/>
+                <h1 class="font-semibold text-xl">Bill #{{ props.billing.billNumber }} <Tag severity="danger" value="Unpaid"></Tag></h1>
+                <ViewWaterBillModal :billing="props.billing" :resident="props.resident"/>
             </div>
             <hr>
             <div class="flex justify-between">
                 <div>
                     <label class="text-surface-500">Name</label><br>
-                    <Tag severity="secondary" value="Nenwell Era"></Tag>
+                    <span class="uppercase">{{`${resident.firstName} ${resident.lastName}`}}</span>
                 </div>
                 <div>
                     <label class="text-surface-500">Class Type</label><br>
-                    <Tag severity="secondary" value="Residential"></Tag>
+                    <span class="uppercase">{{ resident.classification }}</span>
                 </div>
             </div>
             <div>
@@ -28,17 +37,11 @@
             <div class="flex justify-between">
                 <div>
                     <label class="text-surface-500">Due Date</label><br>
-                    <span>February 15, 2025</span>
+                    <span>{{ formatTimestamp(props.billing.dueDate) }}</span>
                 </div>
                 <div>
                     <label class="text-surface-500">Amount</label><br>
-                    <span>P 100.00</span>
-                </div>
-            </div>
-            <div class="flex justify-end">
-                <div>
-                    <label class="text-surface-500">Status</label><br>
-                    <Tag severity="danger" value="Unpaid"></Tag>
+                    <span>{{ formatToPeso(props.billing.billingAmount) }}</span>
                 </div>
             </div>
 

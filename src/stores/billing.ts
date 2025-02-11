@@ -12,6 +12,8 @@ import {
 	updateDoc,
 	query,
 	where,
+	orderBy,
+	limit
 } from 'firebase/firestore';
 import { useFirestore } from 'vuefire';
 import type { Billing } from '@/types/billing';
@@ -75,6 +77,37 @@ export const useBillingStore = defineStore('billing', () => {
 			isLoading.value = false;
 		}
 	}
+
+	async function fetchBillingsByAccountNumber(accountNumber: number) {
+		isLoading.value = true;
+		console.log(accountNumber);
+		
+		try {
+			const queryBillings = query(
+				collection(db, "billings"),
+				where("residentAccountNumber", "==", accountNumber)
+			);
+
+			const querySnapshot = await getDocs(queryBillings);
+			if (querySnapshot.empty) {
+				console.log('No billings records found for this account')
+				return
+			};
+			
+			billings.value = querySnapshot.docs.map((doc) => ({
+				billingDate: doc.data().billingDate,
+				...doc.data(),
+				uid: doc.id,
+			})).sort((a, b) => (b.billingDate as Timestamp).toDate().getTime() - (a.billingDate as Timestamp).toDate().getTime());
+
+		} catch (error) {
+			console.error('Error fetching billings by account number:', error);
+			throw error;
+		} finally {
+			isLoading.value = false;
+		}
+	}
+	
 
 	async function addBilling(
 		payload: Billing,
@@ -218,6 +251,7 @@ export const useBillingStore = defineStore('billing', () => {
 		isLoading,
 		fetchCurrentBillings,
 		fetchBillings,
+		fetchBillingsByAccountNumber,
 		addBilling,
 		fetchBilling,
 		deleteBilling,

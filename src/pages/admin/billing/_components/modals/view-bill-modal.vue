@@ -32,7 +32,6 @@
 		:breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
 		<div v-if="store.isLoading">...Loading</div>
 		<div v-else>
-			resident: {{ store.resident }}
 			<div class="flex gap-3 items-center pb-5">
 				<Avatar
 					image="/logo.jpeg"
@@ -74,9 +73,9 @@
 					><strong>Billing Period:</strong> January 01, 2025 to January 30,
 					2025</span
 				>
-				<span><strong>Reading Date:</strong> January 01, 2025</span>
-				<span><strong>Due Date:</strong> January 01, 2025</span>
-				<span><strong>Disconnection Date:</strong> January 01, 2025</span>
+				<span><strong>Reading Date:</strong> {{ formatTimestamp(props.billing.readingDate) }}</span>
+				<span><strong>Due Date:</strong> {{ formatTimestamp(props.billing.dueDate) }}</span>
+				<span><strong>Disconnection Date:</strong> {{ formatTimestamp(props.billing.disconnectionDate) }}</span>
 				<div class="flex flex-col gap-1">
 					<h1 class="font-semibold">Reading</h1>
 					<span><strong>Previous Reading:</strong> 3536</span>
@@ -84,14 +83,14 @@
 					<span><strong>Consumption:</strong> 3536</span>
 					<hr />
 					<span><strong>Current Charge:</strong> 3536</span>
-					<span><strong>Environmental Fee:</strong> 3536</span>
-					<span><strong>Water Bill Arrears:</strong> 3536</span>
-					<span><strong>Env. Fee Arrears:</strong> 3536</span>
-					<span><strong>Amortization:</strong> 3536</span>
+					<span><strong>Environmental Fee:</strong> {{ props.billing.environmentFee }}</span>
+					<span><strong>Water Bill Arrears:</strong> {{ props.billing.arrears }}</span>
+					<span><strong>Env. Fee Arrears:</strong> {{ props.billing.environmentFeeArrears }}</span>
+					<span><strong>Amortization:</strong> {{ props.billing.amortization }}</span>
 					<span><strong>Total Amount Due:</strong> 3536</span>
 					<span><strong>Until Due Date:</strong> 3536</span>
 				</div>
-				<span><strong>Meter Reader:</strong> Joselito B. Rodriguez</span>
+				<span><strong>Meter Reader:</strong> {{ props.billing.meterReader }}</span>
 			</div>
 		</div>
 	</Dialog>
