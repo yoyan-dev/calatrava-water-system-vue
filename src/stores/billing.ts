@@ -33,12 +33,12 @@ export const useBillingStore = defineStore('billing', () => {
 
 		return billings.value
 			.filter((item) => {
-				// const billingDate = (item.billingDate as Timestamp).toDate();
-				// return (
-				// 	billingDate.getMonth() + 1 === currentMonth &&
-				// 	billingDate.getFullYear() === currentYear
-				// );
-				return item.billingDate;
+				const billingDate = item.billingDate ? (item.billingDate as Timestamp).toDate() : null;
+				return (
+					billingDate &&
+					billingDate.getMonth() + 1 === currentMonth &&
+					billingDate.getFullYear() === currentYear
+				);
 			})
 			.map((item) => ({ ...item }));
 	});

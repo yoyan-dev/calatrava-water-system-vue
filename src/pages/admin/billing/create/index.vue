@@ -43,6 +43,7 @@
 
 	async function onSubmit() {
 		isLoading.value = true;
+		billing.area = resident.value.address;
 		const result = await billingStore.addBilling(billing, selected.value);
 		isLoading.value = false;
 

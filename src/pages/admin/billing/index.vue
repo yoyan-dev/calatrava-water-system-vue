@@ -130,7 +130,7 @@
 						</template>
 					</Column>
 					<Column
-						field="address"
+						field="area"
 						header="Area"></Column>
 					<Column header="Status">
 						<template #body>
