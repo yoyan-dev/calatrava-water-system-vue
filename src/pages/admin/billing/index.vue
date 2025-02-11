@@ -21,30 +21,8 @@
 
 	const menu = ref();
 
-	const items = ref([
-		{
-			label: 'Menu',
-		},
-	]);
-
 	function toggle(event: any) {
 		menu.value.toggle(event);
-	}
-
-	function getStatusLabel(status: String) {
-		switch (status) {
-			case 'Paid':
-				return 'success';
-
-			case 'LOWSTOCK':
-				return 'warn';
-
-			case 'OUTOFSTOCK':
-				return 'danger';
-
-			default:
-				return null;
-		}
 	}
 
 	onMounted(() => {

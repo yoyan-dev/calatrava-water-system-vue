@@ -1,9 +1,10 @@
 <script setup lang="ts">
 	import { useRouter } from 'vue-router';
 	import { useFetch } from '@vueuse/core';
-	import { signInWithCustomToken } from 'firebase/auth';
-	import { ref } from 'vue';
+	import { signInWithCustomToken, onAuthStateChanged } from 'firebase/auth';
+	import { ref, computed } from 'vue';
 	import { useFirebaseAuth } from 'vuefire';
+	import type { H3Response } from '@/types/h3response';
 
 	const auth = useFirebaseAuth();
 	const router = useRouter();
@@ -26,10 +27,10 @@
 			const res = JSON.parse(token.value as string) as H3Response<string>;
 
 			const user = await signInWithCustomToken(auth!, res.data ?? '');
-			// if (user) {
-			// 	router.push('/resident');
-			// 	console.log(user);
-			// }
+			if (user) {
+				router.push('/resident');
+				console.log(user);
+			}
 		} catch (e) {
 			console.error(e);
 		}
