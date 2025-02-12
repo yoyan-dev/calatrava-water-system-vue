@@ -1,9 +1,19 @@
 <script setup lang="ts">
-    import payBillModal from './pay-bill-modal.vue';
-    import { ref } from "vue";
+    import { ref, onMounted } from "vue";
+    import payBillModal from "./pay-bill-modal.vue";
+    import type { Billing } from "@/types/billing";
+    import type { Resident } from "@/types/resident";
+    import useFirebaseTimestamp from "@/composables/useFirebaseTimestamp";
+    import { formatToPeso } from "@/composables/currencyFormat";
 
-    const visible = ref(false);
-    
+    const visible = ref(false)
+
+    const { formatTimestamp } = useFirebaseTimestamp()
+    const props = defineProps<{
+        resident: Resident;
+		billing: Billing;
+	}>();
+
 </script>
 <template>
     <Button
@@ -22,18 +32,18 @@
             </div>
         </div>
         <div class="flex flex-col gap-1 px-5">
-            <span><strong>Account Number:</strong> 2616352</span>
-            <span><strong>Name:</strong> Nenwell Era</span>
-            <span><strong>Bill Number:</strong> 2616352</span>
-            <span><strong>Address:</strong> Calatrava</span>
+            <span><strong>Account Number:</strong> {{ props.resident.accountNumber }}</span>
+            <span><strong>Name:</strong> {{ props.resident.firstName }} {{ props.resident.lastName }}</span>
+            <span><strong>Bill Number:</strong> {{ props.billing.billNumber }}</span>
+            <span><strong>Address:</strong> {{ props.resident.address }}</span>
             <span><strong>Meter No:</strong> 2616352</span>
             <span><strong>Stub out:</strong> 2616352</span>
-            <span><strong>Class type:</strong> Residential</span>
-            <span><strong>Billing Month:</strong> January 01, 2025</span>
+            <span><strong>Class type:</strong> {{ props.resident.classification }}</span>
+            <span><strong>Billing Month:</strong> {{ props.billing.billingDate }}</span>
             <span><strong>Billing Period:</strong> January 01, 2025 to January 30, 2025</span>
-            <span><strong>Reading Date:</strong> January 01, 2025</span>
-            <span><strong>Due Date:</strong> January 01, 2025</span>
-            <span><strong>Disconnection Date:</strong> January 01, 2025</span>
+            <span><strong>Reading Date:</strong> {{ props.billing.readingDate }}</span>
+            <span><strong>Due Date:</strong> {{ props.billing.dueDate }}</span>
+            <span><strong>Disconnection Date:</strong> {{ props.billing.disconnectionDate }}</span>
             <div class="flex flex-col gap-1">
                 <h1 class="font-semibold">Reading</h1>
                 <span><strong>Previous Reading:</strong> 3536</span>
@@ -41,14 +51,14 @@
                 <span><strong>Consumption:</strong> 3536</span>
                 <hr>
                 <span><strong>Current Charge:</strong> 3536</span>
-                <span><strong>Environmental Fee:</strong> 3536</span>
-                <span><strong>Water Bill Arrears:</strong> 3536</span>
-                <span><strong>Env. Fee Arrears:</strong> 3536</span>
-                <span><strong>Amortization:</strong> 3536</span>
+                <span><strong>Environmental Fee:</strong> {{ props.billing.environmentFee }}</span>
+                <span><strong>Water Bill Arrears:</strong> {{ props.billing.arrears }}</span>
+                <span><strong>Env. Fee Arrears:</strong> {{ props.billing.environmentFeeArrears }}</span>
+                <span><strong>Amortization:</strong> {{ props.billing.amortization }}</span>
                 <span><strong>Total Amount Due:</strong> 3536</span>
                 <span><strong>Until Due Date:</strong> 3536</span>
             </div>
-            <span><strong>Meter Reader:</strong> Joselito B. Rodriguez</span>
+            <span><strong>Meter Reader:</strong> {{ props.billing.meterReader }}</span>
             <div class="text-center py-5">
                 *Please pay your water bill on or before the due date. <br>
                 Water service will be disconnected if payment<br>

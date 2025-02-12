@@ -10,6 +10,10 @@ import {
 	getDocs,
 	writeBatch,
 	updateDoc,
+	query,
+	where,
+	orderBy,
+	limit
 } from 'firebase/firestore';
 import { useFirestore } from 'vuefire';
 import type { Billing } from '@/types/billing';
@@ -31,12 +35,12 @@ export const useBillingStore = defineStore('billing', () => {
 
 		return billings.value
 			.filter((item) => {
-				// const billingDate = (item.billingDate as Timestamp).toDate();
-				// return (
-				// 	billingDate.getMonth() + 1 === currentMonth &&
-				// 	billingDate.getFullYear() === currentYear
-				// );
-				return item.billingDate
+				const billingDate = item.billingDate ? (item.billingDate as Timestamp).toDate() : null;
+				return (
+					billingDate &&
+					billingDate.getMonth() + 1 === currentMonth &&
+					billingDate.getFullYear() === currentYear
+				);
 			})
 			.map((item) => ({ ...item }));
 	});
@@ -52,7 +56,6 @@ export const useBillingStore = defineStore('billing', () => {
 			}));
 
 			billings.value = billingSnapshot;
-			console.log(billings.value);
 		} catch (error) {
 			console.error('Error fetching billings:', error);
 			billings.value = [];
@@ -74,6 +77,37 @@ export const useBillingStore = defineStore('billing', () => {
 			isLoading.value = false;
 		}
 	}
+
+	async function fetchBillingsByAccountNumber(accountNumber: number) {
+		isLoading.value = true;
+		console.log(accountNumber);
+		
+		try {
+			const queryBillings = query(
+				collection(db, "billings"),
+				where("residentAccountNumber", "==", accountNumber)
+			);
+
+			const querySnapshot = await getDocs(queryBillings);
+			if (querySnapshot.empty) {
+				console.log('No billings records found for this account')
+				return
+			};
+			
+			billings.value = querySnapshot.docs.map((doc) => ({
+				billingDate: doc.data().billingDate,
+				...doc.data(),
+				uid: doc.id,
+			})).sort((a, b) => (b.billingDate as Timestamp).toDate().getTime() - (a.billingDate as Timestamp).toDate().getTime());
+
+		} catch (error) {
+			console.error('Error fetching billings by account number:', error);
+			throw error;
+		} finally {
+			isLoading.value = false;
+		}
+	}
+	
 
 	async function addBilling(
 		payload: Billing,
@@ -132,11 +166,32 @@ export const useBillingStore = defineStore('billing', () => {
 		}
 	}
 
-	async function deleteBilling(uid: string): Promise<StoreResponse> {
+	async function deleteBilling(residentUid: string): Promise<StoreResponse> {
 		isLoading.value = true;
 		try {
-			await deleteDoc(doc(db, 'billings', uid));
-			billings.value = billings.value.filter((item) => item.uid !== uid);
+			const q = query(
+				collection(db, 'billings'),
+				where('residentUid', '==', residentUid),
+			);
+			const querySnapshot = await getDocs(q);
+
+			if (querySnapshot.empty) {
+				return {
+					status: 'error',
+					statusMessage: 'Error message',
+					message: 'No billing records found for this residentUid',
+				};
+			}
+
+			await Promise.all(
+				querySnapshot.docs.map((document) =>
+					deleteDoc(doc(db, 'billings', document.id)),
+				),
+			);
+
+			billings.value = billings.value.filter(
+				(item) => item.residentUid !== residentUid,
+			);
 			return {
 				status: 'success',
 				statusMessage: 'Success message',
@@ -196,6 +251,7 @@ export const useBillingStore = defineStore('billing', () => {
 		isLoading,
 		fetchCurrentBillings,
 		fetchBillings,
+		fetchBillingsByAccountNumber,
 		addBilling,
 		fetchBilling,
 		deleteBilling,

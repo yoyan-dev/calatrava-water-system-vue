@@ -15,6 +15,8 @@ import {
 	getCountFromServer,
 	Timestamp,
 	writeBatch,
+	where,
+	setDoc,
 } from 'firebase/firestore';
 import type { StoreResponse } from '@/types/store-response';
 
@@ -30,7 +32,7 @@ export const useResidentStore = defineStore('resident', () => {
 		totalResidents.value = snapshot.data().count;
 	}
 
-	async function fetchResidents(event?: any) {
+	async function fetchResidents() {
 		isLoading.value = true;
 
 		const residentQuery = query(
@@ -85,14 +87,17 @@ export const useResidentStore = defineStore('resident', () => {
 				};
 			}
 
-			const docRef = await addDoc(collection(db, 'residents'), {
-				...resident,
-				createdAt: Timestamp.now(),
-				classification: 'resedential',
-			});
+			await setDoc(
+				doc(db, 'residents', resident.accountNumber?.toString() ?? ''),
+				{
+					...resident,
+					createdAt: Timestamp.now(),
+					classification: 'resedential',
+				},
+			);
 			residents.value.push({
 				...resident,
-				uid: docRef.id,
+				uid: resident.accountNumber?.toString(),
 				classification: 'resedential',
 			});
 
@@ -116,8 +121,20 @@ export const useResidentStore = defineStore('resident', () => {
 	async function deleteResident(uid: string): Promise<StoreResponse> {
 		isLoading.value = true;
 		try {
+			const billingQuery = query(
+				collection(db, 'billings'),
+				where('residentUid', '==', uid),
+			);
+			const billingSnapshot = await getDocs(billingQuery);
+
+			const batch = writeBatch(db);
+			billingSnapshot.forEach((doc) => batch.delete(doc.ref));
+			await batch.commit();
+
 			await deleteDoc(doc(db, 'residents', uid));
+
 			residents.value = residents.value.filter((val) => val.uid !== uid);
+
 			return {
 				status: 'success',
 				statusMessage: 'Success message',
