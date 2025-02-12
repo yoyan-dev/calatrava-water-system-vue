@@ -2,24 +2,28 @@
 	import { ref } from 'vue';
 	import { useResidentStore } from '@/stores/resident';
 	import { useToast } from 'primevue/usetoast';
+	import type { Resident } from '@/types/resident';
 
 	const toast = useToast();
 	const store = useResidentStore();
 
 	const isOpen = ref(false);
 
-	function onDelete() {
-		console.log(props.selectedResidents)
+	async function onDelete() {
+		const uids = props.selectedResidents.map(
+			(resident: Resident) => resident.uid,
+		) as string[];
+		const response = await store.deleteResidents(uids);
 		toast.add({
-			severity: 'success',
-			summary: 'Successful',
-			detail: 'Resident Deleted',
+			severity: response.status,
+			summary: response.statusMessage,
+			detail: response.message,
 			life: 3000,
 		});
 		isOpen.value = false;
 	}
 
-	const props = defineProps<{ selectedResidents: any }>();
+	const props = defineProps<{ selectedResidents: Resident[] }>();
 </script>
 <template>
 	<div>
@@ -47,6 +51,7 @@
 					size="small"
 					@click="isOpen = false" />
 				<Button
+					:loading="store.isLoading"
 					size="small"
 					label="Yes"
 					@click="onDelete" />

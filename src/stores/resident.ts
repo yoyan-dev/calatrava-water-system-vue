@@ -152,7 +152,7 @@ export const useResidentStore = defineStore('resident', () => {
 		}
 	}
 
-	async function deleteResidents(uids: string[]) {
+	async function deleteResidents(uids: string[]): Promise<StoreResponse> {
 		isLoading.value = true;
 		const batch = writeBatch(db);
 
