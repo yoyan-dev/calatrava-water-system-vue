@@ -17,12 +17,7 @@
 
 	const resident = ref<Resident>({});
 
-	const previousBilling = ref({
-		readingDate: 'January 01, 2025',
-		distributionDate: 'January 01, 2025',
-		dueDate: 'January 01, 2025',
-		disconnectionDate: 'January 01, 2025',
-	});
+	const previousBilling = ref<Billing>({});
 
 	const billing = reactive<Billing>({
 		waterBill: undefined,
@@ -76,6 +71,9 @@
 			(resident: Resident) => resident.uid == selected.value?.uid,
 		);
 		resident.value = { ...findResident };
+		if(findResident){
+			previousBilling.value = {...findResident.currentBilling}
+		}
 	});
 
 	onMounted(() => {
@@ -85,14 +83,14 @@
 </script>
 
 <template>
-	<div class="bg-white p-2">
+	<div class="bg-white p-5">
 		<form @submit.prevent="onSubmit">
 			<div
 				class="text-xl font-medium text-surface-900 dark:text-surface-0 mb-2">
 				Create New Water Bill
 			</div>
 			<div class="flex gap-5">
-				<div class="flex flex-col gap-2 bg-gray-50 p-2 px-5 rounded-md flex-1">
+				<div class="flex flex-col gap-2 p-2 px-5 rounded-md flex-1">
 					<div>
 						<label
 							for="account-number"
@@ -101,7 +99,6 @@
 						>
 						<Select
 							v-model="selected"
-							variant="filled"
 							:loading="residentStore.isLoading"
 							:options="selectOptions"
 							optionLabel="fullName"
@@ -141,22 +138,25 @@
                 >Classification: {{ resident.classification }}</label
               >
             </div> -->
-						<div class="pt-2 border-t mt-2">
+						<div class="pt-2 border-t mt-2" >
 							<div
 								class="text-xl font-medium text-surface-900 dark:text-surface-0 mb-2 mt-2">
 								Previous Billing Schedule
 							</div>
-							<div class="flex flex-col gap-1 text-gray-700 font-thin">
+							<div class="flex flex-col gap-1 text-gray-700 font-thin" v-if="previousBilling.readingDate">
 								<span>Reading Date: {{ previousBilling.readingDate }}</span>
 								<span
-									>Distribution Dat:
+									>Distribution Date:
 									{{ previousBilling.distributionDate }}</span
 								>
-								<span>Due Dat: {{ previousBilling.dueDate }}</span>
+								<span>Due Date: {{ previousBilling.dueDate }}</span>
 								<span
-									>Disconnection Dat:
+									>Disconnection Date:
 									{{ previousBilling.disconnectionDate }}</span
 								>
+							</div>
+							<div class="text-center py-5 text-gray-700" v-else>
+								No previous billing found
 							</div>
 						</div>
 					</div>
@@ -194,7 +194,7 @@
 								mode="currency"
 								currency="PHP"
 								:minFractionDigits="2"
-								size="small" />
+								size="small" fluid/>
 						</div>
 						<div>
 							<label
@@ -204,10 +204,11 @@
 							>
 							<InputNumber
 								id="previous-reading"
-								v-model="billing.previousReading"
+								v-model="previousBilling.previousReading"
+								:disabled="previousBilling.previousReading? true : false"
 								required
 								:minFractionDigits="0"
-								size="small" />
+								size="small" fluid/>
 						</div>
 					</div>
 					<div class="flex gap-5">
@@ -224,7 +225,7 @@
 								mode="currency"
 								currency="PHP"
 								:minFractionDigits="2"
-								size="small" />
+								size="small" fluid/>
 						</div>
 						<div>
 							<label
@@ -237,7 +238,7 @@
 								v-model="billing.currentReading"
 								required
 								:minFractionDigits="0"
-								size="small" />
+								size="small" fluid/>
 						</div>
 					</div>
 					<div class="flex gap-5">
@@ -252,7 +253,7 @@
 								v-model="billing.arrears"
 								required
 								:minFractionDigits="2"
-								size="small" />
+								size="small" fluid/>
 						</div>
 						<div>
 							<label
@@ -262,10 +263,11 @@
 							>
 							<InputNumber
 								id="previous-meter-usage"
-								v-model="billing.previousMeterUsage"
+								v-model="previousBilling.previousMeterUsage"
+								:disabled="previousBilling.previousMeterUsage? true : false"
 								required
 								:minFractionDigits="0"
-								size="small" />
+								size="small" fluid/>
 						</div>
 					</div>
 					<div class="flex gap-5">
@@ -282,7 +284,7 @@
 								mode="currency"
 								currency="PHP"
 								:minFractionDigits="2"
-								size="small" />
+								size="small" fluid/>
 						</div>
 						<div>
 							<label
@@ -295,7 +297,7 @@
 								v-model="billing.waterConsumption"
 								required
 								:minFractionDigits="0"
-								size="small" />
+								size="small" fluid/>
 						</div>
 					</div>
 					<div class="flex gap-5">
@@ -310,7 +312,7 @@
 								v-model="billing.amortization"
 								required
 								:minFractionDigits="2"
-								size="small" />
+								size="small" fluid/>
 						</div>
 						<div>
 							<label
@@ -323,7 +325,7 @@
 								v-model="billing.billingAmount"
 								required
 								:minFractionDigits="2"
-								size="small" />
+								size="small" fluid/>
 						</div>
 					</div>
 				</div>
@@ -332,7 +334,6 @@
 						<label class="block">Meter Reader</label>
 						<Select
 							v-model="selectedReader"
-							variant="filled"
 							:loading="readerStore.isLoading.value"
 							:options="readerStore.readers.value"
 							optionLabel="name"
