@@ -45,10 +45,25 @@
 								: ''
 						"
 						class="flex items-center px-2 rounded-lg text-black hover:text-white cursor-pointer hover:bg-primary-400">
-							<i class="pi pi-users"></i>
+							<i class="pi pi-user"></i>
 							<a
 								class="flex items-center p-2 rounded-lg hover:text-white cursor-pointer hover:bg-primary-400">
 								<span>Users</span>
+							</a>
+						</RouterLink>
+					</li>
+					<li>
+						<RouterLink to="/admin/readers" 
+						:class="
+							route.name == 'admin-readers' || route.name == 'admin-reader'
+								? 'bg-primary-500 text-white'
+								: ''
+						"
+						class="flex items-center px-2 rounded-lg text-black hover:text-white cursor-pointer hover:bg-primary-400">
+							<i class="pi pi-users"></i>
+							<a
+								class="flex items-center p-2 rounded-lg hover:text-white cursor-pointer hover:bg-primary-400">
+								<span>Readers</span>
 							</a>
 						</RouterLink>
 					</li>
@@ -63,7 +78,7 @@
 									: ''
 							"
 						class="flex items-center px-2 rounded-lg text-black hover:text-white cursor-pointer hover:bg-primary-400">
-							<i class="pi pi-users"></i>
+							<i class="pi pi-book"></i>
 							<a
 								class="flex items-center p-2 rounded-lg hover:text-white cursor-pointer hover:bg-primary-400">
 								<span>Billings</span>
