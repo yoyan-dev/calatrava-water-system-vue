@@ -8,12 +8,12 @@
 
 	const isOpen = ref(false);
 
-	function deleteReader() {
-		store.deleteReaders(props.uid!);
+	async function deleteReader() {
+		const response = await store.deleteReaders(props.uid!);
 		toast.add({
-			severity: 'success',
-			summary: 'Successful',
-			detail: 'Resident Deleted',
+			severity: response.status,
+			summary: response.statusMessage,
+			detail: response.message,
 			life: 3000,
 		});
 		isOpen.value = false;

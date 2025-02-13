@@ -2,6 +2,7 @@
 	import { reactive, ref } from 'vue';
 	import { useResidentStore } from '@/stores/resident';
 	import type { Resident } from '@/types/resident';
+	import { validateForm } from '../../_composables/validate';
 
 	const store = useResidentStore();
 	const isOpen = ref(false);
@@ -14,9 +15,7 @@
 		firstName?: Resident['firstName'];
 		middleName?: Resident['middleName'];
 		lastName?: Resident['lastName'];
-		waterBill?: Resident['waterBill'];
 		address?: Resident['address'];
-		classification?: Resident['classification'];
 	}>();
 
 	const resident = reactive({
@@ -24,13 +23,18 @@
 		middleName: props.middleName,
 		lastName: props.lastName,
 		address: props.address,
-		classification: props.classification,
 	});
 
 	const isLoading = ref(false);
 	function onSubmit() {
 		isLoading.value = true;
 		isSubmitted.value = true;
+
+		const result = validateForm(resident)
+		if(result.error) {
+			isLoading.value = false;
+			return;
+		}
 		store.updateResident(resident, props.uid!);
 		isOpen.value = false;
 		isLoading.value = false;
@@ -69,7 +73,7 @@
 						<InputText
 							id="name"
 							v-model.trim="resident.firstName"
-							required="true"
+						
 							autofocus
 							:invalid="isSubmitted && !resident.firstName"
 							fluid />
@@ -88,7 +92,7 @@
 						<InputText
 							id="name"
 							v-model.trim="resident.middleName"
-							required="true"
+						
 							autofocus
 							:invalid="isSubmitted && !resident.middleName"
 							fluid />
@@ -107,7 +111,7 @@
 						<InputText
 							id="name"
 							v-model.trim="resident.lastName"
-							required="true"
+						
 							autofocus
 							:invalid="isSubmitted && !resident.lastName"
 							fluid />
@@ -127,7 +131,7 @@
 					<InputText
 						id="name"
 						v-model.trim="resident.address"
-						required="true"
+					
 						autofocus
 						:invalid="isSubmitted && !resident.address"
 						fluid />

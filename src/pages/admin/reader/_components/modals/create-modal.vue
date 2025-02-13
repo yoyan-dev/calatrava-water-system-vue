@@ -11,8 +11,23 @@
 
 	const reader = ref<Reader>({});
 
+	function validateForm() {
+		if (!reader.value.name || !reader.value.area) {
+			return false;
+		}
+		return true;
+	}
+
+	const isSubmitted = ref(false)
+
 	async function onSubmit() {
+		isSubmitted.value = true;
 		isLoading.value = true;
+		const isValid = validateForm()
+		if(!isValid){
+			isLoading.value = false;
+			return
+		}
 		const response = await store.addReader(reader.value);
 		toast.add({
 			severity: response.status,
@@ -22,6 +37,7 @@
 		});
 		isOpen.value = false;
 		reader.value = {};
+		isSubmitted.value = false;
 		isLoading.value = false;
 	}
 </script>
@@ -44,41 +60,43 @@
 					<div>
 						<label
 							for="name"
-							class="block font-bold mb-3"
+							class="block mb-1"
 							>Name</label
 						>
 						<InputText
 							id="name"
 							v-model.trim="reader.name"
-							required="true"
 							autofocus
-							:invalid="isLoading && !reader.name"
+							variant="filled"
+							placeholder="Enter meter reader name"
+							:invalid="isSubmitted && !reader.name"
 							fluid />
 						<small
-							v-if="isLoading && !reader.name"
+							v-if="isSubmitted && !reader.name"
 							class="text-red-500"
-							>Name is required.</small
+							>This field must not be empty.</small
 						>
 					</div>
-					<!-- <div>
+					<div>
 						<label
 							for="name"
-							class="block font-bold mb-3"
-							>First Reading</label
+							class="block mb-1"
+							>Area</label
 						>
-						<InputNumber
-							v-model.trim="reader.currentReading"
-							required="true"
+						<InputText
+							id="name"
+							v-model.trim="reader.area"
 							autofocus
-							inputId="integeronly"
-							:invalid="isLoading && !reader.currentReading"
+							variant="filled"
+							placeholder="Enter meter reader area"
+							:invalid="isSubmitted && !reader.area"
 							fluid />
 						<small
-							v-if="isLoading && !reader.currentReading"
+							v-if="isSubmitted && !reader.area"
 							class="text-red-500"
-							>Reading is required.</small
+							>This field must not be empty.</small
 						>
-					</div> -->
+					</div>
 				</div>
 
 				<div class="w-full flex items-center justify-end gap-4">
@@ -88,6 +106,7 @@
 						text
 						@click="isOpen = false" />
 					<Button
+						:loading="isLoading"
 						label="Save"
 						type="submit" />
 				</div>

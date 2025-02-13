@@ -2,7 +2,9 @@
 	import { reactive, ref } from 'vue';
 	import { useReaderStore } from '@/stores/reader';
 	import type { Reader } from '@/types/reader';
+	import { useToast } from 'primevue';
 
+	const toast = useToast()
 	const store = useReaderStore();
 	const isOpen = ref(false);
 	const isSubmitted = ref(false);
@@ -10,17 +12,39 @@
 	const props = defineProps<{
 		uid?: Reader['uid'];
 		name?: Reader['name'];
+		area?: Reader['area'];
 	}>();
 
 	const reader = reactive({
 		name: props.name,
+		area: props.area,
 	});
 
 	const isLoading = ref(false);
-	function onSubmit() {
+	function validateForm() {
+		if (!reader.name || !reader.area) {
+			return false;
+		}
+		return true;
+	}
+
+	async function onSubmit() {
 		isLoading.value = true;
 		isSubmitted.value = true;
-		// store.updateReader(reader, props.uid!);
+		const isValid = validateForm()
+
+		if(!isValid){
+			isLoading.value = false;
+			return
+		}
+		// const response = await store.updateReader(reader);
+		// toast.add({
+		// 	severity: response.status,
+		// 	summary: response.statusMessage,
+		// 	detail: response.message,
+		// 	life: 3000,
+		// });
+		isSubmitted.value = false;
 		isOpen.value = false;
 		isLoading.value = false;
 	}
@@ -50,20 +74,39 @@
 				<div>
 					<label
 						for="name"
-						class="block font-bold mb-3"
+						class="block mb-1"
 						>Name</label
 					>
 					<InputText
 						id="name"
 						v-model.trim="reader.name"
-						required="true"
 						autofocus
+						variant="filled"
 						:invalid="isSubmitted && !reader.name"
 						fluid />
 					<small
 						v-if="isSubmitted && !reader.name"
 						class="text-red-500"
-						>Name is required.</small
+						>This field must not be empty.</small
+					>
+				</div>
+				<div>
+					<label
+						for="name"
+						class="block mb-1"
+						>Area</label
+					>
+					<InputText
+						id="name"
+						v-model.trim="reader.area"
+						autofocus
+						variant="filled"
+						:invalid="isSubmitted && !reader.area"
+						fluid />
+					<small
+						v-if="isSubmitted && !reader.area"
+						class="text-red-500"
+						>This field must not be empty.</small
 					>
 				</div>
 			</div>

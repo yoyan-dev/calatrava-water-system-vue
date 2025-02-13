@@ -74,11 +74,11 @@
 					</template>
 				</Column>
 				<Column
-					field="address"
+					field="area"
 					header="Area">
 					<template #body="slotProps">
 						<span class="bg-green-200 pb-1 px-4 rounded-lg text-green-800">{{
-							slotProps.data.address
+							slotProps.data.area
 						}}</span>
 					</template>
 				</Column>
