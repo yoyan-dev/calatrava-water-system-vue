@@ -153,9 +153,9 @@
 							<Popover :ref="(el) => (menu[slotProps.index] = el)">
 								<label>Actions</label>
 								<div class="flex flex-col">
-									{{ slotProps.index }}
-									<viewBillModal :billing="slotProps.data" />
-
+									<RouterLink to="">
+										<viewBillModal :billing="slotProps.data" />
+									</RouterLink>
 									<RouterLink
 										:to="`/admin/billing/update/${slotProps.data.uid}`">
 										<Button

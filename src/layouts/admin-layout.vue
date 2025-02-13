@@ -5,11 +5,12 @@
 </script>
 
 <template>
-	<main class="flex h-screen w-full font-sans">
+	<main class="flex h-screen w-full text-surface-600">
+		
 		<aside
 			class="w-64 h-full transition-transform border-r  hidden lg:block">
 			<div
-				class="h-full p-4 overflow-y-auto flex flex-col bg-gray-100 dark:bg-gray-800 shadow-lg">
+				class="h-full p-4 overflow-y-auto flex flex-col bg-white dark:bg-gray-800">
 				<a class="flex items-center ps-2.5 mb-5">
 					<span
 						class="self-center flex items-center text-2xl font-semibold whitespace-nowrap dark:text-white"
@@ -90,27 +91,7 @@
 			</div>
 		</aside>
 		<div
-			class="w-full flex flex-col gap-5  dark:bg-surface-950 p-5 overflow-auto">
-			<Toolbar style="border-radius: 3rem; padding: 1rem 1rem 1rem 1.5rem">
-				<template #start>
-					<div class="flex gap-2 items-center">
-						<Avatar
-							image="/logo.jpeg"
-							class="w-8 h-8" />
-						<div class="font-semibold text-xl">
-							CALATRAVA <span class="text-primary">WATER</span> SYSTEM
-						</div>
-					</div>
-				</template>
-
-				<template #end>
-					<div class="flex items-center gap-2">
-						<Avatar
-							image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png"
-							style="width: 32px; height: 32px" />
-					</div>
-				</template>
-			</Toolbar>
+			class="w-full flex flex-col gap-5 bg-gray-50 p-5 overflow-auto">
 
 			<slot />
 		</div>

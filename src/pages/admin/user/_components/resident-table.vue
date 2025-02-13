@@ -89,7 +89,7 @@
 				<Column
 					field="classification"
 					header="Classification"></Column>
-				<Column :exportable="false">
+				<Column :exportable="false" header="Actions">
 					<template #body="slotProps">
 						<div class="flex">
 							<ViewModal v-bind="slotProps.data" />
