@@ -5,10 +5,8 @@
 	import DeleteModal from './modals/delete-modal.vue';
 	import DeleteSelectedModal from './modals/delete-selected-modal.vue';
 	import UpdateModal from './modals/update-modal.vue';
-	// import { useReaderStore } from '@/stores/reader';
 	import type { Reader } from '@/types/reader';
 
-	// const store = useReaderStore();
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
@@ -48,8 +46,7 @@
 				dataKey="uid"
 				scrollable
 				scrollHeight="450px"
-				:filters="filters"
-				>
+				:filters="filters">
 				<template #empty>
 					<div class="flex items-center justify-center p-4">
 						No readers found.
@@ -63,16 +60,16 @@
 					field="uid"
 					header="UID">
 				</Column>
-				<Column header="Name">
+				<Column
+					header="Name"
+					field="name">
 					<template #body="slotProps">
 						<div class="font-semibold">
 							<Avatar
 								icon="pi pi-user"
 								class="mr-2 bg-primary text-white"
 								size="normal" />
-							{{
-								slotProps.data.firstName
-							}}
+							{{ slotProps.data.name }}
 						</div>
 					</template>
 				</Column>
@@ -80,10 +77,14 @@
 					field="address"
 					header="Area">
 					<template #body="slotProps">
-						<span class="bg-green-200 pb-1 px-4 rounded-lg text-green-800">{{ slotProps.data.address }}</span>
+						<span class="bg-green-200 pb-1 px-4 rounded-lg text-green-800">{{
+							slotProps.data.address
+						}}</span>
 					</template>
 				</Column>
-				<Column :exportable="false" header="Actions">
+				<Column
+					:exportable="false"
+					header="Actions">
 					<template #body="slotProps">
 						<div class="flex">
 							<UpdateModal v-bind="slotProps.data" />
