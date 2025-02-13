@@ -31,11 +31,11 @@ export const useReaderStore = () => {
 		}
 	}
 
-	async function addReader(name: string): Promise<StoreResponse> {
+	async function addReader(payload: Reader): Promise<StoreResponse> {
 		isLoading.value = true;
 		try {
-			const res = await addDoc(collection(db, 'readers'), { name });
-			readers.value.push({ name, uid: res.id });
+			const res = await addDoc(collection(db, 'readers'), { ...payload });
+			readers.value.push({ ...payload, uid: res.id });
 			return {
 				status: 'success',
 				statusMessage: 'Success message',

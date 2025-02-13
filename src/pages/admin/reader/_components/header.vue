@@ -1,9 +1,7 @@
 <script setup lang="ts">
-
-const props = defineProps<{
-	totalReaders: number;
-}>();
-
+	const props = defineProps<{
+		totalReaders: number;
+	}>();
 </script>
 <template>
 	<div class="flex justify-between">
@@ -14,7 +12,7 @@ const props = defineProps<{
 		</div>
 		<div>
 			<div class="text-sm px-3 py-2 text-slate-600 bg-gray-50 rounded-full">
-				{{ totalReaders }} Readers
+				{{ props.totalReaders }} Readers
 			</div>
 		</div>
 	</div>

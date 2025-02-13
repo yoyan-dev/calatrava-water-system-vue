@@ -5,18 +5,15 @@
 	import { useReaderStore } from '@/stores/reader';
 	import Header from './_components/header.vue';
 
-	const readerStore = useReaderStore()
-	const store = useResidentStore();
+	const store = useReaderStore();
 	onMounted(() => {
-		readerStore.fetchReaders()
-		store.fetchResidents();
-		store.fetchTotalResidents();
+		store.fetchReaders();
 	});
 </script>
 
 <template>
 	<div class="bg-surface-0 dark:bg-surface-900 p-6 border rounded-lg">
-		<Header :totalReaders="readerStore.readers.length"/>
-		<ReaderTable :readers="store.residents"/>
+		<Header :totalReaders="store.readers.value.length" />
+		<ReaderTable :readers="store.readers.value" />
 	</div>
 </template>
