@@ -2,6 +2,7 @@
 	import { ref, watch, onMounted, watchEffect, reactive } from 'vue';
 	import { useBillingStore } from '@/stores/billing';
 	import { useResidentStore } from '@/stores/resident';
+	import { useReaderStore } from '@/stores/reader';
 	import type { Resident } from '@/types/resident';
 	import { useRouter } from 'vue-router';
 	import type { Billing } from '@/types/billing';
@@ -11,6 +12,7 @@
 	const router = useRouter();
 	const billingStore = useBillingStore();
 	const residentStore = useResidentStore();
+	const readerStore = useReaderStore()
 	const isLoading = ref(false);
 
 	const resident = ref<Resident>({});
@@ -41,9 +43,12 @@
 		{ accountNumber: any; uid: string; fullName: string }[]
 	>([]);
 
+	const selectedReader = ref()
+
 	async function onSubmit() {
 		isLoading.value = true;
 		billing.area = resident.value.address;
+		billing.meterReader = selectedReader.value.name
 		const result = await billingStore.addBilling(billing, selected.value);
 		isLoading.value = false;
 
@@ -62,7 +67,9 @@
 			fullName: `${item.firstName ?? ''} ${item.lastName ?? ''}`.trim(),
 			uid: item.uid ?? '',
 		}));
+		// selectOptionsReader.value = readerStore.value.readers.map((row: any) => row)
 	});
+
 
 	watch(selected, () => {
 		const findResident = residentStore.residents.find(
@@ -73,15 +80,16 @@
 
 	onMounted(() => {
 		residentStore.fetchResidents();
+		readerStore.fetchReaders()
 	});
 </script>
 
 <template>
-	<div class="">
+	<div class="bg-white p-2">
 		<form @submit.prevent="onSubmit">
 			<div
 				class="text-xl font-medium text-surface-900 dark:text-surface-0 mb-2">
-				Create Water Billing
+				Create New Water Bill
 			</div>
 			<div class="flex gap-5">
 				<div class="flex flex-col gap-2 bg-gray-50 p-2 px-5 rounded-md flex-1">
@@ -94,10 +102,11 @@
 						<Select
 							v-model="selected"
 							variant="filled"
+							:loading="residentStore.isLoading"
 							:options="selectOptions"
 							optionLabel="fullName"
 							size="small"
-							placeholder="Select Account Number"
+							placeholder="Select resident"
 							class="w-full md:w-56" />
 					</div>
 					<div v-if="resident.accountNumber">
@@ -159,15 +168,7 @@
 							Billing Details
 						</div>
 					</div>
-					<div class="flex gap-5">
-						<div>
-							<label class="block">Bill Number</label>
-							<InputNumber
-								v-model="billing.billNumber"
-								required
-								:useGrouping="false"
-								size="small" />
-						</div>
+					<div>
 						<div>
 							<label class="block">Billing Date</label>
 							<DatePicker
@@ -329,7 +330,15 @@
 				<div class="p-5 border rounded-lg flex-1 text-gray-700">
 					<div>
 						<label class="block">Meter Reader</label>
-						<InputText placeholder="Enter meter reader" />
+						<Select
+							v-model="selectedReader"
+							variant="filled"
+							:loading="readerStore.isLoading.value"
+							:options="readerStore.readers.value"
+							optionLabel="name"
+							size="small"
+							placeholder="Select meter reader"
+							class="w-full md:w-56" />
 					</div>
 					<div
 						class="text-xl font-medium text-surface-900 dark:text-surface-0 mb-2 mt-2">
