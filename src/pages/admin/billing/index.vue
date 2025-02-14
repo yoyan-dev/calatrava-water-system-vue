@@ -6,10 +6,11 @@
 	import DeleteSelected from '@/pages/admin/billing/_components/modals/delete-selected-modal.vue';
 	import ViewReciept from '@/pages/admin/billing/_components/modals/view-reciept.vue';
 	import viewBillModal from './_components/modals/view-bill-modal.vue';
-	import { formatToPeso } from '@/composables/currencyFormat';
 	import { useBillingStore } from '@/stores/billing';
 	import useFirebaseTimestamp from '@/composables/useFirebaseTimestamp';
 	import { useRouter } from 'vue-router';
+	import ImportModal from './_components/modals/import-modal.vue';
+	import { useDialog } from 'primevue';
 
 	const store = useBillingStore();
 	const router = useRouter();
@@ -68,6 +69,7 @@
 									icon="pi pi-plus"
 									severity="primary" />
 							</RouterLink>
+							<ImportModal />
 							<DeleteSelected
 								:selectedBills="selectedWaterBill"
 								v-if="selectedWaterBill.length" />
@@ -134,7 +136,7 @@
 					<Column
 						field="area"
 						header="Area"></Column>
-					<Column header="Status" >
+					<Column header="Status">
 						<template #body="slotProps">
 							<Tag
 								severity="warn"
