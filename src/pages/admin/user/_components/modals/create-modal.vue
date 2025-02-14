@@ -1,8 +1,9 @@
 <script setup lang="ts">
-	import { ref } from 'vue';
+	import { ref, reactive } from 'vue';
 	import { useResidentStore } from '@/stores/resident';
 	import type { Resident } from '@/types/resident';
 	import { useToast } from 'primevue';
+	import { validateForm } from '../../_composables/validate';
 
 	const store = useResidentStore();
 	const toast = useToast();
@@ -10,9 +11,22 @@
 	const isLoading = ref(false);
 
 	const resident = ref<Resident>({});
+	const errorAccountNumberMessage = ref('')
+
+	const isSubmitted = ref(false)
 
 	async function onSubmit() {
 		isLoading.value = true;
+		isSubmitted.value = true;
+		
+		const result = validateForm(resident.value)
+		errorAccountNumberMessage.value = result.errorAccountNumberMessage
+		if(result.error) {
+			isLoading.value = false;
+			return;
+		}
+
+		isSubmitted.value = false;
 		const response = await store.addResident(resident.value);
 		toast.add({
 			severity: response.status,
@@ -44,59 +58,59 @@
 					<div>
 						<label
 							for="acc-no"
-							class="block font-bold mb-3"
+							class="block mb-1"
 							>Account Number</label
 						>
 						<InputNumber
 							id="acc-no"
 							v-model.trim="resident.accountNumber"
-							required="true"
+							variant="filled"
 							autofocus
 							inputId="withoutgrouping"
 							:useGrouping="false"
-							:invalid="isLoading && !resident.accountNumber"
+							:invalid="isSubmitted && !resident.accountNumber"
 							fluid />
 						<small
-							v-if="isLoading && !resident.accountNumber"
+							v-if="isSubmitted && !resident.accountNumber || errorAccountNumberMessage"
 							class="text-red-500"
-							>Account Number is required.</small
+							>{{errorAccountNumberMessage? errorAccountNumberMessage : 'Account Number is required.'}}</small
 						>
 					</div>
 					<div class="flex gap-5">
 						<div>
 							<label
 								for="name"
-								class="block font-bold mb-3"
+								class="block mb-1"
 								>Firstname</label
 							>
 							<InputText
 								id="name"
 								v-model.trim="resident.firstName"
-								required="true"
+								variant="filled"
 								autofocus
-								:invalid="isLoading && !resident.firstName"
+								:invalid="isSubmitted && !resident.firstName"
 								fluid />
 							<small
-								v-if="isLoading && !resident.firstName"
+								v-if="isSubmitted && !resident.firstName"
 								class="text-red-500"
-								>firstname is required.</small
+								>Firstname is required.</small
 							>
 						</div>
 						<div>
 							<label
 								for="name"
-								class="block font-bold mb-3"
+								class="block mb-1"
 								>Middle name</label
 							>
 							<InputText
 								id="name"
 								v-model.trim="resident.middleName"
-								required="true"
+								variant="filled"
 								autofocus
-								:invalid="isLoading && !resident.middleName"
+								:invalid="isSubmitted && !resident.middleName"
 								fluid />
 							<small
-								v-if="isLoading && !resident.middleName"
+								v-if="isSubmitted && !resident.middleName"
 								class="text-red-500"
 								>Middle name is required.</small
 							>
@@ -104,18 +118,18 @@
 						<div>
 							<label
 								for="name"
-								class="block font-bold mb-3"
+								class="block mb-1"
 								>Lastname</label
 							>
 							<InputText
 								id="name"
 								v-model.trim="resident.lastName"
-								required="true"
+								variant="filled"
 								autofocus
-								:invalid="isLoading && !resident.lastName"
+								:invalid="isSubmitted && !resident.lastName"
 								fluid />
 							<small
-								v-if="isLoading && !resident.lastName"
+								v-if="isSubmitted && !resident.lastName"
 								class="text-red-500"
 								>Last name is required.</small
 							>
@@ -124,41 +138,22 @@
 					<div>
 						<label
 							for="name"
-							class="block font-bold mb-3"
+							class="block mb-1"
 							>Address</label
 						>
 						<InputText
 							id="name"
 							v-model.trim="resident.address"
-							required="true"
+							variant="filled"
 							autofocus
-							:invalid="isLoading && !resident.address"
+							:invalid="isSubmitted && !resident.address"
 							fluid />
 						<small
-							v-if="isLoading && !resident.address"
+							v-if="isSubmitted && !resident.address"
 							class="text-red-500"
 							>Address is required.</small
 						>
 					</div>
-					<!-- <div>
-						<label
-							for="name"
-							class="block font-bold mb-3"
-							>First Reading</label
-						>
-						<InputNumber
-							v-model.trim="resident.currentReading"
-							required="true"
-							autofocus
-							inputId="integeronly"
-							:invalid="isLoading && !resident.currentReading"
-							fluid />
-						<small
-							v-if="isLoading && !resident.currentReading"
-							class="text-red-500"
-							>Reading is required.</small
-						>
-					</div> -->
 				</div>
 
 				<div class="w-full flex items-center justify-end gap-4">
@@ -169,6 +164,7 @@
 						@click="isOpen = false" />
 					<Button
 						label="Save"
+						:loading="isLoading"
 						type="submit" />
 				</div>
 			</form>

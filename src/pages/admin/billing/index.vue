@@ -125,7 +125,7 @@
 						field="waterBill"
 						header="Water Bill">
 						<template #body="slotProps">
-							<span class="px-2 py-1 rounded-md bg-primary-50 text-primary">
+							<span class="rounded-md text-primary">
 								<i name="pi pi-money-bill"></i
 								>{{ `₱ ${slotProps.data.waterBill}` }}
 							</span>
@@ -134,11 +134,11 @@
 					<Column
 						field="area"
 						header="Area"></Column>
-					<Column header="Status">
-						<template #body>
+					<Column header="Status" >
+						<template #body="slotProps">
 							<Tag
 								severity="warn"
-								value="pending"></Tag>
+								:value="slotProps.data.status"></Tag>
 						</template>
 					</Column>
 					<Column header="Actions">
@@ -153,9 +153,9 @@
 							<Popover :ref="(el) => (menu[slotProps.index] = el)">
 								<label>Actions</label>
 								<div class="flex flex-col">
-									{{ slotProps.index }}
-									<viewBillModal :billing="slotProps.data" />
-
+									<RouterLink to="">
+										<viewBillModal :billing="slotProps.data" />
+									</RouterLink>
 									<RouterLink
 										:to="`/admin/billing/update/${slotProps.data.uid}`">
 										<Button

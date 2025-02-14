@@ -5,19 +5,16 @@
 	import DeleteModal from './modals/delete-modal.vue';
 	import DeleteSelectedModal from './modals/delete-selected-modal.vue';
 	import UpdateModal from './modals/update-modal.vue';
-	import ViewModal from './modals/view-modal.vue';
-	import { useResidentStore } from '@/stores/resident';
-	import type { Resident } from '@/types/resident';
+	import type { Reader } from '@/types/reader';
 
-	const store = useResidentStore();
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
 
-	const selectedResidents = ref([]);
+	const selectedReaders = ref([]);
 
 	const props = defineProps<{
-		residents: Resident[];
+		readers: Reader[];
 	}>();
 </script>
 
@@ -37,62 +34,59 @@
 			<template #end>
 				<CreateModal />
 				<DeleteSelectedModal
-					:selectedResidents="selectedResidents"
-					v-if="selectedResidents && selectedResidents.length" />
+					:selectedReaders="selectedReaders"
+					v-if="selectedReaders && selectedReaders.length" />
 			</template>
 		</Toolbar>
 		<div class="card border rounded-md">
 			<DataTable
-				:value="props.residents"
-				v-model:selection="selectedResidents"
+				:value="props.readers"
+				v-model:selection="selectedReaders"
 				size="small"
 				dataKey="uid"
 				scrollable
 				scrollHeight="450px"
-				:filters="filters"
-				:loading="store.isLoading">
+				:filters="filters">
 				<template #empty>
 					<div class="flex items-center justify-center p-4">
-						No residents found.
+						No readers found.
 					</div>
 				</template>
 				<Column
 					selectionMode="multiple"
 					style="width: 3rem"
 					:exportable="false"></Column>
-				<column header="id">
-					<template #body="slotProps"
-						><span>{{ slotProps.index + 1 }}</span></template
-					>
-				</column>
 				<Column
-					field="accountNumber"
-					header="Account No.">
+					field="uid"
+					header="UID">
 				</Column>
-				<Column header="Name">
+				<Column
+					header="Name"
+					field="name">
 					<template #body="slotProps">
 						<div class="font-semibold">
 							<Avatar
 								icon="pi pi-user"
-								class="mr-2"
+								class="mr-2 bg-primary text-white"
 								size="normal" />
-							{{
-								`${slotProps.data.firstName} ${slotProps.data.middleName} ${slotProps.data.lastName}`
-							}}
+							{{ slotProps.data.name }}
 						</div>
 					</template>
 				</Column>
 				<Column
-					field="address"
-					header="Address">
+					field="area"
+					header="Area">
+					<template #body="slotProps">
+						<span class="bg-green-200 pb-1 px-4 rounded-lg text-green-800">{{
+							slotProps.data.area
+						}}</span>
+					</template>
 				</Column>
 				<Column
-					field="classification"
-					header="Classification"></Column>
-				<Column :exportable="false" header="Actions">
+					:exportable="false"
+					header="Actions">
 					<template #body="slotProps">
 						<div class="flex">
-							<ViewModal v-bind="slotProps.data" />
 							<UpdateModal v-bind="slotProps.data" />
 							<DeleteModal :uid="slotProps.data.uid" />
 						</div>
@@ -102,7 +96,7 @@
 		</div>
 		<!-- <Paginator
 			:rows="10"
-			:totalRecords="store.totalResidents"
+			:totalRecords="store.totalReaders"
 			:rowsPerPageOptions="[10, 20, 30]"
 			@page="store.onPageChange"
 			template="PrevPageLink CurrentPageReport NextPageLink  RowsPerPageDropdown"

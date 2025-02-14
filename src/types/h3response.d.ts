@@ -1,4 +1,4 @@
-interface H3Response<T = any> {
+export interface H3Response<T = any> {
 	status?: number;
 	message?: string;
 	body?: any;
