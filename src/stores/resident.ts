@@ -1,24 +1,23 @@
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { defineStore } from 'pinia';
 import type { Resident } from '@/types/resident';
 import { useFirestore } from 'vuefire';
 import {
-	addDoc,
 	collection,
 	deleteDoc,
 	doc,
 	getDoc,
 	getDocs,
-	orderBy,
 	query,
 	updateDoc,
-	getCountFromServer,
 	Timestamp,
 	writeBatch,
 	where,
 	setDoc,
 } from 'firebase/firestore';
 import type { StoreResponse } from '@/types/store-response';
+import type { H3Response } from '@/types/h3response';
+import { useFetch, watchDebounced } from '@vueuse/core';
 
 export const useResidentStore = defineStore('resident', () => {
 	const db = useFirestore();
@@ -26,31 +25,34 @@ export const useResidentStore = defineStore('resident', () => {
 	const resident = ref<Resident>({});
 	const isLoading = ref(false);
 	const totalResidents = ref(0);
+	const searchQuery = ref('');
+	const filterAddress = ref('');
+	const page = ref(0);
 
-	async function fetchTotalResidents() {
-		const snapshot = await getCountFromServer(collection(db, 'residents'));
-		totalResidents.value = snapshot.data().count;
-	}
+	// getters
+	const offset = computed(() => page.value * 10);
 
-	async function fetchResidents() {
+	async function fetchResidents(searchParams: Record<string, any> = {}) {
 		isLoading.value = true;
 
-		const residentQuery = query(
-			collection(db, 'residents'),
-			orderBy('firstName'),
-		);
-
 		try {
-			const snapshot = await getDocs(residentQuery);
+			const queryString = new URLSearchParams(searchParams).toString();
+			console.log(queryString);
+			const url = `${import.meta.env.VITE_API_URL}/api/residents${
+				queryString ? '?' + queryString : ''
+			}`;
+			const { data: response } = await useFetch(
+				url,
+				{
+					method: 'GET',
+				},
+				{
+					refetch: true,
+				},
+			).json<H3Response<Resident[]>>();
 
-			residents.value = snapshot.docs.map((doc) => {
-				const { searchKeyword, createdAt, createtedAt, ...rest } = doc.data();
-				return {
-					uid: doc.id,
-					...rest,
-				};
-			});
-			console.log(residents.value);
+			residents.value = response.value?.data as Resident[];
+			totalResidents.value = response.value?.total as number;
 		} catch (error) {
 			console.error('Error fetching students:', error);
 		} finally {
@@ -211,12 +213,27 @@ export const useResidentStore = defineStore('resident', () => {
 		}
 	}
 
+	watchDebounced(
+		[searchQuery, filterAddress, offset],
+		(newQuery) => {
+			console.log(newQuery);
+			fetchResidents({
+				q: newQuery[0],
+				address: newQuery[1],
+				offset: newQuery[2],
+			});
+		},
+		{ debounce: 300 },
+	);
+
 	return {
 		residents,
 		resident,
 		isLoading,
 		totalResidents,
-		fetchTotalResidents,
+		searchQuery,
+		filterAddress,
+		page,
 		fetchResident,
 		fetchResidents,
 		addResident,

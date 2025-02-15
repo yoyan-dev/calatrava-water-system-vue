@@ -1,6 +1,5 @@
 <script setup lang="ts">
-	import { ref } from 'vue';
-	import { FilterMatchMode } from '@primevue/core/api';
+	import { ref, watch } from 'vue';
 	import CreateModal from './modals/create-modal.vue';
 	import DeleteModal from './modals/delete-modal.vue';
 	import DeleteSelectedModal from './modals/delete-selected-modal.vue';
@@ -10,9 +9,6 @@
 	import type { Resident } from '@/types/resident';
 
 	const store = useResidentStore();
-	const filters = ref({
-		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-	});
 
 	const selectedResidents = ref([]);
 
@@ -30,7 +26,7 @@
 						<i class="pi pi-search" />
 					</InputIcon>
 					<InputText
-						v-model="filters['global'].value"
+						v-model="store.searchQuery"
 						placeholder="Search..." />
 				</IconField>
 			</template>
@@ -47,9 +43,6 @@
 				v-model:selection="selectedResidents"
 				size="small"
 				dataKey="uid"
-				scrollable
-				scrollHeight="450px"
-				:filters="filters"
 				:loading="store.isLoading">
 				<template #empty>
 					<div class="flex items-center justify-center p-4">
@@ -66,30 +59,32 @@
 					>
 				</column>
 				<Column
-					field="accountNumber"
-					header="Account No.">
+					field="uid"
+					header="Account Number">
 				</Column>
 				<Column header="Name">
 					<template #body="slotProps">
-						<div class="font-semibold">
+						<div class="font-semibold capitalize">
 							<Avatar
 								icon="pi pi-user"
 								class="mr-2"
 								size="normal" />
-							{{
-								`${slotProps.data.firstName} ${slotProps.data.middleName} ${slotProps.data.lastName}`
-							}}
+							{{ slotProps.data.fullname }}
 						</div>
 					</template>
 				</Column>
 				<Column
+					class="capitalize"
 					field="address"
 					header="Address">
 				</Column>
 				<Column
 					field="classification"
-					header="Classification"></Column>
-				<Column :exportable="false" header="Actions">
+					header="Classification"
+					class="capitalize"></Column>
+				<Column
+					:exportable="false"
+					header="Actions">
 					<template #body="slotProps">
 						<div class="flex">
 							<ViewModal v-bind="slotProps.data" />
@@ -100,12 +95,16 @@
 				</Column>
 			</DataTable>
 		</div>
-		<!-- <Paginator
+		<Paginator
 			:rows="10"
+			@page="(e) => (store.page = e.page)"
 			:totalRecords="store.totalResidents"
-			:rowsPerPageOptions="[10, 20, 30]"
-			@page="store.onPageChange"
-			template="PrevPageLink CurrentPageReport NextPageLink  RowsPerPageDropdown"
-			currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" /> -->
+			template="FirstPageLink PrevPageLink  PageLinks  NextPageLink LastPageLink">
+			<template #start="slotProps">
+				Showing {{ slotProps.state.page * 10 + 1 }} to
+				{{ Math.min((slotProps.state.page + 1) * 10, store.totalResidents) }} of
+				{{ store.totalResidents }} results
+			</template>
+		</Paginator>
 	</div>
 </template>

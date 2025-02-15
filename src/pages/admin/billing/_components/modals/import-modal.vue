@@ -2,9 +2,9 @@
 	import { ref, watch } from 'vue';
 	import Papa from 'papaparse';
 	import { useToast, type FileUploadSelectEvent } from 'primevue';
-	import axios from 'axios';
+	import { useFetch } from '@vueuse/core';
 
-	const toast = useToast()
+	const toast = useToast();
 	const isOpen = ref(false);
 	const csvData = ref<any[]>();
 
@@ -35,19 +35,22 @@
 		});
 	}
 
-	async function onSubmit (data: any) {
-		try{
-			const result = await axios.post(`${import.meta.env.VITE_API_URL}/api/billings`, data);
-			console.log(result);
-
+	async function onSubmit(payload: any) {
+		try {
+			const { data: result } = await useFetch(
+				`${import.meta.env.VITE_API_URL}/api/billings`,
+			)
+				.post(payload)
+				.json();
 			toast.add({
-			severity: result.data.statusCode === 200 ? 'success' : 'error',
-			summary: result.data.statusMessage,
-			detail: result.data.message,
-			life: 3000,
-		});
-		} catch (e){
-			console.error(e)
+				severity: result.value.statusCode == 200 ? 'success' : 'error',
+				summary: result.value.statusMessage,
+				detail: result.value.message,
+				life: 3000,
+			});
+			isOpen.value = false;
+		} catch (e) {
+			console.error(e);
 		}
 	}
 </script>

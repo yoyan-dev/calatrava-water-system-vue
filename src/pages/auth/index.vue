@@ -1,8 +1,8 @@
 <script setup lang="ts">
 	import { useRouter } from 'vue-router';
 	import { useFetch } from '@vueuse/core';
-	import { signInWithCustomToken, onAuthStateChanged } from 'firebase/auth';
-	import { ref, computed } from 'vue';
+	import { signInWithCustomToken } from 'firebase/auth';
+	import { ref } from 'vue';
 	import { useFirebaseAuth } from 'vuefire';
 	import type { H3Response } from '@/types/h3response';
 

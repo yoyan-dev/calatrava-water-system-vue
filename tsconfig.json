@@ -7,7 +7,8 @@
 		"noUnusedParameters": false,
 		"noFallthroughCasesInSwitch": true,
 		"allowSyntheticDefaultImports": true,
-		"types": ["topojson-client"]
+		"types": ["topojson-client"],
+		"moduleResolution": "Node"
 	},
 
 	"references": [
