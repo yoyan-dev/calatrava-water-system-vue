@@ -1,8 +1,10 @@
 <script setup lang="ts">
 	import { ref, watch } from 'vue';
 	import Papa from 'papaparse';
-	import type { FileUploadSelectEvent } from 'primevue';
+	import { useToast, type FileUploadSelectEvent } from 'primevue';
+	import axios from 'axios';
 
+	const toast = useToast()
 	const isOpen = ref(false);
 	const csvData = ref<any[]>();
 
@@ -32,6 +34,22 @@
 			},
 		});
 	}
+
+	async function onSubmit (data: any) {
+		try{
+			const result = await axios.post(`${import.meta.env.VITE_API_URL}/api/billings`, data);
+			console.log(result);
+
+			toast.add({
+			severity: 'error',
+			summary: result.data.statusMessage,
+			detail: result.data.message,
+			life: 3000,
+		});
+		} catch (e){
+			console.error(e)
+		}
+	}
 </script>
 
 <template>
@@ -60,7 +78,7 @@
 				@click="isOpen = false" />
 			<Button
 				label="Upload"
-				@click="" />
+				@click="onSubmit(csvData)" />
 		</template>
 	</Dialog>
 </template>
