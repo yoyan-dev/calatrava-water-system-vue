@@ -41,7 +41,7 @@
 			console.log(result);
 
 			toast.add({
-			severity: 'error',
+			severity: result.data.statusCode === 200 ? 'success' : 'error',
 			summary: result.data.statusMessage,
 			detail: result.data.message,
 			life: 3000,
