@@ -37,7 +37,7 @@
 			case 'Paid':
 				return 'success';
 
-			case 'LOWSTOCK':
+			case 'Pending':
 				return 'warn';
 
 			case 'OUTOFSTOCK':
@@ -62,13 +62,13 @@
 			<div>
 				<Toolbar>
 					<template #end>
-						<div class="flex gap-3">
-							<RouterLink to="/admin/billing/create">
+						<div class="flex justify-end gap-3 w-full">
+							<!-- <RouterLink to="/admin/billing/create">
 								<Button
 									label="Create"
 									icon="pi pi-plus"
 									severity="primary" />
-							</RouterLink>
+							</RouterLink> -->
 							<ImportModal />
 							<DeleteSelected
 								:selectedBills="selectedWaterBill"
@@ -77,7 +77,7 @@
 					</template>
 
 					<template #start>
-						<div class="flex gap-5">
+						<div class="flex gap-5 w-full">
 							<IconField>
 								<InputIcon>
 									<i class="pi pi-search" />
@@ -157,15 +157,6 @@
 								<div class="flex flex-col">
 									<RouterLink to="">
 										<viewBillModal :billing="slotProps.data" />
-									</RouterLink>
-									<RouterLink
-										:to="`/admin/billing/update/${slotProps.data.uid}`">
-										<Button
-											icon="pi pi-pen-to-square"
-											severity="secondary"
-											size="small"
-											label="edit"
-											text />
 									</RouterLink>
 									<RouterLink to="">
 										<ViewReciept />

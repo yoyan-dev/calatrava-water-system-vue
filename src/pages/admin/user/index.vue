@@ -11,7 +11,7 @@
 </script>
 
 <template>
-	<div class="bg-surface-0 dark:bg-surface-900 p-6 border rounded-lg">
+	<div class="bg-surface-0 dark:bg-surface-900 p-2 py-6 md:p-6 border rounded-lg">
 		<Header :totalResident="store.totalResidents" />
 		<ResidentTable :residents="store.residents" />
 	</div>

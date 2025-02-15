@@ -58,11 +58,12 @@
 <template>
 	<Button
 		label="Import CSV"
+		icon="pi pi-export "
 		@click="isOpen = true" />
 	<Dialog
 		v-model:visible="isOpen"
 		:style="{ width: '450px' }"
-		header="Confirm"
+		header="Import csv"
 		:modal="true">
 		<FileUpload
 			:pt="{
