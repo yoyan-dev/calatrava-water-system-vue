@@ -16,6 +16,13 @@
 		residents: Resident[];
 	}>();
 
+	const menu = ref<any[]>([]);
+
+	function onToggled(event: Event, index: number) {
+		menu.value[index].toggle(event);
+	}
+
+
 </script>
 
 <template>
@@ -93,11 +100,21 @@
 					:exportable="false"
 					header="Actions">
 					<template #body="slotProps">
-						<div class="flex">
-							<ViewModal v-bind="slotProps.data" />
-							<UpdateModal v-bind="slotProps.data" />
-							<DeleteModal :uid="slotProps.data.uid" />
-						</div>
+						<Button
+							type="button"
+							severity="secondary"
+							icon="pi pi-ellipsis-v"
+							@click="onToggled($event, slotProps.index)"
+							text />
+	
+						<Popover :ref="(el) => (menu[slotProps.index] = el)">
+							<label>Actions</label>
+							<div class="flex flex-col items-start">
+								<ViewModal v-bind="slotProps.data" />
+								<UpdateModal v-bind="slotProps.data" />
+								<DeleteModal :uid="slotProps.data.uid" />
+							</div>
+						</Popover>
 					</template>
 				</Column>
 			</DataTable>

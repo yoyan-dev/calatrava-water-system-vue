@@ -20,6 +20,7 @@ const props = defineProps<{
     icon="pi pi-eye"
     severity="secondary"
     size="small"
+    label="view"
     @click="visible = true"
     text
   />

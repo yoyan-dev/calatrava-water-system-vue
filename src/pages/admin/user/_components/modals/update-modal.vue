@@ -41,6 +41,8 @@
 	<Button
 		icon="pi pi-pen-to-square"
 		text
+		size="small"
+		label="edit"
 		class="mr-2"
 		@click="isOpen = true" />
 	<Dialog
