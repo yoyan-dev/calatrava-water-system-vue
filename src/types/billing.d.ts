@@ -1,12 +1,13 @@
 export interface Billing {
 	id?: string;
+	uid?: string;
 	accountno?: string;
 	address?: string;
 	arrears?: string;
 	averageuse?: string;
 	bill_date?: any;
 	bill_no?: string;
-	c_route_no?: string
+	c_route_no?: string;
 	c_statdesc?: string;
 	c_type?: string;
 	createdAt?: any;

@@ -21,24 +21,23 @@
 	function onToggled(event: Event, index: number) {
 		menu.value[index].toggle(event);
 	}
-
-
 </script>
 
 <template>
 	<div class="flex flex-col gap-3">
 		<div class="flex flex-wrap gap-5 justify-between">
 			<div class="flex-1">
-				<IconField >
+				<IconField>
 					<InputIcon>
 						<i class="pi pi-search" />
 					</InputIcon>
 					<InputText
 						v-model="store.searchQuery"
-						placeholder="Search..." fluid/>
+						placeholder="Search..."
+						fluid />
 				</IconField>
 			</div>
-			<div class=" flex gap-3 justify-end">
+			<div class="flex gap-3 justify-end">
 				<CreateModal />
 				<DeleteSelectedModal
 					:selectedResidents="selectedResidents"
@@ -61,9 +60,11 @@
 					selectionMode="multiple"
 					style="width: 3rem"
 					:exportable="false"></Column>
-				<column header="id">
+				<column
+					header="id"
+					field="id">
 					<template #body="slotProps"
-						><span>{{ slotProps.index + 1 }}</span></template
+						><span>{{ slotProps.data.id }}</span></template
 					>
 				</column>
 				<Column
@@ -106,7 +107,7 @@
 							icon="pi pi-ellipsis-v"
 							@click="onToggled($event, slotProps.index)"
 							text />
-	
+
 						<Popover :ref="(el) => (menu[slotProps.index] = el)">
 							<label>Actions</label>
 							<div class="flex flex-col items-start">
@@ -122,14 +123,16 @@
 		<Paginator
 			:template="{
 				'640px': 'PrevPageLink CurrentPageReport NextPageLink',
-				'960px': 'FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink',
-				'1300px': 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
-				default: 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink JumpToPageDropdown JumpToPageInput'
+				'960px':
+					'FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink',
+				'1300px':
+					'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
+				default:
+					'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink  ',
 			}"
 			:rows="10"
-			@page="(e) => (store.page = e.page)"
+			@page="(e) => (store.page = e.page + 1)"
 			:totalRecords="store.totalResidents">
 		</Paginator>
-		
 	</div>
 </template>

@@ -28,9 +28,10 @@ export const useResidentStore = defineStore('resident', () => {
 	const searchQuery = ref('');
 	const filterAddress = ref('');
 	const page = ref(0);
+	const limit = ref(10);
 
 	// getters
-	const offset = computed(() => page.value * 10);
+	const offset = computed(() => (page.value - 1) * limit.value);
 
 	async function fetchResidents(searchParams: Record<string, any> = {}) {
 		isLoading.value = true;
@@ -212,8 +213,9 @@ export const useResidentStore = defineStore('resident', () => {
 			fetchResidents({
 				q: newQuery[0],
 				address: newQuery[1],
-				offset: newQuery[2],
+				offset: offset.value,
 			});
+			console.log(page.value, offset.value);
 		},
 		{ debounce: 300 },
 	);

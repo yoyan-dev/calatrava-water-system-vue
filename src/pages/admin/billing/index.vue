@@ -12,8 +12,6 @@
 	import { useDialog } from 'primevue';
 
 	const store = useBillingStore();
-	const router = useRouter();
-	const { formatTimestamp } = useFirebaseTimestamp();
 	const selectedWaterBill = ref([]);
 	const menu = ref<any[]>([]);
 	const expandedRows = ref({});
@@ -22,28 +20,14 @@
 		menu.value[index].toggle(event);
 	}
 
-	function getStatusLabel(status: String) {
-		switch (status) {
-			case 'Paid':
-				return 'success';
-
-			case 'Pending':
-				return 'warn';
-
-			case 'OUTOFSTOCK':
-				return 'danger';
-
-			default:
-				return null;
-		}
-	}
 	onMounted(() => {
 		store.fetchBillings({ month: store.month });
 	});
 </script>
 
 <template>
-	<div class="bg-surface-0 dark:bg-surface-900 mx-5 p-4 py-6 md:p-6 border rounded-lg">
+	<div
+		class="bg-surface-0 dark:bg-surface-900 mx-5 p-4 py-6 md:p-6 border rounded-lg">
 		<Header />
 		<div class="flex flex-col gap-3">
 			<div>
@@ -53,8 +37,7 @@
 							<InputIcon>
 								<i class="pi pi-search" />
 							</InputIcon>
-							<InputText
-								placeholder="Search..." />
+							<InputText placeholder="Search..." />
 						</IconField>
 					</div>
 					<div class="flex gap-3 justify-start md:justify-end w-full flex-1">
@@ -99,7 +82,9 @@
 						selectionMode="multiple"
 						style="width: 3rem"
 						:exportable="false"></Column>
-					<Column expander style="width: 5rem" />
+					<Column
+						expander
+						style="width: 5rem" />
 					<Column
 						header="Bill No."
 						field="bill_no">
@@ -167,32 +152,128 @@
 							<h5 class="font-semibold">Bill#{{ slotProps.data.bill_no }}</h5>
 							<div class="flex gap-5 justify-between">
 								<div class="flex-1 flex flex-col p-3 border rounded-md">
-									<div class="flex-1 flex justify-between">Account No.: <span class="text-gray-500 text-left">{{ slotProps.data.accountno }}</span></div>
-									<div class="flex-1 flex justify-between">Address:     <span class="text-gray-500 text-left">{{ slotProps.data.address }}</span></div>
-									<div class="flex-1 flex justify-between">Arrears:     <span class="text-gray-500 text-left">{{ slotProps.data.arrears }}</span></div>
-									<div class="flex-1 flex justify-between">Average use: <span class="text-gray-500 text-left">{{ slotProps.data.averageuse }}</span></div>
-									<div class="flex-1 flex justify-between">Bill Date:   <span class="text-gray-500 text-left">{{ slotProps.data.bill_date }}</span></div>
+									<div class="flex-1 flex justify-between">
+										Account No.:
+										<span class="text-gray-500 text-left">{{
+											slotProps.data.accountno
+										}}</span>
+									</div>
+									<div class="flex-1 flex justify-between">
+										Address:
+										<span class="text-gray-500 text-left">{{
+											slotProps.data.address
+										}}</span>
+									</div>
+									<div class="flex-1 flex justify-between">
+										Arrears:
+										<span class="text-gray-500 text-left">{{
+											slotProps.data.arrears
+										}}</span>
+									</div>
+									<div class="flex-1 flex justify-between">
+										Average use:
+										<span class="text-gray-500 text-left">{{
+											slotProps.data.averageuse
+										}}</span>
+									</div>
+									<div class="flex-1 flex justify-between">
+										Bill Date:
+										<span class="text-gray-500 text-left">{{
+											slotProps.data.bill_date
+										}}</span>
+									</div>
 								</div>
 								<div class="flex-1 flex flex-col p-3 border rounded-md">
-									<div class="flex-1 flex justify-between">Bill No.: <span class="text-gray-500">{{ slotProps.data.bill_no }}</span></div>
-									<div class="flex-1 flex justify-between">Route No.:     <span class="text-gray-500">{{ slotProps.data.c_route_no }}</span></div>
-									<div class="flex-1 flex justify-between">Statdesc:     <span class="text-gray-500">{{ slotProps.data.c_statdesc }}</span></div>
-									<div class="flex-1 flex justify-between">c_type: <span class="text-gray-500">{{ slotProps.data.c_type }}</span></div>
-									<div class="flex-1 flex justify-between">Disconnection Date:   <span class="text-gray-500">{{ slotProps.data.discon_dat }}</span></div>
+									<div class="flex-1 flex justify-between">
+										Bill No.:
+										<span class="text-gray-500">{{
+											slotProps.data.bill_no
+										}}</span>
+									</div>
+									<div class="flex-1 flex justify-between">
+										Route No.:
+										<span class="text-gray-500">{{
+											slotProps.data.c_route_no
+										}}</span>
+									</div>
+									<div class="flex-1 flex justify-between">
+										Statdesc:
+										<span class="text-gray-500">{{
+											slotProps.data.c_statdesc
+										}}</span>
+									</div>
+									<div class="flex-1 flex justify-between">
+										c_type:
+										<span class="text-gray-500">{{
+											slotProps.data.c_type
+										}}</span>
+									</div>
+									<div class="flex-1 flex justify-between">
+										Disconnection Date:
+										<span class="text-gray-500">{{
+											slotProps.data.discon_dat
+										}}</span>
+									</div>
 								</div>
 								<div class="flex-1 flex flex-col p-3 border rounded-md">
-									<div class="flex-1 flex justify-between">Due Date: <span class="text-gray-500">{{ slotProps.data.due_date }}</span></div>
-									<div class="flex-1 flex justify-between">Install Fee:     <span class="text-gray-500">{{ slotProps.data.installfee }}</span></div>
-									<div class="flex-1 flex justify-between">Meter Code:     <span class="text-gray-500">{{ slotProps.data.metercode }}</span></div>
-									<div class="flex-1 flex justify-between">Mrrf: <span class="text-gray-500">{{ slotProps.data.mrrf }}</span></div>
-									<div class="flex-1 flex justify-between">Meter No.:   <span class="text-gray-500">{{ slotProps.data.mtr_no }}</span></div>
+									<div class="flex-1 flex justify-between">
+										Due Date:
+										<span class="text-gray-500">{{
+											slotProps.data.due_date
+										}}</span>
+									</div>
+									<div class="flex-1 flex justify-between">
+										Install Fee:
+										<span class="text-gray-500">{{
+											slotProps.data.installfee
+										}}</span>
+									</div>
+									<div class="flex-1 flex justify-between">
+										Meter Code:
+										<span class="text-gray-500">{{
+											slotProps.data.metercode
+										}}</span>
+									</div>
+									<div class="flex-1 flex justify-between">
+										Mrrf:
+										<span class="text-gray-500">{{ slotProps.data.mrrf }}</span>
+									</div>
+									<div class="flex-1 flex justify-between">
+										Meter No.:
+										<span class="text-gray-500">{{
+											slotProps.data.mtr_no
+										}}</span>
+									</div>
 								</div>
 								<div class="flex-1 flex flex-col p-3 border rounded-md">
-									<div class="flex-1 flex justify-between">Pre Reading: <span class="text-gray-500">{{ slotProps.data.prereading }}</span></div>
-									<div class="flex-1 flex justify-between">Prorated:     <span class="text-gray-500">{{ slotProps.data.prorated }}</span></div>
-									<div class="flex-1 flex justify-between">Prvmr_date:     <span class="text-gray-500">{{ slotProps.data.prvmr_date }}</span></div>
-									<div class="flex-1 flex justify-between">Reminders: <span class="text-gray-500">{{ slotProps.data.reminders }}</span></div>
-									<div class="flex-1 flex justify-between">Res2:   <span class="text-gray-500">{{ slotProps.data.res2 }}</span></div>
+									<div class="flex-1 flex justify-between">
+										Pre Reading:
+										<span class="text-gray-500">{{
+											slotProps.data.prereading
+										}}</span>
+									</div>
+									<div class="flex-1 flex justify-between">
+										Prorated:
+										<span class="text-gray-500">{{
+											slotProps.data.prorated
+										}}</span>
+									</div>
+									<div class="flex-1 flex justify-between">
+										Prvmr_date:
+										<span class="text-gray-500">{{
+											slotProps.data.prvmr_date
+										}}</span>
+									</div>
+									<div class="flex-1 flex justify-between">
+										Reminders:
+										<span class="text-gray-500">{{
+											slotProps.data.reminders
+										}}</span>
+									</div>
+									<div class="flex-1 flex justify-between">
+										Res2:
+										<span class="text-gray-500">{{ slotProps.data.res2 }}</span>
+									</div>
 								</div>
 							</div>
 							<!-- <DataTable :value="slotProps.data.orders">
@@ -206,16 +287,18 @@
 				<Paginator
 					:template="{
 						'640px': 'PrevPageLink CurrentPageReport NextPageLink',
-						'960px': 'FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink',
-						'1300px': 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
-						default: 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink JumpToPageDropdown JumpToPageInput'
+						'960px':
+							'FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink',
+						'1300px':
+							'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
+						default:
+							'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink ',
 					}"
 					:rows="10"
-					@page="(e) => (store.page = e.page)"
+					@page="(e) => (store.page = e.page + 1)"
 					:totalRecords="store.totalBillings">
 				</Paginator>
 			</div>
-
 		</div>
 	</div>
 </template>

@@ -43,8 +43,8 @@ export const useBillingStore = defineStore('billing', () => {
 
 		return billings.value
 			.filter((item) => {
-				const billingDate = item.billingDate
-					? (item.billingDate as Timestamp).toDate()
+				const billingDate = item.bill_date
+					? (item.bill_date as Timestamp).toDate()
 					: null;
 				return (
 					billingDate &&
@@ -97,40 +97,40 @@ export const useBillingStore = defineStore('billing', () => {
 		}
 	}
 
-	async function fetchBillingsByAccountNumber(accountNumber: number) {
-		isLoading.value = true;
-		console.log(accountNumber);
+	// async function fetchBillingsByAccountNumber(accountNumber: number) {
+	// 	isLoading.value = true;
+	// 	console.log(accountNumber);
 
-		try {
-			const queryBillings = query(
-				collection(db, 'billings'),
-				where('residentAccountNumber', '==', accountNumber),
-			);
+	// 	try {
+	// 		const queryBillings = query(
+	// 			collection(db, 'billings'),
+	// 			where('residentAccountNumber', '==', accountNumber),
+	// 		);
 
-			const querySnapshot = await getDocs(queryBillings);
-			if (querySnapshot.empty) {
-				console.log('No billings records found for this account');
-				return;
-			}
+	// 		const querySnapshot = await getDocs(queryBillings);
+	// 		if (querySnapshot.empty) {
+	// 			console.log('No billings records found for this account');
+	// 			return;
+	// 		}
 
-			billings.value = querySnapshot.docs
-				.map((doc) => ({
-					billingDate: doc.data().billingDate,
-					...doc.data(),
-					uid: doc.id,
-				}))
-				.sort(
-					(a, b) =>
-						(b.billingDate as Timestamp).toDate().getTime() -
-						(a.billingDate as Timestamp).toDate().getTime(),
-				);
-		} catch (error) {
-			console.error('Error fetching billings by account number:', error);
-			throw error;
-		} finally {
-			isLoading.value = false;
-		}
-	}
+	// 		billings.value = querySnapshot.docs
+	// 			.map((doc) => ({
+	// 				billingDate: doc.data().bill_date,
+	// 				...doc.data(),
+	// 				uid: doc.id,
+	// 			}))
+	// 			.sort(
+	// 				(a, b) =>
+	// 					(b.bill_date as Timestamp).toDate().getTime() -
+	// 					(a.bill_date as Timestamp).toDate().getTime(),
+	// 			);
+	// 	} catch (error) {
+	// 		console.error('Error fetching billings by account number:', error);
+	// 		throw error;
+	// 	} finally {
+	// 		isLoading.value = false;
+	// 	}
+	// }
 
 	async function addBilling(
 		payload: Billing,
@@ -143,7 +143,7 @@ export const useBillingStore = defineStore('billing', () => {
 			}
 			console.log(payload, selected);
 			payload.id = (billings.value.length + 1).toString();
-			payload.billNumber = Number(payload.id);
+			payload.bill_no = payload.id;
 			const docRef = await addDoc(collection(db, 'billings'), {
 				...payload,
 				residentAccountNumber: selected.accountNumber,
@@ -189,48 +189,48 @@ export const useBillingStore = defineStore('billing', () => {
 		}
 	}
 
-	async function deleteBilling(residentUid: string): Promise<StoreResponse> {
-		isLoading.value = true;
-		try {
-			const q = query(
-				collection(db, 'billings'),
-				where('residentUid', '==', residentUid),
-			);
-			const querySnapshot = await getDocs(q);
+	// async function deleteBilling(residentUid: string): Promise<StoreResponse> {
+	// 	isLoading.value = true;
+	// 	try {
+	// 		const q = query(
+	// 			collection(db, 'billings'),
+	// 			where('residentUid', '==', residentUid),
+	// 		);
+	// 		const querySnapshot = await getDocs(q);
 
-			if (querySnapshot.empty) {
-				return {
-					status: 'error',
-					statusMessage: 'Error message',
-					message: 'No billing records found for this residentUid',
-				};
-			}
+	// 		if (querySnapshot.empty) {
+	// 			return {
+	// 				status: 'error',
+	// 				statusMessage: 'Error message',
+	// 				message: 'No billing records found for this residentUid',
+	// 			};
+	// 		}
 
-			await Promise.all(
-				querySnapshot.docs.map((document) =>
-					deleteDoc(doc(db, 'billings', document.id)),
-				),
-			);
+	// 		await Promise.all(
+	// 			querySnapshot.docs.map((document) =>
+	// 				deleteDoc(doc(db, 'billings', document.id)),
+	// 			),
+	// 		);
 
-			billings.value = billings.value.filter(
-				(item) => item.residentUid !== residentUid,
-			);
-			return {
-				status: 'success',
-				statusMessage: 'Success message',
-				message: 'Successfully deleted billing',
-			};
-		} catch (error: any) {
-			console.log(error);
-			return {
-				status: 'error',
-				statusMessage: 'Error message',
-				message: 'Something went wrong',
-			};
-		} finally {
-			isLoading.value = false;
-		}
-	}
+	// 		billings.value = billings.value.filter(
+	// 			(item) => item.residentUid !== residentUid,
+	// 		);
+	// 		return {
+	// 			status: 'success',
+	// 			statusMessage: 'Success message',
+	// 			message: 'Successfully deleted billing',
+	// 		};
+	// 	} catch (error: any) {
+	// 		console.log(error);
+	// 		return {
+	// 			status: 'error',
+	// 			statusMessage: 'Error message',
+	// 			message: 'Something went wrong',
+	// 		};
+	// 	} finally {
+	// 		isLoading.value = false;
+	// 	}
+	// }
 
 	async function deleteBillings(payload: Billing[]): Promise<StoreResponse> {
 		isLoading.value = true;
@@ -291,10 +291,8 @@ export const useBillingStore = defineStore('billing', () => {
 		fetchBillings,
 		page,
 		totalBillings,
-		fetchBillingsByAccountNumber,
 		addBilling,
 		fetchBilling,
-		deleteBilling,
 		deleteBillings,
 		updateBilling,
 	};
