@@ -37,9 +37,6 @@
 				return null;
 		}
 	}
-	onMounted(() => {
-		store.fetchBillings({ month: store.month });
-	});
 </script>
 
 <template>
@@ -203,7 +200,19 @@
 						</div>
 					</template>
 				</DataTable>
+				<Paginator
+					:template="{
+						'640px': 'PrevPageLink CurrentPageReport NextPageLink',
+						'960px': 'FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink',
+						'1300px': 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
+						default: 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink JumpToPageDropdown JumpToPageInput'
+					}"
+					:rows="10"
+					@page="(e) => (store.page = e.page)"
+					:totalRecords="store.totalBillings">
+				</Paginator>
 			</div>
+
 		</div>
 	</div>
 </template>

@@ -120,16 +120,15 @@
 			</DataTable>
 		</div>
 		<Paginator
+			:template="{
+				'640px': 'PrevPageLink CurrentPageReport NextPageLink',
+				'960px': 'FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink',
+				'1300px': 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
+				default: 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink JumpToPageDropdown JumpToPageInput'
+			}"
 			:rows="10"
 			@page="(e) => (store.page = e.page)"
-			:totalRecords="store.totalResidents"
-			template="FirstPageLink PrevPageLink  PageLinks  NextPageLink LastPageLink">
-			
-			<template #start="slotProps">
-				Showing {{ slotProps.state.page * 10 + 1 }} to
-				{{ Math.min((slotProps.state.page + 1) * 10, store.totalResidents) }} of
-				{{ store.totalResidents }} results
-			</template>
+			:totalRecords="store.totalResidents">
 		</Paginator>
 		
 	</div>

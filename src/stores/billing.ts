@@ -30,8 +30,12 @@ export const useBillingStore = defineStore('billing', () => {
 	const isLoading = ref(false);
 	const month = ref(new Date());
 	const searchQuery = ref('');
+	const totalBillings = ref(0);
+	const page = ref(0);
 
-	// Getters
+	// getters
+	const offset = computed(() => page.value * 10);
+
 	const fetchCurrentBillings = computed(() => {
 		const now = new Date();
 		const currentMonth = now.getMonth() + 1;
@@ -71,6 +75,7 @@ export const useBillingStore = defineStore('billing', () => {
 				},
 			).json<H3Response<Billing[]>>();
 			billings.value = response.value?.data as Billing[];
+			totalBillings.value = response.value?.total as number;
 		} catch (error) {
 			console.error('Error fetching students:', error);
 		} finally {
@@ -264,12 +269,13 @@ export const useBillingStore = defineStore('billing', () => {
 	}
 
 	watchDebounced(
-		[searchQuery, month],
+		[searchQuery, month, offset],
 		(newQuery) => {
 			console.log(newQuery);
 			fetchBillings({
 				q: newQuery[0],
 				month: newQuery[1],
+				offset: newQuery[2],
 			});
 		},
 		{ debounce: 300 },
@@ -283,6 +289,8 @@ export const useBillingStore = defineStore('billing', () => {
 		month,
 		searchQuery,
 		fetchBillings,
+		page,
+		totalBillings,
 		fetchBillingsByAccountNumber,
 		addBilling,
 		fetchBilling,
