@@ -1,6 +1,5 @@
 <script setup lang="ts">
-	import { ref, onMounted, watchEffect } from 'vue';
-	import { FilterMatchMode } from '@primevue/core/api';
+	import { ref, onMounted, watchEffect, watch } from 'vue';
 	import Header from '@/pages/admin/billing/_components/header.vue';
 	import DeleteModal from '@/pages/admin/billing/_components/modals/delete-modal.vue';
 	import DeleteSelected from '@/pages/admin/billing/_components/modals/delete-selected-modal.vue';
@@ -16,17 +15,7 @@
 	const router = useRouter();
 	const { formatTimestamp } = useFirebaseTimestamp();
 	const selectedWaterBill = ref([]);
-	const filters = ref({
-		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-	});
-
 	const menu = ref<any[]>([]);
-
-	const items = ref([
-		{
-			label: 'Menu',
-		},
-	]);
 
 	function onToggled(event: Event, index: number) {
 		menu.value[index].toggle(event);
@@ -47,12 +36,9 @@
 				return null;
 		}
 	}
-
 	onMounted(() => {
-		store.fetchBillings();
+		store.fetchBillings({ month: store.month });
 	});
-
-	// watchEffect(() => console.log(store.fetchCurrentBillings));
 </script>
 
 <template>
@@ -84,16 +70,52 @@
 							v-if="selectedWaterBill.length" />
 					</div>
 				</div>
+				<Toolbar>
+					<template #start>
+						<div class="flex gap-5">
+							<IconField>
+								<InputIcon>
+									<i class="pi pi-search" />
+								</InputIcon>
+								<InputText placeholder="Search..." />
+							</IconField>
+						</div>
+					</template>
+
+					<template #end>
+						<div class="flex gap-3">
+							<FloatLabel variant="on">
+								<DatePicker
+									v-model:modelValue="store.month"
+									inputId="on_label"
+									view="month"
+									dateFormat="MM yy"
+									showIcon
+									iconDisplay="input" />
+								<label for="on_label">Select month</label>
+							</FloatLabel>
+							<RouterLink to="/admin/billing/create">
+								<Button
+									label="Create"
+									icon="pi pi-plus"
+									severity="primary" />
+							</RouterLink>
+							<ImportModal />
+							<DeleteSelected
+								:selectedBills="selectedWaterBill"
+								v-if="selectedWaterBill.length" />
+						</div>
+					</template>
+				</Toolbar>
 			</div>
 			<div class="border rounded-md">
 				<DataTable
-					:value="store.fetchCurrentBillings"
+					:value="store.billings"
 					:loading="store.isLoading"
 					v-model:selection="selectedWaterBill"
 					dataKey="billNumber"
 					size="small"
-					:rows="10"
-					:filters="filters">
+					:rows="10">
 					<template #empty>
 						<div class="flex items-center justify-center p-4">
 							No billing found.
@@ -103,13 +125,12 @@
 						selectionMode="multiple"
 						style="width: 3rem"
 						:exportable="false"></Column>
-					<Column header="Bill No.">
-						<template #body="slotProps">
-							{{ slotProps.index + 1 }}
-						</template>
+					<Column
+						header="Bill No."
+						field="bill_no">
 					</Column>
 					<Column
-						field="residentUid"
+						field="accountno"
 						header="AccountNumber"></Column>
 					<Column
 						field="billingDate"
@@ -129,7 +150,7 @@
 						</template>
 					</Column>
 					<Column
-						field="area"
+						field="address"
 						header="Area"></Column>
 					<Column header="Status">
 						<template #body="slotProps">

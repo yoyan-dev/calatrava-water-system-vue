@@ -13,11 +13,13 @@ import {
 	query,
 	where,
 	orderBy,
-	limit
+	limit,
 } from 'firebase/firestore';
 import { useFirestore } from 'vuefire';
 import type { Billing } from '@/types/billing';
 import type { StoreResponse } from '@/types/store-response';
+import { useFetch, watchDebounced } from '@vueuse/core';
+import type { H3Response } from '@/types/h3response';
 
 export const useBillingStore = defineStore('billing', () => {
 	const db = useFirestore();
@@ -26,6 +28,8 @@ export const useBillingStore = defineStore('billing', () => {
 	const billings = ref<Billing[]>([]);
 	const billing = ref<Billing>();
 	const isLoading = ref(false);
+	const month = ref(new Date());
+	const searchQuery = ref('');
 
 	// Getters
 	const fetchCurrentBillings = computed(() => {
@@ -35,7 +39,9 @@ export const useBillingStore = defineStore('billing', () => {
 
 		return billings.value
 			.filter((item) => {
-				const billingDate = item.billingDate ? (item.billingDate as Timestamp).toDate() : null;
+				const billingDate = item.billingDate
+					? (item.billingDate as Timestamp).toDate()
+					: null;
 				return (
 					billingDate &&
 					billingDate.getMonth() + 1 === currentMonth &&
@@ -46,19 +52,27 @@ export const useBillingStore = defineStore('billing', () => {
 	});
 
 	// Actions
-	async function fetchBillings() {
+	async function fetchBillings(searchParams: Record<string, any> = {}) {
 		isLoading.value = true;
-		try {
-			const querySnapshot = await getDocs(collection(db, 'billings'));
-			const billingSnapshot = querySnapshot.docs.map((doc) => ({
-				...doc.data(),
-				uid: doc.id,
-			}));
 
-			billings.value = billingSnapshot;
+		try {
+			const queryString = new URLSearchParams(searchParams).toString();
+
+			const url = `${import.meta.env.VITE_API_URL}/api/billings${
+				queryString ? '?' + queryString : ''
+			}`;
+			const { data: response } = await useFetch(
+				url,
+				{
+					method: 'GET',
+				},
+				{
+					refetch: true,
+				},
+			).json<H3Response<Billing[]>>();
+			billings.value = response.value?.data as Billing[];
 		} catch (error) {
-			console.error('Error fetching billings:', error);
-			billings.value = [];
+			console.error('Error fetching students:', error);
 		} finally {
 			isLoading.value = false;
 		}
@@ -81,25 +95,30 @@ export const useBillingStore = defineStore('billing', () => {
 	async function fetchBillingsByAccountNumber(accountNumber: number) {
 		isLoading.value = true;
 		console.log(accountNumber);
-		
+
 		try {
 			const queryBillings = query(
-				collection(db, "billings"),
-				where("residentAccountNumber", "==", accountNumber)
+				collection(db, 'billings'),
+				where('residentAccountNumber', '==', accountNumber),
 			);
 
 			const querySnapshot = await getDocs(queryBillings);
 			if (querySnapshot.empty) {
-				console.log('No billings records found for this account')
-				return
-			};
-			
-			billings.value = querySnapshot.docs.map((doc) => ({
-				billingDate: doc.data().billingDate,
-				...doc.data(),
-				uid: doc.id,
-			})).sort((a, b) => (b.billingDate as Timestamp).toDate().getTime() - (a.billingDate as Timestamp).toDate().getTime());
+				console.log('No billings records found for this account');
+				return;
+			}
 
+			billings.value = querySnapshot.docs
+				.map((doc) => ({
+					billingDate: doc.data().billingDate,
+					...doc.data(),
+					uid: doc.id,
+				}))
+				.sort(
+					(a, b) =>
+						(b.billingDate as Timestamp).toDate().getTime() -
+						(a.billingDate as Timestamp).toDate().getTime(),
+				);
 		} catch (error) {
 			console.error('Error fetching billings by account number:', error);
 			throw error;
@@ -107,7 +126,6 @@ export const useBillingStore = defineStore('billing', () => {
 			isLoading.value = false;
 		}
 	}
-	
 
 	async function addBilling(
 		payload: Billing,
@@ -245,11 +263,25 @@ export const useBillingStore = defineStore('billing', () => {
 		Object.assign(result || {}, billing);
 	}
 
+	watchDebounced(
+		[searchQuery, month],
+		(newQuery) => {
+			console.log(newQuery);
+			fetchBillings({
+				q: newQuery[0],
+				month: newQuery[1],
+			});
+		},
+		{ debounce: 300 },
+	);
+
 	return {
 		billings,
 		billing,
 		isLoading,
 		fetchCurrentBillings,
+		month,
+		searchQuery,
 		fetchBillings,
 		fetchBillingsByAccountNumber,
 		addBilling,

@@ -70,13 +70,6 @@ export const useResidentStore = defineStore('resident', () => {
 	async function addResident(resident: Resident): Promise<StoreResponse> {
 		isLoading.value = true;
 		try {
-			// const fullName =
-			// 	resident.firstName +
-			// 	' ' +
-			// 	resident.middleName +
-			// 	' ' +
-			// 	resident.lastName;
-			// resident.searchKeyword = generateKeywords(fullName);
 			const exists = residents.value.some(
 				(item: Resident) => item.accountNumber === resident.accountNumber,
 			);
@@ -216,7 +209,6 @@ export const useResidentStore = defineStore('resident', () => {
 	watchDebounced(
 		[searchQuery, filterAddress, offset],
 		(newQuery) => {
-			console.log(newQuery);
 			fetchResidents({
 				q: newQuery[0],
 				address: newQuery[1],
