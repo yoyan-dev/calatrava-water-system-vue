@@ -3,8 +3,10 @@
 	import Papa from 'papaparse';
 	import { useToast, type FileUploadSelectEvent } from 'primevue';
 	import { useFetch } from '@vueuse/core';
+	import { useBillingStore } from '@/stores/billing';
 
 	const toast = useToast();
+	const store = useBillingStore()
 	const isOpen = ref(false);
 	const csvData = ref<any[]>();
 
@@ -36,23 +38,13 @@
 	}
 
 	async function onSubmit(payload: any) {
-		try {
-			const { data: result } = await useFetch(
-				`${import.meta.env.VITE_API_URL}/api/billings`,
-			)
-				.post(payload)
-				.json();
-			toast.add({
-				severity: result.value.statusCode == 200 ? 'success' : 'error',
-				summary: result.value.statusMessage,
-				detail: result.value.message,
-				life: 3000,
-			});
-			console.log(result)
-			isOpen.value = false;
-		} catch (e) {
-			console.error(e);
-		}
+		const res = await store.addBatchBilling(payload)
+		toast.add({
+			severity: res.status,
+			summary: res.statusMessage,
+			detail: res.message,
+			life: 3000,
+		});
 	}
 </script>
 
@@ -63,7 +55,7 @@
 	<Dialog
 		v-model:visible="isOpen"
 		:style="{ width: '450px' }"
-		header="Import csv"
+		header="Import billing csv"
 		:modal="true">
 		<FileUpload
 			:pt="{
@@ -79,8 +71,11 @@
 				label="Cancel"
 				severity="danger"
 				variant="outlined"
+				size="small"
 				@click="isOpen = false" />
 			<Button
+				size="small"
+				:loading="store.isLoading"
 				label="Upload"
 				@click="onSubmit(csvData)" />
 		</template>
