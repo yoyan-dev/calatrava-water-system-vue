@@ -37,6 +37,9 @@
 				return null;
 		}
 	}
+	onMounted(() => {
+		store.fetchBillings({ month: store.month });
+	});
 </script>
 
 <template>
@@ -54,7 +57,7 @@
 								placeholder="Search..." />
 						</IconField>
 					</div>
-					<div class="flex gap-3 justify-end md:justify-end w-full flex-1">
+					<div class="flex gap-3 justify-start md:justify-end w-full flex-1">
 						<!-- <RouterLink to="/admin/billing/create">
 							<Button
 								label="Create"
