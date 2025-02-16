@@ -6,12 +6,20 @@ const route = useRoute();
 const visible = ref(false);
 const items = ref([
   {
-    label: "Bill",
+    label: "Home",
+    name: "resident-home",
     icon: "pi pi-money-bill",
     route: "/resident",
   },
   {
+    label: "Bills",
+    name: "resident-bills",
+    icon: "pi pi-book",
+    route: "/resident/bills",
+  },
+  {
     label: "Concern",
+    name: "resident-concen",
     icon: "pi pi-question-circle",
     route: "/resident/concern",
   },
@@ -44,7 +52,7 @@ const items = ref([
           <Drawer v-model:visible="visible" header="CWS">
             <Menu :model="items">
               <template #item="{ item, props }">
-                <RouterLink v-slot="{ href, navigate }" :to="item.route" custom>
+                <RouterLink v-slot="{ href, navigate }" :to="item.route" custom :class="route.name == item.name ? 'text-primary-500' : ''">
                   <a
                     v-ripple
                     :href="href"
@@ -64,19 +72,11 @@ const items = ref([
             class="visible md:invisible lg:invisible xl:invisible"
           />
           <div class="flex gap-5" :class="visible ? 'px-5' : ''">
-            <RouterLink
-              to="/resident"
-              :class="route.name == 'resident-home' ? 'text-primary-500' : ''"
+            <RouterLink v-for="item in items" :key="item.name"
+              :to="item.route"
+              :class="route.name == item.name ? 'text-primary-500' : ''"
               class="hidden md:block lg:block"
-              >Bill</RouterLink
-            >
-            <RouterLink
-              to="/resident/concern"
-              :class="
-                route.name == 'resident-concern' ? 'text-primary-500' : ''
-              "
-              class="hidden md:block lg:block"
-              >Concern</RouterLink
+              >{{ item.label }}</RouterLink
             >
           </div>
         </template>
