@@ -12,16 +12,12 @@
 		id?: Resident['id'];
 		uid?: Resident['uid'];
 		accountNumber?: Resident['accountNumber'];
-		firstName?: Resident['firstName'];
-		middleName?: Resident['middleName'];
-		lastName?: Resident['lastName'];
+		fullname?: Resident['fullname'];
 		address?: Resident['address'];
 	}>();
 
 	const resident = reactive({
-		firstName: props.firstName,
-		middleName: props.middleName,
-		lastName: props.lastName,
+		fullname: props.fullname,
 		address: props.address,
 	});
 
@@ -54,7 +50,7 @@
 		<template #header>
 			<div class="inline-flex items-center justify-center gap-2">
 				<Avatar icon="pi pi-user" class="mr-2" size="normal" />
-				<span class="font-bold whitespace-nowrap">{{ resident.firstName }} {{ resident.lastName }}</span>
+				<span class="font-bold whitespace-nowrap">{{ resident.fullname }}</span>
 			</div>
 		</template>
 		<span class="text-surface-500 dark:text-surface-400 block mb-8">Update resident information.</span>
@@ -63,69 +59,31 @@
 			class="flex flex-col gap-4">
 			<div class="flex flex-col gap-4">
 				<!-- <img v-if="product.image" :src="`https://primefaces.org/cdn/primevue/images/product/${product.image}`" :alt="product.image" class="block m-auto pb-4" /> -->
-				<div class="flex gap-5">
-					<div>
+				<div class="flex flex-wrap gap-5">
+					<div class="flex-auto">
 						<label
 							for="name"
-							class="block font-bold mb-3"
-							>Firstname</label
+							class="block mb-3"
+							>Fullname</label
 						>
 						<InputText
 							id="name"
-							v-model.trim="resident.firstName"
+							v-model.trim="resident.fullname"
 						
 							autofocus
-							:invalid="isSubmitted && !resident.firstName"
+							:invalid="isSubmitted && !resident.fullname"
 							fluid />
 						<small
-							v-if="isSubmitted && !resident.firstName"
+							v-if="isSubmitted && !resident.fullname"
 							class="text-red-500"
-							>firstname is required.</small
-						>
-					</div>
-					<div>
-						<label
-							for="name"
-							class="block font-bold mb-3"
-							>Middle name</label
-						>
-						<InputText
-							id="name"
-							v-model.trim="resident.middleName"
-						
-							autofocus
-							:invalid="isSubmitted && !resident.middleName"
-							fluid />
-						<small
-							v-if="isSubmitted && !resident.middleName"
-							class="text-red-500"
-							>Middle name is required.</small
-						>
-					</div>
-					<div>
-						<label
-							for="name"
-							class="block font-bold mb-3"
-							>Lastname</label
-						>
-						<InputText
-							id="name"
-							v-model.trim="resident.lastName"
-						
-							autofocus
-							:invalid="isSubmitted && !resident.lastName"
-							fluid />
-						<small
-							v-if="isSubmitted && !resident.lastName"
-							class="text-red-500"
-							>Last name is required.</small
+							>Fullname is required.</small
 						>
 					</div>
 				</div>
 				<div>
 					<label
 						for="name"
-						class="block font-bold mb-3"
+						class="block mb-3"
 						>Address</label
 					>
 					<InputText

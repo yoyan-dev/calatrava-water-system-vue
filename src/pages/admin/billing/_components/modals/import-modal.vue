@@ -48,6 +48,7 @@
 				detail: result.value.message,
 				life: 3000,
 			});
+			console.log(result)
 			isOpen.value = false;
 		} catch (e) {
 			console.error(e);
@@ -57,8 +58,7 @@
 
 <template>
 	<Button
-		label="Import CSV"
-		icon="pi pi-export "
+		icon="pi pi-file-import"
 		@click="isOpen = true" />
 	<Dialog
 		v-model:visible="isOpen"

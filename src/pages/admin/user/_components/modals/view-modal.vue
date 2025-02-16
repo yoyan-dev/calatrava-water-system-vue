@@ -9,7 +9,7 @@ const visible = ref(false);
 const props = defineProps<{
   id?: Resident["id"];
   uid?: Resident["uid"];
-  accountNumber?: Resident["accountNumber"];
+  uid?: Resident["uid"];
   fullname?: Resident["fullname"];
   address?: Resident["address"];
   classification?: Resident["classification"];
@@ -38,7 +38,7 @@ const props = defineProps<{
               <span class="text-xl capitalize">{{
                 `${props.fullname}`
               }}</span>
-              <span class="text-slate-600">Acc-no. {{ props.accountNumber }}</span>
+              <span class="text-slate-600">Acc-no. {{ props.uid }}</span>
             </div>
         </div>
       </div>

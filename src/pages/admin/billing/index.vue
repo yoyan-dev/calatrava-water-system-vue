@@ -56,39 +56,34 @@
 </script>
 
 <template>
-	<div class="bg-surface-0 dark:bg-surface-900 p-6 border rounded-lg">
+	<div class="bg-surface-0 dark:bg-surface-900 mx-5 p-4 py-6 md:p-6 border rounded-lg">
 		<Header />
 		<div class="flex flex-col gap-3">
 			<div>
-				<Toolbar>
-					<template #end>
-						<div class="flex justify-end gap-3 w-full">
-							<!-- <RouterLink to="/admin/billing/create">
-								<Button
-									label="Create"
-									icon="pi pi-plus"
-									severity="primary" />
-							</RouterLink> -->
-							<ImportModal />
-							<DeleteSelected
-								:selectedBills="selectedWaterBill"
-								v-if="selectedWaterBill.length" />
-						</div>
-					</template>
-
-					<template #start>
-						<div class="flex gap-5 w-full">
-							<IconField>
-								<InputIcon>
-									<i class="pi pi-search" />
-								</InputIcon>
-								<InputText
-									v-model="filters['global'].value"
-									placeholder="Search..." />
-							</IconField>
-						</div>
-					</template>
-				</Toolbar>
+				<div class="flex items-start">
+					<div class="flex gap-5 w-full flex-1">
+					<IconField>
+						<InputIcon>
+							<i class="pi pi-search" />
+						</InputIcon>
+						<InputText
+							v-model="filters['global'].value"
+							placeholder="Search..." />
+					</IconField>
+					</div>
+					<div class="flex justify-end gap-3 w-full flex-1">
+						<!-- <RouterLink to="/admin/billing/create">
+							<Button
+								label="Create"
+								icon="pi pi-plus"
+								severity="primary" />
+						</RouterLink> -->
+						<ImportModal />
+						<DeleteSelected
+							:selectedBills="selectedWaterBill"
+							v-if="selectedWaterBill.length" />
+					</div>
+				</div>
 			</div>
 			<div class="border rounded-md">
 				<DataTable

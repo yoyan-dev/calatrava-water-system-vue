@@ -16,39 +16,28 @@
 		residents: Resident[];
 	}>();
 
-	const menu = ref<any[]>([]);
-
-	function onToggled(event: Event, index: number) {
-		menu.value[index].toggle(event);
-	}
 </script>
 
 <template>
 	<div class="flex flex-col gap-3">
-		<Toolbar>
-			<template #start>
-				<div class="flex flex-wrap justify-between">
-					<div class="flex-1">
-						<IconField >
-							<InputIcon>
-								<i class="pi pi-search" />
-							</InputIcon>
-							<InputText
-								v-model="store.searchQuery"
-								placeholder="Search..." fluid/>
-						</IconField>
-					</div>
-					<div class="flex-1 flex gap-3 justify-end">
-						<CreateModal />
-						<DeleteSelectedModal
-							:selectedResidents="selectedResidents"
-							v-if="selectedResidents && selectedResidents.length" />
-					</div>
-				</div>
-			</template>
-			<template #end>
-			</template>
-		</Toolbar>
+		<div class="flex flex-wrap gap-5 justify-between">
+			<div class="flex-1">
+				<IconField >
+					<InputIcon>
+						<i class="pi pi-search" />
+					</InputIcon>
+					<InputText
+						v-model="store.searchQuery"
+						placeholder="Search..." fluid/>
+				</IconField>
+			</div>
+			<div class=" flex gap-3 justify-end">
+				<CreateModal />
+				<DeleteSelectedModal
+					:selectedResidents="selectedResidents"
+					v-if="selectedResidents && selectedResidents.length" />
+			</div>
+		</div>
 		<div class="card border rounded-md">
 			<DataTable
 				:value="props.residents"
@@ -70,14 +59,16 @@
 						><span>{{ slotProps.index + 1 }}</span></template
 					>
 				</column>
-				<!-- <Column
+				<Column
 					field="uid"
-					class="collapse md:visible w-0"
-					header="Account Number">
-				</Column> -->
+					header="Account No.">
+					<template #body="slotProps">
+						<div class="flex w-[20vh]">{{ slotProps.data.uid }}</div>
+					</template>
+				</Column>
 				<Column header="Name">
 					<template #body="slotProps">
-						<div class="font-semibold capitalize">
+						<div class="font-semibold capitalize w-[45vh]">
 							<Avatar
 								icon="pi pi-user"
 								class="mr-2"
@@ -86,31 +77,27 @@
 						</div>
 					</template>
 				</Column>
-				<!-- <Column
-					class="capitalize collapse md:visible  "
+				<Column
+					class="capitalize"
 					field="address"
 					header="Address">
+					<template #body="slotProps">
+						<div class="flex w-[25vh]">{{ slotProps.data.address }}</div>
+					</template>
 				</Column>
 				<Column
 					field="classification"
 					header="Classification"
-					class="capitalize collapse md:visible  "></Column> -->
+					class="capitalize"></Column>
 				<Column
 					:exportable="false"
 					header="Actions">
 					<template #body="slotProps">
-						<Button
-								type="button"
-								severity="secondary"
-								icon="pi pi-ellipsis-v"
-								@click="onToggled($event, slotProps.index)"
-								text />
-
-							<Popover :ref="(el) => (menu[slotProps.index] = el)">
-								<ViewModal v-bind="slotProps.data" />
-								<UpdateModal v-bind="slotProps.data" />
-								<DeleteModal :uid="slotProps.data.uid" />
-							</Popover>
+						<div class="flex">
+							<ViewModal v-bind="slotProps.data" />
+							<UpdateModal v-bind="slotProps.data" />
+							<DeleteModal :uid="slotProps.data.uid" />
+						</div>
 					</template>
 				</Column>
 			</DataTable>
@@ -120,11 +107,13 @@
 			@page="(e) => (store.page = e.page)"
 			:totalRecords="store.totalResidents"
 			template="FirstPageLink PrevPageLink  PageLinks  NextPageLink LastPageLink">
+			
 			<template #start="slotProps">
 				Showing {{ slotProps.state.page * 10 + 1 }} to
 				{{ Math.min((slotProps.state.page + 1) * 10, store.totalResidents) }} of
 				{{ store.totalResidents }} results
 			</template>
 		</Paginator>
+		
 	</div>
 </template>

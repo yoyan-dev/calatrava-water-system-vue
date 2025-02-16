@@ -26,7 +26,6 @@
 		<Button
 			icon="pi pi-trash"
 			severity="danger"
-			label="delete"
 			@click="isOpen = true" />
 		<Dialog
 			v-model:visible="isOpen"

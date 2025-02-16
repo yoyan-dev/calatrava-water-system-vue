@@ -1,6 +1,6 @@
 export function validateForm(resident: any) {
 
-    const requiredFields = ['firstName', 'middleName', 'accountNumber', 'lastName', 'address'];
+    const requiredFields = ['fullname', 'accountNumber', 'address'];
     
     if(resident.accountNumber){
         if (resident.accountNumber.toString().length < 11 || resident.accountNumber.toString().length > 11) {

@@ -6,9 +6,9 @@ const props = defineProps<{
 
 </script>
 <template>
-	<div class="flex justify-between">
+	<div class="flex justify-between mb-2">
 		<div>
-			<div class="text-3xl text-surface-900 dark:text-surface-0 mb-2">
+			<div class="text-xl md:text-3xl text-surface-900 dark:text-surface-0 mb-2">
 				Residents
 			</div>
 		</div>
