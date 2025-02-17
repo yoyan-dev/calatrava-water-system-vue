@@ -7,8 +7,6 @@ export interface Resident {
 	fullname?: string;
 	accountNumber?: number;
 	firstName?: string;
-	lastName?: string;
-	middleName?: string;
 	address?: string;
 	classification?: string;
 	searchKeyword?: string[];
