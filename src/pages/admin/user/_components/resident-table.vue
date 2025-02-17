@@ -1,6 +1,5 @@
 <script setup lang="ts">
-	import { ref } from 'vue';
-	import { FilterMatchMode } from '@primevue/core/api';
+	import { ref, watch } from 'vue';
 	import CreateModal from './modals/create-modal.vue';
 	import DeleteModal from './modals/delete-modal.vue';
 	import DeleteSelectedModal from './modals/delete-selected-modal.vue';
@@ -10,46 +9,47 @@
 	import type { Resident } from '@/types/resident';
 
 	const store = useResidentStore();
-	const filters = ref({
-		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-	});
 
 	const selectedResidents = ref([]);
 
 	const props = defineProps<{
 		residents: Resident[];
 	}>();
+
+	const menu = ref<any[]>([]);
+
+	function onToggled(event: Event, index: number) {
+		menu.value[index].toggle(event);
+	}
 </script>
 
 <template>
 	<div class="flex flex-col gap-3">
-		<Toolbar>
-			<template #start>
+		<div class="flex flex-wrap gap-5 justify-between">
+			<div class="flex-1">
 				<IconField>
 					<InputIcon>
 						<i class="pi pi-search" />
 					</InputIcon>
 					<InputText
-						v-model="filters['global'].value"
-						placeholder="Search..." />
+						v-model="store.searchQuery"
+						placeholder="Search..."
+						fluid />
 				</IconField>
-			</template>
-			<template #end>
+			</div>
+			<div class="flex gap-3 justify-end">
 				<CreateModal />
 				<DeleteSelectedModal
 					:selectedResidents="selectedResidents"
 					v-if="selectedResidents && selectedResidents.length" />
-			</template>
-		</Toolbar>
+			</div>
+		</div>
 		<div class="card border rounded-md">
 			<DataTable
 				:value="props.residents"
 				v-model:selection="selectedResidents"
 				size="small"
 				dataKey="uid"
-				scrollable
-				scrollHeight="450px"
-				:filters="filters"
 				:loading="store.isLoading">
 				<template #empty>
 					<div class="flex items-center justify-center p-4">
@@ -60,52 +60,79 @@
 					selectionMode="multiple"
 					style="width: 3rem"
 					:exportable="false"></Column>
-				<column header="id">
+				<column
+					header="id"
+					field="id">
 					<template #body="slotProps"
-						><span>{{ slotProps.index + 1 }}</span></template
+						><span>{{ slotProps.data.id }}</span></template
 					>
 				</column>
 				<Column
-					field="accountNumber"
+					field="uid"
 					header="Account No.">
+					<template #body="slotProps">
+						<div class="flex w-[20vh]">{{ slotProps.data.uid }}</div>
+					</template>
 				</Column>
 				<Column header="Name">
 					<template #body="slotProps">
-						<div class="font-semibold">
+						<div class="font-semibold capitalize w-[45vh]">
 							<Avatar
 								icon="pi pi-user"
 								class="mr-2"
 								size="normal" />
-							{{
-								`${slotProps.data.firstName} ${slotProps.data.middleName} ${slotProps.data.lastName}`
-							}}
+							{{ slotProps.data.fullname }}
 						</div>
 					</template>
 				</Column>
 				<Column
+					class="capitalize"
 					field="address"
 					header="Address">
+					<template #body="slotProps">
+						<div class="flex w-[25vh]">{{ slotProps.data.address }}</div>
+					</template>
 				</Column>
 				<Column
 					field="classification"
-					header="Classification"></Column>
-				<Column :exportable="false" header="Actions">
+					header="Classification"
+					class="capitalize"></Column>
+				<Column
+					:exportable="false"
+					header="Actions">
 					<template #body="slotProps">
-						<div class="flex">
-							<ViewModal v-bind="slotProps.data" />
-							<UpdateModal v-bind="slotProps.data" />
-							<DeleteModal :uid="slotProps.data.uid" />
-						</div>
+						<Button
+							type="button"
+							severity="secondary"
+							icon="pi pi-ellipsis-v"
+							@click="onToggled($event, slotProps.index)"
+							text />
+
+						<Popover :ref="(el) => (menu[slotProps.index] = el)">
+							<label>Actions</label>
+							<div class="flex flex-col items-start">
+								<ViewModal v-bind="slotProps.data" />
+								<UpdateModal v-bind="slotProps.data" />
+								<DeleteModal :uid="slotProps.data.uid" />
+							</div>
+						</Popover>
 					</template>
 				</Column>
 			</DataTable>
 		</div>
-		<!-- <Paginator
+		<Paginator
+			:template="{
+				'640px': 'PrevPageLink CurrentPageReport NextPageLink',
+				'960px':
+					'FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink',
+				'1300px':
+					'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
+				default:
+					'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink  ',
+			}"
 			:rows="10"
-			:totalRecords="store.totalResidents"
-			:rowsPerPageOptions="[10, 20, 30]"
-			@page="store.onPageChange"
-			template="PrevPageLink CurrentPageReport NextPageLink  RowsPerPageDropdown"
-			currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" /> -->
+			@page="(e) => (store.page = e.page + 1)"
+			:totalRecords="store.totalResidents">
+		</Paginator>
 	</div>
 </template>

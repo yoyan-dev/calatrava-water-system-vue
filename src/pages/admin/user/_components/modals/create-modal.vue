@@ -42,7 +42,6 @@
 <template>
 	<div>
 		<Button
-			label="New"
 			icon="pi pi-plus"
 			class="mr-2"
 			@click="isOpen = true" />
@@ -76,64 +75,24 @@
 							>{{errorAccountNumberMessage? errorAccountNumberMessage : 'Account Number is required.'}}</small
 						>
 					</div>
-					<div class="flex gap-5">
-						<div>
-							<label
-								for="name"
-								class="block mb-1"
-								>Firstname</label
-							>
-							<InputText
-								id="name"
-								v-model.trim="resident.firstName"
-								variant="filled"
-								autofocus
-								:invalid="isSubmitted && !resident.firstName"
-								fluid />
-							<small
-								v-if="isSubmitted && !resident.firstName"
-								class="text-red-500"
-								>Firstname is required.</small
-							>
-						</div>
-						<div>
-							<label
-								for="name"
-								class="block mb-1"
-								>Middle name</label
-							>
-							<InputText
-								id="name"
-								v-model.trim="resident.middleName"
-								variant="filled"
-								autofocus
-								:invalid="isSubmitted && !resident.middleName"
-								fluid />
-							<small
-								v-if="isSubmitted && !resident.middleName"
-								class="text-red-500"
-								>Middle name is required.</small
-							>
-						</div>
-						<div>
-							<label
-								for="name"
-								class="block mb-1"
-								>Lastname</label
-							>
-							<InputText
-								id="name"
-								v-model.trim="resident.lastName"
-								variant="filled"
-								autofocus
-								:invalid="isSubmitted && !resident.lastName"
-								fluid />
-							<small
-								v-if="isSubmitted && !resident.lastName"
-								class="text-red-500"
-								>Last name is required.</small
-							>
-						</div>
+					<div>
+						<label
+							for="name"
+							class="block mb-1"
+							>Firstname</label
+						>
+						<InputText
+							id="name"
+							v-model.trim="resident.fullname"
+							variant="filled"
+							autofocus
+							:invalid="isSubmitted && !resident.fullname"
+							fluid />
+						<small
+							v-if="isSubmitted && !resident.fullname"
+							class="text-red-500"
+							>Fullname is required.</small
+						>
 					</div>
 					<div>
 						<label

@@ -1,24 +1,10 @@
 <script setup lang="ts">
-	import { ref, onMounted, watchEffect, watch } from 'vue';
+	import { ref, onMounted } from 'vue';
 	import Header from '@/pages/admin/billing/_components/header.vue';
-	import DeleteModal from '@/pages/admin/billing/_components/modals/delete-modal.vue';
-	import DeleteSelected from '@/pages/admin/billing/_components/modals/delete-selected-modal.vue';
-	import ViewReciept from '@/pages/admin/billing/_components/modals/view-reciept.vue';
-	import viewBillModal from './_components/modals/view-bill-modal.vue';
 	import { useBillingStore } from '@/stores/billing';
-	import useFirebaseTimestamp from '@/composables/useFirebaseTimestamp';
-	import { useRouter } from 'vue-router';
-	import ImportModal from './_components/modals/import-modal.vue';
-	import { useDialog } from 'primevue';
 
 	const store = useBillingStore();
-	const selectedWaterBill = ref([]);
-	const menu = ref<any[]>([]);
 	const expandedRows = ref({});
-
-	function onToggled(event: Event, index: number) {
-		menu.value[index].toggle(event);
-	}
 
 	onMounted(() => {
 		store.fetchBillings({ month: store.month });
@@ -27,41 +13,22 @@
 
 <template>
 	<div
-		class="bg-surface-0 dark:bg-surface-900 mx-5 p-4 py-6 md:p-6 border rounded-lg">
-		<Header />
+		class="bg-surface-0 dark:bg-surface-900 m-5 p-4 py-6 md:p-6 border rounded-lg">
+		<Header :totatBillings="store.totalBillings"/>
 		<div class="flex flex-col gap-3">
 			<div>
-				<div class="flex gap-5 flex-wrap items-start">
-					<div class="flex-1">
-						<IconField>
-							<InputIcon>
-								<i class="pi pi-search" />
-							</InputIcon>
-							<InputText placeholder="Search..." />
-						</IconField>
-					</div>
-					<div class="flex gap-3 justify-start md:justify-end w-full flex-1">
-						<!-- <RouterLink to="/admin/billing/create">
-							<Button
-								label="Create"
-								icon="pi pi-plus"
-								severity="primary" />
-						</RouterLink> -->
-						<FloatLabel variant="on">
-							<DatePicker
-								v-model:modelValue="store.month"
-								inputId="on_label"
-								view="month"
-								dateFormat="MM yy"
-								showIcon
-								iconDisplay="input" />
-							<label for="on_label">Select month</label>
-						</FloatLabel>
-						<ImportModal />
-						<DeleteSelected
-							:selectedBills="selectedWaterBill"
-							v-if="selectedWaterBill.length" />
-					</div>
+				<div class="w-full">
+					<FloatLabel variant="on">
+						<DatePicker
+							v-model:modelValue="store.month"
+							inputId="on_label"
+							view="month"
+							dateFormat="MM yy"
+							showIcon
+							fluid
+							iconDisplay="input" />
+						<label for="on_label">Select month</label>
+					</FloatLabel>
 				</div>
 			</div>
 			<div class="border rounded-md">
@@ -69,7 +36,6 @@
 					v-model:expandedRows="expandedRows"
 					:value="store.billings"
 					:loading="store.isLoading"
-					v-model:selection="selectedWaterBill"
 					dataKey="bill_no"
 					size="small"
 					:rows="10">
@@ -79,19 +45,12 @@
 						</div>
 					</template>
 					<Column
-						selectionMode="multiple"
-						style="width: 3rem"
-						:exportable="false"></Column>
-					<Column
 						expander
 						style="width: 5rem" />
 					<Column
 						header="Bill No."
 						field="bill_no">
 					</Column>
-					<Column
-						field="accountno"
-						header="AccountNumber"></Column>
 					<Column
 						field="bill_date"
 						header="Billing Date">
@@ -106,45 +65,11 @@
 							</span>
 						</template>
 					</Column>
-					<Column
-						field="address"
-						header="Area"></Column>
 					<Column header="Status">
 						<template #body="slotProps">
 							<Tag
 								severity="warn"
 								:value="slotProps.data.status"></Tag>
-						</template>
-					</Column>
-					<Column header="Actions">
-						<template #body="slotProps">
-							<Button
-								type="button"
-								severity="secondary"
-								icon="pi pi-ellipsis-v"
-								@click="onToggled($event, slotProps.index)"
-								text />
-
-							<Popover :ref="(el) => (menu[slotProps.index] = el)">
-								<label>Actions</label>
-								<div class="flex flex-col">
-									<!-- <RouterLink to="">
-										<viewBillModal :billing="slotProps.data" />
-									</RouterLink> -->
-									<RouterLink to="">
-										<ViewReciept />
-									</RouterLink>
-									<RouterLink to="">
-										<Button
-											icon="pi pi-check"
-											severity="success"
-											size="small"
-											label="mark as paid"
-											text />
-									</RouterLink>
-									<DeleteModal :uid="slotProps.data.residentUid" />
-								</div>
-							</Popover>
 						</template>
 					</Column>
 					<template #expansion="slotProps">

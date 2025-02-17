@@ -4,6 +4,7 @@ import type { Billing } from './billing';
 export interface Resident {
 	id?: string;
 	uid?: string;
+	fullname?: string;
 	accountNumber?: number;
 	firstName?: string;
 	lastName?: string;

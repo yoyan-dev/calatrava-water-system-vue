@@ -28,8 +28,8 @@ import { ref, onMounted } from 'vue';
 <template>
 	<div class="p-5 bg-white rounded-md flex flex-col gap-5">
 		<div class="text-lg">Dashboard</div>
-		<div class="grid grid-cols-3 gap-5">
-			<div class="bg-white p-5 shadow-sm border rounded-md relative">
+		<div class="flex flex-col md:flex-row flex-wrap gap-5">
+			<div class="bg-white p-5 shadow-sm border rounded-md relative flex-1">
 				<div class="text-xl font-medium text-surface-900 dark:text-surface-0 mb-2">
 					Total Residents
 				</div>
@@ -40,7 +40,7 @@ import { ref, onMounted } from 'vue';
 					<i class="pi pi-users text-gray-400 text-5xl"></i>
 				</div>
 			</div>
-			<div class="bg-white p-5 shadow-sm border rounded-md relative">
+			<div class="bg-white p-5 shadow-sm border rounded-md relative flex-1">
 				<div class="text-xl font-medium text-surface-900 dark:text-surface-0 mb-2">
 					Total Billings
 				</div>
@@ -51,7 +51,7 @@ import { ref, onMounted } from 'vue';
 					<i class="pi pi-money-bill text-gray-400 text-5xl"></i>
 				</div>
 			</div>
-			<div class="bg-white p-5 shadow-sm border rounded-md relative">
+			<div class="bg-white p-5 shadow-sm border rounded-md relative flex-1">
 				<div class="text-xl font-medium text-surface-900 dark:text-surface-0 mb-2">
 					Total Payments
 				</div>	
@@ -66,7 +66,7 @@ import { ref, onMounted } from 'vue';
 				</div>
 			</div>
 		</div>
-		<div class="flex gap-10">
+		<div class="flex flex-wrap gap-10">
 			<div class="flex-1 shadow-sm border rounded-md p-5 bg-white">
 				<BarChart :data="barData" />
 			</div>

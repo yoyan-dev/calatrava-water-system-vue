@@ -23,6 +23,11 @@ const router = createRouter({
 					component: () => import('@/pages/resident/home/index.vue'),
 				},
 				{
+					path: 'bills',
+					name: 'resident-bills',
+					component: () => import('@/pages/resident/billing/index.vue'),
+				},
+				{
 					path: 'concern',
 					name: 'resident-concern',
 					component: () => import('@/pages/resident/concern/index.vue'),

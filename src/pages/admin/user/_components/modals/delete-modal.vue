@@ -25,6 +25,8 @@
 	<Button
 		icon="pi pi-trash"
 		text
+		size="small"
+		label="delete"
 		severity="danger"
 		@click="isOpen = true" />
 	<Dialog

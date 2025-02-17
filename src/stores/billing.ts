@@ -13,11 +13,13 @@ import {
 	query,
 	where,
 	orderBy,
-	limit
+	limit,
 } from 'firebase/firestore';
 import { useFirestore } from 'vuefire';
 import type { Billing } from '@/types/billing';
 import type { StoreResponse } from '@/types/store-response';
+import { useFetch, watchDebounced } from '@vueuse/core';
+import type { H3Response } from '@/types/h3response';
 
 export const useBillingStore = defineStore('billing', () => {
 	const db = useFirestore();
@@ -26,8 +28,14 @@ export const useBillingStore = defineStore('billing', () => {
 	const billings = ref<Billing[]>([]);
 	const billing = ref<Billing>();
 	const isLoading = ref(false);
+	const month = ref(new Date());
+	const searchQuery = ref('');
+	const totalBillings = ref(0);
+	const page = ref(0);
 
-	// Getters
+	// getters
+	const offset = computed(() => page.value * 10);
+
 	const fetchCurrentBillings = computed(() => {
 		const now = new Date();
 		const currentMonth = now.getMonth() + 1;
@@ -35,7 +43,9 @@ export const useBillingStore = defineStore('billing', () => {
 
 		return billings.value
 			.filter((item) => {
-				const billingDate = item.billingDate ? (item.billingDate as Timestamp).toDate() : null;
+				const billingDate = item.bill_date
+					? (item.bill_date as Timestamp).toDate()
+					: null;
 				return (
 					billingDate &&
 					billingDate.getMonth() + 1 === currentMonth &&
@@ -46,19 +56,28 @@ export const useBillingStore = defineStore('billing', () => {
 	});
 
 	// Actions
-	async function fetchBillings() {
+	async function fetchBillings(searchParams: Record<string, any> = {}) {
 		isLoading.value = true;
-		try {
-			const querySnapshot = await getDocs(collection(db, 'billings'));
-			const billingSnapshot = querySnapshot.docs.map((doc) => ({
-				...doc.data(),
-				uid: doc.id,
-			}));
 
-			billings.value = billingSnapshot;
+		try {
+			const queryString = new URLSearchParams(searchParams).toString();
+
+			const url = `${import.meta.env.VITE_API_URL}/api/billings${
+				queryString ? '?' + queryString : ''
+			}`;
+			const { data: response } = await useFetch(
+				url,
+				{
+					method: 'GET',
+				},
+				{
+					refetch: true,
+				},
+			).json<H3Response<Billing[]>>();
+			billings.value = response.value?.data as Billing[];
+			totalBillings.value = response.value?.total as number;
 		} catch (error) {
-			console.error('Error fetching billings:', error);
-			billings.value = [];
+			console.error('Error fetching students:', error);
 		} finally {
 			isLoading.value = false;
 		}
@@ -78,36 +97,66 @@ export const useBillingStore = defineStore('billing', () => {
 		}
 	}
 
-	async function fetchBillingsByAccountNumber(accountNumber: number) {
+	// async function fetchBillingsByAccountNumber(accountNumber: number) {
+	// 	isLoading.value = true;
+	// 	console.log(accountNumber);
+
+	// 	try {
+	// 		const queryBillings = query(
+	// 			collection(db, 'billings'),
+	// 			where('residentAccountNumber', '==', accountNumber),
+	// 		);
+
+	// 		const querySnapshot = await getDocs(queryBillings);
+	// 		if (querySnapshot.empty) {
+	// 			console.log('No billings records found for this account');
+	// 			return;
+	// 		}
+
+	// 		billings.value = querySnapshot.docs
+	// 			.map((doc) => ({
+	// 				billingDate: doc.data().bill_date,
+	// 				...doc.data(),
+	// 				uid: doc.id,
+	// 			}))
+	// 			.sort(
+	// 				(a, b) =>
+	// 					(b.bill_date as Timestamp).toDate().getTime() -
+	// 					(a.bill_date as Timestamp).toDate().getTime(),
+	// 			);
+	// 	} catch (error) {
+	// 		console.error('Error fetching billings by account number:', error);
+	// 		throw error;
+	// 	} finally {
+	// 		isLoading.value = false;
+	// 	}
+	// }
+
+	async function addBatchBilling (payload: Billing[]): Promise<StoreResponse>{
 		isLoading.value = true;
-		console.log(accountNumber);
-		
 		try {
-			const queryBillings = query(
-				collection(db, "billings"),
-				where("residentAccountNumber", "==", accountNumber)
-			);
+			const { data: result } = await useFetch(
+				`${import.meta.env.VITE_API_URL}/api/billings`,
+			)
+				.post(payload)
+				.json();
 
-			const querySnapshot = await getDocs(queryBillings);
-			if (querySnapshot.empty) {
-				console.log('No billings records found for this account')
-				return
+			return {
+				status: result.value.statusCode == 200 ? 'success' : 'error',
+				statusMessage: result.value.statusMessage,
+				message: result.value.message,
+			}
+		} catch (e) {
+			console.error(e);
+			return {
+				status: 'error',
+				statusMessage: 'Error message',
+				message: 'Something went wrong',
 			};
-			
-			billings.value = querySnapshot.docs.map((doc) => ({
-				billingDate: doc.data().billingDate,
-				...doc.data(),
-				uid: doc.id,
-			})).sort((a, b) => (b.billingDate as Timestamp).toDate().getTime() - (a.billingDate as Timestamp).toDate().getTime());
-
-		} catch (error) {
-			console.error('Error fetching billings by account number:', error);
-			throw error;
-		} finally {
+		} finally{
 			isLoading.value = false;
 		}
 	}
-	
 
 	async function addBilling(
 		payload: Billing,
@@ -120,7 +169,7 @@ export const useBillingStore = defineStore('billing', () => {
 			}
 			console.log(payload, selected);
 			payload.id = (billings.value.length + 1).toString();
-			payload.billNumber = Number(payload.id);
+			payload.bill_no = payload.id;
 			const docRef = await addDoc(collection(db, 'billings'), {
 				...payload,
 				residentAccountNumber: selected.accountNumber,
@@ -166,48 +215,48 @@ export const useBillingStore = defineStore('billing', () => {
 		}
 	}
 
-	async function deleteBilling(residentUid: string): Promise<StoreResponse> {
-		isLoading.value = true;
-		try {
-			const q = query(
-				collection(db, 'billings'),
-				where('residentUid', '==', residentUid),
-			);
-			const querySnapshot = await getDocs(q);
+	// async function deleteBilling(residentUid: string): Promise<StoreResponse> {
+	// 	isLoading.value = true;
+	// 	try {
+	// 		const q = query(
+	// 			collection(db, 'billings'),
+	// 			where('residentUid', '==', residentUid),
+	// 		);
+	// 		const querySnapshot = await getDocs(q);
 
-			if (querySnapshot.empty) {
-				return {
-					status: 'error',
-					statusMessage: 'Error message',
-					message: 'No billing records found for this residentUid',
-				};
-			}
+	// 		if (querySnapshot.empty) {
+	// 			return {
+	// 				status: 'error',
+	// 				statusMessage: 'Error message',
+	// 				message: 'No billing records found for this residentUid',
+	// 			};
+	// 		}
 
-			await Promise.all(
-				querySnapshot.docs.map((document) =>
-					deleteDoc(doc(db, 'billings', document.id)),
-				),
-			);
+	// 		await Promise.all(
+	// 			querySnapshot.docs.map((document) =>
+	// 				deleteDoc(doc(db, 'billings', document.id)),
+	// 			),
+	// 		);
 
-			billings.value = billings.value.filter(
-				(item) => item.residentUid !== residentUid,
-			);
-			return {
-				status: 'success',
-				statusMessage: 'Success message',
-				message: 'Successfully deleted billing',
-			};
-		} catch (error: any) {
-			console.log(error);
-			return {
-				status: 'error',
-				statusMessage: 'Error message',
-				message: 'Something went wrong',
-			};
-		} finally {
-			isLoading.value = false;
-		}
-	}
+	// 		billings.value = billings.value.filter(
+	// 			(item) => item.residentUid !== residentUid,
+	// 		);
+	// 		return {
+	// 			status: 'success',
+	// 			statusMessage: 'Success message',
+	// 			message: 'Successfully deleted billing',
+	// 		};
+	// 	} catch (error: any) {
+	// 		console.log(error);
+	// 		return {
+	// 			status: 'error',
+	// 			statusMessage: 'Error message',
+	// 			message: 'Something went wrong',
+	// 		};
+	// 	} finally {
+	// 		isLoading.value = false;
+	// 	}
+	// }
 
 	async function deleteBillings(payload: Billing[]): Promise<StoreResponse> {
 		isLoading.value = true;
@@ -245,16 +294,32 @@ export const useBillingStore = defineStore('billing', () => {
 		Object.assign(result || {}, billing);
 	}
 
+	watchDebounced(
+		[searchQuery, month, offset],
+		(newQuery) => {
+			console.log(newQuery);
+			fetchBillings({
+				q: newQuery[0],
+				month: newQuery[1],
+				offset: newQuery[2],
+			});
+		},
+		{ debounce: 300 },
+	);
+
 	return {
 		billings,
 		billing,
 		isLoading,
 		fetchCurrentBillings,
+		month,
+		searchQuery,
 		fetchBillings,
-		fetchBillingsByAccountNumber,
+		page,
+		totalBillings,
 		addBilling,
+		addBatchBilling,
 		fetchBilling,
-		deleteBilling,
 		deleteBillings,
 		updateBilling,
 	};
