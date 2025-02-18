@@ -63,8 +63,10 @@ export const useResidentStore = defineStore('resident', () => {
 
 	async function fetchResident(uid: string) {
 		isLoading.value = true;
-		const docSnap = await getDoc(doc(db, 'residents', uid));
-		resident.value = { ...docSnap.data(), uid: docSnap.id };
+		const { data: response } = await useFetch(
+			`${import.meta.env.VITE_API_URL}/api/residents/${uid}`,
+		).json<H3Response<Resident>>();
+		resident.value = response.value?.data as Resident;
 		isLoading.value = false;
 	}
 

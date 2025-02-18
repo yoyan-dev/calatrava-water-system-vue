@@ -1,26 +1,29 @@
 <script setup lang="ts">
 	import { ref, onMounted } from 'vue';
 	import Header from '@/pages/admin/billing/_components/header.vue';
-	import { useBillingStore } from '@/stores/billing';
+	import { useResidentStore } from '@/stores/resident';
+	import { useRoute } from 'vue-router';
 
-	const store = useBillingStore();
+	const route = useRoute();
+	console.log(route.params.uid);
+	const store = useResidentStore();
 	const expandedRows = ref({});
 
-	onMounted(() => {
-		store.fetchBillings({ month: store.month });
+	onMounted(async () => {
+		const residentId = route.params.uid;
+		await store.fetchResident(residentId as string);
 	});
 </script>
 
 <template>
 	<div
 		class="bg-surface-0 dark:bg-surface-900 m-5 p-4 py-6 md:p-6 border rounded-lg">
-		<Header :totatBillings="store.totalBillings"/>
+		<Header :totatBillings="store.resident.billings?.length" />
 		<div class="flex flex-col gap-3">
 			<div>
 				<div class="w-full">
-					<FloatLabel variant="on">
+					<!-- <FloatLabel variant="on">
 						<DatePicker
-							v-model:modelValue="store.month"
 							inputId="on_label"
 							view="month"
 							dateFormat="MM yy"
@@ -28,13 +31,13 @@
 							fluid
 							iconDisplay="input" />
 						<label for="on_label">Select month</label>
-					</FloatLabel>
+					</FloatLabel> -->
 				</div>
 			</div>
 			<div class="border rounded-md">
 				<DataTable
 					v-model:expandedRows="expandedRows"
-					:value="store.billings"
+					:value="store.resident.billings"
 					:loading="store.isLoading"
 					dataKey="bill_no"
 					size="small"
@@ -209,7 +212,7 @@
 						</div>
 					</template>
 				</DataTable>
-				<Paginator
+				<!-- <Paginator
 					:template="{
 						'640px': 'PrevPageLink CurrentPageReport NextPageLink',
 						'960px':
@@ -220,9 +223,7 @@
 							'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink ',
 					}"
 					:rows="10"
-					@page="(e) => (store.page = e.page + 1)"
-					:totalRecords="store.totalBillings">
-				</Paginator>
+				</Paginator> -->
 			</div>
 		</div>
 	</div>

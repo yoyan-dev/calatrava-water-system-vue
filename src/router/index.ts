@@ -23,7 +23,7 @@ const router = createRouter({
 					component: () => import('@/pages/resident/home/index.vue'),
 				},
 				{
-					path: 'bills',
+					path: 'bills/:uid',
 					name: 'resident-bills',
 					component: () => import('@/pages/resident/billing/index.vue'),
 				},
