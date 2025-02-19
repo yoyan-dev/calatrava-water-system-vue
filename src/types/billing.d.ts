@@ -24,6 +24,9 @@ export interface Billing {
 	reminders?: string;
 	res2?: number;
 	status?: BillingStatus;
+	waterCharge?: number;
+	environmentalFee?: number;
+	totalBill?: number;
 }
 
 type BillingStatus = 'pending' | 'paid' | undefined;
