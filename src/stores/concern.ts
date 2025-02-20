@@ -1,43 +1,49 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import type { Concern } from '@/types/concern';
+import {
+	addDoc,
+	collection,
+	deleteDoc,
+	doc,
+	getDocs,
+} from 'firebase/firestore';
+import { useFirestore } from 'vuefire';
 
 export const useConcernStore = defineStore('concern', () => {
+	const db = useFirestore();
 	const concerns = ref<Concern[]>([]);
+	const isLoading = ref(false);
 
-	function getConcerns() {
-		concerns.value = [
-			{
-				id: '1',
-				firstName: 'John Doe',
-				content: 'Water leakage in the basement.',
-			},
-			{
-				id: '2',
-				firstName: 'Jane Smith',
-				content: 'No water supply in the kitchen.',
-			},
-			{
-				id: '3',
-				firstName: 'Alice Johnson',
-				content: 'Low water pressure in the shower.',
-			},
-			{
-				id: '4',
-				firstName: 'Bob Brown',
-				content: 'Strange odor in the tap water.',
-			},
-		];
-		return concerns.value;
+	async function fetchConcerns() {
+		isLoading.value = true;
+		const concernSnapshot = await getDocs(collection(db, 'concerns'));
+		const result = concernSnapshot.docs.map((doc) => ({
+			...doc.data(),
+			uid: doc.id,
+		}));
+		concerns.value = result;
+		isLoading.value = false;
 	}
 
-	function addConcern(concern: Concern) {
-		concerns.value.push(concern);
+	async function addConcern(concern: Concern) {
+		isLoading.value = true;
+		const concernRef = await addDoc(collection(db, 'concerns'), { concern });
+		concerns.value.push({ ...concern, uid: concernRef.id });
+		isLoading.value = false;
+	}
+
+	async function deleteConcer(uid: string) {
+		isLoading.value = true;
+		await deleteDoc(doc(db, 'concerns', uid));
+		concerns.value = concerns.value.filter((val) => val.uid !== uid);
+		isLoading.value = false;
 	}
 
 	return {
 		concerns,
-		getConcerns,
+		deleteConcer,
+		fetchConcerns,
 		addConcern,
 	};
 });
