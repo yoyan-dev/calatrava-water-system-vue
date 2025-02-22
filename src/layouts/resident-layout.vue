@@ -75,8 +75,8 @@ const items = ref([
                   </a>
                 </RouterLink>
               </template>
-              <Button label="log out" icon="pi pi-sin-out" size="small" />
             </Menu>
+            <Button label="log out" icon="pi pi-sign-out" size="small" text />
           </Drawer>
           <div class="flex gap-5" :class="visible ? 'px-5' : ''">
             <RouterLink
@@ -89,7 +89,7 @@ const items = ref([
             >
             <Button
               label="log out"
-              icon="pi pi-sin-out"
+              icon="pi pi-sign-out"
               size="small"
               class="hidden md:block lg:block"
             />
