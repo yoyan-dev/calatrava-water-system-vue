@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import type { Billing } from "@/types/billing";
 import type { Resident } from "@/types/resident";
 import useFirebaseTimestamp from "@/composables/useFirebaseTimestamp";
 import { formatToPeso } from "@/composables/currencyFormat";

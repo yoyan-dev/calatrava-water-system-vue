@@ -11,15 +11,14 @@ const store = useResidentStore();
 
 onMounted(async () => {
   const user = useCurrentUser() as any;
-  if (user.value) {
-    const residentId = user.value.uid;
-    await store.fetchResident(residentId);
-
-    console.log(store.resident);
-  } else {
+  if (!user.value) {
     console.log("No user is signed in.");
     router.push("/");
   }
+  const residentId = user.value.uid;
+  await store.fetchResident(residentId);
+
+  console.log(store.resident);
 });
 </script>
 

@@ -19,6 +19,7 @@ const initialValues = ref({
 async function onFormSubmit() {
   isLoading.value = true;
   isSubmitted.value = true;
+  errorMessage.value = "";
   try {
     const { data: token, error } = await useFetch<H3Response<string>>(
       `${import.meta.env.VITE_API_URL}/api/auth/${

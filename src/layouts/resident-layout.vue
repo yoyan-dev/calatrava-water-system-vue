@@ -1,18 +1,6 @@
 <script setup lang="ts">
-import { useRoute, RouterLink } from "vue-router";
+import { useRoute } from "vue-router";
 import { ref, onMounted, computed } from "vue";
-import { useCurrentUser } from "vuefire";
-import { useRouter } from "vue-router";
-
-const router = useRouter();
-const user = useCurrentUser() as any;
-
-onMounted(async () => {
-  if (!user) {
-    console.log("No user is signed in.");
-    router.push("/");
-  }
-});
 
 const route = useRoute();
 const visible = ref(false);
@@ -27,7 +15,7 @@ const items = ref([
     label: "Bills",
     name: "resident-bills",
     icon: "pi pi-book",
-    route: `/resident/bills/${user.value.uid}`,
+    route: "/resident/bills",
   },
   {
     label: "Concern",
@@ -44,24 +32,30 @@ const items = ref([
         <template #start>
           <div class="flex items-center gap-2 font-semibold">
             <div class="flex items-center">
+              <Button
+                icon="pi pi-align-center"
+                @click="visible = true"
+                class="visible md:invisible lg:invisible xl:invisible"
+                text
+              />
               <Avatar
                 image="/logo.png"
                 class="mr-2"
                 size="large"
                 shape="circle"
               />
-              <h1 class="block md:hidden lg:hidden xl:hidden text-xl">
-                C<span class="text-primary">W</span>S
-              </h1>
-              <h1 class="hidden md:block lg:block xl:block text-xl">
-                Calatrava <span class="text-primary">Water</span> System
-              </h1>
+              <div class="text-lG md:text-xl">CALATRAVA WATER SYSTEM</div>
             </div>
           </div>
         </template>
 
         <template #end>
-          <Drawer v-model:visible="visible" header="CWS">
+          <Drawer v-model:visible="visible">
+            <template #header>
+              <div>
+                <div class="text-lG md:text-xl">CALATRAVA WATER SYSTEM</div>
+              </div>
+            </template>
             <Menu :model="items">
               <template #item="{ item, props }">
                 <RouterLink
@@ -81,13 +75,9 @@ const items = ref([
                   </a>
                 </RouterLink>
               </template>
+              <Button label="log out" icon="pi pi-sin-out" size="small" />
             </Menu>
           </Drawer>
-          <Button
-            icon="pi pi-align-center"
-            @click="visible = true"
-            class="visible md:invisible lg:invisible xl:invisible"
-          />
           <div class="flex gap-5" :class="visible ? 'px-5' : ''">
             <RouterLink
               v-for="item in items"
@@ -97,6 +87,12 @@ const items = ref([
               class="hidden md:block lg:block"
               >{{ item.label }}</RouterLink
             >
+            <Button
+              label="log out"
+              icon="pi pi-sin-out"
+              size="small"
+              class="hidden md:block lg:block"
+            />
           </div>
         </template>
       </Toolbar>
