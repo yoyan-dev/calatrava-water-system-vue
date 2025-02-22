@@ -10,6 +10,7 @@ const auth = useFirebaseAuth();
 const router = useRouter();
 const isSubmitted = ref(false);
 const isLoading = ref(false);
+const errorMessage = ref("");
 
 const initialValues = ref({
   accountNumber: "",
@@ -32,6 +33,7 @@ async function onFormSubmit() {
       console.log(user);
     }
   } catch (e) {
+    errorMessage.value = "Failed to sign in. Please try again.";
     console.error(e);
   }
   isLoading.value = false;
@@ -39,13 +41,15 @@ async function onFormSubmit() {
 </script>
 <template>
   <div
-    class="px-6 py-20 h-screen md:px-12 lg:px-20 flex items-center justify-center bg-[linear-gradient(-225deg,var(--p-primary-500),var(--p-primary-700)_48%,var(--p-primary-800))] dark:bg-[linear-gradient(-225deg,var(--p-primary-400),var(--p-primary-600)_48%,var(--p-primary-800))]"
+    class="px-3 py-20 h-screen md:px-12 lg:px-20 flex items-center flex-col justify-evenly"
   >
     <div
-      class="p-12 shadow text-center lg:w-[30rem] backdrop-blur-md rounded-xl border bg-white"
+      class="p-12 shadow text-center lg:w-[30rem] backdrop-blur-md border border-primary rounded-lg bg-white"
     >
-      <Avatar image="/logo.png" class="mr-2" size="xlarge" shape="circle" />
-      <div class="text-2xl font-medium">CALATRAVA WATER SYSTEM</div>
+      <div class="text-lg md:text-2xl font-medium text-primary">
+        CALATRAVA WATER SYSTEM
+      </div>
+      <Avatar image="/logo.png" size="xlarge" shape="circle" />
       <div class="text-xl text-slate-500 mb-12">Welcome</div>
       <form
         @submit.prevent="onFormSubmit"
@@ -66,6 +70,13 @@ async function onFormSubmit() {
             >Please enter your account number.</Message
           >
         </div>
+        <Message
+          v-if="errorMessage"
+          severity="error"
+          size="small"
+          variant="simple"
+          >{{ errorMessage }}</Message
+        >
         <Button type="submit" label="Submit" :loading="isLoading" />
       </form>
     </div>
