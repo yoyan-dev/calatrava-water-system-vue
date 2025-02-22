@@ -6,7 +6,7 @@ const store = useResidentStore();
 const expandedRows = ref({});
 
 const props = defineProps<{
-  uid: string;
+  uid: any;
 }>();
 
 onMounted(async () => {
