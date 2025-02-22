@@ -19,7 +19,7 @@ const items = ref([
   },
   {
     label: "Concern",
-    name: "resident-concen",
+    name: "resident-concern",
     icon: "pi pi-question-circle",
     route: "/resident/concern",
   },

@@ -8,6 +8,7 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 const store = useResidentStore();
+const billIncreasePercentage = ref(0);
 
 onMounted(async () => {
   const user = useCurrentUser() as any;
@@ -17,6 +18,17 @@ onMounted(async () => {
   }
   const residentId = user.value.uid;
   await store.fetchResident(residentId);
+
+  if (store.resident.billings && store.resident.billings.length > 1) {
+    const currentBill = store.resident.billings[0].totalBill
+      ? store.resident.billings[0].totalBill
+      : 0;
+    const previousBill = store.resident.billings[1].totalBill
+      ? store.resident.billings[1].totalBill
+      : 0;
+    billIncreasePercentage.value =
+      ((currentBill - previousBill) / previousBill) * 100;
+  }
 
   console.log(store.resident);
 });
@@ -62,27 +74,27 @@ onMounted(async () => {
                 <span class="text-xl font-bold text-surface-500">{{
                   `₱ ${store.resident.billings?.[0].totalBill}`
                 }}</span>
-                <div class="text-red-500">
-                  <span
-                    ><i class="pi pi-sort-amount-up"></i>
-                    bill increase by 10%
+                <div
+                  :class="{
+                    'text-red-500': billIncreasePercentage > 0,
+                    'text-green-500': billIncreasePercentage <= 0,
+                  }"
+                >
+                  <span>
+                    <i
+                      :class="{
+                        'pi pi-sort-amount-up': billIncreasePercentage > 0,
+                        'pi pi-sort-amount-down': billIncreasePercentage <= 0,
+                      }"
+                    ></i>
+                    {{
+                      billIncreasePercentage > 0
+                        ? `bill increase by ${billIncreasePercentage}%`
+                        : `bill decrease by ${Math.abs(
+                            billIncreasePercentage
+                          )}%`
+                    }}
                   </span>
-                </div>
-              </div>
-            </div>
-            <div
-              class="max-w-96 flex flex-col gap-3 border border-primary rounded-md p-3 mt-3"
-            >
-              <div class="text-lg">Current total bill</div>
-              <div class="flex justify-between items-end">
-                <span class="text-xl font-bold text-surface-500">{{
-                  `₱ ${store.resident.billings?.[0].totalBill}`
-                }}</span>
-                <div class="text-green-500">
-                  <span
-                    ><i class="pi pi-sort-amount-down"></i> bill decrease by
-                    10%</span
-                  >
                 </div>
               </div>
             </div>

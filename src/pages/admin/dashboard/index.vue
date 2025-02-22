@@ -23,54 +23,55 @@ const lineData = [
 
 <template>
   <div class="p-5 bg-white rounded-md flex flex-col gap-5">
+    <div class="text-2xl">Welcome! Admin</div>
     <div class="text-lg">Dashboard</div>
     <div class="flex flex-col md:flex-row flex-wrap gap-5">
-      <div class="bg-white p-5 shadow-sm border rounded-md relative flex-1">
-        <div
-          class="text-xl font-medium text-surface-900 dark:text-surface-0 mb-2"
-        >
+      <div
+        class="bg-white p-5 shadow-sm border border-primary rounded-md relative flex-1"
+      >
+        <div class="text-xl text-surface-900 dark:text-surface-0 mb-2">
           Total Residents
         </div>
         <div
-          class="text-4xl font-semibold text-primary-500 dark:text-primary-400"
+          class="text-4xl font-semibold text-surface-600 dark:text-primary-400"
         >
           100
         </div>
         <div class="absolute top-2 right-2">
-          <i class="pi pi-users text-gray-400 text-5xl"></i>
+          <i class="pi pi-users text-primary text-5xl"></i>
         </div>
       </div>
-      <div class="bg-white p-5 shadow-sm border rounded-md relative flex-1">
-        <div
-          class="text-xl font-medium text-surface-900 dark:text-surface-0 mb-2"
-        >
+      <div
+        class="bg-white p-5 shadow-sm border border-primary rounded-md relative flex-1"
+      >
+        <div class="text-xl text-surface-900 dark:text-surface-0 mb-2">
           Total Billings
         </div>
         <div
-          class="text-4xl font-semibold text-primary-500 dark:text-primary-400"
+          class="text-4xl font-semibold text-surface-600 dark:text-primary-400"
         >
           100
         </div>
         <div class="absolute top-2 right-2">
-          <i class="pi pi-money-bill text-gray-400 text-5xl"></i>
+          <i class="pi pi-money-bill text-primary text-5xl"></i>
         </div>
       </div>
-      <div class="bg-white p-5 shadow-sm border rounded-md relative flex-1">
-        <div
-          class="text-xl font-medium text-surface-900 dark:text-surface-0 mb-2"
-        >
-          Total Payments
+      <div
+        class="bg-white p-5 shadow-sm border border-primary rounded-md relative flex-1"
+      >
+        <div class="text-xl text-surface-900 dark:text-surface-0 mb-2">
+          Pending Payments
         </div>
         <div
-          class="text-4xl font-semibold text-primary-500 dark:text-primary-400"
+          class="text-4xl font-semibold text-surface-600 dark:text-primary-400"
         >
           100
         </div>
         <div class="text-sm text-gray-400 dark:text-gray-500">
-          Total amount of payments
+          Total amount of pending payments
         </div>
         <div class="absolute top-2 right-2">
-          <i class="pi pi-money-bill text-gray-400 text-5xl"></i>
+          <i class="pi pi-money-bill text-primary text-5xl"></i>
         </div>
       </div>
     </div>
