@@ -1,3 +1,44 @@
+<script setup lang="ts">
+	import { ref } from 'vue';
+	import { useToast } from 'primevue/usetoast';
+	import { usePaymentStore } from '@/stores/payment';
+
+	const props = defineProps<{
+		uid: string;
+		billingUid: string;
+	}>();
+
+	const store = usePaymentStore();
+	const toast = useToast();
+	const visible = ref(false);
+	const uploading = ref(false);
+	const downloadURL = ref();
+
+	const file = ref();
+
+	async function onFileSelected(event: any) {
+		file.value = event;
+		if (!file.value) return;
+	}
+
+	async function onUpload() {
+		const payment = {
+			uid: props.uid,
+			billUid: props.billingUid,
+			event: file.value,
+		};
+		console.log(payment);
+		const res = await store.addPayment(payment as any);
+
+		toast.add({
+			severity: res.status,
+			summary: res.statusMessage,
+			detail: res.message,
+			life: 3000,
+		});
+		res.status === 'success' ? (visible.value = false) : null;
+	}
+</script>
 <template>
 	<Button
 		icon="pi pi-money-bill"
@@ -26,6 +67,36 @@
 				:multiple="false"
 				accept="image/*"
 				:maxFileSize="1000000">
+				<template
+					#header="{ chooseCallback, uploadCallback, clearCallback, files }">
+					<div class="flex flex-wrap justify-between items-center flex-1 gap-4">
+						<div class="flex gap-2">
+							<Button
+								@click="chooseCallback()"
+								icon="pi pi-images"
+								label="choose file"
+								rounded
+								outlined
+								severity="secondary"></Button>
+							<Button
+								@click="onUpload"
+								icon="pi pi-cloud-upload"
+								label="upload"
+								rounded
+								outlined
+								severity="success"
+								:disabled="!files || files.length === 0"></Button>
+							<Button
+								@click="clearCallback()"
+								icon="pi pi-times"
+								label="clear"
+								rounded
+								outlined
+								severity="danger"
+								:disabled="!files || files.length === 0"></Button>
+						</div>
+					</div>
+				</template>
 				<template #empty>
 					<span>Drag and drop files here to upload.</span>
 				</template>
@@ -48,48 +119,3 @@
 		</div>
 	</Dialog>
 </template>
-
-<script setup lang="ts">
-	import { ref } from 'vue';
-	import { useToast } from 'primevue/usetoast';
-	import { useStorageFile } from 'vuefire';
-	import { getStorage, ref as storageRef } from 'firebase/storage';
-
-	const toast = useToast();
-	const visible = ref(false);
-	const uploading = ref(false);
-	const downloadURL = ref();
-	const storage = getStorage();
-
-	async function onFileSelected(event: any) {
-		const file = event.files[0];
-		if (!file) return;
-
-		const filePath = `payments/${file.name}`;
-		const fileRef = storageRef(storage, filePath);
-		const { upload, url } = useStorageFile(fileRef);
-
-		try {
-			uploading.value = true;
-			await upload(file);
-			downloadURL.value = url.value;
-
-			toast.add({
-				severity: 'success',
-				summary: 'Upload Successful',
-				detail: 'Receipt uploaded successfully',
-				life: 3000,
-			});
-		} catch (error) {
-			console.error('Upload error:', error);
-			toast.add({
-				severity: 'error',
-				summary: 'Upload Failed',
-				detail: 'There was an issue uploading your receipt.',
-				life: 3000,
-			});
-		} finally {
-			uploading.value = false;
-		}
-	}
-</script>
