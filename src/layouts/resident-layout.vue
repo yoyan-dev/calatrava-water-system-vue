@@ -1,9 +1,23 @@
 <script setup lang="ts">
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { ref, onMounted, computed } from "vue";
+import { signOut } from "firebase/auth";
+import { auth } from "@/firebase/config";
 
 const route = useRoute();
+const router = useRouter();
 const visible = ref(false);
+
+const logoutUser = async () => {
+  try {
+    await signOut(auth);
+    router.push("/");
+    console.log("User logged out successfully");
+  } catch (err) {
+    console.error("Error logging out:", err);
+  }
+};
+
 const items = ref([
   {
     label: "Home",
@@ -76,7 +90,13 @@ const items = ref([
                 </RouterLink>
               </template>
             </Menu>
-            <Button label="log out" icon="pi pi-sign-out" size="small" text />
+            <template #footer>
+              <Button
+                @click="logoutUser"
+                icon="pi pi-sign-out"
+                label="Sign Out"
+              />
+            </template>
           </Drawer>
           <div class="flex gap-5" :class="visible ? 'px-5' : ''">
             <RouterLink
@@ -89,6 +109,7 @@ const items = ref([
             >
             <Button
               label="log out"
+              @click="logoutUser"
               icon="pi pi-sign-out"
               size="small"
               class="hidden md:block lg:block"
