@@ -37,6 +37,12 @@ const items = ref([
     icon: "pi pi-book",
     route: "/admin/billings",
   },
+  {
+    label: "Concerns",
+    name: "admin-concerns",
+    icon: "pi pi-book",
+    route: "/admin/concerns",
+  },
 ]);
 </script>
 
@@ -113,6 +119,24 @@ const items = ref([
                 class="flex items-center p-2 rounded-lg hover:text-white cursor-pointer hover:bg-primary-400"
               >
                 <span>Billings</span>
+              </a>
+            </RouterLink>
+          </li>
+          <li>
+            <RouterLink
+              to="/admin/concerns"
+              :class="
+                route.name == 'admin-concern' || route.name == 'admin-concerns'
+                  ? 'bg-primary-100 text-primary'
+                  : ''
+              "
+              class="flex items-center px-2 rounded-lg font-normal hover:text-white cursor-pointer hover:bg-primary-400"
+            >
+              <i class="pi pi-inbox"></i>
+              <a
+                class="flex items-center p-2 rounded-lg hover:text-white cursor-pointer hover:bg-primary-400"
+              >
+                <span>Concerns</span>
               </a>
             </RouterLink>
           </li>
