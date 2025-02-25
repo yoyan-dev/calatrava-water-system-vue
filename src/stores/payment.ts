@@ -35,6 +35,7 @@ export const usePaymentStore = defineStore('payment', () => {
 
 			await updateDoc(billDocRef, {
 				paymentReceipt: url,
+				status: 'inprogress',
 			});
 			return {
 				status: 'success',

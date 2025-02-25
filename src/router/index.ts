@@ -79,6 +79,11 @@ const router = createRouter({
           name: "admin-readers",
           component: () => import("@/pages/admin/reader/index.vue"),
         },
+        {
+          path: "concerns",
+          name: "admin-concerns",
+          component: () => import("@/pages/admin/concern/index.vue"),
+        },
       ],
     },
     {

@@ -1,5 +1,7 @@
-## Residents
+### TODO LIST
 
-    -can search name. Create a searchKeywords
-    -can filter address
-    -can sort
+- [ ] Make sign out and log out work
+- [ ] Add real data to analytics
+- [ ] Add ui in concern
+- [ ] create a remiders UI in resident and admin
+- [x]
