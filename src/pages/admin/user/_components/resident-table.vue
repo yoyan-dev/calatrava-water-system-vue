@@ -111,7 +111,7 @@
 						<Popover :ref="(el) => (menu[slotProps.index] = el)">
 							<label>Actions</label>
 							<div class="flex flex-col items-start">
-								<ViewModal v-bind="slotProps.data" />
+								<ViewModal :resident="slotProps.data" />
 								<UpdateModal v-bind="slotProps.data" />
 								<DeleteModal :uid="slotProps.data.uid" />
 							</div>

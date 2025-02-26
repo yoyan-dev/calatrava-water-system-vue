@@ -1,33 +1,45 @@
 <script setup lang="ts">
 	import { ref, onMounted, computed } from 'vue';
 	import WaterBill from './_components/water-bill.vue';
-	import PayBillModal from './_components/modals/pay-bill-modal.vue';
 	import { useCurrentUser } from 'vuefire';
 	import { useResidentStore } from '@/stores/resident';
 	import { useRouter } from 'vue-router';
 
 	const router = useRouter();
 	const store = useResidentStore();
+	const billIncreasePercentage = ref(0);
 
 	onMounted(async () => {
 		const user = useCurrentUser() as any;
-		if (user.value) {
-			const residentId = user.value.uid;
-			await store.fetchResident(residentId);
-
-			console.log(store.resident);
-		} else {
+		if (!user.value) {
 			console.log('No user is signed in.');
 			router.push('/');
 		}
+		const residentId = user.value.uid;
+		await store.fetchResident(residentId);
+
+		if (store.resident.billings && store.resident.billings.length > 1) {
+			const currentBill = store.resident.billings[0].totalBill
+				? store.resident.billings[0].totalBill
+				: 0;
+			const previousBill = store.resident.billings[1].totalBill
+				? store.resident.billings[1].totalBill
+				: 0;
+			billIncreasePercentage.value =
+				((currentBill - previousBill) / previousBill) * 100;
+		}
+
+		console.log(store.resident);
 	});
 </script>
 
 <template>
 	<div
-		class="p-2 md:p-4 lg:p-5"
+		class="h-screen flex justify-center items-center"
 		v-if="store.isLoading">
-		...Loading
+		<i
+			class="pi pi-spin pi-spinner text-primary"
+			style="font-size: 2rem"></i>
 	</div>
 	<div
 		class="p-2 md:p-4 lg:p-5"
@@ -58,21 +70,33 @@
 				<div>
 					<div>
 						<h2 class="text-lg font-semibold">Analytics</h2>
-						<div class="flex justify-between items-center mt-4">
-							<div class="flex items-center gap-2">
-								<i class="pi pi-arrow-up text-green-500"></i>
-								<p class="text-green-500">
-									Your current usage is lower than the previous period by 15%.
-								</p>
-							</div>
-						</div>
-						<div class="flex justify-between items-center mt-4">
-							<div class="flex items-center gap-2">
-								<i class="pi pi-arrow-down text-red-500"></i>
-								<p class="text-red-500">
-									Your current usage is higher than to the previous period by
-									10%.
-								</p>
+						<div
+							class="max-w-96 flex flex-col gap-3 border border-primary rounded-md p-3 mt-3">
+							<div class="text-lg">Current total bill</div>
+							<div class="flex justify-between items-end">
+								<span class="text-xl font-bold text-surface-500">{{
+									`₱ ${store.resident.billings?.[0].totalBill}`
+								}}</span>
+								<div
+									:class="{
+										'text-red-500': billIncreasePercentage > 0,
+										'text-green-500': billIncreasePercentage <= 0,
+									}">
+									<span>
+										<i
+											:class="{
+												'pi pi-sort-amount-up': billIncreasePercentage > 0,
+												'pi pi-sort-amount-down': billIncreasePercentage <= 0,
+											}"></i>
+										{{
+											billIncreasePercentage > 0
+												? `bill increase by ${billIncreasePercentage}%`
+												: `bill decrease by ${Math.abs(
+														billIncreasePercentage,
+												  )}%`
+										}}
+									</span>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -99,9 +123,6 @@
 				<WaterBill
 					:resident="store.resident"
 					v-else />
-				<div class="flex justify-end">
-					<PayBillModal />
-				</div>
 			</div>
 		</div>
 	</div>

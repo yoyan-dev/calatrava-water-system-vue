@@ -2,36 +2,51 @@
 	import { ref, onMounted } from 'vue';
 	import Header from '@/pages/admin/billing/_components/header.vue';
 	import { useResidentStore } from '@/stores/resident';
-	import { useRoute } from 'vue-router';
+	import { useRoute, useRouter } from 'vue-router';
+	import { useCurrentUser } from 'vuefire';
+	import { getSeverity } from '@/composables/getSeverity';
 
-	const route = useRoute();
-	console.log(route.params.uid);
+	const router = useRouter();
+	const user = useCurrentUser() as any;
 	const store = useResidentStore();
 	const expandedRows = ref({});
 
 	onMounted(async () => {
-		const residentId = route.params.uid;
+		if (!user.value) {
+			console.log('No user is signed in.');
+			router.push('/');
+			return;
+		}
+		const residentId = user.value.uid;
 		await store.fetchResident(residentId as string);
 	});
 </script>
 
 <template>
 	<div
-		class="bg-surface-0 dark:bg-surface-900 m-5 p-4 py-6 md:p-6 border rounded-lg">
+		class="h-screen flex justify-center items-center"
+		v-if="store.isLoading">
+		<i
+			class="pi pi-spin pi-spinner text-primary"
+			style="font-size: 2rem"></i>
+	</div>
+	<div
+		class="bg-surface-0 dark:bg-surface-900 m-5 p-4 py-6 md:p-6 border rounded-lg"
+		v-else>
 		<Header :totatBillings="store.resident.billings?.length" />
 		<div class="flex flex-col gap-3">
 			<div>
 				<div class="w-full">
 					<!-- <FloatLabel variant="on">
-						<DatePicker
-							inputId="on_label"
-							view="month"
-							dateFormat="MM yy"
-							showIcon
-							fluid
-							iconDisplay="input" />
-						<label for="on_label">Select month</label>
-					</FloatLabel> -->
+							<DatePicker
+								inputId="on_label"
+								view="month"
+								dateFormat="MM yy"
+								showIcon
+								fluid
+								iconDisplay="input" />
+							<label for="on_label">Select month</label>
+						</FloatLabel> -->
 				</div>
 			</div>
 			<div class="border rounded-md">
@@ -64,14 +79,16 @@
 						<template #body="slotProps">
 							<span class="rounded-md text-primary">
 								<i name="pi pi-money-bill"></i
-								>{{ `₱ ${slotProps.data.waterBill}` }}
+								>{{
+									`₱ ${slotProps.data.totalBill ? slotProps.data.totalBill : 0}`
+								}}
 							</span>
 						</template>
 					</Column>
 					<Column header="Status">
 						<template #body="slotProps">
 							<Tag
-								severity="warn"
+								:severity="getSeverity(slotProps.data.status as string)"
 								:value="slotProps.data.status"></Tag>
 						</template>
 					</Column>
@@ -205,25 +222,25 @@
 								</div>
 							</div>
 							<!-- <DataTable :value="slotProps.data.orders">
-								<Column field="id" header="Id" sortable></Column>
-								<Column field="customer" header="Customer" sortable></Column>
-								<Column field="date" header="Date" sortable></Column>
-							</DataTable> -->
+									<Column field="id" header="Id" sortable></Column>
+									<Column field="customer" header="Customer" sortable></Column>
+									<Column field="date" header="Date" sortable></Column>
+								</DataTable> -->
 						</div>
 					</template>
 				</DataTable>
 				<!-- <Paginator
-					:template="{
-						'640px': 'PrevPageLink CurrentPageReport NextPageLink',
-						'960px':
-							'FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink',
-						'1300px':
-							'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
-						default:
-							'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink ',
-					}"
-					:rows="10"
-				</Paginator> -->
+						:template="{
+							'640px': 'PrevPageLink CurrentPageReport NextPageLink',
+							'960px':
+								'FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink',
+							'1300px':
+								'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
+							default:
+								'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink ',
+						}"
+						:rows="10"
+					</Paginator> -->
 			</div>
 		</div>
 	</div>

@@ -10,8 +10,11 @@ const initialValues = ref({
 
 const router = useRouter();
 const auth = getAuth();
+const isLoading = ref(false);
+const errorMessage = ref();
 
 async function onFormSubmit() {
+  isLoading.value = true;
   try {
     const { email, password } = initialValues.value;
     const userCredential = await signInWithEmailAndPassword(
@@ -23,8 +26,26 @@ async function onFormSubmit() {
     if (userCredential) {
       router.push("/admin/dashboard");
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error signing in:", error);
+    switch (error.code) {
+      case "auth/invalid-email":
+        errorMessage.value = "Email is invalid.";
+        break;
+      case "auth/user-not-found":
+        errorMessage.value = "User is not registered.";
+        break;
+      case "auth/wrong-password":
+        errorMessage.value = "Wrong password.";
+        break;
+      case "auth/invalid-credential":
+        errorMessage.value = "Incorrect email or password.";
+        break;
+      default:
+        errorMessage.value = "Unknown error. Please try again.";
+    }
+  } finally {
+    isLoading.value = false;
   }
 }
 </script>
@@ -38,16 +59,38 @@ async function onFormSubmit() {
       <Avatar image="/logo.png" class="mr-2" size="xlarge" shape="circle" />
       <div class="text-2xl font-medium">CALATRAVA WATER SYSTEM</div>
       <div class="text-xl text-slate-500 mb-12">Welcome</div>
-      <form class="flex justify-center flex-col gap-4">
+      <form
+        @submit.prevent="onFormSubmit"
+        class="flex justify-center flex-col gap-4"
+      >
+        <div class="flex justify-center">
+          <Message
+            v-if="errorMessage"
+            severity="error"
+            size="small"
+            variant="simple"
+            >{{ errorMessage }}</Message
+          >
+        </div>
         <div class="flex flex-col gap-1">
-          <InputText name="email" type="email" placeholder="Email" />
+          <InputText
+            v-model="initialValues.email"
+            name="email"
+            type="email"
+            placeholder="Email"
+          />
           <!-- <Message v-if="$form.username?.invalid" severity="error" size="small" variant="simple">{{ $form.username.error?.message }}</Message> -->
         </div>
         <div class="flex flex-col gap-1">
-          <InputText name="password" type="password" placeholder="Password" />
-          <!-- <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">{{ $form.email.error?.message }}</Message> -->
+          <Password
+            placeholder="Password"
+            v-model="initialValues.password"
+            :feedback="false"
+            toggleMask
+            fluid
+          />
         </div>
-        <Button label="Submit" @click="onFormSubmit" />
+        <Button label="Submit" type="submit" :loading="isLoading" />
       </form>
     </div>
   </div>

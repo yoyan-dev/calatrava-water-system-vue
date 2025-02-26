@@ -1,17 +1,15 @@
 <script setup lang="ts">
-	import { ref, onMounted } from 'vue';
-	import type { Billing } from '@/types/billing';
 	import type { Resident } from '@/types/resident';
 	import useFirebaseTimestamp from '@/composables/useFirebaseTimestamp';
 	import { formatToPeso } from '@/composables/currencyFormat';
 	import type { Timestamp } from 'firebase/firestore';
+	import PayBillModal from './modals/pay-bill-modal.vue';
+	import { getSeverity } from '@/composables/getSeverity';
 
 	const { formatTimestamp } = useFirebaseTimestamp();
 	const props = defineProps<{
 		resident: Resident;
 	}>();
-
-	console.log(props.resident.billings);
 </script>
 <template>
 	<div>
@@ -20,8 +18,8 @@
 				<h1 class="font-semibold text-xl">
 					Bill #{{ props.resident.billings?.[0].bill_no }}
 					<Tag
-						severity="danger"
-						value="Unpaid"></Tag>
+						:severity="getSeverity(props.resident.billings?.[0].status as string)"
+						:value="props.resident.billings?.[0].status"></Tag>
 				</h1>
 			</div>
 			<hr />
@@ -37,7 +35,10 @@
 			</div>
 			<div>
 				<label class="text-surface-500">Bill Period</label><br />
-				<span>January 01, 2025 - January 31, 2025"</span>
+				<span
+					>{{ formatTimestamp(props.resident.billings?.[0].prvmr_date) }} -
+					{{ formatTimestamp(props.resident.billings?.[0].due_date) }}</span
+				>
 			</div>
 			<div class="flex justify-between">
 				<div>
@@ -48,11 +49,16 @@
 				</div>
 				<div>
 					<label class="text-surface-500">Amount</label><br />
-					<!-- // <span>{{
-					// 	formatToPeso(props.resident.billings?.[0].)
-					// }}</span> -->
+					<span>
+						{{ `₱ ${props.resident.billings?.[0].totalBill}` }}
+					</span>
 				</div>
 			</div>
+		</div>
+		<div class="flex justify-end p-5">
+			<PayBillModal
+				:uid="props.resident.uid as string"
+				:billingUid="props.resident.billings?.[0].uid as string" />
 		</div>
 	</div>
 </template>
