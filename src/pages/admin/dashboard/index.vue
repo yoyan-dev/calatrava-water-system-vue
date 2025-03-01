@@ -2,10 +2,8 @@
 import { ref, onMounted } from "vue";
 import BarChart from "./_components/bar-chart.vue";
 import LineChart from "./_components/line-chart.vue";
-import ConcernList from "./_components/concern-list.vue";
-import { useConcernStore } from "@/stores/concern";
+import { useFetch } from "@vueuse/core";
 
-const store = useConcernStore();
 const barData = [
   { x: 1, y: 10, y1: 20, y2: 30 },
   { x: 2, y: 20, y1: 30, y2: 40 },
@@ -19,59 +17,131 @@ const lineData = [
   { x: 1, y: 2 },
   { x: 2, y: 1 },
 ];
+
+const totals = ref();
+const isLoading = ref(false);
+onMounted(async () => {
+  isLoading.value = true;
+  const { data: response } = await useFetch(
+    `${import.meta.env.VITE_API_URL}/api/analytics/total`,
+    {
+      method: "GET",
+    }
+  ).json();
+  totals.value = response.value?.data;
+  console.log(totals.value);
+  isLoading.value = false;
+});
 </script>
 
 <template>
   <div class="p-5 bg-white rounded-md flex flex-col gap-5">
     <div class="text-2xl">Welcome! Admin</div>
     <div class="text-lg">Dashboard</div>
-    <div class="flex flex-col md:flex-row flex-wrap gap-5">
-      <div
-        class="bg-white p-5 shadow-sm border border-primary rounded-md relative flex-1"
-      >
-        <div class="text-xl text-surface-900 dark:text-surface-0 mb-2">
-          Total Residents
+    <div class="flex flex-col flex-wrap lg:flex-row gap-5 w-full">
+      <div class="grid md:grid-cols-2 gap-5 flex-1">
+        <div
+          class="bg-white p-5 shadow-sm border border-primary rounded-md relative flex-1"
+        >
+          <div
+            class="text-lg text-surface-900 dark:text-surface-0 mb-2 flex justify-between"
+          >
+            Total Residents
+            <i class="pi pi-users text-primary text-3xl"></i>
+          </div>
+          <div
+            class="text-2xl font-semibold text-surface-600 dark:text-primary-400"
+          >
+            {{ totals?.residents }}
+          </div>
         </div>
         <div
-          class="text-4xl font-semibold text-surface-600 dark:text-primary-400"
+          class="bg-white p-5 shadow-sm border border-primary rounded-md relative flex-1"
         >
-          100
+          <div
+            class="text-lg text-surface-900 dark:text-surface-0 mb-2 flex justify-between"
+          >
+            Total Billings
+            <i class="pi pi-money-bill text-primary text-3xl"></i>
+          </div>
+          <div
+            class="text-2xl font-semibold text-surface-600 dark:text-primary-400"
+          >
+            {{ totals?.bills }}
+          </div>
         </div>
-        <div class="absolute top-2 right-2">
-          <i class="pi pi-users text-primary text-5xl"></i>
+        <div
+          class="bg-white p-5 shadow-sm border border-primary rounded-md relative flex-1"
+        >
+          <div
+            class="text-lg text-surface-900 dark:text-surface-0 mb-2 flex justify-between"
+          >
+            Pending Payments
+            <i class="pi pi-money-bill text-primary text-3xl"></i>
+          </div>
+          <div
+            class="text-2xl font-semibold text-surface-600 dark:text-primary-400"
+          >
+            100
+          </div>
+          <div class="text-sm text-gray-400 dark:text-gray-500">
+            Total amount of pending payments
+          </div>
         </div>
       </div>
-      <div
-        class="bg-white p-5 shadow-sm border border-primary rounded-md relative flex-1"
-      >
-        <div class="text-xl text-surface-900 dark:text-surface-0 mb-2">
-          Total Billings
-        </div>
-        <div
-          class="text-4xl font-semibold text-surface-600 dark:text-primary-400"
-        >
-          100
-        </div>
-        <div class="absolute top-2 right-2">
-          <i class="pi pi-money-bill text-primary text-5xl"></i>
-        </div>
-      </div>
-      <div
-        class="bg-white p-5 shadow-sm border border-primary rounded-md relative flex-1"
-      >
-        <div class="text-xl text-surface-900 dark:text-surface-0 mb-2">
-          Pending Payments
-        </div>
-        <div
-          class="text-4xl font-semibold text-surface-600 dark:text-primary-400"
-        >
-          100
-        </div>
-        <div class="text-sm text-gray-400 dark:text-gray-500">
-          Total amount of pending payments
-        </div>
-        <div class="absolute top-2 right-2">
-          <i class="pi pi-money-bill text-primary text-5xl"></i>
+      <div class="p-5 bg-white rounded-md border flex-1">
+        <span class="py-2 font-semibold text-lg">Reminders</span>
+        <hr />
+        <div class="max-h-56 overflow-auto">
+          <div class="flex justify-between items-center py-2 border-b">
+            <div>
+              <h2 class="font-semibold">Nenwell Era Due date</h2>
+              <span>March 1 - 5, 2025</span>
+            </div>
+            <Tag value="upcomming" severity="warn" />
+          </div>
+          <div class="flex justify-between items-center py-2 border-b">
+            <div>
+              <h2 class="font-semibold">Nenwell Era Due date</h2>
+              <span>March 1 - 5, 2025</span>
+            </div>
+            <Tag value="upcomming" severity="warn" />
+          </div>
+          <div class="flex justify-between items-center py-2 border-b">
+            <div>
+              <h2 class="font-semibold">Nenwell Era Due date</h2>
+              <span>March 1 - 5, 2025</span>
+            </div>
+            <Tag value="upcomming" severity="warn" />
+          </div>
+          <div class="flex justify-between items-center py-2 border-b">
+            <div>
+              <h2 class="font-semibold">Nenwell Era Due date</h2>
+              <span>March 1 - 5, 2025</span>
+            </div>
+            <Tag value="upcomming" severity="warn" />
+          </div>
+          <div class="flex justify-between items-center py-2 border-b">
+            <div>
+              <h2 class="font-semibold">Nenwell Era Due date</h2>
+              <span>March 1 - 5, 2025</span>
+            </div>
+            <Tag value="upcomming" severity="warn" />
+          </div>
+          <div class="flex justify-between items-center py-2 border-b">
+            <div>
+              <h2 class="font-semibold">Nenwell Era Due date</h2>
+              <span>March 1 - 5, 2025</span>
+            </div>
+            <Tag value="upcomming" severity="warn" />
+          </div>
+          <div class="flex justify-between items-center py-2 border-b">
+            <div>
+              <h2 class="font-semibold">Nenwell Era Due date</h2>
+              <span>March 1 - 5, 2025</span>
+            </div>
+            <Tag value="upcomming" severity="warn" />
+          </div>
         </div>
       </div>
     </div>

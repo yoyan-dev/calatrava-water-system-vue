@@ -11,9 +11,11 @@ function submit() {}
 <template>
   <Button
     severity="primary"
-    label="Send Reminder"
+    icons="pi pi-send"
+    label="reminder"
     size="small"
     @click="visible = true"
+    text
   />
   <Dialog
     v-model:visible="visible"
