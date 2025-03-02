@@ -1,24 +1,16 @@
 <script setup lang="ts">
 	import { useRoute, useRouter } from 'vue-router';
-	import { ref, onMounted, computed } from 'vue';
+	import { ref, onMounted, watchEffect } from 'vue';
 	import { signOut } from 'firebase/auth';
 	import { useFirebaseAuth } from 'vuefire';
+	import useNotification from '@/composables/useNotification';
 
 	const route = useRoute();
 	const router = useRouter();
-	const visible = ref(false);
 	const auth = useFirebaseAuth()!;
+	const { requestPermission, userToken } = useNotification();
 
-	const logoutUser = async () => {
-		try {
-			await signOut(auth);
-			router.push('/');
-			console.log('User logged out successfully');
-		} catch (err) {
-			console.error('Error logging out:', err);
-		}
-	};
-
+	const visible = ref(false);
 	const items = ref([
 		{
 			label: 'Home',
@@ -39,6 +31,22 @@
 			route: '/resident/concern',
 		},
 	]);
+
+	async function logoutUser() {
+		try {
+			await signOut(auth);
+			router.push('/');
+			console.log('User logged out successfully');
+		} catch (err) {
+			console.error('Error logging out:', err);
+		}
+	}
+
+	onMounted(() => requestPermission());
+
+	watchEffect(() => {
+		console.log(userToken.value);
+	});
 </script>
 <template>
 	<main class="relative bg-white h-screen">
