@@ -1,22 +1,22 @@
 <script setup lang="ts">
-	import { ref, onMounted, computed } from 'vue';
+	import { ref, onMounted, watch, watchEffect } from 'vue';
 	import WaterBill from './_components/water-bill.vue';
-	import { useCurrentUser } from 'vuefire';
+	import { getCurrentUser, useCurrentUser } from 'vuefire';
 	import { useResidentStore } from '@/stores/resident';
 	import { useRouter } from 'vue-router';
 
-	const router = useRouter();
 	const store = useResidentStore();
 	const billIncreasePercentage = ref(0);
+	const router = useRouter();
 
 	onMounted(async () => {
-		const user = useCurrentUser() as any;
-		if (!user.value) {
-			console.log('No user is signed in.');
-			router.push('/');
+		store.isLoading = true;
+		const user = await getCurrentUser();
+		if (!user) {
+			router.replace('/auth');
 		}
-		const residentId = user.value.uid;
-		await store.fetchResident(residentId);
+
+		store.fetchResident(user?.uid ?? '');
 
 		if (store.resident.billings && store.resident.billings.length > 1) {
 			const currentBill = store.resident.billings[0].totalBill
@@ -28,8 +28,6 @@
 			billIncreasePercentage.value =
 				((currentBill - previousBill) / previousBill) * 100;
 		}
-
-		console.log(store.resident);
 	});
 </script>
 

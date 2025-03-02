@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { ref, onMounted, watchEffect, watch } from "vue";
+import { ref, onMounted } from "vue";
 import Header from "@/pages/admin/billing/_components/header.vue";
 import DeleteModal from "@/pages/admin/billing/_components/modals/delete-modal.vue";
 import DeleteSelected from "@/pages/admin/billing/_components/modals/delete-selected-modal.vue";
 import ViewReciept from "@/pages/admin/billing/_components/modals/view-reciept.vue";
 import { useBillingStore } from "@/stores/billing";
-import useFirebaseTimestamp from "@/composables/useFirebaseTimestamp";
-import { useRouter } from "vue-router";
 import ImportModal from "./_components/modals/import-modal.vue";
 import { getSeverity } from "@/composables/getSeverity";
+import CreateReminderModal from "@/pages/admin/billing/_components/modals/create-reminder-modal.vue";
 
 const store = useBillingStore();
 const selectedWaterBill = ref([]);
@@ -25,6 +24,14 @@ onMounted(() => {
 </script>
 
 <template>
+  <div class="px-5 pb-5">
+    <Message closable>
+      <div>
+        <h1>Reminder! Upcomming due date.</h1>
+        <span>Hapit na and due date ni Nenwell Era.</span>
+      </div>
+    </Message>
+  </div>
   <div
     class="bg-surface-0 dark:bg-surface-900 mx-5 p-4 py-6 md:p-6 border rounded-lg"
   >
@@ -135,6 +142,7 @@ onMounted(() => {
                       text
                     />
                   </RouterLink>
+                  <CreateReminderModal />
                   <DeleteModal :uid="slotProps.data.residentUid" />
                 </div>
               </Popover>

@@ -22,13 +22,11 @@
 	}
 
 	async function onUpload() {
-		const payment = {
+		const res = await store.addPayment({
 			uid: props.uid,
 			billUid: props.billingUid,
 			event: file.value,
-		};
-		console.log(payment);
-		const res = await store.addPayment(payment as any);
+		});
 
 		toast.add({
 			severity: res.status,

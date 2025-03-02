@@ -6,7 +6,7 @@ const store = useConcernStore();
 
 onMounted(async () => {
   await store.fetchConcerns();
-  console.log(store.concerns[0].concern.name);
+  console.log(store.concerns[0].concern);
 });
 </script>
 <template>
@@ -14,7 +14,7 @@ onMounted(async () => {
     class="bg-surface-0 dark:bg-surface-900 mx-5 p-4 py-6 md:p-6 border rounded-lg"
   >
     <div class="py-2 border-b text-xl">List of Concerns</div>
-    <div v-if="!store.isLoading" class="overflow-auto">
+    <div v-if="!store.isLoading" class="overflow-auto max-h-screen">
       <div
         class="p-2 border-b"
         v-for="concern in store.concerns"
@@ -30,10 +30,12 @@ onMounted(async () => {
               }}</span>
             </div>
             <div class="flex-1">
-              <div class="flex justify-between w-full">
-                <h2 class="text-lg font-semibold capitalize">
-                  {{ concern.concern.name }}
-                </h2>
+              <div class="flex justify-between w-full items-start">
+                <div>
+                  <h2 class="text-lg font-semibold capitalize">
+                    {{ concern.concern.name }}
+                  </h2>
+                </div>
                 <span
                   class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded"
                   >Resident</span
@@ -42,6 +44,9 @@ onMounted(async () => {
               <p class="text-sm text-gray-500">
                 {{ concern.concern.content }}
               </p>
+              <div class="text-end text-sm text-gray-400">
+                <span>March 1, 2025</span>
+              </div>
             </div>
           </div>
         </div>

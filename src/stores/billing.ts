@@ -65,6 +65,7 @@ export const useBillingStore = defineStore('billing', () => {
 			const url = `${import.meta.env.VITE_API_URL}/api/billings${
 				queryString ? '?' + queryString : ''
 			}`;
+			console.log(url);
 			const { data: response } = await useFetch(
 				url,
 				{
@@ -132,7 +133,7 @@ export const useBillingStore = defineStore('billing', () => {
 	// 	}
 	// }
 
-	async function addBatchBilling (payload: Billing[]): Promise<StoreResponse>{
+	async function addBatchBilling(payload: Billing[]): Promise<StoreResponse> {
 		isLoading.value = true;
 		try {
 			const { data: result } = await useFetch(
@@ -145,7 +146,7 @@ export const useBillingStore = defineStore('billing', () => {
 				status: result.value.statusCode == 200 ? 'success' : 'error',
 				statusMessage: result.value.statusMessage,
 				message: result.value.message,
-			}
+			};
 		} catch (e) {
 			console.error(e);
 			return {
@@ -153,7 +154,7 @@ export const useBillingStore = defineStore('billing', () => {
 				statusMessage: 'Error message',
 				message: 'Something went wrong',
 			};
-		} finally{
+		} finally {
 			isLoading.value = false;
 		}
 	}
