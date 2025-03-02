@@ -1,9 +1,11 @@
 <script setup lang="ts">
 	import { useRoute, useRouter } from 'vue-router';
-	import { ref, onMounted, watchEffect } from 'vue';
+	import { ref, onMounted, watchEffect, onUnmounted } from 'vue';
 	import { signOut } from 'firebase/auth';
 	import { useFirebaseAuth } from 'vuefire';
 	import useNotification from '@/composables/useNotification';
+	import { onMessage } from 'firebase/messaging';
+	import { messaging } from '@/firebase/config';
 
 	const route = useRoute();
 	const router = useRouter();
@@ -42,7 +44,13 @@
 		}
 	}
 
+	const unsubscribe = onMessage(messaging, (payload) => {
+		console.log('Message received. ', payload);
+	});
+
 	onMounted(() => requestPermission());
+
+	onUnmounted(() => unsubscribe());
 
 	watchEffect(() => {
 		console.log(userToken.value);
