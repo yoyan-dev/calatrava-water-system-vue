@@ -7,7 +7,7 @@ import checker from 'vite-plugin-checker';
 import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vite.dev/config/
-export default defineConfig(({ mode }) => {
+export default defineConfig(() => {
 	return {
 		plugins: [
 			vue(),
@@ -17,14 +17,18 @@ export default defineConfig(({ mode }) => {
 			}),
 			VitePWA({
 				registerType: 'autoUpdate',
-				strategies: 'injectManifest',
-				injectManifest: {
-					globPatterns: ['**/*.{js,css,html,png,ico,jpg,svg}'],
+				strategies: 'generateSW', // 🔥 Use generateSW instead of injectManifest
+				workbox: {
+					globPatterns: ['**/*.{js,css,html,png,ico,jpg,svg}'], // ✅ Ensure matching files
 				},
-				srcDir: 'public',
-				filename: 'firebase-messaging-sw.js',
+				// injectManifest: {
+				// 	globPatterns: ['**/*.{js,css,html,png,ico,jpg,svg}'],
+				// },
+				// srcDir: 'public',
+				// filename: 'firebase-messaging-sw.js',
 				devOptions: {
 					enabled: true,
+					type: 'module',
 				},
 				includeAssets: ['favicon.ico'],
 				manifest: {
