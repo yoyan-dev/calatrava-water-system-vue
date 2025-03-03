@@ -7,10 +7,9 @@
 		"noUnusedParameters": false,
 		"noFallthroughCasesInSwitch": true,
 		"allowSyntheticDefaultImports": true,
-		"types": ["topojson-client"],
+		"types": ["topojson-client", "vite-plugin-pwa/client"],
 		"moduleResolution": "Node"
 	},
-
 	"references": [
 		{
 			"path": "./tsconfig.node.json"

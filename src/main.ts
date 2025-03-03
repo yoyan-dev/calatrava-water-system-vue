@@ -47,8 +47,12 @@ import {
 	Password,
 } from 'primevue';
 import { browserLocalPersistence } from 'firebase/auth';
+import { registerSW } from 'virtual:pwa-register';
 
 const app = createApp(App);
+
+registerSW({ immediate: true });
+
 app.use(VueFire, {
 	firebaseApp,
 	modules: [
