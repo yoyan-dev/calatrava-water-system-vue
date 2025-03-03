@@ -17,19 +17,16 @@ export default defineConfig(() => {
 			}),
 			VitePWA({
 				registerType: 'autoUpdate',
-				strategies: 'generateSW', // 🔥 Use generateSW instead of injectManifest
-				workbox: {
-					globPatterns: ['**/*.{js,css,html,png,ico,jpg,svg}'], // ✅ Ensure matching files
+				strategies: 'injectManifest', // ✅ Use injectManifest for FCM
+				injectManifest: {
+					globPatterns: ['**/*.{js,css,html,png,ico,jpg,svg}'],
 				},
-				// injectManifest: {
-				// 	globPatterns: ['**/*.{js,css,html,png,ico,jpg,svg}'],
+				srcDir: 'public', // ✅ Ensure this matches the location of your SW
+				filename: 'firebase-messaging-sw.js', // ✅ Ensure this matches your file name
+				// devOptions: {
+				// 	enabled: true,
+				// 	type: 'module',
 				// },
-				// srcDir: 'public',
-				// filename: 'firebase-messaging-sw.js',
-				devOptions: {
-					enabled: true,
-					type: 'module',
-				},
 				includeAssets: ['favicon.ico'],
 				manifest: {
 					name: 'My Awesome App',
