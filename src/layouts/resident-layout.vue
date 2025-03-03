@@ -2,7 +2,7 @@
 	import { useRoute, useRouter } from 'vue-router';
 	import { ref, onMounted, watchEffect, onUnmounted } from 'vue';
 	import { signOut } from 'firebase/auth';
-	import { useFirebaseAuth } from 'vuefire';
+	import { useCurrentUser, useFirebaseAuth } from 'vuefire';
 	import useNotification from '@/composables/useNotification';
 	import { onMessage } from 'firebase/messaging';
 	import { messaging } from '@/firebase/config';
@@ -11,6 +11,7 @@
 	const router = useRouter();
 	const auth = useFirebaseAuth()!;
 	const { requestPermission, userToken } = useNotification();
+	const user = useCurrentUser();
 
 	const visible = ref(false);
 	const items = ref([
@@ -48,7 +49,7 @@
 		console.log('Message received. ', payload);
 	});
 
-	onMounted(() => requestPermission());
+	onMounted(() => requestPermission(user.value?.uid ?? ''));
 
 	onUnmounted(() => unsubscribe());
 
