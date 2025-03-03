@@ -1,7 +1,12 @@
 import App from './App.vue';
 import router from './router';
 import PrimeVue from 'primevue/config';
-import { VueFire, VueFireAuthWithDependencies } from 'vuefire';
+import {
+	useFirebaseAuth,
+	VueFire,
+	VueFireAuth,
+	VueFireAuthWithDependencies,
+} from 'vuefire';
 import { firebaseApp } from '@/firebase/config';
 import '@/assets/main.css';
 import '@/assets/base.css';
@@ -46,22 +51,27 @@ import {
 	Button,
 	Password,
 } from 'primevue';
-import { browserLocalPersistence } from 'firebase/auth';
+import {
+	browserLocalPersistence,
+	getAuth,
+	indexedDBLocalPersistence,
+	setPersistence,
+} from 'firebase/auth';
 import { registerSW } from 'virtual:pwa-register';
 
 const app = createApp(App);
+const auth = getAuth(firebaseApp);
 
 registerSW({ immediate: true });
 
+setPersistence(auth, indexedDBLocalPersistence)
+	.catch(() => setPersistence(auth, browserLocalPersistence))
+	.then(() => console.log('Persistence set successfully'))
+	.catch((error) => console.error('Error setting persistence:', error));
+
 app.use(VueFire, {
 	firebaseApp,
-	modules: [
-		VueFireAuthWithDependencies({
-			dependencies: {
-				persistence: [browserLocalPersistence],
-			},
-		}),
-	],
+	modules: [VueFireAuth()],
 });
 app.use(PrimeVue, {
 	theme: 'none',
