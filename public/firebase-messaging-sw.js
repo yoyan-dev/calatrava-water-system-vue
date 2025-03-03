@@ -4,6 +4,8 @@ importScripts(
 importScripts(
 	'https://www.gstatic.com/firebasejs/11.1.0/firebase-messaging-compat.js',
 );
+import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching';
+import { clientsClaim } from 'workbox-core';
 
 firebase.initializeApp({
 	apiKey: 'AIzaSyBj8H7hCEz3KZ4Od2d8S1cFm4BmuiX1k6Q',
@@ -15,6 +17,9 @@ firebase.initializeApp({
 });
 
 const messaging = firebase.messaging();
+
+cleanupOutdatedCaches();
+precacheAndRoute(self.__WB_MANIFEST || []);
 
 messaging.onBackgroundMessage((payload) => {
 	console.log(
@@ -36,3 +41,10 @@ self.addEventListener('notificationclick', (event) => {
 	event.notification.close();
 	event.waitUntil(self.clients.openWindow('/'));
 });
+
+self.addEventListener('message', (event) => {
+	if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
+});
+
+self.skipWaiting();
+clientsClaim();
