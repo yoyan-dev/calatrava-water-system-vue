@@ -4,8 +4,6 @@ importScripts(
 importScripts(
 	'https://www.gstatic.com/firebasejs/11.1.0/firebase-messaging-compat.js',
 );
-import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching';
-import { clientsClaim } from 'workbox-core';
 
 firebase.initializeApp({
 	apiKey: 'AIzaSyBj8H7hCEz3KZ4Od2d8S1cFm4BmuiX1k6Q',
@@ -17,9 +15,6 @@ firebase.initializeApp({
 });
 
 const messaging = firebase.messaging();
-
-cleanupOutdatedCaches();
-precacheAndRoute(self.__WB_MANIFEST || []);
 
 messaging.onBackgroundMessage((payload) => {
 	console.log(
@@ -34,17 +29,29 @@ messaging.onBackgroundMessage((payload) => {
 	};
 
 	self.registration.showNotification(notificationTitle, notificationOptions);
-});
 
-self.addEventListener('notificationclick', (event) => {
-	console.log('[Service Worker] Notification click received.');
-	event.notification.close();
-	event.waitUntil(self.clients.openWindow('/'));
+	self.addEventListener('notificationclick', (e) => {
+		console.log('on click notification', e);
+		const url = 'https://follow.it';
+		// Close the notification popout
+		e.notification.close();
+		// Get all the Window clients
+		e.waitUntil(
+			clients.matchAll({ type: 'window' }).then((clientsArr) => {
+				// If a Window tab matching the targeted URL already exists, focus that;
+				const hadWindowToFocus = clientsArr.some((windowClient) =>
+					// windowClient.url === e.notification.data.url
+					windowClient.url === url ? (windowClient.focus(), true) : false,
+				);
+				// Otherwise, open a new tab to the applicable URL and focus it.
+				if (!hadWindowToFocus)
+					clients
+						// .openWindow(e.notification.data.url)
+						.openWindow(url)
+						.then((windowClient) =>
+							windowClient ? windowClient.focus() : null,
+						);
+			}),
+		);
+	});
 });
-
-self.addEventListener('message', (event) => {
-	if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
-});
-
-self.skipWaiting();
-clientsClaim();

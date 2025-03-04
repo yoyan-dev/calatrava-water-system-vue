@@ -17,12 +17,6 @@ export default defineConfig(() => {
 			}),
 			VitePWA({
 				registerType: 'autoUpdate',
-				strategies: 'injectManifest', // ✅ Use injectManifest for FCM
-				injectManifest: {
-					globPatterns: ['**/*.{js,css,html,png,ico,jpg,svg}'],
-				},
-				srcDir: 'public', // ✅ Ensure this matches the location of your SW
-				filename: 'firebase-messaging-sw.js', // ✅ Ensure this matches your file name
 				// devOptions: {
 				// 	enabled: true,
 				// 	type: 'module',
@@ -33,6 +27,7 @@ export default defineConfig(() => {
 					short_name: 'MyApp',
 					description: 'My Awesome App description',
 					theme_color: '#ffffff',
+					start_url: '/',
 					icons: [
 						{
 							src: 'pwa-192x192.png',
@@ -57,6 +52,9 @@ export default defineConfig(() => {
 							purpose: 'maskable',
 						},
 					],
+				},
+				workbox: {
+					globPatterns: ['**/*.{js,css}', 'index.html'],
 				},
 			}),
 		],
