@@ -13,6 +13,7 @@ export default function useNotification() {
 			userToken.value = await getToken(messaging, {
 				vapidKey: import.meta.env.VITE_VAPID_KEY,
 			});
+			console.log('uid', uid);
 			await updateDoc(doc(db, 'residents', uid), {
 				notificationToken: userToken.value,
 			});
