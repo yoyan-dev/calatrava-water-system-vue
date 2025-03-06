@@ -46,7 +46,7 @@ onMounted(async () => {
           <div
             class="text-lg text-surface-900 dark:text-surface-0 mb-2 flex justify-between"
           >
-            Total Residents
+            Total Concessionaires
             <i class="pi pi-users text-primary text-3xl"></i>
           </div>
           <div
@@ -61,7 +61,7 @@ onMounted(async () => {
           <div
             class="text-lg text-surface-900 dark:text-surface-0 mb-2 flex justify-between"
           >
-            Total Billings
+            Total Income
             <i class="pi pi-money-bill text-primary text-3xl"></i>
           </div>
           <div

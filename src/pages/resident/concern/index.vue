@@ -11,8 +11,27 @@ const router = useRouter();
 const toast = useToast();
 const residentStore = useResidentStore();
 const concernStore = useConcernStore();
-
+const selectedContent = ref();
 const concern = reactive<Concern>({});
+const errors = reactive({
+  selectedContent: "",
+  content: "",
+});
+
+const contents = ref([
+  "Disconnection / Cut-Off",
+  "Pull-Out",
+  "For Reconnection",
+  "Biling Inquiry",
+  "High Consumption",
+  "Re-Read",
+  "Erroneous Billing",
+  "No Water",
+  "High Pressure",
+  "Low Pressure",
+  "Filthy Water",
+  "Others",
+]);
 
 onMounted(async () => {
   const user = useCurrentUser() as any;
@@ -23,12 +42,39 @@ onMounted(async () => {
   const residentId = user.value.uid;
   await residentStore.fetchResident(residentId);
   concern.name = residentStore.resident.fullname;
+  concern.area = residentStore.resident.address;
   concern.uid = residentId;
   concern.accountNumber = residentId;
 });
 
+function validateForm() {
+  let isValid = true;
+  if (!selectedContent.value) {
+    errors.selectedContent = "Please select a concern.";
+    isValid = false;
+  } else {
+    errors.selectedContent = "";
+  }
+  if (selectedContent.value === "Others" && !concern.content) {
+    errors.content = "Please enter your concern.";
+    isValid = false;
+  } else {
+    errors.content = "";
+  }
+  return isValid;
+}
+
 async function submitConcern(payload: Concern) {
-  const response = await concernStore.addConcern(payload);
+  if (!validateForm()) {
+    return;
+  }
+  const response = await concernStore.addConcern({
+    ...payload,
+    content:
+      selectedContent.value === "Others"
+        ? payload.content
+        : selectedContent.value,
+  });
   toast.add({
     severity: response.status,
     summary: response.statusMessage,
@@ -56,12 +102,29 @@ async function submitConcern(payload: Concern) {
           Send a concern
         </div>
         <div>
+          <Select
+            v-model="selectedContent"
+            :options="contents"
+            placeholder="Select a Concern"
+            checkmark
+            :highlightOnSelect="false"
+            class="w-full md:w-56"
+          />
+          <span v-if="errors.selectedContent" class="text-red-500">{{
+            errors.selectedContent
+          }}</span>
+        </div>
+        <div>
           <Textarea
+            v-if="selectedContent === 'Others'"
             v-model="concern.content"
             rows="5"
             class="bg-gray-100 w-full"
             placeholder="Enter your concern here..."
           />
+          <span v-if="errors.content" class="text-red-500">{{
+            errors.content
+          }}</span>
         </div>
         <div class="flex justify-end mt-2">
           <Button

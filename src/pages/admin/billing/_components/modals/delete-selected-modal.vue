@@ -8,12 +8,12 @@
 
 	const isOpen = ref(false);
 
-	function onDelete() {
-		console.log(props.selectedBills)
+	async function onDelete() {
+		const res = await store.deleteBillings(props.selectedBills);
 		toast.add({
-			severity: 'success',
-			summary: 'Successful',
-			detail: 'Resident Deleted',
+			severity: res.status,
+			summary: res.statusMessage,
+			detail: res.message,
 			life: 3000,
 		});
 		isOpen.value = false;
@@ -35,7 +35,8 @@
 			<div class="flex items-center gap-4">
 				<i class="pi pi-exclamation-triangle !text-3xl" />
 				<span
-					>Are you sure you want to delete this selected <b>Water Bills</b>?</span
+					>Are you sure you want to delete this selected
+					<b>Water Bills</b>?</span
 				>
 			</div>
 			<template #footer>
@@ -48,6 +49,7 @@
 				<Button
 					size="small"
 					label="Yes"
+					:loading="store.isLoading"
 					@click="onDelete" />
 			</template>
 		</Dialog>
