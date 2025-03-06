@@ -1,6 +1,14 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import { useConcernStore } from "@/stores/concern";
+import { format } from "date-fns";
+
+const formatDate = (timestamp: any) => {
+  if (timestamp && timestamp.toDate) {
+    return format(timestamp.toDate(), "MMMM d, yyyy hh:mm a");
+  }
+  return "";
+};
 
 const store = useConcernStore();
 
@@ -46,7 +54,7 @@ onMounted(async () => {
                   </h2>
                 </div>
                 <span
-                  class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded"
+                  class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded capitalize"
                   >{{ concern.area }}</span
                 >
               </div>
@@ -54,7 +62,7 @@ onMounted(async () => {
                 {{ concern.content }}
               </p>
               <div class="text-end text-sm text-gray-400">
-                <span>March 1, 2025</span>
+                <span> {{ formatDate(concern.createdAt) }}</span>
               </div>
             </div>
           </div>
