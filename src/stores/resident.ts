@@ -214,9 +214,8 @@ export const useResidentStore = defineStore('resident', () => {
 			fetchResidents({
 				q: newQuery[0],
 				address: newQuery[1],
-				offset: offset.value,
+				offset: newQuery[2],
 			});
-			console.log(page.value, offset.value);
 		},
 		{ debounce: 300 },
 	);

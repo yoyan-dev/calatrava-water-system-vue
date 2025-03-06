@@ -84,6 +84,12 @@ export const useBillingStore = defineStore('billing', () => {
 				.post(payload)
 				.json();
 
+			await fetchBillings({
+				q: searchQuery.value,
+				month: formattedDate.value,
+				offset: offset.value,
+			});
+
 			return {
 				status: result.value.statusCode == 200 ? 'success' : 'error',
 				statusMessage: result.value.statusMessage,
