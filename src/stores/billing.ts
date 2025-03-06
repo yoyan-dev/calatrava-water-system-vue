@@ -3,23 +3,17 @@ import { defineStore } from 'pinia';
 import {
 	addDoc,
 	collection,
-	deleteDoc,
 	doc,
 	Timestamp,
 	getDoc,
-	getDocs,
 	writeBatch,
-	updateDoc,
-	query,
-	where,
-	orderBy,
-	limit,
 } from 'firebase/firestore';
 import { useFirestore } from 'vuefire';
 import type { Billing } from '@/types/billing';
 import type { StoreResponse } from '@/types/store-response';
 import { useFetch, watchDebounced } from '@vueuse/core';
 import type { H3Response } from '@/types/h3response';
+import { format } from 'date-fns';
 
 export const useBillingStore = defineStore('billing', () => {
 	const db = useFirestore();
@@ -35,6 +29,7 @@ export const useBillingStore = defineStore('billing', () => {
 
 	// getters
 	const offset = computed(() => page.value * 10);
+	const formattedDate = computed(() => format(month.value, 'yyyy-M'));
 
 	const fetchCurrentBillings = computed(() => {
 		const now = new Date();
@@ -296,7 +291,7 @@ export const useBillingStore = defineStore('billing', () => {
 	}
 
 	watchDebounced(
-		[searchQuery, month, offset],
+		[searchQuery, formattedDate, offset],
 		(newQuery) => {
 			console.log(newQuery);
 			fetchBillings({
