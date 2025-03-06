@@ -8,7 +8,7 @@ import { Toast } from "primevue";
   <ResidentLayout>
     <Toast position="bottom-right" />
     <div class="p-5">
-      <Message closable>
+      <Message>
         <div>
           <h1>Reminder! Upcomming due date.</h1>
           <span>Hapit na imong due date.</span>

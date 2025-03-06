@@ -25,7 +25,7 @@ onMounted(() => {
 
 <template>
   <div class="px-5 pb-5">
-    <Message closable>
+    <Message>
       <div>
         <h1>Reminder! Upcomming due date.</h1>
         <span>Hapit na and due date ni Nenwell Era.</span>
