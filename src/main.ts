@@ -1,13 +1,8 @@
 import App from './App.vue';
 import router from './router';
 import PrimeVue from 'primevue/config';
-import {
-	useFirebaseAuth,
-	VueFire,
-	VueFireAuth,
-	VueFireAuthWithDependencies,
-} from 'vuefire';
-import { firebaseApp } from '@/firebase/config';
+import { VueFire, VueFireAuth } from 'vuefire';
+import { firebaseApp, messaging } from '@/firebase/config';
 import '@/assets/main.css';
 import '@/assets/base.css';
 import 'primeicons/primeicons.css';
@@ -69,17 +64,6 @@ setPersistence(auth, indexedDBLocalPersistence)
 	.then(() => console.log('Persistence set successfully'))
 	.catch((error) => console.error('Error setting persistence:', error));
 
-if ('serviceWorker' in navigator) {
-	navigator.serviceWorker
-		.register('/firebase-messaging-sw.js')
-		.then((registration) => {
-			console.log('FCM Service Worker registered:', registration);
-		})
-		.catch((error) => {
-			console.error('FCM Service Worker registration failed:', error);
-		});
-}
-
 app.use(VueFire, {
 	firebaseApp,
 	modules: [VueFireAuth()],
@@ -127,5 +111,16 @@ app.use(router);
 app.use(ConfirmationService);
 app.use(ToastService);
 app.use(DialogService);
+
+if ('serviceWorker' in navigator) {
+	navigator.serviceWorker
+		.register('/sw.js')
+		.then((registration) => {
+			console.log('Service Worker registered with scope:', registration.scope);
+		})
+		.catch((error) => {
+			console.error('Service Worker registration failed:', error);
+		});
+}
 
 app.mount('#app');
