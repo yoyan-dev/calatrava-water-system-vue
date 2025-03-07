@@ -69,6 +69,17 @@ setPersistence(auth, indexedDBLocalPersistence)
 	.then(() => console.log('Persistence set successfully'))
 	.catch((error) => console.error('Error setting persistence:', error));
 
+if ('serviceWorker' in navigator) {
+	navigator.serviceWorker
+		.register('/firebase-messaging-sw.js')
+		.then((registration) => {
+			console.log('FCM Service Worker registered:', registration);
+		})
+		.catch((error) => {
+			console.error('FCM Service Worker registration failed:', error);
+		});
+}
+
 app.use(VueFire, {
 	firebaseApp,
 	modules: [VueFireAuth()],

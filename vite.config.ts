@@ -54,7 +54,10 @@ export default defineConfig(() => {
 					],
 				},
 				workbox: {
-					globPatterns: ['**/*.{js,css}', 'index.html'],
+					globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+					navigateFallbackDenylist: [/^\/firebase-messaging-sw.js$/],
+					// skipWaiting: true,
+					// clientsClaim: true,
 				},
 			}),
 		],
