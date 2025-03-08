@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useReminderStore } from "@/stores/reminder";
 
+const store = useReminderStore();
 const visible = ref(false);
 const reminder = ref({
   message: "",
 });
 
-function submit() {}
+function submit(payload: any) {
+  store.addReminder(payload);
+}
 </script>
 <template>
   <Button
@@ -24,7 +28,7 @@ function submit() {}
     :style="{ width: '50rem' }"
     :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
   >
-    <form @submit.prevent="submit">
+    <form @submit.prevent="submit(reminder)">
       <div>
         <Textarea
           v-model="reminder.message"
@@ -40,6 +44,7 @@ function submit() {}
           icon="pi pi-send"
           iconPos="right"
           type="submit"
+          :loading="store.isLoading"
         />
       </div>
     </form>

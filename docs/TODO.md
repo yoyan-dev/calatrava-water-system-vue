@@ -1,7 +1,7 @@
 ### TODO LIST
 
 - [x] Make sign out and log out work
-- [ ] Add real data to analytics
+- [x] Add real data to analytics
 - [x] Add ui in concern
 - [ ] create a remiders UI in resident and admin
 - [ ] FINISH reminder feature
