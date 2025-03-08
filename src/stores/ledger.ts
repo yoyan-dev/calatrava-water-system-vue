@@ -36,11 +36,14 @@ export const useLedgerStore = defineStore("ledger", () => {
   });
 
   async function addLedgers(payload: any[]) {
+    isLoading.value = true;
     const response = await ledgerRepository.addLedgers(payload);
     if (response?.statusCode == 200) {
       await fetchLedgers();
+      isLoading.value = false;
       return { success: true, message: response.message };
     }
+    isLoading.value = false;
     return { success: false, message: response?.message };
   }
 

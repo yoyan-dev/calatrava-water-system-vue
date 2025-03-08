@@ -25,7 +25,7 @@ async function onSubmit(payload: any) {
   <Dialog
     v-model:visible="isOpen"
     :style="{ width: '450px' }"
-    header="Import collection csv"
+    header="Import ledger csv"
     :modal="true"
   >
     <FileUpload
