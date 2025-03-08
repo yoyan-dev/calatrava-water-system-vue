@@ -1,44 +1,16 @@
 <script setup lang="ts">
-	import { ref, watch } from 'vue';
-	import Papa from 'papaparse';
-	import { useToast, type FileUploadSelectEvent } from 'primevue';
-	import { useFetch } from '@vueuse/core';
+	import { ref } from 'vue';
+	import { useToast } from 'primevue';
 	import { useBillingStore } from '@/stores/billing';
+	import { useFileParser } from '@/composables/useFileParser';
 
 	const toast = useToast();
-	const store = useBillingStore()
+	const store = useBillingStore();
 	const isOpen = ref(false);
-	const csvData = ref<any[]>();
-
-	function handleFileChange(event: FileUploadSelectEvent) {
-		const file = event.files[0];
-		Papa.parse(file as File, {
-			header: true,
-			complete: (result: any) => {
-				const filteredData = result.data
-					.filter((row: any) =>
-						Object.values(row).some((value) => value !== '' && value !== null),
-					)
-					.map((row: any) =>
-						Object.fromEntries(
-							Object.entries(row).map(([key, value]) => [
-								key,
-								typeof value === 'string' ? value.toLowerCase() : value,
-							]),
-						),
-					);
-
-				csvData.value = filteredData;
-				console.log(filteredData);
-			},
-			error: (error: any) => {
-				console.error('Error parsing CSV file:', error);
-			},
-		});
-	}
+	const { csvData, parseCsvFile } = useFileParser();
 
 	async function onSubmit(payload: any) {
-		const res = await store.addBatchBilling(payload)
+		const res = await store.addBatchBilling(payload);
 		toast.add({
 			severity: res.status,
 			summary: res.statusMessage,
@@ -62,7 +34,7 @@
 				root: 'justify-start border rounded-lg border-gray-300',
 			}"
 			mode="basic"
-			@select="handleFileChange"
+			@select="parseCsvFile"
 			customUpload
 			accept=".csv"
 			severity="secondary" />

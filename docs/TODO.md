@@ -1,7 +1,14 @@
 ### TODO LIST
 
-- [✔] Make sign out and log out work
+- [x] Make sign out and log out work
 - [ ] Add real data to analytics
-- [✔] Add ui in concern
+- [x] Add ui in concern
 - [ ] create a remiders UI in resident and admin
-- [x]
+- [ ] FINISH reminder feature
+- [ ] FINISH announcement feature
+- [ ] Create ledger page
+- [ ] Create collection page
+- [ ] Create Import csv for collection
+- [ ] Create Import csv for ledger
+- [ ] Create types for ledger
+- [ ] Create types for collection
