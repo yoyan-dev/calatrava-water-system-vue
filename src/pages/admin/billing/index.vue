@@ -43,7 +43,7 @@ onMounted(() => {
               <InputIcon>
                 <i class="pi pi-search" />
               </InputIcon>
-              <InputText placeholder="Search..." />
+              <InputText v-model="store.searchQuery" placeholder="Search..." />
             </IconField>
           </div>
           <div class="flex gap-3 justify-start md:justify-end w-full flex-1">

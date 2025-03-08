@@ -62,6 +62,7 @@ export const useCollectionStore = defineStore("collection", () => {
     isLoading,
     totalCollections,
     collections,
+    searchQuery,
     month,
     page,
     fetchCollections,
