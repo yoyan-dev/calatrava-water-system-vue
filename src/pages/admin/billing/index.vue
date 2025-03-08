@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { ref, onMounted } from 'vue';
+	import { ref, onMounted, watchEffect } from 'vue';
 	import Header from '@/pages/admin/billing/_components/header.vue';
 	import DeleteModal from '@/pages/admin/billing/_components/modals/delete-modal.vue';
 	import DeleteSelected from '@/pages/admin/billing/_components/modals/delete-selected-modal.vue';
@@ -19,7 +19,7 @@
 	}
 
 	onMounted(() => {
-		store.fetchBillings({ month: store.month });
+		store.fetchBillings();
 	});
 </script>
 

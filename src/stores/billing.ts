@@ -12,9 +12,9 @@ import {
 import { useFirestore } from 'vuefire';
 import type { Billing } from '@/types/billing';
 import type { StoreResponse } from '@/types/store-response';
-import { useFetch, watchDebounced } from '@vueuse/core';
-import type { H3Response } from '@/types/h3response';
+import { watchDebounced } from '@vueuse/core';
 import { format } from 'date-fns';
+import { billingRepository } from '@/repositories/billingRepository';
 
 export const useBillingStore = defineStore('billing', () => {
 	const db = useFirestore();
@@ -33,32 +33,17 @@ export const useBillingStore = defineStore('billing', () => {
 	const formattedDate = computed(() => format(month.value, 'yyyy-M'));
 
 	// Actions
-	async function fetchBillings(searchParams: Record<string, any> = {}) {
+	async function fetchBillings() {
 		isLoading.value = true;
+		const response = await billingRepository.fetchBillings({
+			q: searchQuery.value,
+			month: formattedDate.value,
+			offset: offset.value,
+		});
 
-		try {
-			const queryString = new URLSearchParams(searchParams).toString();
-
-			const url = `${import.meta.env.VITE_API_URL}/api/billings${
-				queryString ? '?' + queryString : ''
-			}`;
-
-			const { data: response } = await useFetch(
-				url,
-				{
-					method: 'GET',
-				},
-				{
-					refetch: true,
-				},
-			).json<H3Response<Billing[]>>();
-			billings.value = response.value?.data as Billing[];
-			totalBillings.value = response.value?.total as number;
-		} catch (error) {
-			console.error('Error fetching students:', error);
-		} finally {
-			isLoading.value = false;
-		}
+		billings.value = response?.data || [];
+		totalBillings.value = response?.total || 0;
+		isLoading.value = false;
 	}
 
 	async function fetchBilling(uid: string) {
@@ -75,36 +60,21 @@ export const useBillingStore = defineStore('billing', () => {
 		}
 	}
 
-	async function addBatchBilling(payload: Billing[]): Promise<StoreResponse> {
-		isLoading.value = true;
-		try {
-			const { data: result } = await useFetch(
-				`${import.meta.env.VITE_API_URL}/api/billings`,
-			)
-				.post(payload)
-				.json();
-
-			await fetchBillings({
-				q: searchQuery.value,
-				month: formattedDate.value,
-				offset: offset.value,
-			});
-
+	async function addBillings(payload: Billing[]): Promise<StoreResponse> {
+		const response = await billingRepository.addBillings(payload);
+		if (response?.statusCode == 200) {
+			await fetchBillings();
 			return {
-				status: result.value.statusCode == 200 ? 'success' : 'error',
-				statusMessage: result.value.statusMessage,
-				message: result.value.message,
+				status: 'success',
+				message: response.message,
+				statusMessage: response.statusMessage ?? '',
 			};
-		} catch (e) {
-			console.error(e);
-			return {
-				status: 'error',
-				statusMessage: 'Error message',
-				message: 'Something went wrong',
-			};
-		} finally {
-			isLoading.value = false;
 		}
+		return {
+			status: 'error',
+			message: response?.message,
+			statusMessage: response?.statusMessage ?? '',
+		};
 	}
 
 	async function addBilling(
@@ -118,7 +88,7 @@ export const useBillingStore = defineStore('billing', () => {
 			}
 			console.log(payload, selected);
 			payload.id = (billings.value.length + 1).toString();
-			payload.bill_no = payload.id;
+			payload.billNo = payload.id;
 			const docRef = await addDoc(collection(db, 'billings'), {
 				...payload,
 				residentAccountNumber: selected.accountNumber,
@@ -213,11 +183,7 @@ export const useBillingStore = defineStore('billing', () => {
 			billings.value = billings.value.filter(
 				(val) => !payload.some((item) => item.uid === val.uid),
 			);
-			await fetchBillings({
-				q: searchQuery.value,
-				month: formattedDate.value,
-				offset: offset.value,
-			});
+			await fetchBillings();
 			return {
 				status: 'success',
 				statusMessage: 'Success',
@@ -243,12 +209,7 @@ export const useBillingStore = defineStore('billing', () => {
 	watchDebounced(
 		[searchQuery, formattedDate, offset],
 		(newQuery) => {
-			console.log(newQuery);
-			fetchBillings({
-				q: newQuery[0],
-				month: newQuery[1],
-				offset: newQuery[2],
-			});
+			fetchBillings();
 		},
 		{ debounce: 300 },
 	);
@@ -264,7 +225,7 @@ export const useBillingStore = defineStore('billing', () => {
 		fetchBilling,
 		fetchBillings,
 		addBilling,
-		addBatchBilling,
+		addBillings,
 		updateBilling,
 		deleteBilling,
 		deleteBillings,

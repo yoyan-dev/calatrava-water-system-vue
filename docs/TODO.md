@@ -10,5 +10,5 @@
 - [ ] Create collection page
 - [ ] Create Import csv for collection
 - [ ] Create Import csv for ledger
-- [ ] Create types for ledger
+- [x] Create types for ledger
 - [ ] Create types for collection

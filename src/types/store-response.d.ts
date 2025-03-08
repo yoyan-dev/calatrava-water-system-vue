@@ -3,6 +3,7 @@ export interface StoreResponse<T = any> {
 	statusMessage?: string;
 	message?: string;
 	data?: T;
+	success?: boolean;
 }
 
 type severity =

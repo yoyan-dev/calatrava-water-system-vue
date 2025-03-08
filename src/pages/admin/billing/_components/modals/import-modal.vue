@@ -10,7 +10,7 @@
 	const { csvData, parseCsvFile } = useFileParser();
 
 	async function onSubmit(payload: any) {
-		const res = await store.addBatchBilling(payload);
+		const res = await store.addBillings(payload);
 		toast.add({
 			severity: res.status,
 			summary: res.statusMessage,

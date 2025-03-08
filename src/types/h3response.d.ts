@@ -1,5 +1,5 @@
 export interface H3Response<T = any> {
-	status?: number;
+	status?: string;
 	message?: string;
 	body?: any;
 	statusCode?: number;
