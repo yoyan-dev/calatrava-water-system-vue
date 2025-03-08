@@ -25,9 +25,9 @@ export const residentRepository = {
 		}`;
 
 		try {
-			const { data: response } = await useFetch(url).json<
-				H3Response<Resident[]>
-			>();
+			const { data: response } = await useFetch(url, { refetch: true })
+				.get()
+				.json<H3Response<Resident[]>>();
 			return camelize(response.value);
 		} catch (error) {
 			console.error('Error fetching residents:', error);
