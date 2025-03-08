@@ -61,44 +61,7 @@ const items = ref([
 
 <template>
   <main class="flex h-screen w-full text-surface-600">
-    <aside class="w-64 h-full transition-transform border-r hidden lg:block">
-      <div
-        class="h-full p-4 overflow-y-auto flex flex-col bg-white dark:bg-gray-800"
-      >
-        <a class="flex items-center justify-center ps-2.5 mb-3">
-          <span
-            class="self-center flex items-center text-2xl font-semibold whitespace-nowrap dark:text-white"
-            ><Avatar
-              image="/logo.png"
-              class="mr-2"
-              size="xlarge"
-              shape="circle"
-            />
-          </span>
-        </a>
-        <hr />
-        <ul class="space-y-2 font-medium grow">
-          <li v-for="item in items" :key="item.name">
-            <RouterLink
-              :to="item.route"
-              :class="
-                route.name == item.name ? 'bg-primary-100 text-primary' : ''
-              "
-              class="flex items-center px-2 rounded-lg font-normal hover:text-white cursor-pointer hover:bg-primary-400"
-            >
-              <i :class="item.icon"></i>
-              <a
-                class="flex items-center p-2 rounded-lg hover:text-white cursor-pointer hover:bg-primary-400"
-              >
-                <span>{{ item.label }}</span>
-              </a>
-            </RouterLink>
-          </li>
-        </ul>
-        <Button @click="logoutUser" icon="pi pi-sign-out" label="Sign Out" />
-      </div>
-    </aside>
-    <div class="w-full flex flex-col gap-5 bg-gray-50 overflow-auto">
+    <div class="w-full flex flex-col gap-5 bg-gray-50">
       <nav class="bg-white">
         <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-3">
           <div class="relative flex h-16 items-center justify-between">
@@ -170,8 +133,51 @@ const items = ref([
           <Button @click="logoutUser" icon="pi pi-sign-out" label="Sign Out" />
         </template>
       </Drawer>
-      <div class="px-0 md:px-3">
-        <slot />
+      <div class="flex gap-5 px-0 md:px-5 h-screen overflow-auto">
+        <aside class="w-64 h-full transition-transform hidden lg:block">
+          <div
+            class="h-full p-4 overflow-y-auto flex flex-col bg-white rounded-lg dark:bg-gray-800"
+          >
+            <a class="flex items-center justify-center ps-2.5 mb-3">
+              <span
+                class="self-center flex items-center text-2xl font-semibold whitespace-nowrap dark:text-white"
+                ><Avatar
+                  image="/logo.png"
+                  class="mr-2"
+                  size="xlarge"
+                  shape="circle"
+                />
+              </span>
+            </a>
+            <hr />
+            <ul class="space-y-2 font-medium grow">
+              <li v-for="item in items" :key="item.name">
+                <RouterLink
+                  :to="item.route"
+                  :class="
+                    route.name == item.name ? 'bg-primary-100 text-primary' : ''
+                  "
+                  class="flex items-center px-2 rounded-lg font-normal hover:text-white cursor-pointer hover:bg-primary-400"
+                >
+                  <i :class="item.icon"></i>
+                  <a
+                    class="flex items-center p-2 rounded-lg hover:text-white cursor-pointer hover:bg-primary-400"
+                  >
+                    <span>{{ item.label }}</span>
+                  </a>
+                </RouterLink>
+              </li>
+            </ul>
+            <Button
+              @click="logoutUser"
+              icon="pi pi-sign-out"
+              label="Sign Out"
+            />
+          </div>
+        </aside>
+        <div class="px-0 flex-1 overflow-y-auto">
+          <slot />
+        </div>
       </div>
     </div>
   </main>

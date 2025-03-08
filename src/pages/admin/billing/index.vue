@@ -23,7 +23,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="px-5 pb-5">
+  <div class="px-2 py-5">
     <Message severity="warn">
       <div>
         <h1>Reminder! Upcomming due date.</h1>
@@ -32,9 +32,9 @@ onMounted(() => {
     </Message>
   </div>
   <div
-    class="bg-surface-0 dark:bg-surface-900 mx-5 p-4 py-6 md:p-6 border rounded-lg"
+    class="bg-surface-0 dark:bg-surface-900 p-4 py-6 md:p-6 border rounded-lg"
   >
-    <Header />
+    <Header :totalBillings="store.totalBillings" />
     <div class="flex flex-col gap-3">
       <div>
         <div class="flex gap-5 flex-wrap items-start">
