@@ -28,10 +28,9 @@ export const useResidentStore = defineStore('resident', () => {
 	const searchQuery = ref('');
 	const filterAddress = ref('');
 	const page = ref(0);
-	const limit = ref(10);
 
 	// getters
-	const offset = computed(() => (page.value - 1) * limit.value);
+	const offset = computed(() => page.value * 10);
 
 	async function fetchResidents() {
 		isLoading.value = true;
@@ -39,7 +38,7 @@ export const useResidentStore = defineStore('resident', () => {
 			q: searchQuery.value,
 			offset: offset.value,
 		});
-
+		console.log(response);
 		residents.value = response?.data || [];
 		totalResidents.value = response?.total || 0;
 		isLoading.value = false;
