@@ -6,6 +6,18 @@ import camelize from 'camelize';
 const API_URL = import.meta.env.VITE_API_URL;
 
 export const billingRepository = {
+	async fetchBilling(uid: string) {
+		try {
+			const { data: response } = await useFetch(
+				`${API_URL}/api/billings/${uid}`,
+			).json<H3Response<Billing>>();
+			return camelize(response.value);
+		} catch (error) {
+			console.error('Error fetching billings:', error);
+			return { data: {} };
+		}
+	},
+
 	async fetchBillings(params: Record<string, any>) {
 		const queryString = new URLSearchParams(params).toString();
 		const url = `${API_URL}/api/billings${
@@ -44,6 +56,75 @@ export const billingRepository = {
 				statusCode: 500,
 				message:
 					error instanceof Error ? error.message : 'Failed to add billing',
+			};
+		}
+	},
+
+	async updateBilling({ uid, billing }: { uid: string; billing: Billing }) {
+		try {
+			const { data, error } = await useFetch(`${API_URL}/api/billings/${uid}`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(billing),
+			}).json<H3Response<Billing[]>>();
+
+			if (error.value) {
+				throw new Error(error.value.message || 'Network error');
+			}
+
+			return data.value;
+		} catch (error) {
+			return {
+				statusCode: 500,
+				message:
+					error instanceof Error ? error.message : 'Failed to delete billing',
+			};
+		}
+	},
+
+	async deleteBilling({ uid, accountno }: { uid: string; accountno: string }) {
+		try {
+			const { data, error } = await useFetch(`${API_URL}/api/billings/${uid}`, {
+				method: 'DELETE',
+				body: accountno,
+			}).json<H3Response<Billing[]>>();
+
+			if (error.value) {
+				throw new Error(error.value.message || 'Network error');
+			}
+
+			return data.value;
+		} catch (error) {
+			return {
+				statusCode: 500,
+				message:
+					error instanceof Error ? error.message : 'Failed to delete billing',
+			};
+		}
+	},
+
+	async deleteBillings(payload: Billing[]) {
+		try {
+			const { data, error } = await useFetch(`${API_URL}/api/billings`, {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(payload),
+			}).json<H3Response<Billing[]>>();
+
+			if (error.value) {
+				throw new Error(error.value.message || 'Network error');
+			}
+
+			return data.value;
+		} catch (error) {
+			return {
+				statusCode: 500,
+				message:
+					error instanceof Error ? error.message : 'Failed to delete billing',
 			};
 		}
 	},
