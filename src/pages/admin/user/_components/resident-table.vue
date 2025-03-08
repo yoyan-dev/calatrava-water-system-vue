@@ -105,8 +105,7 @@ function onToggled(event: Event, index: number) {
               text
             />
 
-            <Popover :ref="(el) => (menu[slotProps.index] = el)"
-              >\
+            <Popover :ref="(el) => (menu[slotProps.index] = el)">
               <div class="flex flex-col items-start">
                 <SendReminder />
                 <ViewModal :resident="slotProps.data" />

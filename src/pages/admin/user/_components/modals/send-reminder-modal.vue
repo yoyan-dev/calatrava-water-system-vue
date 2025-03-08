@@ -15,7 +15,7 @@ function submit(payload: any) {
 <template>
   <Button
     severity="primary"
-    icons="pi pi-send"
+    icon="pi pi-send"
     label="reminder"
     size="small"
     @click="visible = true"
