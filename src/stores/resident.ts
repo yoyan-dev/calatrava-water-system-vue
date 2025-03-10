@@ -38,7 +38,6 @@ export const useResidentStore = defineStore('resident', () => {
 			q: searchQuery.value,
 			offset: offset.value,
 		});
-		console.log(response);
 		residents.value = response?.data || [];
 		totalResidents.value = response?.total || 0;
 		isLoading.value = false;
@@ -48,6 +47,7 @@ export const useResidentStore = defineStore('resident', () => {
 		isLoading.value = true;
 		const response = await residentRepository.fetchResident(uid);
 		resident.value = response?.data;
+		console.log(response?.data);
 		isLoading.value = false;
 	}
 
