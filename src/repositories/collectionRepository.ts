@@ -13,9 +13,9 @@ export const collectionRepository = {
 		}`;
 
 		try {
-			const { data: response } = await useFetch(url).json<
-				H3Response<Collection[]>
-			>();
+			const { data: response } = await useFetch(url, {
+				method: 'GET',
+			}).json<H3Response<Collection[]>>();
 			return camelize(response.value);
 		} catch (error) {
 			console.error('Error fetching collections:', error);
@@ -23,19 +23,12 @@ export const collectionRepository = {
 		}
 	},
 
-	async addCollections(payload: any[]) {
+	async addCollections(payload: FormData) {
 		try {
-			const { data, error } = await useFetch(`${API_URL}/api/collections`, {
+			const { data } = await useFetch(`${API_URL}/api/collections`, {
 				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(payload),
-			}).json<H3Response<Collection[]>>();
-
-			if (error.value) {
-				throw new Error(error.value.message || 'Network error');
-			}
+				body: payload,
+			}).json<H3Response>();
 
 			return data.value;
 		} catch (error) {

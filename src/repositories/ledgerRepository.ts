@@ -8,7 +8,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 export const ledgerRepository = {
 	async fetchLedgers(params: Record<string, any>) {
 		const queryString = new URLSearchParams(params).toString();
-		const url = `${API_URL}/api/ledger${queryString ? '?' + queryString : ''}`;
+		const url = `${API_URL}/api/ledgers${queryString ? '?' + queryString : ''}`;
 
 		try {
 			const { data: response } = await useFetch(url).json<
@@ -21,19 +21,12 @@ export const ledgerRepository = {
 		}
 	},
 
-	async addLedgers(payload: any[]) {
+	async addLedgers(payload: FormData) {
 		try {
-			const { data, error } = await useFetch(`${API_URL}/api/ledger`, {
+			const { data } = await useFetch(`${API_URL}/api/ledgers`, {
 				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(payload),
-			}).json<H3Response<Ledger[]>>();
-
-			if (error.value) {
-				throw new Error(error.value.message || 'Network error');
-			}
+				body: payload,
+			}).json<H3Response>();
 
 			return data.value;
 		} catch (error) {
