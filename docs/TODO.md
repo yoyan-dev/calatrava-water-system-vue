@@ -12,3 +12,5 @@
 - [x] Create Import csv for ledger
 - [x] Create types for ledger
 - [ ] Create types for collection
+
+- [ ] Fixed popover auto close when clicking the opened modal
