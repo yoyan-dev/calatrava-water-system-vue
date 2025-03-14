@@ -78,7 +78,7 @@ onMounted(() => {
             <template #body="slotProps">
               <span class="rounded-md text-primary">
                 <i name="pi pi-money-bill"></i
-                >{{ `₱ ${slotProps.data.waterill}` }}
+                >{{ `₱ ${slotProps.data.waterbill}` }}
               </span>
             </template>
           </Column>
@@ -151,8 +151,6 @@ onMounted(() => {
                       slotProps.data.pymtdate
                     }}</span>
                   </div>
-                </div>
-                <div class="flex-1 flex flex-col p-3 border rounded-md">
                   <div class="flex-1 flex justify-between items-end gap-3">
                     Payment Method:
                     <span class="text-gray-500 text-left">{{
@@ -181,8 +179,6 @@ onMounted(() => {
                       slotProps.data.bankid
                     }}</span>
                   </div>
-                </div>
-                <div class="flex-1 flex flex-col p-3 border rounded-md">
                   <div class="flex-1 flex justify-between items-end gap-3">
                     Branch:
                     <span class="text-gray-500">{{
@@ -213,14 +209,14 @@ onMounted(() => {
                       slotProps.data.bankgroup
                     }}</span>
                   </div>
+                </div>
+                <div class="flex-1 flex flex-col p-3 border rounded-md">
                   <div class="flex-1 flex justify-between items-end gap-3">
                     Bank Online:
                     <span class="text-gray-500">{{
                       slotProps.data.bankonline
                     }}</span>
                   </div>
-                </div>
-                <div class="flex-1 flex flex-col p-3 border rounded-md">
                   <div class="flex-1 flex justify-between items-end gap-3">
                     Full Name:
                     <span class="text-gray-500">{{
@@ -287,6 +283,8 @@ onMounted(() => {
                       slotProps.data.runbalance
                     }}</span>
                   </div>
+                </div>
+                <div class="flex-1 flex flex-col p-3 border rounded-md">
                   <div class="flex-1 flex justify-between items-end gap-3">
                     Customer No.:
                     <span class="text-gray-500">{{

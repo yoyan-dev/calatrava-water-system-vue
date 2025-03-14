@@ -68,9 +68,9 @@ onMounted(() => {
             :exportable="false"
           ></Column>
           <Column header="Account No." field="accountno"> </Column>
-          <Column header="Transaction Date" field="trans_date"> </Column>
-          <Column field="ref_cod" header="Ref Code"></Column>
-          <Column field="ref_no" header="Ref No."> </Column>
+          <Column header="Transaction Date" field="transDate"> </Column>
+          <Column field="refCode" header="Ref Code"></Column>
+          <Column field="refNo" header="Ref No."> </Column>
           <Column field="amount" header="Amount">
             <template #body="slotProps">
               <span class="rounded-md text-primary">

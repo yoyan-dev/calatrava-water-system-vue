@@ -2,21 +2,37 @@
 import { ref } from "vue";
 import { useToast } from "primevue";
 import { useLedgerStore } from "@/stores/ledger";
-import { useFileParser } from "@/composables/useFileParser";
 
 const toast = useToast();
 const store = useLedgerStore();
 const isOpen = ref(false);
-const { csvData, parseCsvFile } = useFileParser();
+const selectedFile = ref<File | null>(null);
+const isUploading = ref(false);
 
-async function onSubmit(payload: any) {
-  const res = await store.addLedgers(payload);
+async function onSubmit() {
+  if (!selectedFile.value) {
+    toast.add({
+      severity: "warn",
+      summary: "No File Selected",
+      detail: "Please select a CSV file before uploading.",
+      life: 3000,
+    });
+    return;
+  }
+
+  isUploading.value = true;
+  const res = await store.addLedgers(selectedFile.value);
   toast.add({
-    severity: res.success ? "success" : "error",
-    // summary: res.statusMessage,
+    severity: res.status,
+    summary: res.statusMessage || "Upload Status",
     detail: res.message,
     life: 3000,
   });
+  isOpen.value = false;
+}
+
+function onFileSelect(event: any) {
+  selectedFile.value = event.files?.[0] || null;
 }
 </script>
 
@@ -33,11 +49,14 @@ async function onSubmit(payload: any) {
         root: 'justify-start border rounded-lg border-gray-300',
       }"
       mode="basic"
-      @select="parseCsvFile"
+      @select="onFileSelect"
       customUpload
       accept=".csv"
       severity="secondary"
     />
+    <p class="text-sm text-gray-500 mt-2">
+      Note: Please ensure the CSV file has no more than 2000 rows.
+    </p>
     <template #footer>
       <Button
         label="Cancel"
@@ -50,7 +69,7 @@ async function onSubmit(payload: any) {
         size="small"
         :loading="store.isLoading"
         label="Upload"
-        @click="onSubmit(csvData)"
+        @click="onSubmit"
       />
     </template>
   </Dialog>

@@ -33,11 +33,7 @@ function onToggled(event: Event, index: number) {
           <InputIcon>
             <i class="pi pi-search" />
           </InputIcon>
-          <InputText
-            v-model="store.searchQuery"
-            placeholder="Search..."
-            fluid
-          />
+          <InputText v-model="store.searchQuery" placeholder="Search..." />
         </IconField>
       </div>
       <div class="flex gap-3 justify-end">

@@ -31,7 +31,7 @@ onMounted(() => {
     <div class="text-2xl">Welcome! Admin</div>
     <div class="text-lg">Dashboard</div>
     <div class="flex flex-col flex-wrap lg:flex-row gap-5 w-full">
-      <div class="grid gap-5 flex-1">
+      <div class="grid md:grid-cols-3 gap-5 flex-1">
         <div
           class="bg-gradient-to-r from-primary-950 to-primary-600 p-3 shadow-sm border border-primary rounded-md relative flex-1"
         >
@@ -41,7 +41,12 @@ onMounted(() => {
             Total Concessionaires
             <i class="pi pi-users text-slate-300 text-3xl"></i>
           </div>
-          <div class="text-2xl text-slate-400 dark:text-primary-400">
+          <i
+            v-if="store.isLoading"
+            class="pi pi-spin pi-spinner text-primary"
+            style="font-size: 1rem"
+          ></i>
+          <div class="text-2xl text-slate-400 dark:text-primary-400" v-else>
             {{ store.totals?.residents }}
           </div>
         </div>
@@ -54,7 +59,12 @@ onMounted(() => {
             Total Income
             <i class="pi pi-money-bill text-slate-300 text-3xl"></i>
           </div>
-          <div class="text-2xl text-slate-400 dark:text-primary-400">
+          <i
+            v-if="store.isLoading"
+            class="pi pi-spin pi-spinner text-primary"
+            style="font-size: 1rem"
+          ></i>
+          <div class="text-2xl text-slate-400 dark:text-primary-400" v-else>
             ₱ {{ store.totals?.totalIncome }}
           </div>
         </div>
@@ -67,73 +77,80 @@ onMounted(() => {
             Current month Income
             <i class="pi pi-money-bill text-slate-300 text-3xl"></i>
           </div>
-          <div class="text-2xl text-slate-400 dark:text-primary-400">
+          <i
+            v-if="store.isLoading"
+            class="pi pi-spin pi-spinner text-primary"
+            style="font-size: 1rem"
+          ></i>
+          <div class="text-2xl text-slate-400 dark:text-primary-400" v-else>
             ₱ {{ store.totals?.currentMonthIncome }}
-          </div>
-        </div>
-      </div>
-      <div class="p-5 bg-white rounded-md border flex-1">
-        <span class="py-2 font-semibold text-lg">Reminders</span>
-        <hr />
-        <div class="max-h-56 overflow-auto">
-          <div class="flex justify-between items-center py-2 border-b">
-            <div>
-              <h2 class="font-semibold">Nenwell Era Due date</h2>
-              <span>March 1 - 5, 2025</span>
-            </div>
-            <Tag value="upcomming" severity="warn" />
-          </div>
-          <div class="flex justify-between items-center py-2 border-b">
-            <div>
-              <h2 class="font-semibold">Nenwell Era Due date</h2>
-              <span>March 1 - 5, 2025</span>
-            </div>
-            <Tag value="upcomming" severity="warn" />
-          </div>
-          <div class="flex justify-between items-center py-2 border-b">
-            <div>
-              <h2 class="font-semibold">Nenwell Era Due date</h2>
-              <span>March 1 - 5, 2025</span>
-            </div>
-            <Tag value="upcomming" severity="warn" />
-          </div>
-          <div class="flex justify-between items-center py-2 border-b">
-            <div>
-              <h2 class="font-semibold">Nenwell Era Due date</h2>
-              <span>March 1 - 5, 2025</span>
-            </div>
-            <Tag value="upcomming" severity="warn" />
-          </div>
-          <div class="flex justify-between items-center py-2 border-b">
-            <div>
-              <h2 class="font-semibold">Nenwell Era Due date</h2>
-              <span>March 1 - 5, 2025</span>
-            </div>
-            <Tag value="upcomming" severity="warn" />
-          </div>
-          <div class="flex justify-between items-center py-2 border-b">
-            <div>
-              <h2 class="font-semibold">Nenwell Era Due date</h2>
-              <span>March 1 - 5, 2025</span>
-            </div>
-            <Tag value="upcomming" severity="warn" />
-          </div>
-          <div class="flex justify-between items-center py-2 border-b">
-            <div>
-              <h2 class="font-semibold">Nenwell Era Due date</h2>
-              <span>March 1 - 5, 2025</span>
-            </div>
-            <Tag value="upcomming" severity="warn" />
           </div>
         </div>
       </div>
     </div>
     <div class="flex flex-wrap gap-10">
-      <div class="flex-1 shadow-sm border rounded-md p-5 bg-white">
-        <BarChart :data="barData" />
+      <div class="p-5 bg-white rounded-md border flex-1">
+        <span class="py-2 font-semibold text-lg">Reminders</span>
+        <hr />
+        <div class="overflow-auto">
+          <div class="flex justify-between items-center py-2 border-b">
+            <div>
+              <h2 class="font-semibold">Nenwell Era Due date</h2>
+              <span>March 1 - 5, 2025</span>
+            </div>
+            <Tag value="upcomming" severity="warn" />
+          </div>
+          <div class="flex justify-between items-center py-2 border-b">
+            <div>
+              <h2 class="font-semibold">Nenwell Era Due date</h2>
+              <span>March 1 - 5, 2025</span>
+            </div>
+            <Tag value="upcomming" severity="warn" />
+          </div>
+          <div class="flex justify-between items-center py-2 border-b">
+            <div>
+              <h2 class="font-semibold">Nenwell Era Due date</h2>
+              <span>March 1 - 5, 2025</span>
+            </div>
+            <Tag value="upcomming" severity="warn" />
+          </div>
+          <div class="flex justify-between items-center py-2 border-b">
+            <div>
+              <h2 class="font-semibold">Nenwell Era Due date</h2>
+              <span>March 1 - 5, 2025</span>
+            </div>
+            <Tag value="upcomming" severity="warn" />
+          </div>
+          <div class="flex justify-between items-center py-2 border-b">
+            <div>
+              <h2 class="font-semibold">Nenwell Era Due date</h2>
+              <span>March 1 - 5, 2025</span>
+            </div>
+            <Tag value="upcomming" severity="warn" />
+          </div>
+          <div class="flex justify-between items-center py-2 border-b">
+            <div>
+              <h2 class="font-semibold">Nenwell Era Due date</h2>
+              <span>March 1 - 5, 2025</span>
+            </div>
+            <Tag value="upcomming" severity="warn" />
+          </div>
+          <div class="flex justify-between items-center py-2 border-b">
+            <div>
+              <h2 class="font-semibold">Nenwell Era Due date</h2>
+              <span>March 1 - 5, 2025</span>
+            </div>
+            <Tag value="upcomming" severity="warn" />
+          </div>
+        </div>
       </div>
-      <div class="flex-1 shadow-sm border rounded-md p-5 bg-white">
-        <LineChart :data="lineData" />
+      <div class="flex flex-col gap-10 flex-1">
+        <div class="flex-1 shadow-sm border rounded-md p-5 bg-white">
+          <BarChart :data="barData" />
+        </div>
+        <div class="flex-1 shadow-sm border rounded-md p-5 bg-white">
+          <LineChart :data="lineData" />
+        </div>
       </div>
     </div>
   </div>
