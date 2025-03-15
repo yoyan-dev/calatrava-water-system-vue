@@ -1,27 +1,53 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, watch, nextTick, defineAsyncComponent } from "vue";
+import { useDialog } from "primevue";
 import CreateModal from "./modals/create-modal.vue";
-import DeleteModal from "./modals/delete-modal.vue";
 import DeleteSelectedModal from "./modals/delete-selected-modal.vue";
-import UpdateModal from "./modals/update-modal.vue";
-import ViewModal from "./modals/view-modal.vue";
 import { useResidentStore } from "@/stores/resident";
 import type { Resident } from "@/types/resident";
-import SendReminder from "./modals/send-reminder-modal.vue";
 import createAnnouncementModal from "./modals/create-announcement-modal.vue";
 
 const store = useResidentStore();
-
+const dialog = useDialog();
 const selectedResidents = ref([]);
-
 const props = defineProps<{
   residents: Resident[];
 }>();
+const op = ref();
+const selectedResident = ref<Resident | null>();
 
-const menu = ref<any[]>([]);
+const sendReminder = defineAsyncComponent(
+  () => import("./modals/send-reminder-modal.vue")
+);
 
-function onToggled(event: Event, index: number) {
-  menu.value[index].toggle(event);
+const viewResident = defineAsyncComponent(
+  () => import("./modals/view-modal.vue")
+);
+
+const updateResident = defineAsyncComponent(
+  () => import("./modals/update-modal.vue")
+);
+
+const deleteResident = defineAsyncComponent(
+  () => import("./modals/delete-modal.vue")
+);
+
+function onToggled(event: Event, resident: Resident) {
+  op.value.hide();
+
+  if (selectedResident.value?.uid === resident.uid) {
+    selectedResident.value = null;
+  } else {
+    selectedResident.value = resident;
+
+    nextTick(() => {
+      op.value.show(event);
+    });
+  }
+}
+
+function hidePopover() {
+  op.value.hide();
 }
 </script>
 
@@ -97,18 +123,9 @@ function onToggled(event: Event, index: number) {
               type="button"
               severity="secondary"
               icon="pi pi-ellipsis-v"
-              @click="onToggled($event, slotProps.index)"
+              @click="onToggled($event, slotProps.data)"
               text
             />
-
-            <Popover :ref="(el) => (menu[slotProps.index] = el)">
-              <div class="flex flex-col items-start">
-                <SendReminder />
-                <ViewModal :resident="slotProps.data" />
-                <UpdateModal v-bind="slotProps.data" />
-                <DeleteModal :uid="slotProps.data.uid" />
-              </div>
-            </Popover>
           </template>
         </Column>
       </DataTable>
@@ -128,5 +145,110 @@ function onToggled(event: Event, index: number) {
       :totalRecords="store.totalResidents"
     >
     </Paginator>
+
+    <Popover ref="op">
+      <div class="flex flex-col items-start">
+        <Button
+          severity="primary"
+          icon="pi pi-send"
+          label="reminder"
+          size="small"
+          text
+          @click="
+            () => {
+              dialog.open(sendReminder, {
+                props: {
+                  header: 'Send Reminder',
+                  style: {
+                    width: '50rem',
+                  },
+                  breakpoints: { '1199px': '75vw', '575px': '90vw' },
+                  modal: true,
+                },
+                data: {
+                  user: selectedResident,
+                },
+              });
+              hidePopover();
+            }
+          "
+        />
+        <Button
+          icon="pi pi-eye"
+          severity="secondary"
+          size="small"
+          label="view"
+          text
+          @click="
+            () => {
+              dialog.open(viewResident, {
+                props: {
+                  header: 'Resident Profile',
+                  style: {
+                    width: '50rem',
+                  },
+                  breakpoints: { '1199px': '75vw', '575px': '90vw' },
+                  modal: true,
+                },
+                data: {
+                  user: selectedResident,
+                },
+              });
+              hidePopover();
+            }
+          "
+        />
+        <Button
+          icon="pi pi-pen-to-square"
+          text
+          size="small"
+          label="edit"
+          class="mr-2"
+          @click="
+            () => {
+              dialog.open(updateResident, {
+                props: {
+                  header: 'Update resident',
+                  style: { width: '50rem' },
+                  breakpoints: { '1199px': '75vw', '575px': '90vw' },
+                  modal: true,
+                },
+                data: { user: selectedResident },
+              });
+              hidePopover();
+            }
+          "
+        />
+        <UpdateModal v-bind="selectedResident" />
+        <Button
+          icon="pi pi-trash"
+          text
+          size="small"
+          label="delete"
+          severity="danger"
+          @click="
+            () => {
+              dialog.open(deleteResident, {
+                props: {
+                  header: 'Confirm',
+                  style: {
+                    width: '50vw',
+                  },
+                  breakpoints: {
+                    '960px': '75vw',
+                    '640px': '90vw',
+                  },
+                  modal: true,
+                },
+                data: {
+                  uid: selectedResident?.uid,
+                },
+              });
+              hidePopover();
+            }
+          "
+        />
+      </div>
+    </Popover>
   </div>
 </template>

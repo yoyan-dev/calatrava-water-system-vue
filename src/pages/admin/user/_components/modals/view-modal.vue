@@ -1,40 +1,35 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import type { Resident } from "@/types/resident";
+import {
+  ref,
+  watch,
+  inject,
+  onMounted,
+  nextTick,
+  defineAsyncComponent,
+} from "vue";
+import { useDialog } from "primevue";
 import UpdateModal from "./update-modal.vue";
 import BillingTable from "../billing-table.vue";
 
-const visible = ref(false);
+const dialogRef = inject<any>("dialogRef");
+const resident = ref<Resident>({});
+const dialog = useDialog();
+const updateResident = defineAsyncComponent(() => import("./update-modal.vue"));
 
-const props = defineProps<{
-  resident: Resident;
-}>();
+onMounted(() => {
+  resident.value = dialogRef.value.data.user;
+});
 </script>
 <template>
-  <Button
-    icon="pi pi-eye"
-    severity="secondary"
-    size="small"
-    label="view"
-    @click="visible = true"
-    text
-  />
-  <Dialog
-    v-model:visible="visible"
-    modal
-    header="Resident Profile"
-    :style="{ width: '50rem' }"
-    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
-  >
+  <div>
     <div class="flex flex-wrap">
       <div class="p-5 border rounded-lg flex-1 flex md:flex-col">
         <Avatar icon="pi pi-user" class="mr-2" size="xlarge" />
         <div class="flex justify-between items-start">
           <div class="flex flex-col">
-            <span class="text-xl capitalize">{{
-              `${props.resident.fullname}`
-            }}</span>
-            <span class="text-slate-600">Acc-no. {{ props.resident.uid }}</span>
+            <span class="text-xl capitalize">{{ `${resident.fullname}` }}</span>
+            <span class="text-slate-600">Acc-no. {{ resident.uid }}</span>
           </div>
         </div>
       </div>
@@ -42,20 +37,39 @@ const props = defineProps<{
         <div class="flex justify-between items-start">
           <div class="flex flex-col">
             <span class="text-slate-500">Classification</span>
-            <span class="capitalize">{{ props.resident.classification }}</span>
+            <span class="capitalize">{{ resident.classification }}</span>
           </div>
           <div class="flex flex-col">
             <span class="text-slate-500">Address</span>
-            <span class="capitalize">{{ props.resident.address }}</span>
+            <span class="capitalize">{{ resident.address }}</span>
           </div>
-          <UpdateModal v-bind="props.resident" />
+          <Button
+            icon="pi pi-pen-to-square"
+            text
+            size="small"
+            label="edit"
+            class="mr-2"
+            @click="
+              () => {
+                dialog.open(updateResident, {
+                  props: {
+                    header: 'Update resident',
+                    style: { width: '50rem' },
+                    breakpoints: { '1199px': '75vw', '575px': '90vw' },
+                    modal: true,
+                  },
+                  data: { user: resident },
+                });
+              }
+            "
+          />
         </div>
       </div>
     </div>
     <div class="py-5">
       <div class="p-2 border rounded-lg">
-        <BillingTable :uid="props.resident.uid" />
+        <BillingTable :uid="resident.uid" />
       </div>
     </div>
-  </Dialog>
+  </div>
 </template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watchEffect } from "vue";
 import { useResidentStore } from "@/stores/resident";
 import { getSeverity } from "@/composables/getSeverity";
 
@@ -10,8 +10,8 @@ const props = defineProps<{
   uid: any;
 }>();
 
-onMounted(async () => {
-  await store.fetchResident(props.uid as string);
+watchEffect(() => {
+  store.fetchResident(props.uid);
 });
 </script>
 
