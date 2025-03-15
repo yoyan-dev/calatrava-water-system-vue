@@ -8,8 +8,8 @@
 
 	const isOpen = ref(false);
 
-	function onDelete(uid: string) {
-		store.deleteBilling(uid);
+	function onDelete({ uid, accountno }: { uid: string; accountno: string }) {
+		store.deleteBilling({ uid, accountno });
 		toast.add({
 			severity: 'success',
 			summary: 'Successful',
@@ -19,7 +19,7 @@
 		isOpen.value = false;
 	}
 
-	const props = defineProps<{ uid: string }>();
+	const props = defineProps<{ uid: string; accountno: string }>();
 </script>
 <template>
 	<div>
@@ -51,7 +51,7 @@
 				<Button
 					label="Yes"
 					size="small"
-					@click="onDelete(props.uid)" />
+					@click="onDelete({ uid: props.uid, accountno: props.accountno })" />
 			</template>
 		</Dialog>
 	</div>
