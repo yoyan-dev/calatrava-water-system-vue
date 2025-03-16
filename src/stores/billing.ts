@@ -1,24 +1,12 @@
 import { computed, ref } from 'vue';
 import { defineStore } from 'pinia';
-import {
-	addDoc,
-	collection,
-	doc,
-	Timestamp,
-	getDoc,
-	writeBatch,
-	deleteDoc,
-} from 'firebase/firestore';
-import { useFirestore } from 'vuefire';
 import type { Billing } from '@/types/billing';
 import type { StoreResponse } from '@/types/store-response';
-import { useFetch, watchDebounced } from '@vueuse/core';
-import type { H3Response } from '@/types/h3response';
+import { watchDebounced } from '@vueuse/core';
 import { format } from 'date-fns';
+import { billingRepository } from '@/repositories/billingRepository';
 
 export const useBillingStore = defineStore('billing', () => {
-	const db = useFirestore();
-
 	// State
 	const billings = ref<Billing[]>([]);
 	const billing = ref<Billing>();
@@ -33,135 +21,41 @@ export const useBillingStore = defineStore('billing', () => {
 	const formattedDate = computed(() => format(month.value, 'yyyy-M'));
 
 	// Actions
-	async function fetchBillings(searchParams: Record<string, any> = {}) {
+	async function fetchBillings() {
 		isLoading.value = true;
+		const response = await billingRepository.fetchBillings({
+			q: searchQuery.value,
+			month: formattedDate.value,
+			offset: offset.value,
+		});
 
-		try {
-			const queryString = new URLSearchParams(searchParams).toString();
-
-			const url = `${import.meta.env.VITE_API_URL}/api/billings${
-				queryString ? '?' + queryString : ''
-			}`;
-
-			const { data: response } = await useFetch(
-				url,
-				{
-					method: 'GET',
-				},
-				{
-					refetch: true,
-				},
-			).json<H3Response<Billing[]>>();
-			billings.value = response.value?.data as Billing[];
-			totalBillings.value = response.value?.total as number;
-		} catch (error) {
-			console.error('Error fetching students:', error);
-		} finally {
-			isLoading.value = false;
-		}
+		billings.value = response?.data || [];
+		totalBillings.value = response?.total || 0;
+		isLoading.value = false;
 	}
 
 	async function fetchBilling(uid: string) {
 		isLoading.value = true;
-		try {
-			const docSnap = await getDoc(doc(db, 'billings', uid));
-			console.log(docSnap.data());
-			billing.value = { ...docSnap.data(), uid: docSnap.id };
-		} catch (error) {
-			console.error('Error fetching billing by ID:', error);
-			throw error;
-		} finally {
-			isLoading.value = false;
-		}
+		const response = await billingRepository.fetchBilling(uid);
+		billing.value = response?.data;
+		isLoading.value = false;
 	}
 
-	async function addBatchBilling(payload: Billing[]): Promise<StoreResponse> {
-		isLoading.value = true;
-		try {
-			const { data: result } = await useFetch(
-				`${import.meta.env.VITE_API_URL}/api/billings`,
-			)
-				.post(payload)
-				.json();
-
-			await fetchBillings({
-				q: searchQuery.value,
-				month: formattedDate.value,
-				offset: offset.value,
-			});
-
-			return {
-				status: result.value.statusCode == 200 ? 'success' : 'error',
-				statusMessage: result.value.statusMessage,
-				message: result.value.message,
-			};
-		} catch (e) {
-			console.error(e);
-			return {
-				status: 'error',
-				statusMessage: 'Error message',
-				message: 'Something went wrong',
-			};
-		} finally {
-			isLoading.value = false;
-		}
-	}
-
-	async function addBilling(
-		payload: Billing,
-		selected: any,
-	): Promise<StoreResponse> {
-		isLoading.value = true;
-		try {
-			if (!payload) {
-				throw new Error('Current billing information is missing');
-			}
-			console.log(payload, selected);
-			payload.id = (billings.value.length + 1).toString();
-			payload.bill_no = payload.id;
-			const docRef = await addDoc(collection(db, 'billings'), {
-				...payload,
-				residentAccountNumber: selected.accountNumber,
-				residentUid: selected.uid,
-				createdAt: Timestamp.now(),
-			});
-			// const residentSnap = await updateDoc(doc(db, 'residents'), {
-			// 	currentBilling: { ...payload },
-			// });
-			// const existingBilling = billings.value.find(
-			// 	(billing) => billing.residentAccountNumber === accountNumber,
-			// );
-			// if (existingBilling) {
-			// 	billings.value = billings.value.filter(
-			// 		(b) => b.residentAccountNumber !== accountNumber,
-			// 	);
-			// 	billings.value.push({
-			// 		...payload,
-			// 		residentAccountNumber: accountNumber,
-			// 		uid: docRef.id,
-			// 	});
-			// } else {
-			// 	billings.value.push({
-			// 		...payload,
-			// 		residentAccountNumber: accountNumber,
-			// 		uid: docRef.id,
-			// 	});
-			// }
+	async function addBillings(payload: Billing[]): Promise<StoreResponse> {
+		const response = await billingRepository.addBillings(payload);
+		if (response?.statusCode == 200) {
+			await fetchBillings();
 			return {
 				status: 'success',
-				statusMessage: 'Success message',
-				message: 'Successfully added billing',
+				message: response.message,
+				statusMessage: response.statusMessage ?? '',
 			};
-		} catch (error: any) {
-			console.log(error);
-			return {
-				status: 'error',
-				statusMessage: 'Error message',
-				message: 'Something went wrong',
-			};
-		} finally {
-			isLoading.value = false;
 		}
+		return {
+			status: 'error',
+			message: response?.message,
+			statusMessage: response?.statusMessage ?? '',
+		};
 	}
 
 	async function deleteBilling({
@@ -171,84 +65,60 @@ export const useBillingStore = defineStore('billing', () => {
 		accountno: string;
 		uid: string;
 	}): Promise<StoreResponse> {
-		isLoading.value = true;
-		try {
-			const billingRef = doc(db, 'residents', accountno, 'billings', uid);
-			await deleteDoc(billingRef);
-			billings.value = billings.value.filter((item) => item.uid !== uid);
+		const response = await billingRepository.deleteBilling({ uid, accountno });
+		if (response?.statusCode == 200) {
+			await fetchBillings();
 			return {
 				status: 'success',
-				statusMessage: 'Success',
-				message: 'Successfully deleted billing',
+				message: response.message,
+				statusMessage: response.statusMessage ?? '',
 			};
-		} catch (error: any) {
-			console.log(error);
-			return {
-				status: 'error',
-				statusMessage: 'Error',
-				message: 'Something went wrong',
-			};
-		} finally {
-			isLoading.value = false;
 		}
+		return {
+			status: 'error',
+			message: response?.message,
+			statusMessage: response?.statusMessage ?? '',
+		};
 	}
 
 	async function deleteBillings(payload: Billing[]): Promise<StoreResponse> {
-		isLoading.value = true;
-		const batch = writeBatch(db);
-
-		payload.forEach((item) => {
-			const docRef = doc(
-				db,
-				'residents',
-				item.accountno ?? '',
-				'billings',
-				item.uid ?? '',
-			);
-			batch.delete(docRef);
-		});
-
-		try {
-			await batch.commit();
-			billings.value = billings.value.filter(
-				(val) => !payload.some((item) => item.uid === val.uid),
-			);
-			await fetchBillings({
-				q: searchQuery.value,
-				month: formattedDate.value,
-				offset: offset.value,
-			});
+		const response = await billingRepository.deleteBillings(payload);
+		if (response?.statusCode == 200) {
+			await fetchBillings();
 			return {
 				status: 'success',
-				statusMessage: 'Success',
-				message: 'Successfully deleted billings',
+				message: response.message,
+				statusMessage: response.statusMessage ?? '',
 			};
-		} catch (error) {
-			console.error('Error deleting billings:', error);
-			return {
-				status: 'error',
-				statusMessage: 'Error',
-				message: 'Something went wrong',
-			};
-		} finally {
-			isLoading.value = false;
 		}
+		return {
+			status: 'error',
+			message: response?.message,
+			statusMessage: response?.statusMessage ?? '',
+		};
 	}
 
-	function updateBilling(billing: Billing, uid: string) {
-		const result = billings.value.find((item) => item.uid === uid);
-		Object.assign(result || {}, billing);
+	async function updateBilling(billing: Billing, uid: string) {
+		const response = await billingRepository.updateBilling({ uid, billing });
+		if (response?.statusCode == 200) {
+			await fetchBillings();
+			return {
+				status: 'success',
+				message: response.message,
+				statusMessage: response.statusMessage ?? '',
+			};
+		}
+		return {
+			status: 'error',
+			message: response?.message,
+			statusMessage: response?.statusMessage ?? '',
+		};
 	}
 
 	watchDebounced(
 		[searchQuery, formattedDate, offset],
 		(newQuery) => {
-			console.log(newQuery);
-			fetchBillings({
-				q: newQuery[0],
-				month: newQuery[1],
-				offset: newQuery[2],
-			});
+			fetchBillings();
 		},
 		{ debounce: 300 },
 	);
@@ -263,8 +133,7 @@ export const useBillingStore = defineStore('billing', () => {
 		totalBillings,
 		fetchBilling,
 		fetchBillings,
-		addBilling,
-		addBatchBilling,
+		addBillings,
 		updateBilling,
 		deleteBilling,
 		deleteBillings,

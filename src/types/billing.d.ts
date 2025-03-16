@@ -5,28 +5,29 @@ export interface Billing {
   address?: string;
   arrears?: string;
   averageuse?: string;
-  bill_date?: any;
-  bill_no?: string;
-  c_route_no?: string;
-  c_statdesc?: string;
-  c_type?: string;
+  billDate?: any;
+  billNo?: string;
+  cRouteNo?: string;
+  cStatdesc?: string;
+  cType?: string;
   createdAt?: any;
-  discon_dat?: string;
-  due_date?: any;
+  disconDat?: string;
+  dueDate?: any;
   fullname?: string;
   installfee?: string;
   metercode?: string;
   mrrf?: string;
-  mtr_no?: string;
+  mtrNo?: string;
   prereading?: string;
   prorated?: string;
-  prvmr_date?: any;
+  prvmrDate?: any;
   reminders?: string;
   res2?: number;
   status?: BillingStatus;
   waterCharge?: number;
   environmentalFee?: number;
   totalBill?: number;
+  paymentReceipt?: string;
 }
 
 type BillingStatus = "pending" | "paid" | undefined;

@@ -18,16 +18,20 @@
 
 		store.fetchResident(user?.uid ?? '');
 
-		if (store.resident.billings && store.resident.billings.length > 1) {
-			const currentBill = store.resident.billings[0].totalBill
-				? store.resident.billings[0].totalBill
+		if (store.resident?.billings && store.resident?.billings?.length > 1) {
+			const currentBill = store.resident?.billings[0].totalBill
+				? store.resident?.billings[0].totalBill
 				: 0;
-			const previousBill = store.resident.billings[1].totalBill
-				? store.resident.billings[1].totalBill
+			const previousBill = store.resident?.billings[1].totalBill
+				? store.resident?.billings[1].totalBill
 				: 0;
 			billIncreasePercentage.value =
 				((currentBill - previousBill) / previousBill) * 100;
 		}
+	});
+
+	watchEffect(() => {
+		console.log(store.resident);
 	});
 </script>
 
@@ -49,15 +53,15 @@
 						<div
 							class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center">
 							<span class="text-lg font-bold">{{
-								store.resident.fullname?.charAt(0).toUpperCase()
+								store.resident?.fullname?.charAt(0).toUpperCase() ?? ''
 							}}</span>
 						</div>
 						<div>
 							<h2 class="text-lg font-semibold capitalize">
-								{{ store.resident.fullname }}
+								{{ store.resident?.fullname }}
 							</h2>
 							<p class="text-sm text-gray-500">
-								{{ store.resident.accountNumber }}
+								{{ store.resident?.accountNumber }}
 							</p>
 						</div>
 					</div>
@@ -73,7 +77,7 @@
 							<div class="text-lg">Current total bill</div>
 							<div class="flex justify-between items-end">
 								<span class="text-xl font-bold text-surface-500">{{
-									`₱ ${store.resident.billings?.[0].totalBill}`
+									`₱ ${store.resident?.billings?.[0].totalBill}`
 								}}</span>
 								<div
 									:class="{
@@ -107,7 +111,7 @@
 						<h1 class="text-xl text-center">Current bill</h1>
 					</div>
 				</div>
-				<div v-if="!store.resident.billings">
+				<div v-if="!store.resident?.billings">
 					<div class="flex justify-center items-center h-96">
 						<div class="text-center">
 							<i class="pi pi-exclamation-triangle text-4xl text-slate-500"></i>

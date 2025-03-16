@@ -1,36 +1,39 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useAnnouncementStore } from "@/stores/announcement";
 
+const store = useAnnouncementStore();
 const visible = ref(false);
-const reminder = ref({
+const announcement = ref({
   message: "",
 });
 
-function submit() {}
+function submit(payload: any) {
+  store.addAnnouncement(payload);
+}
 </script>
 <template>
   <Button
     severity="primary"
-    icons="pi pi-send"
-    label="reminder"
+    icon="pi pi-send"
+    label="Announcement"
     size="small"
     @click="visible = true"
-    text
   />
   <Dialog
     v-model:visible="visible"
     modal
-    header="Send Reminder"
+    header="Create Announcement"
     :style="{ width: '50rem' }"
     :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
   >
-    <form @submit.prevent="submit">
+    <form @submit.prevent="submit(announcement)">
       <div>
         <Textarea
-          v-model="reminder.message"
+          v-model="announcement.message"
           rows="5"
           class="bg-gray-100 w-full"
-          placeholder="Enter your content here..."
+          placeholder="Enter your message here..."
         />
       </div>
       <div class="flex justify-end mt-2">
@@ -40,6 +43,7 @@ function submit() {}
           icon="pi pi-send"
           iconPos="right"
           type="submit"
+          :loading="store.isLoading"
         />
       </div>
     </form>

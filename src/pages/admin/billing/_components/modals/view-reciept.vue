@@ -1,21 +1,20 @@
-
 <template>
-    <Button
-        icon="pi pi-wallet"
-        severity="secondary"
-        label="view reciept"
-        size="small"
-        @click="visible = true"
-        text />
-    <Dialog v-model:visible="visible"  modal header="Header" :style="{ width: '50rem' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
-        <p class="m-0">
-            Reciept here
-        </p>
-    </Dialog>
+  <div>
+    <p class="m-0" v-if="!data.paymentReceipt">no reciept</p>
+    <div class="card flex justify-center" v-else>
+      <Image :src="data.paymentReceipt" alt="Image" width="250" preview />
+    </div>
+  </div>
 </template>
 
-<script setup>
-import { ref } from "vue";
+<script setup lang="ts">
+import { inject, onMounted, ref } from "vue";
+const dialogRef = inject<any>("dialogRef");
 
-const visible = ref(false);
+const visible = ref(true);
+const data = ref();
+
+onMounted(() => {
+  data.value = dialogRef.value.data;
+});
 </script>

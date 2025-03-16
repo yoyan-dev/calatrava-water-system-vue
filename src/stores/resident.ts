@@ -17,55 +17,37 @@ import {
 import type { StoreResponse } from '@/types/store-response';
 import type { H3Response } from '@/types/h3response';
 import { useFetch, watchDebounced } from '@vueuse/core';
+import { residentRepository } from '@/repositories/residentRepository';
 
 export const useResidentStore = defineStore('resident', () => {
 	const db = useFirestore();
 	const residents = ref<Resident[]>([]);
-	const resident = ref<Resident>({});
+	const resident = ref<Resident>();
 	const isLoading = ref(false);
 	const totalResidents = ref(0);
 	const searchQuery = ref('');
 	const filterAddress = ref('');
 	const page = ref(0);
-	const limit = ref(10);
 
 	// getters
-	const offset = computed(() => (page.value - 1) * limit.value);
+	const offset = computed(() => page.value * 10);
 
-	async function fetchResidents(searchParams: Record<string, any> = {}) {
+	async function fetchResidents() {
 		isLoading.value = true;
-
-		try {
-			const queryString = new URLSearchParams(searchParams).toString();
-			console.log(queryString);
-			const url = `${import.meta.env.VITE_API_URL}/api/residents${
-				queryString ? '?' + queryString : ''
-			}`;
-			const { data: response } = await useFetch(
-				url,
-				{
-					method: 'GET',
-				},
-				{
-					refetch: true,
-				},
-			).json<H3Response<Resident[]>>();
-
-			residents.value = response.value?.data as Resident[];
-			totalResidents.value = response.value?.total as number;
-		} catch (error) {
-			console.error('Error fetching students:', error);
-		} finally {
-			isLoading.value = false;
-		}
+		const response = await residentRepository.fetchResidents({
+			q: searchQuery.value,
+			offset: offset.value,
+		});
+		residents.value = response?.data || [];
+		totalResidents.value = response?.total || 0;
+		isLoading.value = false;
 	}
 
 	async function fetchResident(uid: string) {
 		isLoading.value = true;
-		const { data: response } = await useFetch(
-			`${import.meta.env.VITE_API_URL}/api/residents/${uid}`,
-		).json<H3Response<Resident>>();
-		resident.value = response.value?.data as Resident;
+		const response = await residentRepository.fetchResident(uid);
+		resident.value = response?.data;
+		console.log(response?.data);
 		isLoading.value = false;
 	}
 
@@ -211,11 +193,7 @@ export const useResidentStore = defineStore('resident', () => {
 	watchDebounced(
 		[searchQuery, filterAddress, offset],
 		(newQuery) => {
-			fetchResidents({
-				q: newQuery[0],
-				address: newQuery[1],
-				offset: newQuery[2],
-			});
+			fetchResidents();
 		},
 		{ debounce: 300 },
 	);

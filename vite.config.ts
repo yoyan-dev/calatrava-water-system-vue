@@ -17,14 +17,13 @@ export default defineConfig(() => {
 			}),
 			VitePWA({
 				registerType: 'autoUpdate',
-				// devOptions: {
-				// 	enabled: true,
-				// 	type: 'module',
-				// },
+				devOptions: {
+					enabled: true,
+				},
 				includeAssets: ['favicon.ico'],
 				manifest: {
-					name: 'My Awesome App',
-					short_name: 'MyApp',
+					name: 'Calatrave Waterworks',
+					short_name: 'CWS',
 					description: 'My Awesome App description',
 					theme_color: '#ffffff',
 					start_url: '/',
@@ -53,8 +52,24 @@ export default defineConfig(() => {
 						},
 					],
 				},
+				// Switch to injectManifest
+				injectManifest: {
+					swSrc: 'src/sw.js', // Your custom service worker
+					swDest: 'dist/sw.js', // Output location
+					globPatterns: ['**/*.{js,css,html,ico,png,svg}'], // Files to precache
+				},
 				workbox: {
-					globPatterns: ['**/*.{js,css}', 'index.html'],
+					// Optional: Add runtime caching if needed
+					runtimeCaching: [
+						{
+							urlPattern: /^https:\/\/.*\.googleapis\.com\/.*$/,
+							handler: 'NetworkFirst',
+						},
+					],
+					// Control update frequency
+					skipWaiting: true, // New SW activates immediately
+					clientsClaim: true, // Takes control of clients immediately
+					cleanupOutdatedCaches: true, // Removes old caches
 				},
 			}),
 		],

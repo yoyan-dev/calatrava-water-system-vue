@@ -4,12 +4,14 @@
 	import { signOut } from 'firebase/auth';
 	import { getCurrentUser, useFirebaseAuth } from 'vuefire';
 	import useNotification from '@/composables/useNotification';
-	import { onMessage } from 'firebase/messaging';
 	import { messaging } from '@/firebase/config';
+	import { onMessage } from 'firebase/messaging';
+	import { useToast } from 'primevue';
 
 	const route = useRoute();
 	const router = useRouter();
 	const auth = useFirebaseAuth()!;
+	const toast = useToast();
 	const { requestPermission, userToken } = useNotification();
 
 	const visible = ref(false);
@@ -44,21 +46,27 @@
 		}
 	}
 
-	const unsubscribe = onMessage(messaging, (payload) => {
-		console.log('Message received. ', payload);
-	});
+	// const unsubscribe = onMessage(messaging, (payload) => {
+	// 	console.log('Message received. ', payload);
+	// 	toast.add({
+	// 		severity: 'info',
+	// 		summary: payload.notification?.title,
+	// 		detail: payload.notification?.body,
+	// 		life: 3000,
+	// 	});
+	// });
 
-	onMounted(async () => {
-		const user = await getCurrentUser();
+	// onMounted(async () => {
+	// 	const user = await getCurrentUser();
 
-		requestPermission(user?.uid!);
-	});
+	// 	requestPermission(user?.uid!);
+	// });
 
-	onUnmounted(() => unsubscribe());
+	// onUnmounted(() => unsubscribe());
 
-	watchEffect(() => {
-		console.log(userToken.value);
-	});
+	// watchEffect(() => {
+	// 	console.log(userToken.value);
+	// });
 </script>
 <template>
 	<main class="relative bg-white h-screen">
