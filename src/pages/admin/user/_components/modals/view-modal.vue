@@ -67,7 +67,7 @@ onMounted(() => {
       </div>
     </div>
     <div class="py-5">
-      <div class="p-2 border rounded-lg">
+      <div class="p-2 border rounded-lg" v-if="resident.uid">
         <BillingTable :uid="resident.uid" />
       </div>
     </div>

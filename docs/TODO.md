@@ -14,4 +14,4 @@
 - [x] Create types for collection
 - [ ] tables in pages in admin should not scrollable unless when expanded
 
-- [ ] Fixed popover auto close when clicking the opened modal
+- [x] Fixed popover auto close when clicking the opened modal

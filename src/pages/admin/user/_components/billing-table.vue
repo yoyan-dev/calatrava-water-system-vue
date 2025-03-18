@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watchEffect } from "vue";
+import { ref, onMounted } from "vue";
 import { useResidentStore } from "@/stores/resident";
 import { getSeverity } from "@/composables/getSeverity";
 
@@ -10,7 +10,8 @@ const props = defineProps<{
   uid: any;
 }>();
 
-watchEffect(() => {
+onMounted(() => {
+  console.log(props.uid);
   store.fetchResident(props.uid);
 });
 </script>
@@ -46,7 +47,7 @@ watchEffect(() => {
       <Column header="Status">
         <template #body="slotProps">
           <Tag
-            :severity="getSeverity(slotProps.data.status as string)"
+            :severity="getSeverity(slotProps.data.status)"
             :value="slotProps.data.status"
           ></Tag>
         </template>
