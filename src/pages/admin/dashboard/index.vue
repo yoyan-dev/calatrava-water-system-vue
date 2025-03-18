@@ -33,7 +33,7 @@ onMounted(() => {
     <div class="flex flex-col flex-wrap lg:flex-row gap-5 w-full">
       <div class="grid md:grid-cols-3 gap-5 flex-1">
         <div
-          class="bg-gradient-to-r from-primary-950 to-primary-600 p-3 shadow-sm border border-primary rounded-md relative flex-1"
+          class="bg-gradient-to-r from-primary-800 to-primary-500 p-3 shadow-sm border border-primary rounded-md relative flex-1"
         >
           <div
             class="text-lg text-slate-200 dark:text-surface-0 mb-2 flex justify-between"
@@ -46,12 +46,12 @@ onMounted(() => {
             class="pi pi-spin pi-spinner text-primary"
             style="font-size: 1rem"
           ></i>
-          <div class="text-2xl text-slate-400 dark:text-primary-400" v-else>
+          <div class="text-2xl text-surface-300" v-else>
             {{ store.totals?.residents }}
           </div>
         </div>
         <div
-          class="bg-gradient-to-r from-primary-950 to-primary-600 p-3 shadow-sm border border-primary rounded-md relative flex-1"
+          class="bg-gradient-to-r from-primary-800 to-primary-500 p-3 shadow-sm border border-primary rounded-md relative flex-1"
         >
           <div
             class="text-lg text-slate-200 dark:text-surface-0 mb-2 flex justify-between"
@@ -64,12 +64,12 @@ onMounted(() => {
             class="pi pi-spin pi-spinner text-primary"
             style="font-size: 1rem"
           ></i>
-          <div class="text-2xl text-slate-400 dark:text-primary-400" v-else>
+          <div class="text-2xl text-surface-300" v-else>
             ₱ {{ store.totals?.totalIncome }}
           </div>
         </div>
         <div
-          class="bg-gradient-to-r from-primary-950 to-primary-600 p-3 shadow-sm border border-primary rounded-md relative flex-1"
+          class="bg-gradient-to-r from-primary-800 to-primary-500 p-3 shadow-sm border border-primary rounded-md relative flex-1"
         >
           <div
             class="text-lg text-slate-200 dark:text-surface-0 mb-2 flex justify-between"
@@ -82,7 +82,7 @@ onMounted(() => {
             class="pi pi-spin pi-spinner text-primary"
             style="font-size: 1rem"
           ></i>
-          <div class="text-2xl text-slate-400 dark:text-primary-400" v-else>
+          <div class="text-2xl text-surface-300" v-else>
             ₱ {{ store.totals?.currentMonthIncome }}
           </div>
         </div>
