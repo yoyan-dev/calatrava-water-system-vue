@@ -13,7 +13,7 @@ export const useAnnouncementStore = defineStore('announcement', () => {
 	async function fetchAnnouncements() {
 		isLoading.value = true;
 		const response = await AnnouncementRepository.fetchAnnouncements({
-			q: searchQuery.value,
+			isAll: searchQuery.value,
 		});
 
 		announcement.value = response?.data || [];
