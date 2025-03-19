@@ -106,15 +106,38 @@ watchEffect(() => console.log(store.billings));
             </div>
           </template>
           <Column
+            class="whitespace-nowrap text-ellipsis"
             selectionMode="multiple"
             style="width: 3rem"
             :exportable="false"
           ></Column>
-          <Column expander style="width: 5rem" />
-          <Column header="Bill No." field="billNo"> </Column>
-          <Column field="accountno" header="AccountNumber"></Column>
-          <Column field="billDate" header="Billing Date"> </Column>
-          <Column field="waterBill" header="Water Bill">
+          <Column
+            class="whitespace-nowrap text-ellipsis"
+            expander
+            style="width: 5rem"
+          />
+          <Column
+            class="whitespace-nowrap text-ellipsis"
+            header="Bill No."
+            field="billNo"
+          >
+          </Column>
+          <Column
+            class="whitespace-nowrap text-ellipsis"
+            field="accountno"
+            header="AccountNumber"
+          ></Column>
+          <Column
+            class="whitespace-nowrap text-ellipsis"
+            field="billDate"
+            header="Billing Date"
+          >
+          </Column>
+          <Column
+            class="whitespace-nowrap text-ellipsis"
+            field="waterBill"
+            header="Water Bill"
+          >
             <template #body="slotProps">
               <span class="rounded-md text-primary">
                 <i name="pi pi-money-bill"></i
@@ -122,8 +145,12 @@ watchEffect(() => console.log(store.billings));
               </span>
             </template>
           </Column>
-          <Column field="address" header="Area"></Column>
-          <Column header="Status">
+          <Column
+            class="whitespace-nowrap text-ellipsis"
+            field="address"
+            header="Area"
+          ></Column>
+          <Column class="whitespace-nowrap text-ellipsis" header="Status">
             <template #body="slotProps">
               <Tag
                 :severity="getSeverity(slotProps.data.status)"
@@ -131,7 +158,7 @@ watchEffect(() => console.log(store.billings));
               ></Tag>
             </template>
           </Column>
-          <Column header="Actions">
+          <Column class="whitespace-nowrap text-ellipsis" header="Actions">
             <template #body="slotProps">
               <Button
                 type="button"
@@ -266,9 +293,9 @@ watchEffect(() => console.log(store.billings));
                 </div>
               </div>
               <!-- <DataTable :value="slotProps.data.orders">
-								<Column field="id" header="Id" sortable></Column>
-								<Column field="customer" header="Customer" sortable></Column>
-								<Column field="date" header="Date" sortable></Column>
+								<Column class="whitespace-nowrap text-ellipsis" field="id" header="Id" sortable></Column>
+								<Column class="whitespace-nowrap text-ellipsis" field="customer" header="Customer" sortable></Column>
+								<Column class="whitespace-nowrap text-ellipsis" field="date" header="Date" sortable></Column>
 							</DataTable> -->
             </div>
           </template>
