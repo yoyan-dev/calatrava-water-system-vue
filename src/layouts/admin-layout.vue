@@ -138,17 +138,22 @@ const items = ref([
           <div
             class="h-full p-4 overflow-y-auto flex flex-col bg-white rounded-lg dark:bg-gray-800"
           >
-            <a class="flex items-center justify-center ps-2.5 mb-3">
+            <div class="flex items-center mb-3">
               <span
                 class="self-center flex items-center text-2xl font-semibold whitespace-nowrap dark:text-white"
                 ><Avatar
-                  image="/logo.png"
+                  image="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                   class="mr-2"
-                  size="xlarge"
-                  shape="circle"
+                  size="large"
                 />
               </span>
-            </a>
+              <div>
+                <div class="font-semibold">Nenwell Era</div>
+                <span class="text-center w-full text-sm text-surface-400"
+                  >Admin</span
+                >
+              </div>
+            </div>
             <hr />
             <ul class="space-y-2 font-medium grow">
               <li v-for="item in items" :key="item.name">

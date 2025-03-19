@@ -101,7 +101,7 @@ async function submitConcern(payload: Concern) {
         >
           Send a concern
         </div>
-        <div class="flex justify-between items-center pb-3">
+        <div class="flex justify-between items-end md:items-center pb-3">
           <div>
             <label>Select concern message: </label><br />
             <Select

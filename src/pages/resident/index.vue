@@ -6,15 +6,17 @@ import { Toast } from "primevue";
 
 <template>
   <ResidentLayout>
-    <Toast position="bottom-right" />
-    <div class="p-5">
-      <Message>
-        <div>
-          <h1>Reminder! Upcomming due date.</h1>
-          <span>Hapit na imong due date.</span>
-        </div>
-      </Message>
+    <div class="bg-gray-50 h-screen">
+      <Toast position="bottom-right" />
+      <div class="p-5">
+        <Message>
+          <div>
+            <h1>Reminder! Upcomming due date.</h1>
+            <span>Hapit na imong due date.</span>
+          </div>
+        </Message>
+      </div>
+      <RouterView />
     </div>
-    <RouterView />
   </ResidentLayout>
 </template>
