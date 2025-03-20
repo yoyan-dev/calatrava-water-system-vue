@@ -4,8 +4,10 @@ import BarChart from "./_components/bar-chart.vue";
 import LineChart from "./_components/line-chart.vue";
 import { useAnalyticStore } from "@/stores/analytic";
 import { formatToPeso } from "@/composables/currencyFormat";
+import { useAnnouncementStore } from "@/stores/announcement";
 
-const store = useAnalyticStore();
+const analyticStore = useAnalyticStore();
+const announcementStore = useAnnouncementStore();
 
 const barData = [
   { x: 1, y: 10, y1: 20, y2: 30 },
@@ -22,11 +24,61 @@ const lineData = [
 ];
 
 onMounted(() => {
-  store.fetchTotals();
+  analyticStore.fetchTotals();
+  announcementStore.fetchAnnouncements();
 });
+
+const responsiveOptions = ref([
+  {
+    breakpoint: "1400px",
+    numVisible: 1,
+    numScroll: 1,
+  },
+  {
+    breakpoint: "1199px",
+    numVisible: 1,
+    numScroll: 1,
+  },
+  {
+    breakpoint: "767px",
+    numVisible: 1,
+    numScroll: 1,
+  },
+  {
+    breakpoint: "575px",
+    numVisible: 1,
+    numScroll: 1,
+  },
+]);
 </script>
 
 <template>
+  <div
+    v-if="
+      !announcementStore.isLoading && announcementStore.announcement?.length > 0
+    "
+  >
+    <Carousel
+      :value="announcementStore.announcement"
+      :numVisible="1"
+      :numScroll="1"
+      :responsiveOptions="responsiveOptions"
+      circular
+      :autoplayInterval="5000"
+    >
+      <template #item="slotProps">
+        <Message>
+          <div>
+            <h1 class="flex items-center gap-2">
+              <i class="pi pi-bell"></i> Announcement!
+              {{ slotProps.data.type }}.
+            </h1>
+            <span class="font-normal">{{ slotProps.data.content }}</span>
+          </div>
+        </Message>
+      </template>
+    </Carousel>
+  </div>
   <div class="p-5 bg-white rounded-md flex flex-col gap-5">
     <div class="text-2xl">Welcome! Admin</div>
     <div class="text-lg">Dashboard</div>
@@ -42,12 +94,12 @@ onMounted(() => {
             <i class="pi pi-users text-slate-300 text-3xl"></i>
           </div>
           <i
-            v-if="store.isLoading"
+            v-if="analyticStore.isLoading"
             class="pi pi-spin pi-spinner text-primary"
             style="font-size: 1rem"
           ></i>
           <div class="text-2xl text-surface-300" v-else>
-            {{ store.totals?.residents }}
+            {{ analyticStore.totals?.residents }}
           </div>
         </div>
         <div
@@ -60,12 +112,12 @@ onMounted(() => {
             <i class="pi pi-money-bill text-slate-300 text-3xl"></i>
           </div>
           <i
-            v-if="store.isLoading"
+            v-if="analyticStore.isLoading"
             class="pi pi-spin pi-spinner text-primary"
             style="font-size: 1rem"
           ></i>
           <div class="text-2xl text-surface-300" v-else>
-            ₱ {{ store.totals?.totalIncome }}
+            ₱ {{ analyticStore.totals?.totalIncome }}
           </div>
         </div>
         <div
@@ -78,12 +130,12 @@ onMounted(() => {
             <i class="pi pi-money-bill text-slate-300 text-3xl"></i>
           </div>
           <i
-            v-if="store.isLoading"
+            v-if="analyticStore.isLoading"
             class="pi pi-spin pi-spinner text-primary"
             style="font-size: 1rem"
           ></i>
           <div class="text-2xl text-surface-300" v-else>
-            ₱ {{ store.totals?.currentMonthIncome }}
+            ₱ {{ analyticStore.totals?.currentMonthIncome }}
           </div>
         </div>
       </div>

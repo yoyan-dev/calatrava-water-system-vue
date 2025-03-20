@@ -1,9 +1,9 @@
 export interface Reminder {
-	id?: string;
-	uid?: string;
-	createdAt?: any;
-	dueDate?: string;
-	residentUid?: string;
-	content?: string;
-	name?: string;
+  id?: string;
+  uid?: string;
+  createdAt?: any;
+  dueDate?: any;
+  residentUid?: string;
+  content?: string;
+  name?: string;
 }
