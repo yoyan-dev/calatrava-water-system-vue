@@ -13,7 +13,7 @@ const props = defineProps<{
 </script>
 <template>
   <div>
-    <div class="pb-2">
+    <div class="py-2">
       <Message severity="warn">
         <div>
           <h1 class="flex items-center gap-2">
