@@ -5,6 +5,7 @@ import LineChart from "./_components/line-chart.vue";
 import { useAnalyticStore } from "@/stores/analytic";
 import { formatToPeso } from "@/composables/currencyFormat";
 import { useAnnouncementStore } from "@/stores/announcement";
+import Announcement from "./_components/announcement.vue";
 
 const analyticStore = useAnalyticStore();
 const announcementStore = useAnnouncementStore();
@@ -27,29 +28,6 @@ onMounted(() => {
   analyticStore.fetchTotals();
   announcementStore.fetchAnnouncements();
 });
-
-const responsiveOptions = ref([
-  {
-    breakpoint: "1400px",
-    numVisible: 1,
-    numScroll: 1,
-  },
-  {
-    breakpoint: "1199px",
-    numVisible: 1,
-    numScroll: 1,
-  },
-  {
-    breakpoint: "767px",
-    numVisible: 1,
-    numScroll: 1,
-  },
-  {
-    breakpoint: "575px",
-    numVisible: 1,
-    numScroll: 1,
-  },
-]);
 </script>
 
 <template>
@@ -58,26 +36,7 @@ const responsiveOptions = ref([
       !announcementStore.isLoading && announcementStore.announcement?.length > 0
     "
   >
-    <Carousel
-      :value="announcementStore.announcement"
-      :numVisible="1"
-      :numScroll="1"
-      :responsiveOptions="responsiveOptions"
-      circular
-      :autoplayInterval="5000"
-    >
-      <template #item="slotProps">
-        <Message>
-          <div>
-            <h1 class="flex items-center gap-2">
-              <i class="pi pi-bell"></i> Announcement!
-              {{ slotProps.data.type }}.
-            </h1>
-            <span class="font-normal">{{ slotProps.data.content }}</span>
-          </div>
-        </Message>
-      </template>
-    </Carousel>
+    <Announcement :announcement="announcementStore.announcement" />
   </div>
   <div class="p-5 bg-white rounded-md flex flex-col gap-5">
     <div class="text-2xl">Welcome! Admin</div>
