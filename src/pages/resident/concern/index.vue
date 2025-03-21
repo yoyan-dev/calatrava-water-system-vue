@@ -101,32 +101,21 @@ async function submitConcern(payload: Concern) {
         >
           Send a concern
         </div>
-        <div>
-          <Select
-            v-model="selectedContent"
-            :options="contents"
-            placeholder="Select a Concern"
-            checkmark
-            :highlightOnSelect="false"
-            class="w-full md:w-56"
-          />
-          <span v-if="errors.selectedContent" class="text-red-500">{{
-            errors.selectedContent
-          }}</span>
-        </div>
-        <div>
-          <Textarea
-            v-if="selectedContent === 'Others'"
-            v-model="concern.content"
-            rows="5"
-            class="bg-gray-100 w-full"
-            placeholder="Enter your concern here..."
-          />
-          <span v-if="errors.content" class="text-red-500">{{
-            errors.content
-          }}</span>
-        </div>
-        <div class="flex justify-end mt-2">
+        <div class="flex justify-between items-end md:items-center pb-3">
+          <div>
+            <label>Select concern message: </label><br />
+            <Select
+              v-model="selectedContent"
+              :options="contents"
+              placeholder="Select a Concern"
+              checkmark
+              :highlightOnSelect="false"
+              class="w-full md:w-56"
+            />
+            <span v-if="errors.selectedContent" class="text-red-500">{{
+              errors.selectedContent
+            }}</span>
+          </div>
           <Button
             label="Send"
             severity="primary"
@@ -135,6 +124,18 @@ async function submitConcern(payload: Concern) {
             type="submit"
             :loading="concernStore.isLoading"
           />
+        </div>
+        <div v-if="selectedContent === 'Others'">
+          <label>Message:</label>
+          <Textarea
+            v-model="concern.content"
+            rows="5"
+            class="bg-gray-100 w-full"
+            placeholder="Enter your concern here..."
+          />
+          <span v-if="errors.content" class="text-red-500">{{
+            errors.content
+          }}</span>
         </div>
       </form>
       <!-- <div class="shadow rounded-border p-2 md:p-3 lg:p-6  bg-white ">

@@ -10,8 +10,9 @@ const props = defineProps<{
   uid: any;
 }>();
 
-onMounted(async () => {
-  await store.fetchResident(props.uid as string);
+onMounted(() => {
+  console.log(props.uid);
+  store.fetchResident(props.uid);
 });
 </script>
 
@@ -30,10 +31,28 @@ onMounted(async () => {
           No billing found.
         </div>
       </template>
-      <Column expander style="width: 5rem" />
-      <Column header="Bill No." field="billNo"> </Column>
-      <Column field="billDate" header="Billing Date"> </Column>
-      <Column field="waterBill" header="Water Bill">
+      <Column
+        class="whitespace-nowrap text-ellipsis"
+        expander
+        style="width: 5rem"
+      />
+      <Column
+        class="whitespace-nowrap text-ellipsis"
+        header="Bill No."
+        field="billNo"
+      >
+      </Column>
+      <Column
+        class="whitespace-nowrap text-ellipsis"
+        field="billDate"
+        header="Billing Date"
+      >
+      </Column>
+      <Column
+        class="whitespace-nowrap text-ellipsis"
+        field="waterBill"
+        header="Water Bill"
+      >
         <template #body="slotProps">
           <span class="rounded-md text-primary">
             <i name="pi pi-money-bill"></i
@@ -43,10 +62,10 @@ onMounted(async () => {
           </span>
         </template>
       </Column>
-      <Column header="Status">
+      <Column class="whitespace-nowrap text-ellipsis" header="Status">
         <template #body="slotProps">
           <Tag
-            :severity="getSeverity(slotProps.data.status as string)"
+            :severity="getSeverity(slotProps.data.status)"
             :value="slotProps.data.status"
           ></Tag>
         </template>
@@ -163,9 +182,9 @@ onMounted(async () => {
             </div>
           </div>
           <!-- <DataTable :value="slotProps.data.orders">
-								<Column field="id" header="Id" sortable></Column>
-								<Column field="customer" header="Customer" sortable></Column>
-								<Column field="date" header="Date" sortable></Column>
+								<Column class="whitespace-nowrap text-ellipsis" field="id" header="Id" sortable></Column>
+								<Column class="whitespace-nowrap text-ellipsis" field="customer" header="Customer" sortable></Column>
+								<Column class="whitespace-nowrap text-ellipsis" field="date" header="Date" sortable></Column>
 							</DataTable> -->
         </div>
       </template>

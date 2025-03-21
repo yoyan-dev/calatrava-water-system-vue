@@ -4,8 +4,11 @@ import BarChart from "./_components/bar-chart.vue";
 import LineChart from "./_components/line-chart.vue";
 import { useAnalyticStore } from "@/stores/analytic";
 import { formatToPeso } from "@/composables/currencyFormat";
+import { useAnnouncementStore } from "@/stores/announcement";
+import Announcement from "./_components/announcement.vue";
 
-const store = useAnalyticStore();
+const analyticStore = useAnalyticStore();
+const announcementStore = useAnnouncementStore();
 
 const barData = [
   { x: 1, y: 10, y1: 20, y2: 30 },
@@ -22,18 +25,26 @@ const lineData = [
 ];
 
 onMounted(() => {
-  store.fetchTotals();
+  analyticStore.fetchTotals();
+  announcementStore.fetchAnnouncements();
 });
 </script>
 
 <template>
+  <div
+    v-if="
+      !announcementStore.isLoading && announcementStore.announcement?.length > 0
+    "
+  >
+    <Announcement :announcement="announcementStore.announcement" />
+  </div>
   <div class="p-5 bg-white rounded-md flex flex-col gap-5">
     <div class="text-2xl">Welcome! Admin</div>
     <div class="text-lg">Dashboard</div>
     <div class="flex flex-col flex-wrap lg:flex-row gap-5 w-full">
       <div class="grid md:grid-cols-3 gap-5 flex-1">
         <div
-          class="bg-gradient-to-r from-primary-950 to-primary-600 p-3 shadow-sm border border-primary rounded-md relative flex-1"
+          class="bg-gradient-to-r from-primary-800 to-primary-500 p-3 shadow-sm border border-primary rounded-md relative flex-1"
         >
           <div
             class="text-lg text-slate-200 dark:text-surface-0 mb-2 flex justify-between"
@@ -42,16 +53,16 @@ onMounted(() => {
             <i class="pi pi-users text-slate-300 text-3xl"></i>
           </div>
           <i
-            v-if="store.isLoading"
+            v-if="analyticStore.isLoading"
             class="pi pi-spin pi-spinner text-primary"
             style="font-size: 1rem"
           ></i>
-          <div class="text-2xl text-slate-400 dark:text-primary-400" v-else>
-            {{ store.totals?.residents }}
+          <div class="text-2xl text-surface-300" v-else>
+            {{ analyticStore.totals?.residents }}
           </div>
         </div>
         <div
-          class="bg-gradient-to-r from-primary-950 to-primary-600 p-3 shadow-sm border border-primary rounded-md relative flex-1"
+          class="bg-gradient-to-r from-primary-800 to-primary-500 p-3 shadow-sm border border-primary rounded-md relative flex-1"
         >
           <div
             class="text-lg text-slate-200 dark:text-surface-0 mb-2 flex justify-between"
@@ -60,16 +71,16 @@ onMounted(() => {
             <i class="pi pi-money-bill text-slate-300 text-3xl"></i>
           </div>
           <i
-            v-if="store.isLoading"
+            v-if="analyticStore.isLoading"
             class="pi pi-spin pi-spinner text-primary"
             style="font-size: 1rem"
           ></i>
-          <div class="text-2xl text-slate-400 dark:text-primary-400" v-else>
-            ₱ {{ store.totals?.totalIncome }}
+          <div class="text-2xl text-surface-300" v-else>
+            ₱ {{ analyticStore.totals?.totalIncome }}
           </div>
         </div>
         <div
-          class="bg-gradient-to-r from-primary-950 to-primary-600 p-3 shadow-sm border border-primary rounded-md relative flex-1"
+          class="bg-gradient-to-r from-primary-800 to-primary-500 p-3 shadow-sm border border-primary rounded-md relative flex-1"
         >
           <div
             class="text-lg text-slate-200 dark:text-surface-0 mb-2 flex justify-between"
@@ -78,12 +89,12 @@ onMounted(() => {
             <i class="pi pi-money-bill text-slate-300 text-3xl"></i>
           </div>
           <i
-            v-if="store.isLoading"
+            v-if="analyticStore.isLoading"
             class="pi pi-spin pi-spinner text-primary"
             style="font-size: 1rem"
           ></i>
-          <div class="text-2xl text-slate-400 dark:text-primary-400" v-else>
-            ₱ {{ store.totals?.currentMonthIncome }}
+          <div class="text-2xl text-surface-300" v-else>
+            ₱ {{ analyticStore.totals?.currentMonthIncome }}
           </div>
         </div>
       </div>

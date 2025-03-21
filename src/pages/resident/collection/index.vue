@@ -1,17 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted, watchEffect } from "vue";
-import Header from "@/pages/admin/collection/_components/header.vue";
+import Header from "./_components/header.vue";
 import { useCollectionStore } from "@/stores/collection";
-import ImportModal from "./_components/modals/import-modal.vue";
 
 const store = useCollectionStore();
 // const selectedCollection = ref([]);
 const menu = ref<any[]>([]);
 const expandedRows = ref({});
-
-function onToggled(event: Event, index: number) {
-  menu.value[index].toggle(event);
-}
 
 onMounted(() => {
   store.fetchCollections();
@@ -24,32 +19,6 @@ onMounted(() => {
   >
     <Header :totalCollections="store.totalCollections" />
     <div class="flex flex-col gap-3">
-      <div>
-        <div class="flex gap-5 flex-wrap items-start">
-          <div class="flex-1">
-            <IconField>
-              <InputIcon>
-                <i class="pi pi-search" />
-              </InputIcon>
-              <InputText v-model="store.searchQuery" placeholder="Search..." />
-            </IconField>
-          </div>
-          <div class="flex gap-3 justify-start md:justify-end w-full flex-1">
-            <FloatLabel variant="on">
-              <DatePicker
-                v-model:modelValue="store.month"
-                inputId="on_label"
-                view="month"
-                dateFormat="MM yy"
-                showIcon
-                iconDisplay="input"
-              />
-              <label for="on_label">Select month</label>
-            </FloatLabel>
-            <ImportModal />
-          </div>
-        </div>
-      </div>
       <div class="border rounded-md">
         <DataTable
           v-model:expandedRows="expandedRows"
@@ -64,6 +33,12 @@ onMounted(() => {
               No collection payment found.
             </div>
           </template>
+          <Column
+            class="whitespace-nowrap text-ellipsis"
+            selectionMode="multiple"
+            style="width: 3rem"
+            :exportable="false"
+          ></Column>
           <Column
             class="whitespace-nowrap text-ellipsis"
             expander

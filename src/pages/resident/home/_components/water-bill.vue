@@ -13,6 +13,16 @@ const props = defineProps<{
 </script>
 <template>
   <div>
+    <div class="py-2">
+      <Message severity="warn">
+        <div>
+          <h1 class="flex items-center gap-2">
+            <i class="pi pi-bell"></i> Reminder!.
+          </h1>
+          <span>Hapit na imong due date.</span>
+        </div>
+      </Message>
+    </div>
     <div class="bg-white p-5 border rounded-lg flex flex-col gap-3">
       <div class="flex justify-between">
         <h1 class="font-semibold text-xl">
@@ -27,11 +37,11 @@ const props = defineProps<{
       <div class="flex justify-between">
         <div>
           <label class="text-surface-500">Name</label><br />
-          <span class="uppercase">{{ props.resident.fullname }}</span>
+          <span class="capitalize">{{ props.resident.fullname }}</span>
         </div>
         <div>
           <label class="text-surface-500">Class Type</label><br />
-          <span class="uppercase">{{ resident.classification }}</span>
+          <span class="capitalize">{{ resident.classification }}</span>
         </div>
       </div>
       <div>

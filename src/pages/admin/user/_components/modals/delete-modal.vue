@@ -1,58 +1,46 @@
 <script setup lang="ts">
-	import { ref } from 'vue';
-	import { useResidentStore } from '@/stores/resident';
-	import { useToast } from 'primevue/usetoast';
+import { ref, inject, onMounted } from "vue";
+import { useResidentStore } from "@/stores/resident";
+import { useToast } from "primevue/usetoast";
 
-	const toast = useToast();
-	const store = useResidentStore();
+const toast = useToast();
+const store = useResidentStore();
+const dialogRef = inject<any>("dialogRef");
+const uid = ref();
 
-	const isOpen = ref(false);
+onMounted(() => {
+  uid.value = dialogRef.value.data.uid;
+});
 
-	function deleteResident() {
-		store.deleteResident(props.uid!);
-		toast.add({
-			severity: 'success',
-			summary: 'Successful',
-			detail: 'Resident Deleted',
-			life: 3000,
-		});
-		isOpen.value = false;
-	}
+async function deleteResident() {
+  const res = await store.deleteResident(uid.value!);
+  toast.add({
+    severity: res.status,
+    summary: res.statusMessage,
+    detail: res.message,
+    life: 3000,
+  });
+}
 
-	const props = defineProps<{ uid?: string }>();
+function onClose() {
+  dialogRef.value.close();
+}
 </script>
 <template>
-	<Button
-		icon="pi pi-trash"
-		text
-		size="small"
-		label="delete"
-		severity="danger"
-		@click="isOpen = true" />
-	<Dialog
-		v-model:visible="isOpen"
-		:style="{ width: '450px' }"
-		header="Confirm"
-		modal>
-		<form
-			class="flex flex-col gap-4"
-			@submit.prevent="deleteResident">
-			<div class="flex items-center gap-4">
-				<i class="pi pi-exclamation-triangle !text-3xl" />
-				<span>Are you sure you want to delete resident?</span>
-			</div>
-			<div class="w-full flex gap-4 justify-end items-center">
-				<Button
-					label="No"
-					icon="pi pi-times"
-					severity="danger"
-					text
-					@click="isOpen = false" />
-				<Button
-					label="Yes"
-					icon="pi pi-check"
-					type="submit" />
-			</div>
-		</form>
-	</Dialog>
+  <form class="flex flex-col gap-4" @submit.prevent="deleteResident">
+    <div class="flex items-center gap-4">
+      <i class="pi pi-exclamation-triangle !text-3xl" />
+      <span>Are you sure you want to delete resident?</span>
+    </div>
+    <div class="w-full flex gap-4 justify-end items-center">
+      <Button
+        label="No"
+        icon="pi pi-times"
+        severity="danger"
+        text
+        @click="onClose"
+      />
+      <Button label="Yes" icon="pi pi-check" type="submit" />
+    </div>
+  </form>
 </template>
