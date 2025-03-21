@@ -113,16 +113,16 @@ function hidePopover() {
         </Column>
         <Column
           class="whitespace-nowrap text-ellipsis capitalize"
-          field="address"
-          header="Address"
+          field="book"
+          header="Book"
         >
           <template #body="slotProps">
-            <div class="flex w-[25vh]">{{ slotProps.data.address }}</div>
+            <div class="flex w-[25vh]">{{ slotProps.data.book }}</div>
           </template>
         </Column>
         <Column
           class="whitespace-nowrap text-ellipsis capitalize"
-          field="classification"
+          field="classtype"
           header="Classification"
         ></Column>
         <Column

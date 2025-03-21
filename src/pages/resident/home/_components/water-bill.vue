@@ -28,8 +28,8 @@ const props = defineProps<{
         <h1 class="font-semibold text-xl">
           Bill #{{ props.resident.billings?.[0].billNo }}
           <Tag
-            :severity="getSeverity(props.resident.billings?.[0].status as string)"
-            :value="props.resident.billings?.[0].status"
+            :severity="getSeverity(props.resident.billings?.[0].bStatus as string)"
+            :value="props.resident.billings?.[0].bStatus"
           ></Tag>
         </h1>
       </div>
@@ -41,7 +41,7 @@ const props = defineProps<{
         </div>
         <div>
           <label class="text-surface-500">Class Type</label><br />
-          <span class="capitalize">{{ resident.classification }}</span>
+          <span class="capitalize">{{ resident.classtype }}</span>
         </div>
       </div>
       <div>
@@ -61,7 +61,7 @@ const props = defineProps<{
         <div>
           <label class="text-surface-500">Amount</label><br />
           <span>
-            {{ `₱ ${props.resident.billings?.[0].totalBill}` }}
+            {{ `₱ ${props.resident.billings?.[0].billamnt}` }}
           </span>
         </div>
       </div>

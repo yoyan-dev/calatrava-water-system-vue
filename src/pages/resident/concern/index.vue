@@ -41,8 +41,8 @@ onMounted(async () => {
   }
   const residentId = user.value.uid;
   await residentStore.fetchResident(residentId);
-  concern.name = residentStore.resident.fullname;
-  concern.area = residentStore.resident.address;
+  concern.name = residentStore.resident?.fullname;
+  concern.area = residentStore.resident?.book;
   concern.uid = residentId;
   concern.accountNumber = residentId;
 });

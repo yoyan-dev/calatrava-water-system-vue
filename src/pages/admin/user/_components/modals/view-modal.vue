@@ -37,11 +37,11 @@ onMounted(() => {
         <div class="flex justify-between items-start">
           <div class="flex flex-col">
             <span class="text-slate-500">Classification</span>
-            <span class="capitalize">{{ resident.classification }}</span>
+            <span class="capitalize">{{ resident.classtype }}</span>
           </div>
           <div class="flex flex-col">
-            <span class="text-slate-500">Address</span>
-            <span class="capitalize">{{ resident.address }}</span>
+            <span class="text-slate-500">Book</span>
+            <span class="capitalize">{{ resident.book }}</span>
           </div>
           <Button
             icon="pi pi-pen-to-square"

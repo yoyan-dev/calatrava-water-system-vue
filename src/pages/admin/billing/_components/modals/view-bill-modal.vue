@@ -42,16 +42,11 @@ console.log(props.billing);
       </div>
       <div class="flex flex-col gap-1 px-5 lg:w-[30rem]">
         <span
-          ><strong>Account Number:</strong>
-          {{ props.billing.accountno }}</span
+          ><strong>Account Number:</strong> {{ props.billing.accountno }}</span
         >
-        <span
-          ><strong>Name:</strong> {{ props.billing.fullname }}
-        ></span>
-        <span
-          ><strong>Bill Number:</strong> {{ props.billing.bill_no }}</span
-        >
-        <span><strong>Address:</strong> {{ props.billing.address }}</span>
+        <span><strong>Name:</strong> {{ props.billing.fullname }} ></span>
+        <span><strong>Bill Number:</strong> {{ props.billing.bill_no }}</span>
+        <span><strong>Book:</strong> {{ props.billing.book }}</span>
         <span><strong>Meter No:</strong> {{ props.billing.mtr_no }} </span>
         <span><strong>Stub out:</strong> 2616352</span>
         <span
@@ -68,18 +63,19 @@ console.log(props.billing);
         >
         <div class="flex flex-col gap-1">
           <h1 class="font-semibold">Reading</h1>
-          <span><strong>Pre Reading:</strong>{{ props.billing.prereading }}</span>
+          <span
+            ><strong>Pre Reading:</strong>{{ props.billing.prereading }}</span
+          >
           <span><strong>Current Reading:</strong> 3536</span>
           <span><strong>Consumption:</strong> 3536</span>
           <hr />
           <span><strong>Current Charge:</strong> 3536</span>
           <span
-            ><strong>Install Fee:</strong>
-            {{ props.billing.installfee }}</span
+            ><strong>Install Fee:</strong> {{ props.billing.installfee }}</span
           >
           <span
             ><strong>Water Bill Arrears:</strong>
-            {{ props.billing.arrears }}</span
+            {{ props.billing.arrearsamt }}</span
           >
           <span><strong>Total Amount Due:</strong> 3536</span>
           <span><strong>Until Due Date:</strong> 3536</span>

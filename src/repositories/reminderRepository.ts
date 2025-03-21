@@ -31,6 +31,9 @@ export const reminderRepository = {
     try {
       const { data, error } = await useFetch(`${API_URL}/api/reminders`, {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(payload),
       }).json<H3Response>();
 

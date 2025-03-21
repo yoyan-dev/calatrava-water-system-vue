@@ -48,12 +48,10 @@ const props = defineProps<{
         {{ props.resident.lastName }}</span
       >
       <span><strong>Bill Number:</strong> {{ props.billing.billNumber }}</span>
-      <span><strong>Address:</strong> {{ props.resident.address }}</span>
+      <span><strong>Book:</strong> {{ props.resident.book }}</span>
       <span><strong>Meter No:</strong> 2616352</span>
       <span><strong>Stub out:</strong> 2616352</span>
-      <span
-        ><strong>Class type:</strong> {{ props.resident.classification }}</span
-      >
+      <span><strong>Class type:</strong> {{ props.resident.classtype }}</span>
       <span
         ><strong>Billing Month:</strong> {{ props.billing.billingDate }}</span
       >

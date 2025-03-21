@@ -41,6 +41,7 @@ export const useResidentStore = defineStore('resident', () => {
 		residents.value = response?.data || [];
 		totalResidents.value = response?.total || 0;
 		isLoading.value = false;
+		console.log(residents.value)
 	}
 
 	async function fetchResident(uid: string) {

@@ -19,11 +19,11 @@ onMounted(async () => {
   store.fetchResident(user?.uid ?? "");
 
   if (store.resident?.billings && store.resident?.billings?.length > 1) {
-    const currentBill = store.resident?.billings[0].totalBill
-      ? store.resident?.billings[0].totalBill
+    const currentBill = store.resident?.billings[0].billamnt
+      ? store.resident?.billings[0].billamnt
       : 0;
-    const previousBill = store.resident?.billings[1].totalBill
-      ? store.resident?.billings[1].totalBill
+    const previousBill = store.resident?.billings[1].billamnt
+      ? store.resident?.billings[1].billamnt
       : 0;
     billIncreasePercentage.value =
       ((currentBill - previousBill) / previousBill) * 100;
@@ -73,7 +73,7 @@ watchEffect(() => {
               <div class="text-lg text-white">Current total bill</div>
               <div class="flex justify-between items-end">
                 <span class="text-xl font-bold text-surface-200">{{
-                  `₱ ${store.resident?.billings?.[0].totalBill}`
+                  `₱ ${store.resident?.billings?.[0].billamnt}`
                 }}</span>
                 <div
                   :class="{
