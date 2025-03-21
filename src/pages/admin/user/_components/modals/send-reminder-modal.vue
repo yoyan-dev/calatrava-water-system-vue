@@ -30,6 +30,7 @@ async function submit(payload: any) {
     detail: res.message,
     life: 3000,
   });
+  if (res.status == "success") dialogRef.value.close();
 }
 </script>
 <template>

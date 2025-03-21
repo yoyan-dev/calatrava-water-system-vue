@@ -42,8 +42,11 @@ export const useBillingStore = defineStore("billing", () => {
     isLoading.value = false;
   }
 
-  async function addBillings(payload: Billing[]): Promise<StoreResponse> {
-    const response = await billingRepository.addBillings(payload);
+  async function addBillings(payload: File): Promise<StoreResponse> {
+    isLoading.value = true;
+    const formData = new FormData();
+    formData.append("file", payload);
+    const response = await billingRepository.addBillings(formData);
     if (response?.statusCode == 200) {
       await fetchBillings();
       return {
@@ -52,6 +55,7 @@ export const useBillingStore = defineStore("billing", () => {
         statusMessage: response.statusMessage ?? "",
       };
     }
+    isLoading.value = false;
     return {
       status: "error",
       message: response?.message,

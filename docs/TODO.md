@@ -5,7 +5,7 @@
 - [x] Add ui in concern
 - [x] create a remiders UI in resident and admin
 - [ ] FINISH reminder feature
-- [ ] FINISH announcement feature
+- [x] FINISH announcement feature
 - [x] Create ledger page
 - [x] Create collection page
 - [x] Create Import csv for collection
