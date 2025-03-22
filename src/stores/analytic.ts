@@ -20,6 +20,7 @@ export const useAnalyticStore = defineStore('analytic', () => {
 			).json<H3Response>();
 
 			totals.value = response.value?.data;
+			console.log(totals.value);
 		} catch (error) {
 			console.log(error);
 		} finally {
