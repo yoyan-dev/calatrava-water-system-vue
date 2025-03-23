@@ -4,7 +4,7 @@
 - [x] Add real data to analytics
 - [x] Add ui in concern
 - [x] create a remiders UI in resident and admin
-- [ ] FINISH reminder feature
+- [x] FINISH reminder feature
 - [x] FINISH announcement feature
 - [x] Create ledger page
 - [x] Create collection page

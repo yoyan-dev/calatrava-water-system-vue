@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import type { Reminder } from "@/types/reminder";
 import { ref } from "vue";
-import type { Announcement } from "@/types/announcement";
 
-const props = defineProps<{ announcement: Announcement[] }>();
+const props = defineProps<{ reminders: Reminder[] }>();
 const responsiveOptions = ref([
   {
     breakpoint: "1400px",
@@ -28,8 +28,8 @@ const responsiveOptions = ref([
 </script>
 <template>
   <Carousel
-    v-if="props.announcement.length > 1"
-    :value="props.announcement"
+    v-if="props.reminders?.length > 1"
+    :value="props.reminders"
     :numVisible="1"
     :numScroll="1"
     :responsiveOptions="responsiveOptions"
@@ -37,10 +37,10 @@ const responsiveOptions = ref([
     :autoplayInterval="5000"
   >
     <template #item="slotProps">
-      <Message>
+      <Message severity="warn">
         <div>
           <h1 class="flex items-center gap-2">
-            <i class="pi pi-bell"></i> Announcement! {{ slotProps.data.type }}.
+            <i class="pi pi-bell"></i> Reminder!.
           </h1>
           <span class="font-normal">{{ slotProps.data.content }}</span>
         </div>
@@ -48,12 +48,16 @@ const responsiveOptions = ref([
     </template>
   </Carousel>
   <div class="p-2" v-else>
-    <Message v-for="announce in props.announcement" :key="announce.uid">
+    <Message
+      severity="warn"
+      v-for="reminder in props.reminders"
+      :key="reminder.uid"
+    >
       <div>
         <h1 class="flex items-center gap-2">
-          <i class="pi pi-bell"></i> Announcement! {{ announce.type }}.
+          <i class="pi pi-bell"></i> Reminder!.
         </h1>
-        <span class="font-normal">{{ announce.content }}</span>
+        <span class="font-normal">{{ reminder.content }}</span>
       </div>
     </Message>
   </div>

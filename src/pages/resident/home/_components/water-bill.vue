@@ -1,28 +1,28 @@
 <script setup lang="ts">
+import { onMounted } from "vue";
 import type { Resident } from "@/types/resident";
 import useFirebaseTimestamp from "@/composables/useFirebaseTimestamp";
 import { formatToPeso } from "@/composables/currencyFormat";
 import type { Timestamp } from "firebase/firestore";
 import PayBillModal from "./modals/pay-bill-modal.vue";
 import { getSeverity } from "@/composables/getSeverity";
+import { useReminderStore } from "@/stores/reminder";
+import Reminder from "./reminder.vue";
 
+const store = useReminderStore();
 const { formatTimestamp } = useFirebaseTimestamp();
 const props = defineProps<{
   resident: Resident;
 }>();
+
+onMounted(async () => {
+  await store.fetchReminders(props.resident.uid);
+  console.log(store.reminders);
+});
 </script>
 <template>
   <div>
-    <div class="py-2">
-      <Message severity="warn">
-        <div>
-          <h1 class="flex items-center gap-2">
-            <i class="pi pi-bell"></i> Reminder!.
-          </h1>
-          <span>Hapit na imong due date.</span>
-        </div>
-      </Message>
-    </div>
+    <Reminder :reminders="store.reminders" v-if="!store.isLoading" />
     <div class="bg-white p-5 border rounded-lg flex flex-col gap-3">
       <div class="flex justify-between">
         <h1 class="font-semibold text-xl">
@@ -47,7 +47,7 @@ const props = defineProps<{
       <div>
         <label class="text-surface-500">Bill Period</label><br />
         <span
-          >{{ formatTimestamp(props.resident.billings?.[0].prvmrDate) }} -
+          >{{ formatTimestamp(props.resident.billings?.[0].billDate) }} -
           {{ formatTimestamp(props.resident.billings?.[0].dueDate) }}</span
         >
       </div>
@@ -61,7 +61,7 @@ const props = defineProps<{
         <div>
           <label class="text-surface-500">Amount</label><br />
           <span>
-            {{ `₱ ${props.resident.billings?.[0].billamnt}` }}
+            {{ formatToPeso(props.resident.billings?.[0].billamnt) }}
           </span>
         </div>
       </div>

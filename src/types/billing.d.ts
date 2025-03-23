@@ -13,7 +13,7 @@ export interface Billing {
   discount?: string;
   paid?: string;
   verified?: string;
-  billamnt?: string;
+  billamnt?: any;
   arrearsamt?: string;
   mrrfdue?: string;
   waterusage?: string;
