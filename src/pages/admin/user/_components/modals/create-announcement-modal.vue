@@ -17,6 +17,7 @@ async function submit(payload: Announcement) {
     detail: res.message,
     life: 3000,
   });
+  visible.value = false;
 }
 </script>
 <template>

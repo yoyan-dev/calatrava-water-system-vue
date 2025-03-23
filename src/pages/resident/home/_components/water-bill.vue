@@ -16,13 +16,13 @@ const props = defineProps<{
 }>();
 
 onMounted(async () => {
-  await store.fetchReminders(props.resident.uid);
+  await store.fetchReminder(props.resident.uid);
   console.log(store.reminders);
 });
 </script>
 <template>
   <div>
-    <Reminder :reminders="store.reminders" v-if="!store.isLoading" />
+    <Reminder :reminders="store.reminder" v-if="!store.isLoading" />
     <div class="bg-white p-5 border rounded-lg flex flex-col gap-3">
       <div class="flex justify-between">
         <h1 class="font-semibold text-xl">

@@ -6,17 +6,25 @@ import type { Reminder } from "@/types/reminder";
 
 export const useReminderStore = defineStore("reminder", () => {
   const isLoading = ref(false);
-  const reminders = ref();
+  const reminders = ref<Reminder[]>([]);
+  const reminder = ref<Reminder>({});
   const searchQuery = ref<boolean>(true);
 
-  async function fetchReminders(uid: any) {
+  async function fetchReminders() {
     isLoading.value = true;
-    const response = await reminderRepository.fetchReminders({
+    const response = await reminderRepository.fetchReminders();
+    reminders.value = response?.data || [];
+    isLoading.value = false;
+  }
+
+  async function fetchReminder(uid: any) {
+    isLoading.value = true;
+    const response = await reminderRepository.fetchReminder({
       uid: uid,
       params: { isAll: searchQuery.value },
     });
 
-    reminders.value = response?.data || [];
+    reminder.value = response?.data || [];
     isLoading.value = false;
   }
 
@@ -43,7 +51,9 @@ export const useReminderStore = defineStore("reminder", () => {
   return {
     isLoading,
     reminders,
+    reminder,
     fetchReminders,
+    fetchReminder,
     addReminder,
   };
 });

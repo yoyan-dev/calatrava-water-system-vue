@@ -6,10 +6,14 @@ import { useAnalyticStore } from "@/stores/analytic";
 import { formatToPeso } from "@/composables/currencyFormat";
 import { useAnnouncementStore } from "@/stores/announcement";
 import Announcement from "./_components/announcement.vue";
+import Reminders from "./_components/reminders.vue";
 import { formatNumberWithCommas } from "@/composables/formatNumber";
+import { useReminderStore } from "@/stores/reminder";
+import { formatDate } from "@/composables/formatDate";
 
 const analyticStore = useAnalyticStore();
 const announcementStore = useAnnouncementStore();
+const reminderStore = useReminderStore();
 
 const barData = [
   { x: 1, y: 10, y1: 20, y2: 30 },
@@ -28,6 +32,7 @@ const lineData = [
 onMounted(() => {
   analyticStore.fetchTotals();
   announcementStore.fetchAnnouncements();
+  reminderStore.fetchReminders();
 });
 </script>
 
@@ -100,69 +105,40 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <div class="flex flex-wrap gap-10">
+    <div v-if="!reminderStore.isLoading && reminderStore.reminders?.length > 0">
+      <Reminders :reminders="reminderStore.reminders" />
+    </div>
+    <!-- <div class="flex flex-wrap gap-4">
       <div class="p-5 bg-white rounded-md border flex-1">
         <span class="py-2 font-semibold text-lg">Reminders</span>
         <hr />
         <div class="overflow-auto">
-          <div class="flex justify-between items-center py-2 border-b">
+          <div
+            class="py-2 border-b"
+            v-for="reminder in reminderStore.reminders"
+            :key="reminder.uid"
+          >
             <div>
-              <h2 class="font-semibold">Nenwell Era Due date</h2>
-              <span>March 1 - 5, 2025</span>
+              <div class="flex justify-between items-start">
+                <h2 class="font-semibold capitalize">{{ reminder.name }}</h2>
+                <div
+                  class="px-1 text-red-600 text-sm rounded-lg bg-red-200 text-end"
+                >
+                  due: {{ formatDate(reminder.dueDate) }}
+                </div>
+              </div>
+              <span class="text-sm text-gray-500">{{ reminder.content }}</span>
             </div>
-            <Tag value="upcomming" severity="warn" />
-          </div>
-          <div class="flex justify-between items-center py-2 border-b">
-            <div>
-              <h2 class="font-semibold">Nenwell Era Due date</h2>
-              <span>March 1 - 5, 2025</span>
-            </div>
-            <Tag value="upcomming" severity="warn" />
-          </div>
-          <div class="flex justify-between items-center py-2 border-b">
-            <div>
-              <h2 class="font-semibold">Nenwell Era Due date</h2>
-              <span>March 1 - 5, 2025</span>
-            </div>
-            <Tag value="upcomming" severity="warn" />
-          </div>
-          <div class="flex justify-between items-center py-2 border-b">
-            <div>
-              <h2 class="font-semibold">Nenwell Era Due date</h2>
-              <span>March 1 - 5, 2025</span>
-            </div>
-            <Tag value="upcomming" severity="warn" />
-          </div>
-          <div class="flex justify-between items-center py-2 border-b">
-            <div>
-              <h2 class="font-semibold">Nenwell Era Due date</h2>
-              <span>March 1 - 5, 2025</span>
-            </div>
-            <Tag value="upcomming" severity="warn" />
-          </div>
-          <div class="flex justify-between items-center py-2 border-b">
-            <div>
-              <h2 class="font-semibold">Nenwell Era Due date</h2>
-              <span>March 1 - 5, 2025</span>
-            </div>
-            <Tag value="upcomming" severity="warn" />
-          </div>
-          <div class="flex justify-between items-center py-2 border-b">
-            <div>
-              <h2 class="font-semibold">Nenwell Era Due date</h2>
-              <span>March 1 - 5, 2025</span>
-            </div>
-            <Tag value="upcomming" severity="warn" />
           </div>
         </div>
       </div>
-      <div class="flex flex-col gap-10 flex-1">
-        <div class="flex-1 shadow-sm border rounded-md p-5 bg-white">
-          <BarChart :data="barData" />
-        </div>
-        <div class="flex-1 shadow-sm border rounded-md p-5 bg-white">
-          <LineChart :data="lineData" />
-        </div>
+    </div> -->
+    <div class="flex gap-4">
+      <div class="flex-1 shadow-sm border rounded-md p-5 bg-white">
+        <BarChart :data="barData" />
+      </div>
+      <div class="flex-1 shadow-sm border rounded-md p-5 bg-white">
+        <LineChart :data="lineData" />
       </div>
     </div>
   </div>

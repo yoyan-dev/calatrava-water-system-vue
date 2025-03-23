@@ -60,6 +60,22 @@ function onFileSelect(event: any) {
           <Password placeholder="Password" :feedback="false" toggleMask />
         </InputGroup>
       </div>
+      <div>
+        <label for="password">Confirm password</label><br />
+        <InputGroup>
+          <InputGroupAddon>
+            <i class="pi pi-lock"></i>
+          </InputGroupAddon>
+          <Password
+            placeholder="confirm password"
+            :feedback="false"
+            toggleMask
+          />
+        </InputGroup>
+      </div>
+      <div>
+        <Button label="Update" />
+      </div>
     </div>
   </div>
 </template>

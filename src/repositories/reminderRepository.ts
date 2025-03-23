@@ -6,7 +6,17 @@ import camelize from "camelize";
 const API_URL = import.meta.env.VITE_API_URL;
 
 export const reminderRepository = {
-  async fetchReminders({
+  async fetchReminders() {
+    const url = `${API_URL}/api/reminders/`;
+    try {
+      const { data: response } = await useFetch(url).json<H3Response>();
+      return camelize(response.value);
+    } catch (error) {
+      console.error("Error fetching reminders:", error);
+      return { data: [], total: 0 };
+    }
+  },
+  async fetchReminder({
     uid,
     params,
   }: {
@@ -23,7 +33,7 @@ export const reminderRepository = {
       return camelize(response.value);
     } catch (error) {
       console.error("Error fetching reminders:", error);
-      return { data: [], total: 0 };
+      return { data: {}, total: 0 };
     }
   },
 
