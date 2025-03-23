@@ -27,7 +27,7 @@ async function onSubmit() {
     return;
   }
   const res = await store.updateResident(
-    { fullname: resident.value.fullname, address: resident.value.address },
+    { fullname: resident.value.fullname, book: resident.value.book },
     resident.value.uid!
   );
   toast.add({
@@ -73,16 +73,16 @@ function onClose() {
           </div>
         </div>
         <div>
-          <label for="name" class="block mb-3">Address</label>
+          <label for="name" class="block mb-3">Book</label>
           <InputText
             id="name"
-            v-model.trim="resident.address"
+            v-model.trim="resident.book"
             autofocus
-            :invalid="isSubmitted && !resident.address"
+            :invalid="isSubmitted && !resident.book"
             fluid
           />
-          <small v-if="isSubmitted && !resident.address" class="text-red-500"
-            >Address is required.</small
+          <small v-if="isSubmitted && !resident.book" class="text-red-500"
+            >Book is required.</small
           >
         </div>
       </div>

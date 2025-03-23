@@ -1,30 +1,21 @@
 <script setup lang="ts">
 	import { ref, onMounted, watch, watchEffect } from 'vue';
 	import WaterBill from './_components/water-bill.vue';
-	import { getCurrentUser, useCurrentUser } from 'vuefire';
+	import { getCurrentUser } from 'vuefire';
 	import { useResidentStore } from '@/stores/resident';
-	import { useRouter } from 'vue-router';
 
 	const store = useResidentStore();
 	const billIncreasePercentage = ref(0);
-	const router = useRouter();
 
 	onMounted(async () => {
 		store.isLoading = true;
 		const user = await getCurrentUser();
-		if (!user) {
-			router.replace('/auth');
-		}
 
 		store.fetchResident(user?.uid ?? '');
 
 		if (store.resident?.billings && store.resident?.billings?.length > 1) {
-			const currentBill = store.resident?.billings[0].totalBill
-				? store.resident?.billings[0].totalBill
-				: 0;
-			const previousBill = store.resident?.billings[1].totalBill
-				? store.resident?.billings[1].totalBill
-				: 0;
+			const currentBill = Number(store.resident?.billings[0].billamnt) || 0;
+			const previousBill = Number(store.resident?.billings[1].billamnt) || 0;
 			billIncreasePercentage.value =
 				((currentBill - previousBill) / previousBill) * 100;
 		}
@@ -61,7 +52,7 @@
 								{{ store.resident?.fullname }}
 							</h2>
 							<p class="text-sm text-gray-500">
-								{{ store.resident?.accountNumber }}
+								{{ store.resident?.uid }}
 							</p>
 						</div>
 					</div>
@@ -73,16 +64,16 @@
 					<div>
 						<h2 class="text-lg font-semibold">Analytics</h2>
 						<div
-							class="max-w-96 flex flex-col gap-3 border border-primary rounded-md p-3 mt-3">
-							<div class="text-lg">Current total bill</div>
+							class="max-w-96 flex flex-col gap-3 border border-primary rounded-md p-3 mt-3 bg-gradient-to-b from-primary-800 to-primary-500">
+							<div class="text-lg text-white">Current total bill</div>
 							<div class="flex justify-between items-end">
-								<span class="text-xl font-bold text-surface-500">{{
-									`₱ ${store.resident?.billings?.[0].totalBill}`
+								<span class="text-xl font-bold text-surface-200">{{
+									`₱ ${store.resident?.billings?.[0].billamnt}`
 								}}</span>
 								<div
 									:class="{
-										'text-red-500': billIncreasePercentage > 0,
-										'text-green-500': billIncreasePercentage <= 0,
+										'text-red-200': billIncreasePercentage > 0,
+										'text-green-200': billIncreasePercentage <= 0,
 									}">
 									<span>
 										<i
@@ -106,11 +97,6 @@
 			</div>
 			<div
 				class="lg:flex-1 md:flex-1 bg-gray-50 rounded-md p-1 md:p-3 lg:p-5 flex flex-col gap-5">
-				<div class="card bg-white border rounded-md">
-					<div>
-						<h1 class="text-xl text-center">Current bill</h1>
-					</div>
-				</div>
 				<div v-if="!store.resident?.billings">
 					<div class="flex justify-center items-center h-96">
 						<div class="text-center">

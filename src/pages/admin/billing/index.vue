@@ -106,32 +106,59 @@ watchEffect(() => console.log(store.billings));
             </div>
           </template>
           <Column
+            class="whitespace-nowrap text-ellipsis"
             selectionMode="multiple"
             style="width: 3rem"
             :exportable="false"
           ></Column>
-          <Column expander style="width: 5rem" />
-          <Column header="Bill No." field="billNo"> </Column>
-          <Column field="accountno" header="AccountNumber"></Column>
-          <Column field="billDate" header="Billing Date"> </Column>
-          <Column field="waterBill" header="Water Bill">
+          <Column
+            class="whitespace-nowrap text-ellipsis"
+            expander
+            style="width: 5rem"
+          />
+          <Column
+            class="whitespace-nowrap text-ellipsis"
+            header="Bill No."
+            field="billNo"
+          >
+          </Column>
+          <Column
+            class="whitespace-nowrap text-ellipsis"
+            field="accountno"
+            header="AccountNumber"
+          ></Column>
+          <Column
+            class="whitespace-nowrap text-ellipsis"
+            field="billDate"
+            header="Billing Date"
+          >
+          </Column>
+          <Column
+            class="whitespace-nowrap text-ellipsis"
+            field="waterBill"
+            header="Water Bill"
+          >
             <template #body="slotProps">
               <span class="rounded-md text-primary">
                 <i name="pi pi-money-bill"></i
-                >{{ `₱ ${slotProps.data.totalBill}` }}
+                >{{ `₱ ${slotProps.data.billamnt}` }}
               </span>
             </template>
           </Column>
-          <Column field="address" header="Area"></Column>
-          <Column header="Status">
+          <Column
+            class="whitespace-nowrap text-ellipsis"
+            field="book"
+            header="Book"
+          ></Column>
+          <Column class="whitespace-nowrap text-ellipsis" header="Status">
             <template #body="slotProps">
               <Tag
-                :severity="getSeverity(slotProps.data.status)"
-                :value="slotProps.data.status"
+                :severity="getSeverity(slotProps.data.bStatus)"
+                :value="slotProps.data.bStatus"
               ></Tag>
             </template>
           </Column>
-          <Column header="Actions">
+          <Column class="whitespace-nowrap text-ellipsis" header="Actions">
             <template #body="slotProps">
               <Button
                 type="button"
@@ -145,130 +172,152 @@ watchEffect(() => console.log(store.billings));
           <template #expansion="slotProps">
             <div class="p-4">
               <h5 class="font-semibold">Bill#{{ slotProps.data.billNo }}</h5>
-              <div class="flex gap-5 justify-between">
+              <div class="flex gap-5">
                 <div class="flex-1 flex flex-col p-3 border rounded-md">
-                  <div class="flex-1 flex justify-between items-end gap-3">
-                    Account No.:
-                    <span class="text-gray-500 text-left">{{
-                      slotProps.data.accountno
-                    }}</span>
-                  </div>
-                  <div class="flex-1 flex justify-between items-end gap-3">
-                    Address:
-                    <span class="text-gray-500 text-left">{{
-                      slotProps.data.address
-                    }}</span>
-                  </div>
-                  <div class="flex-1 flex justify-between items-end gap-3">
-                    Arrears:
-                    <span class="text-gray-500 text-left">{{
-                      slotProps.data.arrears
-                    }}</span>
-                  </div>
-                  <div class="flex-1 flex justify-between items-end gap-3">
-                    Average use:
-                    <span class="text-gray-500 text-left">{{
-                      slotProps.data.averageuse
-                    }}</span>
-                  </div>
-                  <div class="flex-1 flex justify-between items-end gap-3">
-                    Bill Date:
-                    <span class="text-gray-500 text-left">{{
-                      slotProps.data.billDate
-                    }}</span>
-                  </div>
-                </div>
-                <div class="flex-1 flex flex-col p-3 border rounded-md">
-                  <div class="flex-1 flex justify-between items-end gap-3">
-                    Bill No.:
+                  <h5 class="font-semibold mb-3">Billing Details</h5>
+                  <div class="flex justify-between items-end gap-3">
+                    <span>Bill No.:</span>
                     <span class="text-gray-500">{{
                       slotProps.data.billNo
                     }}</span>
                   </div>
-                  <div class="flex-1 flex justify-between items-end gap-3">
-                    Route No.:
+                  <div class="flex justify-between items-end gap-3">
+                    <span>Account No.:</span>
                     <span class="text-gray-500">{{
-                      slotProps.data.cRouteNo
+                      slotProps.data.accountno
                     }}</span>
                   </div>
-                  <div class="flex-1 flex justify-between items-end gap-3">
-                    Statdesc:
+                  <div class="flex justify-between items-end gap-3">
+                    <span>Book:</span>
+                    <span class="text-gray-500">{{ slotProps.data.book }}</span>
+                  </div>
+                  <div class="flex justify-between items-end gap-3">
+                    <span>Billing Date:</span>
                     <span class="text-gray-500">{{
-                      slotProps.data.cStatdesc
+                      slotProps.data.billDate
                     }}</span>
                   </div>
-                  <div class="flex-1 flex justify-between items-end gap-3">
-                    c_type:
-                    <span class="text-gray-500">{{
-                      slotProps.data.cType
-                    }}</span>
-                  </div>
-                  <div class="flex-1 flex justify-between items-end gap-3">
-                    Disconnection Date:
-                    <span class="text-gray-500">{{
-                      slotProps.data.disconDat
-                    }}</span>
-                  </div>
-                </div>
-                <div class="flex-1 flex flex-col p-3 border rounded-md">
-                  <div class="flex-1 flex justify-between items-end gap-3">
-                    Due Date:
+                  <div class="flex justify-between items-end gap-3">
+                    <span>Due Date:</span>
                     <span class="text-gray-500">{{
                       slotProps.data.dueDate
                     }}</span>
                   </div>
-                  <div class="flex-1 flex justify-between items-end gap-3">
-                    Install Fee:
+                  <div class="flex justify-between items-end gap-3">
+                    <span>Disconnection Date:</span>
                     <span class="text-gray-500">{{
-                      slotProps.data.installfee
-                    }}</span>
-                  </div>
-                  <div class="flex-1 flex justify-between items-end gap-3">
-                    Meter Code:
-                    <span class="text-gray-500">{{
-                      slotProps.data.metercode
-                    }}</span>
-                  </div>
-                  <div class="flex-1 flex justify-between items-end gap-3">
-                    Mrrf:
-                    <span class="text-gray-500">{{ slotProps.data.mrrf }}</span>
-                  </div>
-                  <div class="flex-1 flex justify-between items-end gap-3">
-                    Meter No.:
-                    <span class="text-gray-500">{{
-                      slotProps.data.mtrNo
+                      slotProps.data.disconDate
                     }}</span>
                   </div>
                 </div>
                 <div class="flex-1 flex flex-col p-3 border rounded-md">
-                  <div class="flex-1 flex justify-between items-end gap-3">
-                    Pre Reading:
+                  <h5 class="font-semibold mb-3">Charges</h5>
+                  <div class="flex justify-between items-end gap-3">
+                    <span>Water Bill:</span>
+                    <span class="text-gray-500">{{
+                      slotProps.data.billamnt
+                    }}</span>
+                  </div>
+                  <div class="flex justify-between items-end gap-3">
+                    <span>Arrears Amount:</span>
+                    <span class="text-gray-500">{{
+                      slotProps.data.arrearsamt
+                    }}</span>
+                  </div>
+                  <div class="flex justify-between items-end gap-3">
+                    <span>Arrears Env:</span>
+                    <span class="text-gray-500">{{
+                      slotProps.data.arrearsenv
+                    }}</span>
+                  </div>
+                  <div class="flex justify-between items-end gap-3">
+                    <span>Due Penalty:</span>
+                    <span class="text-gray-500">{{
+                      slotProps.data.duePenalty
+                    }}</span>
+                  </div>
+                  <div class="flex justify-between items-end gap-3">
+                    <span>Meter Penalty:</span>
+                    <span class="text-gray-500">{{
+                      slotProps.data.mPenalty
+                    }}</span>
+                  </div>
+                  <div class="flex justify-between items-end gap-3">
+                    <span>Discount:</span>
+                    <span class="text-gray-500">{{
+                      slotProps.data.discount
+                    }}</span>
+                  </div>
+                </div>
+                <div class="flex-1 flex flex-col p-3 border rounded-md">
+                  <h5 class="font-semibold mb-3">Meter Details</h5>
+                  <div class="flex justify-between items-end gap-3">
+                    <span>Meter No.:</span>
+                    <span class="text-gray-500">{{
+                      slotProps.data.mtrNo
+                    }}</span>
+                  </div>
+                  <div class="flex justify-between items-end gap-3">
+                    <span>Current Reading:</span>
+                    <span class="text-gray-500">{{
+                      slotProps.data.curreading
+                    }}</span>
+                  </div>
+                  <div class="flex justify-between items-end gap-3">
+                    <span>Previous Reading:</span>
                     <span class="text-gray-500">{{
                       slotProps.data.prereading
                     }}</span>
                   </div>
-                  <div class="flex-1 flex justify-between items-end gap-3">
-                    Prorated:
+                  <div class="flex justify-between items-end gap-3">
+                    <span>Water Usage:</span>
                     <span class="text-gray-500">{{
-                      slotProps.data.prorated
+                      slotProps.data.waterusage
                     }}</span>
                   </div>
-                  <div class="flex-1 flex justify-between items-end gap-3">
-                    Prvmr_date:
+                  <div class="flex justify-between items-end gap-3">
+                    <span>Previous Usage:</span>
                     <span class="text-gray-500">{{
-                      slotProps.data.prvmrDate
+                      slotProps.data.prevused
                     }}</span>
                   </div>
-                  <div class="flex-1 flex justify-between items-end gap-3">
-                    Res2:
-                    <span class="text-gray-500">{{ slotProps.data.res2 }}</span>
+                </div>
+                <div class="flex-1 flex flex-col p-3 border rounded-md">
+                  <h5 class="font-semibold mb-3">Additional Information</h5>
+                  <div class="flex justify-between items-end gap-3">
+                    <span>Class Type:</span>
+                    <span class="text-gray-500">{{
+                      slotProps.data.classtype
+                    }}</span>
+                  </div>
+                  <div class="flex justify-between items-end gap-3">
+                    <span>Barangay:</span>
+                    <span class="text-gray-500">{{
+                      slotProps.data.billbrgy
+                    }}</span>
+                  </div>
+                  <div class="flex justify-between items-end gap-3">
+                    <span>Purok:</span>
+                    <span class="text-gray-500">{{
+                      slotProps.data.billpurok
+                    }}</span>
+                  </div>
+                  <div class="flex justify-between items-end gap-3">
+                    <span>Verified:</span>
+                    <span class="text-gray-500">{{
+                      slotProps.data.verified
+                    }}</span>
+                  </div>
+                  <div class="flex justify-between items-end gap-3">
+                    <span>Paid:</span>
+                    <span class="text-gray-500">{{ slotProps.data.paid }}</span>
                   </div>
                 </div>
               </div>
               <!-- <DataTable :value="slotProps.data.orders">
-								<Column field="id" header="Id" sortable></Column>
-								<Column field="customer" header="Customer" sortable></Column>
-								<Column field="date" header="Date" sortable></Column>
+								<Column class="whitespace-nowrap text-ellipsis" field="id" header="Id" sortable></Column>
+								<Column class="whitespace-nowrap text-ellipsis" field="customer" header="Customer" sortable></Column>
+								<Column class="whitespace-nowrap text-ellipsis" field="date" header="Date" sortable></Column>
 							</DataTable> -->
             </div>
           </template>

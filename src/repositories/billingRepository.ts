@@ -35,14 +35,11 @@ export const billingRepository = {
 		}
 	},
 
-	async addBillings(payload: any[]) {
+	async addBillings(payload: FormData) {
 		try {
 			const { data, error } = await useFetch(`${API_URL}/api/billings`, {
 				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(payload),
+				body: payload,
 			}).json<H3Response<Billing[]>>();
 
 			if (error.value) {

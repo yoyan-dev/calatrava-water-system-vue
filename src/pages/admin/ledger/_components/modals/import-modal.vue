@@ -19,7 +19,6 @@ async function onSubmit() {
     });
     return;
   }
-
   isUploading.value = true;
   const res = await store.addLedgers(selectedFile.value);
   toast.add({
@@ -55,7 +54,7 @@ function onFileSelect(event: any) {
       severity="secondary"
     />
     <p class="text-sm text-gray-500 mt-2">
-      Note: Please ensure the CSV file has no more than 2000 rows.
+      Note: Please ensure the CSV file has no more than 3000 rows.
     </p>
     <template #footer>
       <Button

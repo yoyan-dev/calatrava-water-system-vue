@@ -85,21 +85,25 @@ function hidePopover() {
           </div>
         </template>
         <Column
+          class="whitespace-nowrap text-ellipsis"
           selectionMode="multiple"
-          style="width: 3rem"
           :exportable="false"
         ></Column>
-        <column header="id" field="id">
+        <Column class="whitespace-nowrap text-ellipsis" header="id" field="id">
           <template #body="slotProps"
             ><span>{{ slotProps.data.id }}</span></template
           >
-        </column>
-        <Column field="uid" header="Account No.">
+        </Column>
+        <Column
+          class="whitespace-nowrap text-ellipsis"
+          field="uid"
+          header="Account No."
+        >
           <template #body="slotProps">
             <div class="flex w-[20vh]">{{ slotProps.data.uid }}</div>
           </template>
         </Column>
-        <Column header="Name">
+        <Column class="whitespace-nowrap text-ellipsis" header="Name">
           <template #body="slotProps">
             <div class="font-semibold capitalize w-[45vh]">
               <Avatar icon="pi pi-user" class="mr-2" size="normal" />
@@ -107,17 +111,25 @@ function hidePopover() {
             </div>
           </template>
         </Column>
-        <Column class="capitalize" field="address" header="Address">
+        <Column
+          class="whitespace-nowrap text-ellipsis capitalize"
+          field="book"
+          header="Book"
+        >
           <template #body="slotProps">
-            <div class="flex w-[25vh]">{{ slotProps.data.address }}</div>
+            <div class="flex w-[25vh]">{{ slotProps.data.book }}</div>
           </template>
         </Column>
         <Column
-          field="classification"
+          class="whitespace-nowrap text-ellipsis capitalize"
+          field="classtype"
           header="Classification"
-          class="capitalize"
         ></Column>
-        <Column :exportable="false" header="Actions">
+        <Column
+          class="whitespace-nowrap text-ellipsis"
+          :exportable="false"
+          header="Actions"
+        >
           <template #body="slotProps">
             <Button
               type="button"

@@ -95,17 +95,17 @@ async function onSubmit() {
             >
           </div>
           <div>
-            <label for="name" class="block mb-1">Address</label>
+            <label for="name" class="block mb-1">Book</label>
             <InputText
               id="name"
-              v-model.trim="resident.address"
+              v-model.trim="resident.book"
               variant="filled"
               autofocus
-              :invalid="isSubmitted && !resident.address"
+              :invalid="isSubmitted && !resident.book"
               fluid
             />
-            <small v-if="isSubmitted && !resident.address" class="text-red-500"
-              >Address is required.</small
+            <small v-if="isSubmitted && !resident.book" class="text-red-500"
+              >Book is required.</small
             >
           </div>
         </div>
