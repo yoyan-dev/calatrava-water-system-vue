@@ -17,11 +17,6 @@ onMounted(() => {
   reminder.name = data.value.fullname;
 });
 
-onMounted(async () => {
-  await store.fetchReminders(data.value.uid);
-  console.log(store.reminders);
-});
-
 async function submit(payload: any) {
   const res = await store.addReminder(payload);
   toast.add({
