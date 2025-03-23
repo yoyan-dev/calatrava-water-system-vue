@@ -6,6 +6,7 @@ import { useAnalyticStore } from "@/stores/analytic";
 import { formatToPeso } from "@/composables/currencyFormat";
 import { useAnnouncementStore } from "@/stores/announcement";
 import Announcement from "./_components/announcement.vue";
+import { formatNumberWithCommas } from "@/composables/formatNumber";
 
 const analyticStore = useAnalyticStore();
 const announcementStore = useAnnouncementStore();
@@ -58,7 +59,7 @@ onMounted(() => {
             style="font-size: 1rem"
           ></i>
           <div class="text-2xl text-surface-300" v-else>
-            {{ analyticStore.totals?.residents }}
+            {{ formatNumberWithCommas(analyticStore.totals?.residents) }}
           </div>
         </div>
         <div
@@ -76,7 +77,7 @@ onMounted(() => {
             style="font-size: 1rem"
           ></i>
           <div class="text-2xl text-surface-300" v-else>
-            ₱ {{ analyticStore.totals?.totalIncome }}
+            {{ formatToPeso(analyticStore.totals?.totalIncome) }}
           </div>
         </div>
         <div
@@ -94,7 +95,7 @@ onMounted(() => {
             style="font-size: 1rem"
           ></i>
           <div class="text-2xl text-surface-300" v-else>
-            ₱ {{ analyticStore.totals?.currentMonthIncome }}
+            {{ formatToPeso(analyticStore.totals?.currentMonthIncome) }}
           </div>
         </div>
       </div>

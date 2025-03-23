@@ -1,18 +1,23 @@
 <script setup lang="ts">
 import { ref, onMounted, watchEffect } from "vue";
 import Header from "./_components/header.vue";
-import { useLedgerStore } from "@/stores/ledger";
+import { useResidentStore } from "@/stores/resident";
+import { useRouter } from "vue-router";
+import { useCurrentUser } from "vuefire";
 
-const store = useLedgerStore();
+const store = useResidentStore();
 // const selectedCollection = ref([]);
-const menu = ref<any[]>([]);
+const user = useCurrentUser() as any;
+const router = useRouter();
 
-function onToggled(event: Event, index: number) {
-  menu.value[index].toggle(event);
-}
-
-onMounted(() => {
-  store.fetchLedgers();
+onMounted(async () => {
+  if (!user.value) {
+    console.log("No user is signed in.");
+    router.push("/");
+    return;
+  }
+  const residentId = user.value.uid;
+  await store.fetchResidentLedgers(residentId as string);
 });
 </script>
 
@@ -20,7 +25,7 @@ onMounted(() => {
   <div
     class="bg-surface-0 dark:bg-surface-900 p-4 py-6 md:p-6 border rounded-lg"
   >
-    <Header :totalLedgers="store.totalLedgers" />
+    <Header :totalLedgers="store.ledgers?.length" />
     <div class="flex flex-col gap-3">
       <div class="border rounded-md">
         <DataTable

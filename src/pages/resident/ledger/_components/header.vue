@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{
-  totalLedgers: number;
+  totalLedgers: any;
 }>();
 </script>
 <template>

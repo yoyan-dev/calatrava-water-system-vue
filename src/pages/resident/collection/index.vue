@@ -1,15 +1,25 @@
 <script setup lang="ts">
 import { ref, onMounted, watchEffect } from "vue";
 import Header from "./_components/header.vue";
-import { useCollectionStore } from "@/stores/collection";
+import { useResidentStore } from "@/stores/resident";
+import { useRouter } from "vue-router";
+import { useCurrentUser } from "vuefire";
 
-const store = useCollectionStore();
+const store = useResidentStore();
 // const selectedCollection = ref([]);
+const user = useCurrentUser() as any;
+const router = useRouter();
 const menu = ref<any[]>([]);
 const expandedRows = ref({});
 
-onMounted(() => {
-  store.fetchCollections();
+onMounted(async () => {
+  if (!user.value) {
+    console.log("No user is signed in.");
+    router.push("/");
+    return;
+  }
+  const residentId = user.value.uid;
+  await store.fetchResidentCollections(residentId as string);
 });
 </script>
 
@@ -17,7 +27,7 @@ onMounted(() => {
   <div
     class="bg-surface-0 dark:bg-surface-900 p-4 py-6 md:p-6 border rounded-lg"
   >
-    <Header :totalCollections="store.totalCollections" />
+    <Header :totalCollections="store.collections?.length" />
     <div class="flex flex-col gap-3">
       <div class="border rounded-md">
         <DataTable

@@ -12,7 +12,6 @@ const auth = useFirebaseAuth()!;
 const logoutUser = async () => {
   try {
     await signOut(auth);
-    router.push("/admin");
     console.log("User logged out successfully");
   } catch (err) {
     console.error("Error logging out:", err);
@@ -55,6 +54,12 @@ const items = ref([
     name: "admin-concerns",
     icon: "pi pi-inbox",
     route: "/admin/concerns",
+  },
+  {
+    label: "Setting",
+    name: "admin-setting",
+    icon: "pi pi-cog",
+    route: "/admin/setting",
   },
 ]);
 </script>

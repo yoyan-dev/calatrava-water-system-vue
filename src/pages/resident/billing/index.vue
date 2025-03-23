@@ -5,6 +5,7 @@ import { useResidentStore } from "@/stores/resident";
 import { useRoute, useRouter } from "vue-router";
 import { useCurrentUser } from "vuefire";
 import { getSeverity } from "@/composables/getSeverity";
+import { formatToPeso } from "@/composables/currencyFormat";
 
 const router = useRouter();
 const user = useCurrentUser() as any;
@@ -85,9 +86,7 @@ onMounted(async () => {
             <template #body="slotProps">
               <span class="rounded-md text-primary">
                 <i name="pi pi-money-bill"></i
-                >{{
-                  `₱ ${slotProps.data.billamnt ? slotProps.data.billamnt : 0}`
-                }}
+                >{{ formatToPeso(slotProps.data.billamnt) }}
               </span>
             </template>
           </Column>

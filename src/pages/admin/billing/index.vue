@@ -13,6 +13,7 @@ import ImportModal from "./_components/modals/import-modal.vue";
 import { getSeverity } from "@/composables/getSeverity";
 import { useDialog } from "primevue";
 import type { Billing } from "@/types/billing";
+import { formatToPeso } from "@/composables/currencyFormat";
 
 const ViewReciept = defineAsyncComponent(
   () => import("@/pages/admin/billing/_components/modals/view-reciept.vue")
@@ -141,7 +142,7 @@ watchEffect(() => console.log(store.billings));
             <template #body="slotProps">
               <span class="rounded-md text-primary">
                 <i name="pi pi-money-bill"></i
-                >{{ `₱ ${slotProps.data.billamnt}` }}
+                >{{ formatToPeso(slotProps.data.billamnt) }}
               </span>
             </template>
           </Column>

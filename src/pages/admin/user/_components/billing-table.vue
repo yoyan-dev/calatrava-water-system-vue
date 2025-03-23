@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue";
 import { useResidentStore } from "@/stores/resident";
 import { getSeverity } from "@/composables/getSeverity";
+import { formatToPeso } from "@/composables/currencyFormat";
 
 const store = useResidentStore();
 const expandedRows = ref({});
@@ -56,7 +57,7 @@ onMounted(() => {
         <template #body="slotProps">
           <span class="rounded-md text-primary">
             <i name="pi pi-money-bill"></i
-            >{{ `₱ ${slotProps.data.billamnt ? slotProps.data.billamnt : 0}` }}
+            >{{ formatToPeso(slotProps.data.billamnt) }}
           </span>
         </template>
       </Column>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{
-  totalCollections: number;
+  totalCollections: any;
 }>();
 </script>
 <template>
