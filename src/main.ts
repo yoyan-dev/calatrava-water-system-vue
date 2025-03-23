@@ -46,7 +46,10 @@ import {
   Button,
   Password,
   Image,
+  InputGroup,
+  InputGroupAddon,
 } from "primevue";
+
 import {
   browserLocalPersistence,
   getAuth,
@@ -107,6 +110,8 @@ app.component("Message", Message);
 app.component("FloatLabel", FloatLabel);
 app.component("Password", Password);
 app.component("Image", Image);
+app.component("InputGroup", InputGroup);
+app.component("InputGroupAddon", InputGroupAddon);
 
 app.use(createPinia());
 app.use(router);
