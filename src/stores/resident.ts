@@ -18,11 +18,15 @@ import type { StoreResponse } from "@/types/store-response";
 import type { H3Response } from "@/types/h3response";
 import { useFetch, watchDebounced } from "@vueuse/core";
 import { residentRepository } from "@/repositories/residentRepository";
+import type { Ledger } from "@/types/ledger";
+import type { Collection } from "@/types/collection";
 
 export const useResidentStore = defineStore("resident", () => {
   const db = useFirestore();
   const residents = ref<Resident[]>([]);
   const resident = ref<Resident>();
+  const ledgers = ref<Ledger[]>([]);
+  const collections = ref<Collection[]>([]);
   const isLoading = ref(false);
   const totalResidents = ref(0);
   const searchQuery = ref("");
@@ -47,8 +51,24 @@ export const useResidentStore = defineStore("resident", () => {
   async function fetchResident(uid: string) {
     isLoading.value = true;
     const response = await residentRepository.fetchResident(uid);
-    resident.value = response;
-    console.log(response);
+    resident.value = response?.data;
+    console.log(response?.data);
+    isLoading.value = false;
+  }
+
+  async function fetchResidentLedgers(uid: string) {
+    isLoading.value = true;
+    const response = await residentRepository.fetchResidentLedgers(uid);
+    ledgers.value = response?.data;
+    console.log(response?.data);
+    isLoading.value = false;
+  }
+
+  async function fetchResidentCollections(uid: string) {
+    isLoading.value = true;
+    const response = await residentRepository.fetchResidentCollections(uid);
+    collections.value = response?.data;
+    console.log(response?.data);
     isLoading.value = false;
   }
 
@@ -202,12 +222,16 @@ export const useResidentStore = defineStore("resident", () => {
   return {
     residents,
     resident,
+    ledgers,
+    collections,
     isLoading,
     totalResidents,
     searchQuery,
     filterAddress,
     page,
     fetchResident,
+    fetchResidentLedgers,
+    fetchResidentCollections,
     fetchResidents,
     addResident,
     deleteResident,

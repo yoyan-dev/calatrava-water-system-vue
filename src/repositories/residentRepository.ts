@@ -10,28 +10,37 @@ const API_URL = import.meta.env.VITE_API_URL;
 export const residentRepository = {
   async fetchResident(uid: string) {
     try {
-      const { data: residentResponse } = await useFetch(
+      const { data: response } = await useFetch(
         `${API_URL}/api/residents/${uid}`
       ).json<H3Response<Resident>>();
-      const { data: ledgerResponse } = await useFetch(
-        `${API_URL}/api/residents/ledger/${uid}`
-      ).json<H3Response<Ledger>>();
-      const { data: collectionResponse } = await useFetch(
-        `${API_URL}/api/residents/collection/${uid}`
-      ).json<H3Response<Collection>>();
-
-      const resident = camelize(residentResponse.value);
-      const ledger = camelize(ledgerResponse.value);
-      const collection = camelize(collectionResponse.value);
-
-      return {
-        ...resident?.data,
-        ledgers: ledger?.data,
-        collections: collection?.data,
-      };
+      return camelize(response.value);
     } catch (error) {
       console.error("Error fetching residents:", error);
       return { data: {} };
+    }
+  },
+
+  async fetchResidentLedgers(uid: string) {
+    try {
+      const { data: response } = await useFetch(
+        `${API_URL}/api/residents/ledger/${uid}`
+      ).json<H3Response<Ledger>>();
+      return camelize(response.value);
+    } catch (error) {
+      console.error("Error fetching residents:", error);
+      return { data: [] };
+    }
+  },
+
+  async fetchResidentCollections(uid: string) {
+    try {
+      const { data: response } = await useFetch(
+        `${API_URL}/api/residents/collection/${uid}`
+      ).json<H3Response<Collection>>();
+      return camelize(response.value);
+    } catch (error) {
+      console.error("Error fetching residents:", error);
+      return { data: [] };
     }
   },
 

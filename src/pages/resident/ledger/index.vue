@@ -17,7 +17,7 @@ onMounted(async () => {
     return;
   }
   const residentId = user.value.uid;
-  await store.fetchResident(residentId as string);
+  await store.fetchResidentLedgers(residentId as string);
 });
 </script>
 
@@ -25,11 +25,11 @@ onMounted(async () => {
   <div
     class="bg-surface-0 dark:bg-surface-900 p-4 py-6 md:p-6 border rounded-lg"
   >
-    <Header :totalLedgers="store.resident?.ledgers?.length" />
+    <Header :totalLedgers="store.ledgers?.length" />
     <div class="flex flex-col gap-3">
       <div class="border rounded-md">
         <DataTable
-          :value="store.resident?.ledgers"
+          :value="store.ledgers"
           :loading="store.isLoading"
           dataKey="uid"
           size="small"
