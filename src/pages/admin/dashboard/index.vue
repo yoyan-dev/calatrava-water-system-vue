@@ -37,13 +37,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    v-if="
-      !announcementStore.isLoading && announcementStore.announcement?.length > 0
-    "
-  >
-    <Announcement :announcement="announcementStore.announcement" />
-  </div>
   <div class="p-5 bg-white rounded-md flex flex-col gap-5">
     <div class="text-2xl">Welcome! Admin</div>
     <div class="text-lg">Dashboard</div>
@@ -105,9 +98,6 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <div v-if="!reminderStore.isLoading && reminderStore.reminders?.length > 0">
-      <Reminders :reminders="reminderStore.reminders" />
-    </div>
     <!-- <div class="flex flex-wrap gap-4">
       <div class="p-5 bg-white rounded-md border flex-1">
         <span class="py-2 font-semibold text-lg">Reminders</span>
@@ -139,6 +129,23 @@ onMounted(() => {
       </div>
       <div class="flex-1 shadow-sm border rounded-md p-5 bg-white">
         <LineChart :data="lineData" />
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-4">
+      <div
+        class="flex-1"
+        v-if="!reminderStore.isLoading && reminderStore.reminders?.length > 0"
+      >
+        <Reminders :reminders="reminderStore.reminders" />
+      </div>
+      <div
+        class="flex-1"
+        v-if="
+          !announcementStore.isLoading &&
+          announcementStore.announcement?.length > 0
+        "
+      >
+        <Announcement :announcement="announcementStore.announcement" />
       </div>
     </div>
   </div>

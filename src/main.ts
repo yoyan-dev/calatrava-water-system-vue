@@ -48,6 +48,8 @@ import {
   Image,
   InputGroup,
   InputGroupAddon,
+  Badge,
+  OverlayBadge,
 } from "primevue";
 
 import {
@@ -112,6 +114,8 @@ app.component("Password", Password);
 app.component("Image", Image);
 app.component("InputGroup", InputGroup);
 app.component("InputGroupAddon", InputGroupAddon);
+app.component("Badge", Badge);
+app.component("OverlayBadge", OverlayBadge);
 
 app.use(createPinia());
 app.use(router);
