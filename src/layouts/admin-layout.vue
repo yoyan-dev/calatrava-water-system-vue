@@ -12,6 +12,7 @@ const auth = useFirebaseAuth()!;
 const logoutUser = async () => {
   try {
     await signOut(auth);
+    router.push("/auth/admin");
     console.log("User logged out successfully");
   } catch (err) {
     console.error("Error logging out:", err);

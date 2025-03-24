@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { Announcement } from "@/types/announcement";
+import ViewAnnouncement from "./modals/view-modal.vue";
 
 const props = defineProps<{ announcement: Announcement[] }>();
 
@@ -38,17 +39,7 @@ const responsiveOptions = ref([
     :autoplayInterval="5000"
   >
     <template #item="slotProps">
-      <div class="flex items-center w-full h-full">
-        <Message class="flex-1">
-          <div>
-            <h1 class="flex items-center gap-2">
-              <i class="pi pi-bell"></i> Announcement!
-              {{ slotProps.data.type }}.
-            </h1>
-            <span class="font-normal">{{ slotProps.data.content }}</span>
-          </div>
-        </Message>
-      </div>
+      <ViewAnnouncement :announcement="slotProps.data" />
     </template>
   </Carousel>
   <div class="p-2" v-else>
@@ -57,7 +48,9 @@ const responsiveOptions = ref([
         <h1 class="flex items-center gap-2">
           <i class="pi pi-bell"></i> Announcement! {{ announce.type }}.
         </h1>
-        <span class="font-normal">{{ announce.content }}</span>
+        <span class="font-normal">{{
+          announce.content?.substring(0, 10)
+        }}</span>
       </div>
     </Message>
   </div>

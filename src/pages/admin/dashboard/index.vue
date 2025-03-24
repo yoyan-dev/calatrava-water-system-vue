@@ -123,29 +123,33 @@ onMounted(() => {
         </div>
       </div>
     </div> -->
-    <div class="flex gap-4">
-      <div class="flex-1 shadow-sm border rounded-md p-5 bg-white">
+    <div class="flex flex-wrap gap-4">
+      <div
+        class="flex-1 w-screen md:w-auto shadow-sm border rounded-md p-5 bg-white"
+      >
         <BarChart :data="barData" />
       </div>
-      <div class="flex-1 shadow-sm border rounded-md p-5 bg-white">
+      <div
+        class="flex-1 w-screen md:w-auto shadow-sm border rounded-md p-5 bg-white"
+      >
         <LineChart :data="lineData" />
       </div>
     </div>
     <div class="flex flex-wrap gap-4">
       <div
-        class="flex-1"
-        v-if="!reminderStore.isLoading && reminderStore.reminders?.length > 0"
-      >
-        <Reminders :reminders="reminderStore.reminders" />
-      </div>
-      <div
-        class="flex-1"
+        class="flex-1 w-screen md:w-auto"
         v-if="
           !announcementStore.isLoading &&
           announcementStore.announcement?.length > 0
         "
       >
         <Announcement :announcement="announcementStore.announcement" />
+      </div>
+      <div
+        class="flex-1 w-screen md:w-auto"
+        v-if="!reminderStore.isLoading && reminderStore.reminders?.length > 0"
+      >
+        <Reminders :reminders="reminderStore.reminders" />
       </div>
     </div>
   </div>
