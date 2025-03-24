@@ -3,9 +3,10 @@ import { ref, onMounted, watchEffect } from "vue";
 import Header from "@/pages/admin/collection/_components/header.vue";
 import { useCollectionStore } from "@/stores/collection";
 import ImportModal from "./_components/modals/import-modal.vue";
+import DeleteSelected from "./_components/modals/delete-selected-modal.vue";
 
 const store = useCollectionStore();
-// const selectedCollection = ref([]);
+const selectedCollection = ref([]);
 const menu = ref<any[]>([]);
 const expandedRows = ref({});
 
@@ -47,6 +48,10 @@ onMounted(() => {
               <label for="on_label">Select month</label>
             </FloatLabel>
             <ImportModal />
+            <DeleteSelected
+              :selectedCollections="selectedCollection"
+              v-if="selectedCollection.length"
+            />
           </div>
         </div>
       </div>
@@ -55,6 +60,7 @@ onMounted(() => {
           v-model:expandedRows="expandedRows"
           :value="store.collections"
           :loading="store.isLoading"
+          v-model:selection="selectedCollection"
           dataKey="uid"
           size="small"
           :rows="10"
@@ -64,6 +70,12 @@ onMounted(() => {
               No collection payment found.
             </div>
           </template>
+          <Column
+            class="whitespace-nowrap text-ellipsis"
+            selectionMode="multiple"
+            style="width: 3rem"
+            :exportable="false"
+          ></Column>
           <Column
             class="whitespace-nowrap text-ellipsis"
             expander
@@ -109,37 +121,6 @@ onMounted(() => {
             field="pymtmethod"
             header="Payment Method"
           ></Column>
-          <!-- <Column class="whitespace-nowrap text-ellipsis" header="Actions">
-            <template #body="slotProps">
-              <Button
-                type="button"
-                severity="secondary"
-                icon="pi pi-ellipsis-v"
-                @click="onToggled($event, slotProps.index)"
-                text
-              />
-
-              <Popover :ref="(el) => (menu[slotProps.index] = el)">
-                <div class="flex flex-col">
-                  <RouterLink to="">
-                    <ViewReciept
-                      :paymentReceipt="slotProps.data.paymentReceipt"
-                    />
-                  </RouterLink>
-                  <RouterLink to="">
-                    <Button
-                      icon="pi pi-check"
-                      severity="success"
-                      size="small"
-                      label="mark as paid"
-                      text
-                    />
-                  </RouterLink>
-                  <DeleteModal :uid="slotProps.data.residentUid" />
-                </div>
-              </Popover>
-            </template>
-          </Column> -->
           <template #expansion="slotProps">
             <div class="p-4">
               <h5 class="font-semibold">
