@@ -31,4 +31,4 @@ coverage
 .env
 .env.example
 
-./src/sw.js
+/src/sw.js
