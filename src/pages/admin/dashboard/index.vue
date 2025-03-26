@@ -9,29 +9,17 @@
 	import Reminders from './_components/reminders.vue';
 	import { formatNumberWithCommas } from '@/composables/formatNumber';
 	import { useReminderStore } from '@/stores/reminder';
+	import type { Line } from '@/types/line';
 
 	const analyticStore = useAnalyticStore();
 	const announcementStore = useAnnouncementStore();
 	const reminderStore = useReminderStore();
 
-	const barData = [
-		{ x: 1, y: 10, y1: 20, y2: 30 },
-		{ x: 2, y: 20, y1: 30, y2: 40 },
-		{ x: 3, y: 30, y1: 40, y2: 50 },
-		{ x: 4, y: 40, y1: 50, y2: 60 },
-		{ x: 5, y: 50, y1: 60, y2: 70 },
-	];
-
-	const lineData = [
-		{ x: 0, y: 0 },
-		{ x: 1, y: 2 },
-		{ x: 2, y: 1 },
-	];
-
 	onMounted(() => {
 		analyticStore.fetchTotals();
 		announcementStore.fetchAnnouncements();
 		reminderStore.fetchReminders();
+		analyticStore.fetchLineData();
 	});
 </script>
 
@@ -122,11 +110,7 @@
 		<div class="flex flex-wrap gap-4">
 			<div
 				class="flex-1 w-screen md:w-auto shadow-sm border rounded-md p-5 bg-white">
-				<BarChart :data="barData" />
-			</div>
-			<div
-				class="flex-1 w-screen md:w-auto shadow-sm border rounded-md p-5 bg-white">
-				<LineChart :data="lineData" />
+				<LineChart :data="analyticStore.lineData" />
 			</div>
 		</div>
 		<div class="flex flex-wrap gap-4">

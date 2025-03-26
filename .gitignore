@@ -31,4 +31,5 @@ coverage
 .env
 .env.example
 
-/src/sw.js
+dev-dist/*
+dev-dist
