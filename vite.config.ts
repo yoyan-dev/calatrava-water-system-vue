@@ -17,6 +17,7 @@ export default defineConfig(() => {
       }),
       VitePWA({
         registerType: "autoUpdate",
+        injectRegister: "auto",
         devOptions: {
           enabled: true,
         },
@@ -62,13 +63,20 @@ export default defineConfig(() => {
           // Optional: Add runtime caching if needed
           runtimeCaching: [
             {
-              urlPattern: /^https:\/\/.*\.googleapis\.com\/.*$/,
-              handler: "NetworkFirst",
+              urlPattern: /^https:\/\/www\.gstatic\.com\/firebasejs\//,
+              handler: "CacheFirst",
+              options: {
+                cacheName: "firebase-scripts",
+                expiration: {
+                  maxEntries: 10,
+                  maxAgeSeconds: 60 * 60 * 24 * 7, // 1 week
+                },
+              },
             },
           ],
           // Control update frequency
-          skipWaiting: true, // New SW activates immediately
-          clientsClaim: true, // Takes control of clients immediately
+          // skipWaiting: true, // New SW activates immediately
+          // clientsClaim: true, // Takes control of clients immediately
           cleanupOutdatedCaches: true, // Removes old caches
         },
       }),
