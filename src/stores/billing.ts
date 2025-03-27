@@ -87,6 +87,7 @@ export const useBillingStore = defineStore("billing", () => {
   }
 
   async function deleteBillings(payload: Billing[]): Promise<StoreResponse> {
+    isLoading.value = true;
     const response = await billingRepository.deleteBillings(payload);
     if (response?.statusCode == 200) {
       await fetchBillings();

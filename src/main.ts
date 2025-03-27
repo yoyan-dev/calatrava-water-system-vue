@@ -48,6 +48,8 @@ import {
   Image,
   InputGroup,
   InputGroupAddon,
+  Badge,
+  OverlayBadge,
 } from "primevue";
 
 import {
@@ -112,6 +114,8 @@ app.component("Password", Password);
 app.component("Image", Image);
 app.component("InputGroup", InputGroup);
 app.component("InputGroupAddon", InputGroupAddon);
+app.component("Badge", Badge);
+app.component("OverlayBadge", OverlayBadge);
 
 app.use(createPinia());
 app.use(router);
@@ -119,15 +123,15 @@ app.use(ConfirmationService);
 app.use(ToastService);
 app.use(DialogService);
 
-// if ('serviceWorker' in navigator) {
-// 	navigator.serviceWorker
-// 		.register('/sw.js')
-// 		.then((registration) => {
-// 			console.log('Service Worker registered with scope:', registration.scope);
-// 		})
-// 		.catch((error) => {
-// 			console.error('Service Worker registration failed:', error);
-// 		});
-// }
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker
+    .register("/firebase-messaging-sw.js")
+    .then((registration) => {
+      console.log("✅ Service Worker registered successfully!", registration);
+    })
+    .catch((error) => {
+      console.error("Service Worker registration failed:", error);
+    });
+}
 
 app.mount("#app");

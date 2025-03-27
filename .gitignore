@@ -30,3 +30,6 @@ coverage
 *.tsbuildinfo
 .env
 .env.example
+
+dev-dist/*
+dev-dist

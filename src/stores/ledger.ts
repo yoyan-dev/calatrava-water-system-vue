@@ -1,5 +1,6 @@
 import { ledgerRepository } from "@/repositories/ledgerRepository";
 import type { Ledger } from "@/types/ledger";
+import type { StoreResponse } from "@/types/store-response";
 import { watchDebounced } from "@vueuse/core";
 import { format } from "date-fns";
 import { defineStore } from "pinia";
@@ -61,6 +62,24 @@ export const useLedgerStore = defineStore("ledger", () => {
     }
   }
 
+  async function deleteLedgers(payload: Ledger[]): Promise<StoreResponse> {
+    isLoading.value = true;
+    const response = await ledgerRepository.deleteLedgers(payload);
+    if (response?.statusCode == 200) {
+      await fetchLedgers();
+      return {
+        status: "success",
+        message: response.message,
+        statusMessage: response.statusMessage ?? "",
+      };
+    }
+    return {
+      status: "error",
+      message: response?.message,
+      statusMessage: response?.statusMessage ?? "",
+    };
+  }
+
   return {
     isLoading,
     month,
@@ -70,5 +89,6 @@ export const useLedgerStore = defineStore("ledger", () => {
     totalLedgers,
     fetchLedgers,
     addLedgers,
+    deleteLedgers,
   };
 });

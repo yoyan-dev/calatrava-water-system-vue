@@ -1,67 +1,28 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { Reminder } from "@/types/reminder";
+import ViewReminder from "@/pages/admin/dashboard/_components/modals/view-reminder-modal.vue";
 
 const props = defineProps<{ reminders: Reminder[] }>();
-
-const responsiveOptions = ref([
-  {
-    breakpoint: "1400px",
-    numVisible: 1,
-    numScroll: 1,
-  },
-  {
-    breakpoint: "1199px",
-    numVisible: 1,
-    numScroll: 1,
-  },
-  {
-    breakpoint: "767px",
-    numVisible: 1,
-    numScroll: 1,
-  },
-  {
-    breakpoint: "575px",
-    numVisible: 1,
-    numScroll: 1,
-  },
-]);
 </script>
 <template>
-  <Carousel
-    v-if="props.reminders.length > 1"
-    :value="props.reminders"
-    :numVisible="1"
-    :numScroll="1"
-    :responsiveOptions="responsiveOptions"
-    circular
-    :autoplayInterval="5000"
-  >
-    <template #item="slotProps">
-      <div class="flex items-center w-full h-full">
-        <Message class="flex-1" severity="warn">
+  <div class="p-4 border rounded-lg">
+    <span class="text-lg font-semibold">Reminders</span>
+    <div class="max-h-96 overflow-auto">
+      <div
+        v-for="reminder in props.reminders"
+        :key="reminder.uid"
+        class="flex items-start gap-2 bg-orange-100 p-4 rounded-lg my-2"
+      >
+        <OverlayBadge severity="danger"> </OverlayBadge>
+        <div class="flex justify-between items-center flex-1">
           <div>
-            <h1 class="flex items-center gap-2 capitalize">
-              <i class="pi pi-bell"></i> Reminder! {{ slotProps.data.name }}.
-            </h1>
-            <span class="font-normal">{{ slotProps.data.content }}</span>
+            <span class="text-sm text-gray-500">{{ reminder.dueDate }}</span>
+            <div class="font-semibold capitalize">{{ reminder.name }}</div>
           </div>
-        </Message>
+          <ViewReminder :reminder="reminder" />
+        </div>
       </div>
-    </template>
-  </Carousel>
-  <div class="p-2" v-else>
-    <Message
-      v-for="reminder in props.reminders"
-      :key="reminder.uid"
-      severity="warn"
-    >
-      <div>
-        <h1 class="flex items-center gap-2 capitalize">
-          <i class="pi pi-bell"></i> Reminder! {{ reminder.name }}.
-        </h1>
-        <span class="font-normal">{{ reminder.content }}</span>
-      </div>
-    </Message>
+    </div>
   </div>
 </template>
