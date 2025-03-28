@@ -1,8 +1,6 @@
 import { AnalyticRepository } from '@/repositories/analyticRepoository';
-import type { H3Response } from '@/types/h3response';
 import type { Line } from '@/types/line';
 import type { Total } from '@/types/total';
-import { useFetch } from '@vueuse/core';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
