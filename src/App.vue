@@ -5,6 +5,17 @@ import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { onMounted } from "vue";
 
 const messaging = getMessaging();
+onMessage(messaging, (payload) => {
+  console.log("Message received. ", payload);
+  if (Notification.permission === "granted") {
+    new Notification(payload.notification?.title ?? "", {
+      body: payload.notification?.body,
+      icon: "/logo.png",
+    });
+  } else {
+    console.warn("Notifications are blocked");
+  }
+});
 onMounted(async () => {
   await getToken(messaging, {
     vapidKey:
