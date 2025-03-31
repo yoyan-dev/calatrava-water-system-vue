@@ -20,6 +20,7 @@ export default defineConfig(() => {
         injectRegister: "auto",
         devOptions: {
           enabled: false,
+          type: "module",
         },
         includeAssets: ["favicon.ico"],
         manifest: {
