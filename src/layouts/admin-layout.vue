@@ -1,13 +1,34 @@
 <script setup lang="ts">
 import { useRoute, useRouter, RouterLink } from "vue-router";
-import { ref } from "vue";
+import { ref, onMounted, reactive } from "vue";
 import { signOut } from "firebase/auth";
 import { useFirebaseAuth } from "vuefire";
+import { getCurrentUser } from "vuefire";
+import type { Admin } from "@/types/admin";
 
 const route = useRoute();
 const router = useRouter();
 const visible = ref(false);
 const auth = useFirebaseAuth()!;
+const admin = reactive<Admin>({
+  uid: "",
+  displayName: "",
+  email: "",
+  photoURL: "",
+  phoneNumber: "",
+  password: "",
+});
+
+onMounted(async () => {
+  const data = await getCurrentUser();
+  if (data) {
+    admin.uid = data.uid;
+    admin.displayName = data.displayName || "Admin";
+    admin.email = data.email || "";
+    admin.photoURL = data.photoURL || "/default.jpg";
+    admin.phoneNumber = data.phoneNumber || "";
+  }
+});
 
 const logoutUser = async () => {
   try {
@@ -101,7 +122,7 @@ const items = ref([
                   >
                     <img
                       class="size-8 rounded-full"
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                      :src="admin.photoURL"
                       alt=""
                     />
                   </button>
@@ -147,16 +168,12 @@ const items = ref([
             <div class="flex items-center mb-3">
               <span
                 class="self-center flex items-center text-2xl font-semibold whitespace-nowrap dark:text-white"
-                ><Avatar
-                  image="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  class="mr-2"
-                  size="large"
-                />
+                ><Avatar :image="admin.photoURL" class="mr-2" size="large" />
               </span>
               <div>
-                <div class="font-semibold">Nenwell Era</div>
+                <div class="font-semibold">{{ admin.displayName }}</div>
                 <span class="text-center w-full text-sm text-surface-400"
-                  >Admin</span
+                  >admin</span
                 >
               </div>
             </div>
