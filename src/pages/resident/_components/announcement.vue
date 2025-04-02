@@ -30,7 +30,7 @@ const responsiveOptions = ref([
 </script>
 <template>
   <Carousel
-    v-if="props.announcement.length > 1"
+    v-if="props.announcement?.length > 1"
     :value="props.announcement"
     :numVisible="1"
     :numScroll="1"
@@ -43,15 +43,17 @@ const responsiveOptions = ref([
     </template>
   </Carousel>
   <div class="p-2" v-else>
-    <Message v-for="announce in props.announcement" :key="announce.uid">
-      <div>
-        <h1 class="flex items-center gap-2">
-          <i class="pi pi-bell"></i> Announcement! {{ announce.type }}.
-        </h1>
-        <span class="font-normal">{{
-          announce.content?.substring(0, 10)
-        }}</span>
-      </div>
-    </Message>
+    <div v-for="announce in props.announcement" :key="announce.uid">
+      <Message>
+        <div>
+          <h1 class="flex items-center gap-2">
+            <i class="pi pi-bell"></i> Announcement! {{ announce.type }}.
+          </h1>
+          <span class="font-normal">{{
+            announce.content?.substring(0, 10)
+          }}</span>
+        </div>
+      </Message>
+    </div>
   </div>
 </template>

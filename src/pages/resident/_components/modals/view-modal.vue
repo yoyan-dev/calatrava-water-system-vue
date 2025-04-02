@@ -41,9 +41,7 @@ function truncateText(text: any, limit = 160) {
         }}</span>
       </div>
       <div>
-        <div>
-          <span class="text-dark">{{ announcement.content }}</span>
-        </div>
+        <span class="text-dark text-left">{{ announcement.content }}</span>
       </div>
     </div>
   </Dialog>
