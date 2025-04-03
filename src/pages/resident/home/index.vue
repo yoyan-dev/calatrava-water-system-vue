@@ -7,21 +7,31 @@ import { formatToPeso } from "@/composables/currencyFormat";
 
 const store = useResidentStore();
 const billIncreasePercentage = ref(0);
+const currentBill = ref(0);
+const previousBill = ref(0);
 
 onMounted(async () => {
   store.isLoading = true;
   const user = await getCurrentUser();
 
-  store.fetchResident(user?.uid ?? "");
+  await store.fetchResident(user?.uid ?? "");
 
   if (store.resident?.billings && store.resident?.billings?.length > 1) {
-    const currentBill = Number(store.resident?.billings[0].billamnt) || 0;
-    const previousBill = Number(store.resident?.billings[1].billamnt) || 0;
+    currentBill.value = Number(store.resident?.billings[0].billamnt) || 0;
+    previousBill.value = Number(store.resident?.billings[1].billamnt) || 0;
+    console.log(currentBill.value, previousBill.value);
 
-    let percentage = ((currentBill - previousBill) / previousBill) * 100;
-
-    billIncreasePercentage.value =
-      percentage > 100 ? percentage : Number(percentage.toFixed(2));
+    // Ensure both values are valid for comparison
+    if (currentBill.value > previousBill.value) {
+      let percentage =
+        ((currentBill.value - previousBill.value) / previousBill.value) * 100;
+      billIncreasePercentage.value = Number(percentage.toFixed(2));
+      console.log("greater");
+    } else {
+      let percentage =
+        ((previousBill.value - currentBill.value) / currentBill.value) * 100;
+      billIncreasePercentage.value = Number(percentage.toFixed(2));
+    }
   }
 });
 
@@ -66,31 +76,34 @@ watchEffect(() => {
               class="max-w-96 flex flex-col gap-3 border border-primary rounded-md p-3 mt-3 bg-gradient-to-b from-primary-800 to-primary-500"
             >
               <div class="text-lg text-white">Current total bill</div>
-              <div class="flex justify-between items-end">
+              <div>
                 <span class="text-xl font-bold text-surface-200">{{
                   formatToPeso(store.resident?.billings?.[0].billamnt)
-                }}</span>
-                <div
-                  :class="{
-                    'text-red-200': billIncreasePercentage > 0,
-                    'text-green-200': billIncreasePercentage <= 0,
-                  }"
-                >
-                  <span>
-                    <i
-                      :class="{
-                        'pi pi-sort-amount-up': billIncreasePercentage > 0,
-                        'pi pi-sort-amount-down': billIncreasePercentage <= 0,
-                      }"
-                    ></i>
-                    {{
-                      billIncreasePercentage > 0
-                        ? `bill increase by ${billIncreasePercentage}%`
-                        : `bill decrease by ${Math.abs(
-                            billIncreasePercentage
-                          )}%`
-                    }}
-                  </span>
+                }}</span
+                ><br />
+                <div>
+                  <div
+                    :class="{
+                      'text-red-200': currentBill > previousBill,
+                      'text-green-200': currentBill <= previousBill,
+                    }"
+                  >
+                    <span>
+                      <i
+                        :class="{
+                          'pi pi-sort-amount-up': currentBill > previousBill,
+                          'pi pi-sort-amount-down': currentBill <= previousBill,
+                        }"
+                      ></i>
+                      {{
+                        currentBill > previousBill
+                          ? `bill increase by ${billIncreasePercentage}%`
+                          : `bill decrease by ${Math.abs(
+                              billIncreasePercentage
+                            )}%`
+                      }}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
