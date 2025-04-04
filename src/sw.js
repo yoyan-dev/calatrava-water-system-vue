@@ -1,3 +1,4 @@
+import { precacheAndRoute } from "workbox-precaching";
 import { initializeApp } from "firebase/app";
 import { getMessaging, onBackgroundMessage } from "firebase/messaging/sw";
 
@@ -46,3 +47,5 @@ self.addEventListener("fetch", (event) => {
 
 // Workbox precaching (Vite-PWA will inject the manifest here)
 self.__WB_MANIFEST;
+
+precacheAndRoute(self.__WB_MANIFEST);
