@@ -58,27 +58,27 @@ async function logoutUser() {
   }
 }
 
-// const unsubscribe = onMessage(messaging, (payload) => {
-// 	console.log('Message received. ', payload);
-// 	toast.add({
-// 		severity: 'info',
-// 		summary: payload.notification?.title,
-// 		detail: payload.notification?.body,
-// 		life: 3000,
-// 	});
-// });
+const unsubscribe = onMessage(messaging, (payload) => {
+  console.log("Message received. ", payload);
+  toast.add({
+    severity: "info",
+    summary: payload.notification?.title,
+    detail: payload.notification?.body,
+    life: 3000,
+  });
+});
 
-// onMounted(async () => {
-// 	const user = await getCurrentUser();
+onMounted(async () => {
+  const user = await getCurrentUser();
 
-// 	requestPermission(user?.uid!);
-// });
+  requestPermission(user?.uid!);
+});
 
-// onUnmounted(() => unsubscribe());
+onUnmounted(() => unsubscribe());
 
-// watchEffect(() => {
-// 	console.log(userToken.value);
-// });
+watchEffect(() => {
+  console.log(userToken.value);
+});
 </script>
 <template>
   <main class="relative bg-white h-screen">
