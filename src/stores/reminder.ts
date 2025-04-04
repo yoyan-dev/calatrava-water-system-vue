@@ -7,7 +7,7 @@ import type { Reminder } from "@/types/reminder";
 export const useReminderStore = defineStore("reminder", () => {
   const isLoading = ref(false);
   const reminders = ref<Reminder[]>([]);
-  const reminder = ref<Reminder>({});
+  const reminder = ref<Reminder[]>([]);
   const searchQuery = ref<boolean>(true);
 
   async function fetchReminders() {

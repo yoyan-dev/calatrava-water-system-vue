@@ -2,7 +2,7 @@
 import type { Reminder } from "@/types/reminder";
 import { ref } from "vue";
 
-const props = defineProps<{ reminders: Reminder[] }>();
+const props = defineProps<{ reminder: Reminder[] }>();
 const responsiveOptions = ref([
   {
     breakpoint: "1400px",
@@ -27,30 +27,10 @@ const responsiveOptions = ref([
 ]);
 </script>
 <template>
-  <Carousel
-    v-if="props.reminders?.length > 1"
-    :value="props.reminders"
-    :numVisible="1"
-    :numScroll="1"
-    :responsiveOptions="responsiveOptions"
-    circular
-    :autoplayInterval="5000"
-  >
-    <template #item="slotProps">
-      <Message severity="warn">
-        <div>
-          <h1 class="flex items-center gap-2">
-            <i class="pi pi-bell"></i> Reminder!.
-          </h1>
-          <span class="font-normal">{{ slotProps.data.content }}</span>
-        </div>
-      </Message>
-    </template>
-  </Carousel>
-  <div class="p-2" v-else>
+  <div class="p-2">
     <Message
       severity="warn"
-      v-for="reminder in props.reminders"
+      v-for="reminder in props.reminder"
       :key="reminder.uid"
     >
       <div>

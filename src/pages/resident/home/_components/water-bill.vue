@@ -8,6 +8,7 @@ import PayBillModal from "./modals/pay-bill-modal.vue";
 import { getSeverity } from "@/composables/getSeverity";
 import { useReminderStore } from "@/stores/reminder";
 import Reminder from "./reminder.vue";
+import { isTargetDate } from "@/composables/targetDate";
 
 const store = useReminderStore();
 const { formatTimestamp } = useFirebaseTimestamp();
@@ -17,12 +18,16 @@ const props = defineProps<{
 
 onMounted(async () => {
   await store.fetchReminder(props.resident.uid);
-  console.log(store.reminders);
 });
 </script>
 <template>
   <div>
-    <Reminder :reminders="store.reminder" v-if="!store.isLoading" />
+    <div v-if="!store.isLoading && store.reminder.length > 0">
+      <Reminder
+        :reminder="store.reminder"
+        v-if="isTargetDate(store.reminder[0].dueDate)"
+      />
+    </div>
     <div class="bg-white p-5 border rounded-lg flex flex-col gap-3">
       <div class="flex justify-between">
         <h1 class="font-semibold text-xl">

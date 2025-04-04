@@ -17,8 +17,11 @@ onMounted(async () => {
   if (store.resident?.billings && store.resident?.billings?.length > 1) {
     const currentBill = Number(store.resident?.billings[0].billamnt) || 0;
     const previousBill = Number(store.resident?.billings[1].billamnt) || 0;
+
+    let percentage = ((currentBill - previousBill) / previousBill) * 100;
+
     billIncreasePercentage.value =
-      ((currentBill - previousBill) / previousBill) * 100;
+      percentage > 100 ? percentage : Number(percentage.toFixed(2));
   }
 });
 
