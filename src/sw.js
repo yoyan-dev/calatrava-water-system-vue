@@ -3,12 +3,12 @@ import { initializeApp } from "firebase/app";
 import { getMessaging, onBackgroundMessage } from "firebase/messaging/sw";
 
 const firebaseApp = initializeApp({
-  apiKey: "AIzaSyBj8H7hCEz3KZ4Od2d8S1cFm4BmuiX1k6Q",
-  authDomain: "calatrava-water-system.firebaseapp.com",
-  projectId: "calatrava-water-system",
-  storageBucket: "calatrava-water-system.firebasestorage.app",
-  messagingSenderId: "197722655437",
-  appId: "1:197722655437:web:e2f64bd9628f473f32f784",
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID,
 });
 
 const messaging = getMessaging(firebaseApp);
