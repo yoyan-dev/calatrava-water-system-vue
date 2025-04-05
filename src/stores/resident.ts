@@ -59,7 +59,7 @@ export const useResidentStore = defineStore("resident", () => {
   async function fetchResidentLedgers(uid: string) {
     isLoading.value = true;
     const response = await residentRepository.fetchResidentLedgers(uid);
-    ledgers.value = response?.data;
+    ledgers.value = response?.data || [];
     console.log(response?.data);
     isLoading.value = false;
   }
@@ -67,7 +67,7 @@ export const useResidentStore = defineStore("resident", () => {
   async function fetchResidentCollections(uid: string) {
     isLoading.value = true;
     const response = await residentRepository.fetchResidentCollections(uid);
-    collections.value = response?.data;
+    collections.value = response?.data || [];
     console.log(response?.data);
     isLoading.value = false;
   }
