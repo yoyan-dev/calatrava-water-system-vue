@@ -40,6 +40,6 @@ export interface Billing {
 	totalBill?: number;
 	paymentReceipt?: string;
 	paymentStatus?: string;
-	paymentDate?: string;
+	paymentDate?: any;
 	createdAt?: any;
 }
