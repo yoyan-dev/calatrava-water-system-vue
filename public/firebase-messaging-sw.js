@@ -1,41 +1,30 @@
 // public/firebase-messaging-sw.js
 importScripts(
-	'https://www.gstatic.com/firebasejs/11.1.0/firebase-app-compat.js',
+  "https://www.gstatic.com/firebasejs/11.1.0/firebase-app-compat.js"
 );
 importScripts(
-	'https://www.gstatic.com/firebasejs/11.1.0/firebase-messaging-compat.js',
+  "https://www.gstatic.com/firebasejs/11.1.0/firebase-messaging-compat.js"
 );
 
-let messaging;
-
-self.addEventListener('message', (event) => {
-	console.log('[firebase-messaging-sw.js] Message received:', event.data);
-	if (event.data.type === 'SET_FIREBASE_CONFIG') {
-		console.log(
-			'[firebase-messaging-sw.js] Initializing Firebase with config:',
-			event.data.config,
-		);
-		firebase.initializeApp(event.data.config);
-		messaging = firebase.messaging();
-		console.log('[firebase-messaging-sw.js] Messaging initialized');
-
-		messaging.onBackgroundMessage((payload) => {
-			console.log(
-				'[firebase-messaging-sw.js] Received background message:',
-				payload,
-			);
-			const notificationTitle = payload.notification?.title || 'Default Title';
-			const notificationOptions = {
-				body: payload.notification?.body || 'Default Body',
-				icon: '/logo.png',
-			};
-			self.registration.showNotification(
-				notificationTitle,
-				notificationOptions,
-			);
-		});
-	}
+firebase.initializeApp({
+  apiKey: "AIzaSyDZOcs15xGPsn5Y8yLZwkUeK3ChbFRfflI",
+  authDomain: "calatrava-water-works.firebaseapp.com",
+  projectId: "calatrava-water-works",
+  storageBucket: "calatrava-water-works.firebasestorage.app",
+  messagingSenderId: "549897348816",
+  appId: "1:549897348816:web:d1161ed22419a48dfba0d5",
 });
 
-self.addEventListener('install', () => self.skipWaiting());
-self.addEventListener('activate', () => self.clients.claim());
+const messaging = firebase.messaging();
+
+messaging.onBackgroundMessage((payload) => {
+  console.log("Received background message", payload);
+
+  const notificationTitle = payload.notification.title;
+  const notificationOptions = {
+    body: payload.notification.body,
+    icon: "/logo.png",
+  };
+
+  self.registration.showNotification(notificationTitle, notificationOptions);
+});
