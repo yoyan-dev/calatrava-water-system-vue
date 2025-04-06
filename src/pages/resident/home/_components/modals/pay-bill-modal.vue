@@ -53,12 +53,7 @@ async function onUpload() {
   >
     <div>
       <div class="flex justify-center">
-        <Image
-          src="https://businessmaker-academy.com/cms/wp-content/uploads/2022/04/Gcash-BMA-QRcode.jpg"
-          alt="Image"
-          width="300"
-          preview
-        />
+        <Image src="/gcash.jpg" alt="Gcash qr" width="300" preview />
       </div>
       <span class="text-surface-500 dark:text-surface-400 block mb-2 mt-5">
         Upload your receipt.
