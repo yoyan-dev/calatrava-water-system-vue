@@ -3,7 +3,6 @@ import router from "./router";
 import PrimeVue from "primevue/config";
 import { VueFire, VueFireAuth } from "vuefire";
 import { firebaseApp, messaging } from "@/firebase/config";
-import { getToken } from "firebase/messaging";
 import "@/assets/main.css";
 import "@/assets/base.css";
 import "primeicons/primeicons.css";
@@ -118,22 +117,11 @@ if ("serviceWorker" in navigator) {
     .register("/firebase-messaging-sw.js")
     .then((registration) => {
       console.log("Service Worker registered");
-
-      // Get FCM token
-      getToken(messaging, {
-        vapidKey: import.meta.env.VITE_VAPID_KEY,
-        serviceWorkerRegistration: registration, // ✅ important!
-      }).then((currentToken: any) => {
-        if (currentToken) {
-          console.log("FCM Token:", currentToken);
-          // send token to backend here
-        } else {
-          console.warn("No registration token available.");
-        }
-      });
+      registration.update();
     })
     .catch((err) => {
       console.error("Service Worker registration failed", err);
     });
 }
+
 app.mount("#app");

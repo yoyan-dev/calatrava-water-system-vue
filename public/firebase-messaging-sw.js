@@ -23,8 +23,11 @@ messaging.onBackgroundMessage((payload) => {
   const notificationTitle = payload.notification.title;
   const notificationOptions = {
     body: payload.notification.body,
-    icon: "/logo.png",
+    icon: "/RMES.png",
   };
 
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
+
+self.addEventListener("install", () => self.skipWaiting());
+self.addEventListener("activate", () => self.clients.claim());
