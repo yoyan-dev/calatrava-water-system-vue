@@ -1,40 +1,41 @@
+// public/firebase-messaging-sw.js
 importScripts(
-  "https://www.gstatic.com/firebasejs/11.1.0/firebase-app-compat.js"
+	'https://www.gstatic.com/firebasejs/11.1.0/firebase-app-compat.js',
 );
 importScripts(
-  "https://www.gstatic.com/firebasejs/11.1.0/firebase-messaging-compat.js"
+	'https://www.gstatic.com/firebasejs/11.1.0/firebase-messaging-compat.js',
 );
 
-let firebaseConfig = null;
+let messaging;
 
-// Listen for Firebase config from main thread
-self.addEventListener("message", (event) => {
-  if (event.data && event.data.type === "SET_FIREBASE_CONFIG") {
-    firebaseConfig = event.data.firebaseConfig;
+self.addEventListener('message', (event) => {
+	console.log('[firebase-messaging-sw.js] Message received:', event.data);
+	if (event.data.type === 'SET_FIREBASE_CONFIG') {
+		console.log(
+			'[firebase-messaging-sw.js] Initializing Firebase with config:',
+			event.data.config,
+		);
+		firebase.initializeApp(event.data.config);
+		messaging = firebase.messaging();
+		console.log('[firebase-messaging-sw.js] Messaging initialized');
 
-    if (firebaseConfig) {
-      firebase.initializeApp(firebaseConfig);
-
-      const messaging = firebase.messaging();
-
-      messaging.onBackgroundMessage((payload) => {
-        console.log(
-          "[firebase-messaging-sw.js] Received background message ",
-          payload
-        );
-        const notificationTitle = payload.notification.title;
-        const notificationOptions = {
-          body: payload.notification.body,
-          icon: "/pwa-192x192.png",
-        };
-
-        self.registration.showNotification(
-          notificationTitle,
-          notificationOptions
-        );
-      });
-
-      console.log("✅ Firebase Messaging initialized in SW!");
-    }
-  }
+		messaging.onBackgroundMessage((payload) => {
+			console.log(
+				'[firebase-messaging-sw.js] Received background message:',
+				payload,
+			);
+			const notificationTitle = payload.notification?.title || 'Default Title';
+			const notificationOptions = {
+				body: payload.notification?.body || 'Default Body',
+				icon: '/logo.png',
+			};
+			self.registration.showNotification(
+				notificationTitle,
+				notificationOptions,
+			);
+		});
+	}
 });
+
+self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('activate', () => self.clients.claim());
