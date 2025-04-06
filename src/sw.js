@@ -41,7 +41,7 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
-  console.log("[sw.js] Fetch event:", event.request.url);
+  // console.log("[sw.js] Fetch event:", event.request.url);
   // Let Workbox handle precaching
 });
 

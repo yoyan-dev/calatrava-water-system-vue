@@ -1,13 +1,10 @@
 import { defineStore } from 'pinia';
-import { useFirebaseStorage, useFirestore, useStorageFile } from 'vuefire';
-import { ref as storageRef, getDownloadURL } from 'firebase/storage';
 import { ref } from 'vue';
-import { doc, setDoc } from 'firebase/firestore';
 import type { StoreResponse } from '@/types/store-response';
+import { useFetch } from '@vueuse/core';
+import type { H3Response } from '@/types/h3response';
 
 export const usePaymentStore = defineStore('payment', () => {
-	const storage = useFirebaseStorage();
-	const db = useFirestore();
 	const isLoading = ref(false);
 
 	async function addPayment({
@@ -21,32 +18,24 @@ export const usePaymentStore = defineStore('payment', () => {
 	}): Promise<StoreResponse> {
 		try {
 			isLoading.value = true;
-
 			const file = event.files[0];
-			const fileRef = storageRef(storage, `payments/${file.name}`);
-			const { upload, url } = useStorageFile(fileRef);
+			const formData = new FormData();
 
-			await upload(file);
+			formData.append('file', file);
+			formData.append('uid', uid);
+			formData.append('billUid', billUid);
 
-			let downloadUrl = url.value;
-			if (!downloadUrl) {
-				downloadUrl = await getDownloadURL(fileRef);
-			}
-
-			if (!downloadUrl) {
-				throw new Error('Failed to retrieve uploaded file URL.');
-			}
-
-			const billDocRef = doc(db, `residents/${uid}/billings/${billUid}`);
-
-			await setDoc(
-				billDocRef,
+			const { data: response } = useFetch(
+				`${import.meta.env.VITE_API_URL}/api/payments`,
 				{
-					paymentReceipt: downloadUrl,
-					status: 'inprogress',
+					method: 'POST',
+					body: formData,
 				},
-				{ merge: true },
-			);
+			).json<H3Response>();
+
+			if (response.value?.statusCode !== 200) {
+				throw new Error(response.value?.statusMessage || 'Network error');
+			}
 
 			return {
 				status: 'success',

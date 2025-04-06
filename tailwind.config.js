@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: "class",
-  content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
-  theme: {},
-  plugins: [require("tailwindcss-primeui")],
+	darkMode: ['selector', '[class~="my-app-dark"]'],
+	content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
+	theme: {},
+	plugins: [require('tailwindcss-primeui')],
 };
