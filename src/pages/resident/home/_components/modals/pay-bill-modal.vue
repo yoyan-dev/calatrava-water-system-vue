@@ -52,8 +52,8 @@
 		<div>
 			<div class="flex justify-center">
 				<Image
-					src="https://businessmaker-academy.com/cms/wp-content/uploads/2022/04/Gcash-BMA-QRcode.jpg"
-					alt="Image"
+					src="/gcash.jpg"
+					alt="Gcash qr"
 					width="300"
 					preview />
 			</div>
@@ -63,7 +63,8 @@
 			<FileUpload
 				@select="onFileSelected"
 				:multiple="false"
-				accept="image/*">
+				accept="image/*"
+				:maxFileSize="1000000">
 				<template
 					#header="{ chooseCallback, uploadCallback, clearCallback, files }">
 					<div class="flex flex-wrap justify-between items-center flex-1 gap-4">
