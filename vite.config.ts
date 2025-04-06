@@ -1,6 +1,5 @@
 import { fileURLToPath, URL } from "node:url";
-
-import { defineConfig, loadEnv } from "vite";
+import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import vueDevTools from "vite-plugin-vue-devtools";
 import checker from "vite-plugin-checker";
@@ -53,12 +52,12 @@ export default defineConfig(() => {
           enabled: true,
           type: "classic",
         },
-        strategies: "injectManifest", // ✅ switch to injectManifest
+        strategies: "injectManifest",
         injectManifest: {
-          swSrc: "public/firebase-messaging-sw.js", // or wherever your SW file is
-          swDest: "firebase-messaging-sw.js", // keep this consistent
+          swSrc: "public/firebase-messaging-sw.js",
+          swDest: "firebase-messaging-sw.js",
           globPatterns: ["**/*.{js,css,html,png,jpg,svg}"],
-          exclude: [/firebase-messaging-sw\.js$/], // ✅ exclude here
+          exclude: [/firebase-messaging-sw\.js$/],
         } as any,
       }),
     ],
