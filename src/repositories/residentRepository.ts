@@ -24,7 +24,7 @@ export const residentRepository = {
     try {
       const { data: response } = await useFetch(
         `${API_URL}/api/residents/ledger/${uid}`
-      ).json<H3Response<Ledger>>();
+      ).json<H3Response<Ledger[]>>();
       return camelize(response.value);
     } catch (error) {
       console.error("Error fetching residents:", error);
@@ -36,7 +36,7 @@ export const residentRepository = {
     try {
       const { data: response } = await useFetch(
         `${API_URL}/api/residents/collection/${uid}`
-      ).json<H3Response<Collection>>();
+      ).json<H3Response<Collection[]>>();
       return camelize(response.value);
     } catch (error) {
       console.error("Error fetching residents:", error);

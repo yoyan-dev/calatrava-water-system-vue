@@ -19,7 +19,7 @@ export default defineConfig(() => {
         registerType: "autoUpdate",
         injectRegister: "auto",
         devOptions: {
-          enabled: false,
+          enabled: true,
           type: "module",
         },
         includeAssets: ["favicon.ico"],
@@ -55,13 +55,19 @@ export default defineConfig(() => {
           ],
         },
         // Switch to injectManifest
+        srcDir: "src",
+        filename: "sw.js",
+        strategies: "injectManifest",
         injectManifest: {
-          swSrc: "src/sw.js", // Your custom service worker
-          swDest: "dist/sw.js", // Output location
-          globPatterns: ["**/*.{js,css,html,ico,png,svg}"], // Files to precache
+          swSrc: "src/sw.js",
+          swDest: "dist/sw.js",
+          globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
         },
         workbox: {
-          // Optional: Add runtime caching if needed
+          // Optional: Add runtime caching if
+          cleanupOutdatedCaches: false,
+          clientsClaim: true,
+          skipWaiting: true,
           runtimeCaching: [
             {
               urlPattern: /^https:\/\/www\.gstatic\.com\/firebasejs\//,
@@ -78,7 +84,6 @@ export default defineConfig(() => {
           // Control update frequency
           // skipWaiting: true, // New SW activates immediately
           // clientsClaim: true, // Takes control of clients immediately
-          cleanupOutdatedCaches: true, // Removes old caches
         },
       }),
     ],

@@ -63,7 +63,14 @@ import { registerSW } from "virtual:pwa-register";
 const app = createApp(App);
 const auth = getAuth(firebaseApp);
 
-registerSW({ immediate: true });
+const updateSW = registerSW({
+  onNeedRefresh() {
+    console.log("New content available, click refresh!");
+  },
+  onOfflineReady() {
+    console.log("App ready to work offline");
+  },
+});
 
 setPersistence(auth, indexedDBLocalPersistence)
   .catch(() => setPersistence(auth, browserLocalPersistence))
