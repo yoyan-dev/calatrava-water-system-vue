@@ -40,7 +40,7 @@ export const billingRepository = {
 			const { data, error } = await useFetch(`${API_URL}/api/billings`, {
 				method: 'POST',
 				body: payload,
-			}).json<H3Response<Billing[]>>();
+			}).json<H3Response>();
 
 			if (error.value) {
 				throw new Error(error.value.message || 'Network error');
@@ -65,7 +65,7 @@ export const billingRepository = {
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify(billing),
-			}).json<H3Response<Billing[]>>();
+			}).json<H3Response>();
 
 			if (error.value) {
 				throw new Error(error.value.message || 'Network error');
@@ -86,7 +86,7 @@ export const billingRepository = {
 			const { data, error } = await useFetch(`${API_URL}/api/billings/${uid}`, {
 				method: 'DELETE',
 				body: accountno,
-			}).json<H3Response<Billing[]>>();
+			}).json<H3Response>();
 
 			if (error.value) {
 				throw new Error(error.value.message || 'Network error');
@@ -110,7 +110,7 @@ export const billingRepository = {
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify(payload),
-			}).json<H3Response<Billing[]>>();
+			}).json<H3Response>();
 
 			if (error.value) {
 				throw new Error(error.value.message || 'Network error');
