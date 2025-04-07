@@ -73,8 +73,9 @@ onMounted(async () => {
     </div>
     <div class="flex justify-end p-5">
       <PayBillModal
-        :uid="props.resident.uid as string"
-        :billingUid="props.resident.billings?.[0].uid as string"
+        v-if="props.resident.billings?.[0].paymentReceipt === null"
+        :uid="props.resident.uid"
+        :billingUid="props.resident.billings?.[0].uid"
       />
     </div>
   </div>

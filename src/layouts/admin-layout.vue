@@ -5,6 +5,7 @@ import { signOut } from "firebase/auth";
 import { useFirebaseAuth } from "vuefire";
 import { useAdminStore } from "@/stores/admin";
 import type { Admin } from "@/types/admin";
+import Notification from "./components/notification.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -92,6 +93,9 @@ const logoutUser = async () => {
             <div
               class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
             >
+              <div class="mt-2">
+                <Notification />
+              </div>
               <div class="relative ml-3">
                 <div>
                   <RouterLink
