@@ -154,8 +154,8 @@ watchEffect(() => console.log(store.billings));
           <Column class="whitespace-nowrap text-ellipsis" header="Status">
             <template #body="slotProps">
               <Tag
-                :severity="getSeverity(slotProps.data.bStatus)"
-                :value="slotProps.data.bStatus"
+                :severity="getSeverity(slotProps.data.paymentStatus)"
+                :value="slotProps.data.paymentStatus"
               ></Tag>
             </template>
           </Column>

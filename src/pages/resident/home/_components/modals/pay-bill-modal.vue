@@ -7,7 +7,7 @@ const props = defineProps<{
   uid: any;
   billingUid: any;
 }>();
-
+const emit = defineEmits(["close"]);
 const store = usePaymentStore();
 const toast = useToast();
 const visible = ref(false);
@@ -34,6 +34,7 @@ async function onUpload() {
     detail: res.message,
     life: 3000,
   });
+  emit("close");
   res.status === "success" ? (visible.value = false) : null;
 }
 </script>
@@ -81,6 +82,7 @@ async function onUpload() {
                 icon="pi pi-cloud-upload"
                 label="upload"
                 rounded
+                :loading="store.isLoading"
                 outlined
                 severity="success"
                 :disabled="!files || files.length === 0"
