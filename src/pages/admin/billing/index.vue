@@ -19,6 +19,11 @@ const ViewReciept = defineAsyncComponent(
   () => import("@/pages/admin/billing/_components/modals/view-reciept.vue")
 );
 
+const MarkPaid = defineAsyncComponent(
+  () =>
+    import("@/pages/admin/billing/_components/modals/mark-as-paid-modal.vue")
+);
+
 const deleteBilling = defineAsyncComponent(
   () => import("@/pages/admin/billing/_components/modals/delete-modal.vue")
 );
@@ -371,13 +376,35 @@ watchEffect(() => console.log(store.billings));
         "
         text
       />
-
       <Button
         icon="pi pi-check"
         severity="success"
         size="small"
         label="mark as paid"
         text
+        @click="
+          () => {
+            dialog.open(MarkPaid, {
+              props: {
+                header: selectedBill?.paymentReceipt
+                  ? 'Mark as Paid?'
+                  : 'Mark as Paid without Receipt?',
+                style: {
+                  width: '50vw',
+                },
+                breakpoints: {
+                  '960px': '75vw',
+                  '640px': '90vw',
+                },
+                modal: true,
+              },
+              data: {
+                user: selectedBill,
+              },
+            });
+            hidePopover();
+          }
+        "
       />
 
       <Button

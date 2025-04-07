@@ -74,7 +74,11 @@ onMounted(async () => {
     </div>
     <div class="flex justify-end p-5">
       <PayBillModal
-        v-if="props.resident.billings?.[0].paymentReceipt === null || hide"
+        v-if="
+          props.resident.billings?.[0].paymentReceipt === null ||
+          hide ||
+          props.resident.billings?.[0].paymentStatus?.toLowerCase() === 'paid'
+        "
         @close="hide = true"
         :uid="props.resident.uid"
         :billingUid="props.resident.billings?.[0].uid"
