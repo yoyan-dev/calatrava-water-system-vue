@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import type { Resident } from "@/types/resident";
 import useFirebaseTimestamp from "@/composables/useFirebaseTimestamp";
 import { formatToPeso } from "@/composables/currencyFormat";
@@ -11,6 +11,7 @@ import Reminder from "./reminder.vue";
 import { isTargetDate } from "@/composables/targetDate";
 
 const store = useReminderStore();
+const hide = ref(false);
 const { formatTimestamp } = useFirebaseTimestamp();
 const props = defineProps<{
   resident: Resident;
@@ -73,8 +74,14 @@ onMounted(async () => {
     </div>
     <div class="flex justify-end p-5">
       <PayBillModal
-        :uid="props.resident.uid as string"
-        :billingUid="props.resident.billings?.[0].uid as string"
+        v-if="
+          props.resident.billings?.[0].paymentReceipt === null ||
+          hide ||
+          props.resident.billings?.[0].paymentStatus?.toLowerCase() === 'paid'
+        "
+        @close="hide = true"
+        :uid="props.resident.uid"
+        :billingUid="props.resident.billings?.[0].uid"
       />
     </div>
   </div>

@@ -14,48 +14,40 @@ import {
 } from "firebase/firestore";
 import { useFirestore } from "vuefire";
 import type { StoreResponse } from "@/types/store-response";
+import { concernRepository } from "@/repositories/concernRepository";
 
 export const useConcernStore = defineStore("concern", () => {
   const db = useFirestore();
   const concerns = ref<Concern[]>([]);
+  const totalConcerns = ref(0);
   const isLoading = ref(false);
 
   async function fetchConcerns() {
     isLoading.value = true;
-    const concernQuery = query(
-      collection(db, "concerns"),
-      orderBy("createdAt", "desc")
-    );
-    const concernSnapshot = await getDocs(concernQuery);
-    const result = concernSnapshot.docs.map((doc) => ({
-      ...doc.data(),
-      uid: doc.id,
-    }));
-    concerns.value = result;
+    const response = await concernRepository.fetchConcerns();
+    concerns.value = response?.data || [];
+    totalConcerns.value = response?.total || 0;
     isLoading.value = false;
   }
 
   async function addConcern(concern: Concern): Promise<StoreResponse> {
     isLoading.value = true;
     try {
-      const concernRef = await addDoc(collection(db, "concerns"), {
-        ...concern,
-        createdAt: Timestamp.now(),
-      });
-      concerns.value.push({ ...concern, uid: concernRef.id });
+      const response = await concernRepository.addConcern(concern);
+      return {
+        status: "success",
+        message: response?.message,
+        statusMessage: response?.statusMessage ?? "",
+      };
     } catch (error) {
+      console.error("Error adding concern:", error);
       return {
         status: "error",
-        statusMessage: "Error message",
         message: "Failed to send concern",
+        statusMessage: "error",
       };
     } finally {
       isLoading.value = false;
-      return {
-        status: "success",
-        statusMessage: "Success message",
-        message: "Concern send successfully",
-      };
     }
   }
 
