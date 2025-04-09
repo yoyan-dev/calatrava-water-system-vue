@@ -19,6 +19,7 @@ const props = defineProps<{
 
 onMounted(async () => {
   await store.fetchReminder(props.resident.uid);
+  console.log(store.reminder);
 });
 
 const filtereReminder = computed(() => {
@@ -39,10 +40,10 @@ const filtereReminder = computed(() => {
           <Tag
             :severity="
               getSeverity(
-                props.resident.billings?.[0].paymentStatus ?? 'pending'
+                props.resident.billings?.[0].paymentStatus ?? 'unpaid'
               )
             "
-            :value="props.resident.billings?.[0].bStatus"
+            :value="props.resident.billings?.[0].paymentStatus ?? 'unpaid'"
           ></Tag>
         </h1>
       </div>
@@ -84,7 +85,7 @@ const filtereReminder = computed(() => {
         v-if="
           props.resident.billings?.[0].paymentReceipt === null ||
           hide ||
-          props.resident.billings?.[0].paymentStatus?.toLowerCase() === 'paid'
+          !props.resident.billings?.[0].paymentStatus
         "
         @close="hide = true"
         :uid="props.resident.uid"

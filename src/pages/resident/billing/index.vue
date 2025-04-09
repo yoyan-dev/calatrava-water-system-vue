@@ -93,8 +93,10 @@ onMounted(async () => {
           <Column class="whitespace-nowrap text-ellipsis" header="Status">
             <template #body="slotProps">
               <Tag
-                :severity="getSeverity(slotProps.data.bStatus as string)"
-                :value="slotProps.data.bStatus"
+                :severity="
+                  getSeverity(slotProps.data.paymentStatus || 'unpaid')
+                "
+                :value="slotProps.data.paymentStatus ?? 'unpaid'"
               ></Tag>
             </template>
           </Column>

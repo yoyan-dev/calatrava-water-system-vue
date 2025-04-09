@@ -23,7 +23,7 @@ export const useReminderStore = defineStore("reminder", () => {
       uid: uid,
       params: { isAll: searchQuery.value },
     });
-
+    console.log(response?.data);
     reminder.value = response?.data || [];
     isLoading.value = false;
   }

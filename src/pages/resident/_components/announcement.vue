@@ -49,9 +49,7 @@ const responsiveOptions = ref([
           <h1 class="flex items-center gap-2">
             <i class="pi pi-bell"></i> Announcement! {{ announce.type }}.
           </h1>
-          <span class="font-normal">{{
-            announce.content?.substring(0, 10)
-          }}</span>
+          <span class="font-normal">{{ announce.content }}</span>
         </div>
       </Message>
     </div>
