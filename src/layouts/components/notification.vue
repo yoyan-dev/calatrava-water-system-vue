@@ -12,12 +12,15 @@
 
 	const toggle = (event) => {
 		op.value.toggle(event);
-		if (store.totalNotification > 0 && !store.isLoading) store.markAsAllRead();
+		if (store.totalNotification > 0 && !store.isLoading) {
+			store.totalNotification = 0;
+			store.markAsAllRead();
+		}
 	};
 </script>
 
 <template>
-	<div class="card flex justify-center">
+	<div>
 		<OverlayBadge
 			@click="toggle"
 			:value="store.totalNotification"
@@ -46,13 +49,20 @@
 							:key="notification.uid"
 							class="flex items-center gap-2 px-2 py-3 border-b rounded-border"
 							:class="!notification.isRead ? 'bg-emphasis' : ''">
-							<i class="pi pi-receipt p-2 bg-gray-100 rounded-md"></i>
+							<Avatar
+								icon="pi pi-user"
+								class="mr-2"
+								size="normal" />
 							<div>
-								<span class="font-medium">{{
+								<span class="font-medium capitalize">{{
 									notification.name ?? 'No name'
 								}}</span>
 								<div class="text-sm text-surface-500 dark:text-surface-400">
-									{{ notification.content ?? ' Send receipt on' }}
+									{{
+										notification.content
+											? 'Send concern on'
+											: ' Send receipt on'
+									}}
 									<span>{{ formatDateTimestamp(notification.createdAt) }}</span>
 								</div>
 							</div>
