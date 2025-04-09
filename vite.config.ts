@@ -16,24 +16,15 @@ export default defineConfig(() => {
       }),
       VitePWA({
         registerType: "autoUpdate",
-        strategies: "injectManifest",
+        includeAssets: ["favicon.ico"],
         srcDir: "src",
         filename: "sw.ts",
-        injectManifest: {
-          globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
-          globDirectory: "dist",
-        },
-        devOptions: {
-          enabled: true,
-          type: "module",
-        },
-        includeAssets: ["favicon.ico", "logo.png"],
         manifest: {
-          name: "Calatrava Waterworks",
+          name: "Calatrave Waterworks",
           short_name: "CWS",
-          start_url: "/",
-          display: "standalone",
+          description: "My Awesome App description",
           theme_color: "#ffffff",
+          start_url: "/",
           icons: [
             {
               src: "/logo.png",
@@ -44,9 +35,28 @@ export default defineConfig(() => {
               src: "/logo.png",
               sizes: "512x512",
               type: "image/png",
+            },
+            {
+              src: "/logo.png",
+              sizes: "512x512",
+              type: "image/png",
+              purpose: "any",
+            },
+            {
+              src: "/logo.png",
+              sizes: "512x512",
+              type: "image/png",
               purpose: "maskable",
             },
           ],
+        },
+        strategies: "injectManifest",
+        injectManifest: {
+          rollupFormat: "iife",
+        },
+        devOptions: {
+          enabled: true,
+          type: "module",
         },
       }),
     ],
