@@ -1,5 +1,14 @@
 {
+  "builds": [
+    {
+      "src": "src/sw.ts",
+      "use": "@vercel/static"
+    }
+  ],
   "routes": [
-    { "src": "/firebase-messaging-sw.js", "dest": "/firebase-messaging-sw.js" }
+    {
+      "src": "/sw.js",
+      "dest": "/dist/sw.js"
+    }
   ]
 }
