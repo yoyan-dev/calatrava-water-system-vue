@@ -53,6 +53,7 @@ const filteredConcern = computed(() => {
         v-model="selectedArea"
         :highlightOnSelect="false"
         class="w-full md:w-56"
+        showClear
       />
     </div>
     <div class="border-b pb-2">

@@ -19,6 +19,11 @@ const ViewReciept = defineAsyncComponent(
   () => import("@/pages/admin/billing/_components/modals/view-reciept.vue")
 );
 
+const MarkPaid = defineAsyncComponent(
+  () =>
+    import("@/pages/admin/billing/_components/modals/mark-as-paid-modal.vue")
+);
+
 const deleteBilling = defineAsyncComponent(
   () => import("@/pages/admin/billing/_components/modals/delete-modal.vue")
 );
@@ -154,19 +159,49 @@ watchEffect(() => console.log(store.billings));
           <Column class="whitespace-nowrap text-ellipsis" header="Status">
             <template #body="slotProps">
               <Tag
-                :severity="getSeverity(slotProps.data.bStatus)"
-                :value="slotProps.data.bStatus"
+                :severity="getSeverity(slotProps.data.paymentStatus)"
+                :value="slotProps.data.paymentStatus"
               ></Tag>
             </template>
           </Column>
           <Column class="whitespace-nowrap text-ellipsis" header="Actions">
             <template #body="slotProps">
               <Button
+                v-if="slotProps.data.paymentStatus !== 'paid'"
                 type="button"
                 severity="secondary"
                 icon="pi pi-ellipsis-v"
                 @click="onToggled($event, slotProps.data)"
                 text
+              />
+              <Button
+                v-else
+                icon="pi pi-trash"
+                severity="danger"
+                size="small"
+                text
+                @click="
+                  () => {
+                    dialog.open(deleteBilling, {
+                      props: {
+                        header: 'Confirm',
+                        style: {
+                          width: '50vw',
+                        },
+                        breakpoints: {
+                          '960px': '75vw',
+                          '640px': '90vw',
+                        },
+                        modal: true,
+                      },
+                      data: {
+                        uid: slotProps.data.uid,
+                        accountno: slotProps.data.accountno,
+                      },
+                    });
+                    hidePopover();
+                  }
+                "
               />
             </template>
           </Column>
@@ -371,13 +406,35 @@ watchEffect(() => console.log(store.billings));
         "
         text
       />
-
       <Button
         icon="pi pi-check"
         severity="success"
         size="small"
         label="mark as paid"
         text
+        @click="
+          () => {
+            dialog.open(MarkPaid, {
+              props: {
+                header: selectedBill?.paymentReceipt
+                  ? 'Mark as Paid?'
+                  : 'Mark as Paid without Receipt?',
+                style: {
+                  width: '50vw',
+                },
+                breakpoints: {
+                  '960px': '75vw',
+                  '640px': '90vw',
+                },
+                modal: true,
+              },
+              data: {
+                user: selectedBill,
+              },
+            });
+            hidePopover();
+          }
+        "
       />
 
       <Button

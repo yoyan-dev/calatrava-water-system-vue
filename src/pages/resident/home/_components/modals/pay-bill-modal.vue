@@ -4,10 +4,10 @@ import { useToast } from "primevue/usetoast";
 import { usePaymentStore } from "@/stores/payment";
 
 const props = defineProps<{
-  uid: string;
-  billingUid: string;
+  uid: any;
+  billingUid: any;
 }>();
-
+const emit = defineEmits(["close"]);
 const store = usePaymentStore();
 const toast = useToast();
 const visible = ref(false);
@@ -34,6 +34,7 @@ async function onUpload() {
     detail: res.message,
     life: 3000,
   });
+  emit("close");
   res.status === "success" ? (visible.value = false) : null;
 }
 </script>
@@ -53,12 +54,7 @@ async function onUpload() {
   >
     <div>
       <div class="flex justify-center">
-        <Image
-          src="https://businessmaker-academy.com/cms/wp-content/uploads/2022/04/Gcash-BMA-QRcode.jpg"
-          alt="Image"
-          width="300"
-          preview
-        />
+        <Image src="/gcash.jpg" alt="Gcash qr" width="300" preview />
       </div>
       <span class="text-surface-500 dark:text-surface-400 block mb-2 mt-5">
         Upload your receipt.
@@ -86,6 +82,7 @@ async function onUpload() {
                 icon="pi pi-cloud-upload"
                 label="upload"
                 rounded
+                :loading="store.isLoading"
                 outlined
                 severity="success"
                 :disabled="!files || files.length === 0"

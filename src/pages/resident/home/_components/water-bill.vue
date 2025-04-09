@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import type { Resident } from "@/types/resident";
 import useFirebaseTimestamp from "@/composables/useFirebaseTimestamp";
 import { formatToPeso } from "@/composables/currencyFormat";
@@ -11,6 +11,7 @@ import Reminder from "./reminder.vue";
 import { isTargetDate } from "@/composables/targetDate";
 
 const store = useReminderStore();
+const hide = ref(false);
 const { formatTimestamp } = useFirebaseTimestamp();
 const props = defineProps<{
   resident: Resident;
@@ -19,21 +20,28 @@ const props = defineProps<{
 onMounted(async () => {
   await store.fetchReminder(props.resident.uid);
 });
+
+const filtereReminder = computed(() => {
+  return store.reminder?.filter((item: any) => {
+    return isTargetDate(item.dueDate) && item.dueDate;
+  });
+});
 </script>
 <template>
   <div>
-    <div v-if="!store.isLoading && store.reminder.length > 0">
-      <Reminder
-        :reminder="store.reminder"
-        v-if="isTargetDate(store.reminder[0].dueDate)"
-      />
+    <div v-if="!store.isLoading && filtereReminder.length > 0">
+      <Reminder :reminder="filtereReminder" />
     </div>
     <div class="bg-white p-5 border rounded-lg flex flex-col gap-3">
       <div class="flex justify-between">
         <h1 class="font-semibold text-xl">
           Bill #{{ props.resident.billings?.[0].billNo }}
           <Tag
-            :severity="getSeverity(props.resident.billings?.[0].bStatus as string)"
+            :severity="
+              getSeverity(
+                props.resident.billings?.[0].paymentStatus ?? 'pending'
+              )
+            "
             :value="props.resident.billings?.[0].bStatus"
           ></Tag>
         </h1>
@@ -73,8 +81,14 @@ onMounted(async () => {
     </div>
     <div class="flex justify-end p-5">
       <PayBillModal
-        :uid="props.resident.uid as string"
-        :billingUid="props.resident.billings?.[0].uid as string"
+        v-if="
+          props.resident.billings?.[0].paymentReceipt === null ||
+          hide ||
+          props.resident.billings?.[0].paymentStatus?.toLowerCase() === 'paid'
+        "
+        @close="hide = true"
+        :uid="props.resident.uid"
+        :billingUid="props.resident.billings?.[0].uid"
       />
     </div>
   </div>

@@ -25,7 +25,7 @@ export const usePaymentStore = defineStore('payment', () => {
 			formData.append('uid', uid);
 			formData.append('billUid', billUid);
 
-			const { data: response } = useFetch(
+			const { data: response } = await useFetch(
 				`${import.meta.env.VITE_API_URL}/api/payments`,
 				{
 					method: 'POST',

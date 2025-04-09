@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { ref, onMounted, watch, watchEffect } from 'vue';
+	import { ref, onMounted, watchEffect } from 'vue';
 	import WaterBill from './_components/water-bill.vue';
 	import { getCurrentUser } from 'vuefire';
 	import { useResidentStore } from '@/stores/resident';
@@ -19,12 +19,14 @@
 		if (store.resident?.billings && store.resident?.billings?.length > 1) {
 			currentBill.value = Number(store.resident?.billings[0].billamnt) || 0;
 			previousBill.value = Number(store.resident?.billings[1].billamnt) || 0;
+			console.log(currentBill.value, previousBill.value);
 
 			// Ensure both values are valid for comparison
 			if (currentBill.value > previousBill.value) {
 				let percentage =
 					((currentBill.value - previousBill.value) / previousBill.value) * 100;
 				billIncreasePercentage.value = Number(percentage.toFixed(2));
+				console.log('greater');
 			} else {
 				let percentage =
 					((previousBill.value - currentBill.value) / currentBill.value) * 100;
