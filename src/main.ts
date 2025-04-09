@@ -120,11 +120,8 @@ app.use(DialogService);
 //       .catch((err) => console.error("SW registration failed:", err));
 //   });
 // }
-navigator.serviceWorker?.ready.then((reg) => {
+navigator.serviceWorker?.ready.then(async (reg) => {
   console.log("SW is ready!", reg);
-});
-
-const requestPermissionAndGetToken = async () => {
   try {
     // Request permission for notifications
     const permission = await Notification.requestPermission();
@@ -133,6 +130,7 @@ const requestPermissionAndGetToken = async () => {
       // Get the token
       const currentToken = await getToken(messaging, {
         vapidKey: import.meta.env.VITE_VAPID_KEY, // Replace with your public VAPID key
+        serviceWorkerRegistration: reg,
       });
 
       if (currentToken) {
@@ -149,9 +147,6 @@ const requestPermissionAndGetToken = async () => {
   } catch (error) {
     console.error("Error getting FCM token:", error);
   }
-};
-
-// Call the function when the app starts
-requestPermissionAndGetToken();
+});
 
 app.mount("#app");

@@ -52,6 +52,8 @@ export default defineConfig(() => {
         },
         strategies: "injectManifest",
         injectManifest: {
+          swSrc: "src/sw.ts",
+          swDest: "sw.js",
           rollupFormat: "iife",
         },
         devOptions: {
