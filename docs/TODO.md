@@ -12,9 +12,11 @@
 - [x] Create Import csv for ledger
 - [x] Create types for ledger
 - [x] Create types for collection
-- [ ] tables in pages in admin should not scrollable unless when expanded
 - [x] Fixed popover auto close when clicking the opened modal
+- [ ] tables in pages in admin should not scrollable unless when expanded
 
 ### Bugs/Errors
 
-- [ ] change here
+- [ ] push-notification branch: notification build
+- [ ] concern read status
+- [ ] resident account paymentStatus
