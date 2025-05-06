@@ -50,6 +50,10 @@ import {
 	InputGroupAddon,
 	Badge,
 	OverlayBadge,
+	Accordion,
+	AccordionPanel,
+	AccordionHeader,
+	AccordionContent,
 } from 'primevue';
 
 import {
@@ -126,6 +130,10 @@ app.component('InputGroup', InputGroup);
 app.component('InputGroupAddon', InputGroupAddon);
 app.component('Badge', Badge);
 app.component('OverlayBadge', OverlayBadge);
+app.component('Accordion', Accordion);
+app.component('AccordionPanel', AccordionPanel);
+app.component('AccordionHeader', AccordionHeader);
+app.component('AccordionContent', AccordionContent);
 
 app.use(createPinia());
 app.use(router);
