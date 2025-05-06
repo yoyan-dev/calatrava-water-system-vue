@@ -22,7 +22,7 @@
 <template>
 	<div class="card">
 		<div></div>
-		<span>No faq found.</span>
+		<span class="text-sm text-gray-600">No faq found.</span>
 		<Accordion>
 			<AccordionPanel
 				v-for="faq in store.faqs"
