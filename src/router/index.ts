@@ -96,6 +96,11 @@ const router = createRouter({
 					name: 'admin-setting',
 					component: () => import('@/pages/admin/setting/index.vue'),
 				},
+				{
+					path: 'faq',
+					name: 'admin-faq',
+					component: () => import('@/pages/admin/faq/index.vue'),
+				},
 			],
 		},
 		{

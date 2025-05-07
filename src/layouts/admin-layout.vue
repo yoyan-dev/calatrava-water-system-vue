@@ -147,10 +147,17 @@
 					</template>
 				</Menu>
 				<template #footer>
-					<Button
-						@click="logoutUser"
-						icon="pi pi-sign-out"
-						label="Sign Out" />
+					<div class="flex gap-4 items-center">
+						<RouterLink to="faq">
+							<i class="pi pi-question-circle"></i> FAQ
+						</RouterLink>
+						<hr class="border border-gray-600 h-10" />
+						<Button
+							size="small"
+							@click="logoutUser"
+							icon="pi pi-sign-out"
+							label="Sign Out" />
+					</div>
 				</template>
 			</Drawer>
 			<div class="flex gap-5 px-0 md:px-5 h-screen overflow-auto">
@@ -191,10 +198,17 @@
 								</RouterLink>
 							</li>
 						</ul>
-						<Button
-							@click="logoutUser"
-							icon="pi pi-sign-out"
-							label="Sign Out" />
+						<div class="flex gap-4 items-center">
+							<RouterLink to="faq">
+								<i class="pi pi-question-circle"></i> FAQ
+							</RouterLink>
+							<hr class="border border-gray-600 h-10" />
+							<Button
+								size="small"
+								@click="logoutUser"
+								icon="pi pi-sign-out"
+								label="Sign Out" />
+						</div>
 					</div>
 				</aside>
 				<div class="px-0 flex-1 overflow-y-auto">
