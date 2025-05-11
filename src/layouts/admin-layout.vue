@@ -51,6 +51,12 @@
 			route: '/admin/concerns',
 		},
 		{
+			label: 'FAQs',
+			name: 'admin-faq',
+			icon: 'pi pi-question-circle',
+			route: '/admin/faq',
+		},
+		{
 			label: 'Setting',
 			name: 'admin-setting',
 			icon: 'pi pi-cog',
@@ -198,17 +204,11 @@
 								</RouterLink>
 							</li>
 						</ul>
-						<div class="flex gap-4 items-center">
-							<RouterLink to="faq">
-								<i class="pi pi-question-circle"></i> FAQ
-							</RouterLink>
-							<hr class="border border-gray-600 h-10" />
-							<Button
-								size="small"
-								@click="logoutUser"
-								icon="pi pi-sign-out"
-								label="Sign Out" />
-						</div>
+						<Button
+							size="small"
+							@click="logoutUser"
+							icon="pi pi-sign-out"
+							label="Sign Out" />
 					</div>
 				</aside>
 				<div class="px-0 flex-1 overflow-y-auto">
