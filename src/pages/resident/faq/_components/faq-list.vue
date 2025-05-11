@@ -12,7 +12,7 @@
 		<div></div>
 		<span
 			class="text-sm text-gray-600"
-			v-if="store.totalFas <= 0"
+			v-if="store.totalFaqs <= 0"
 			>No faq found.</span
 		>
 		<Accordion v-else>
