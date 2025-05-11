@@ -22,8 +22,12 @@
 <template>
 	<div class="card">
 		<div></div>
-		<span class="text-sm text-gray-600">No faq found.</span>
-		<Accordion>
+		<span
+			class="text-sm text-gray-600"
+			v-if="store.totalFaqs <= 0"
+			>No faq found.</span
+		>
+		<Accordion v-else>
 			<AccordionPanel
 				v-for="faq in store.faqs"
 				:key="faq.question"

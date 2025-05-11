@@ -42,6 +42,11 @@ const router = createRouter({
 					name: 'resident-concern',
 					component: () => import('@/pages/resident/concern/index.vue'),
 				},
+				{
+					path: 'faq',
+					name: 'resident-faq',
+					component: () => import('@/pages/resident/faq/index.vue'),
+				},
 			],
 		},
 		{
