@@ -20,6 +20,8 @@
 			detail: res.message,
 			life: 3000,
 		});
+
+		dialogRef.value.close();
 	}
 
 	function onClose() {

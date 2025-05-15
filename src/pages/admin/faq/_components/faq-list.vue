@@ -3,6 +3,7 @@
 	import type { Faq } from '@/types/faq';
 	import { useDialog } from 'primevue';
 	import { useFaqStore } from '@/stores/faq';
+	import { formatDateTimestamp } from '@/composables/formatDate';
 
 	const store = useFaqStore();
 	const dialog = useDialog();
@@ -37,7 +38,9 @@
 					<div>
 						<p class="m-0">{{ faq.answer }}</p>
 						<div class="flex justify-between items-center gap-4 mt-4">
-							<span class="text-sm text-gray-400">January 01, 2025</span>
+							<span class="text-sm text-gray-400">{{
+								formatDateTimestamp(faq.createdAt)
+							}}</span>
 							<div>
 								<Button
 									severity="primary"

@@ -16,7 +16,7 @@
 	const isLoading = ref(false);
 	async function onSubmit() {
 		isLoading.value = true;
-		const res = await store.updateFaq(faq.value);
+		const res = await store.updateFaq(faq.value.uid as string, faq.value);
 		toast.add({
 			severity: res.status,
 			summary: res.statusMessage,

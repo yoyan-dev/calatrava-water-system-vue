@@ -38,10 +38,10 @@ export const faqRepository = {
 		}
 	},
 
-	async editFaq(payload: any) {
+	async editFaq(uid: string, payload: any) {
 		try {
-			const { data } = await useFetch(`${API_URL}/api/faqs`, {
-				method: 'POST',
+			const { data } = await useFetch(`${API_URL}/api/faqs/${uid}`, {
+				method: 'PUT',
 				headers: {
 					'Content-Type': 'application/json',
 				},
@@ -61,7 +61,7 @@ export const faqRepository = {
 
 	async deleteFaq(uid: string) {
 		try {
-			const { data, error } = await useFetch(`${API_URL}/api/faqs`, {
+			const { data, error } = await useFetch(`${API_URL}/api/faqs/${uid}`, {
 				method: 'DELETE',
 				headers: {
 					'Content-Type': 'application/json',
