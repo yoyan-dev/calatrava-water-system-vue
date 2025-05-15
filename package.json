@@ -17,6 +17,7 @@
 		"camelize": "^1.0.1",
 		"date-fns": "^4.1.0",
 		"firebase": "^11.1.0",
+		"leaflet": "^1.9.4",
 		"papaparse": "^5.5.2",
 		"pinia": "^2.3.0",
 		"primeicons": "^7.0.0",
