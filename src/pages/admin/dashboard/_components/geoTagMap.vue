@@ -8,18 +8,14 @@
 </template>
 
 <script setup>
+	import { useCoordinateStore } from '@/stores/coordinate';
 	import L from 'leaflet';
 	import { onMounted, ref } from 'vue';
 
-	const geoTags = ref([
-		{
-			lat: 10.45109711173025,
-			lng: 123.36110115051271,
-			name: 'CARPEN',
-		},
-	]);
+	const store = useCoordinateStore();
 
-	onMounted(() => {
+	onMounted(async () => {
+		await store.fetchCoordinates();
 		navigator.geolocation.getCurrentPosition(
 			(position) => {
 				const { latitude, longitude } = position.coords;
@@ -34,7 +30,7 @@
 					.bindPopup('📍 You are here')
 					.openPopup();
 
-				geoTags.value.map((tag) => {
+				store.coordinates.map((tag) => {
 					L.marker([tag.lat, tag.lng])
 						.addTo(map)
 						.bindPopup(tag.name)
@@ -42,7 +38,7 @@
 				});
 
 				initMapListeners(map);
-				console.log(geoTags.value);
+				console.log(store.coordinates);
 			},
 			(error) => {
 				alert('Location access denied. Showing default location.');
@@ -57,7 +53,7 @@
 		);
 
 		function initMapListeners(map) {
-			map.on('click', (e) => {
+			map.on('click', async (e) => {
 				const { lat, lng } = e.latlng;
 
 				const name = prompt('Enter location label:');
@@ -65,12 +61,12 @@
 
 				L.marker([lat, lng]).addTo(map).bindPopup(name).openPopup();
 
-				geoTags.value.push({
+				await store.addCoordinate({
 					name,
 					lat,
 					lng,
 				});
-				console.log(geoTags.value);
+				console.log(store.coordinates);
 			});
 		}
 	});
