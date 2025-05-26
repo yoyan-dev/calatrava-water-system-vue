@@ -6,6 +6,7 @@ import { firebaseApp, messaging } from '@/firebase/config';
 import '@/assets/main.css';
 import '@/assets/base.css';
 import 'primeicons/primeicons.css';
+import 'leaflet/dist/leaflet.css';
 
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';

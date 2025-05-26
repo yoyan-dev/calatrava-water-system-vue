@@ -38,10 +38,10 @@ export const useFaqStore = defineStore('faq', () => {
 		}
 	}
 
-	async function updateFaq(faq: Faq): Promise<StoreResponse> {
+	async function updateFaq(uid: string, faq: Faq): Promise<StoreResponse> {
 		isLoading.value = true;
 		try {
-			const response = await faqRepository.editFaq(faq);
+			const response = await faqRepository.editFaq(uid, faq);
 			fetchFaqs();
 			return {
 				status: 'success',
