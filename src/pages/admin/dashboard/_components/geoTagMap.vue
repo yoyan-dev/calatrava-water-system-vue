@@ -19,10 +19,11 @@
 		navigator.geolocation.getCurrentPosition(
 			(position) => {
 				const { latitude, longitude } = position.coords;
-				const map = L.map('map').setView([latitude, longitude], 15);
+				const map = L.map('map').setView([latitude, longitude], 18);
 
-				L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-					attribution: '&copy; OpenStreetMap contributors',
+				L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+					maxZoom: 20,
+					subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
 				}).addTo(map);
 
 				L.marker([latitude, longitude])
