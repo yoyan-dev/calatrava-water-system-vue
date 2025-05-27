@@ -48,7 +48,7 @@
 			},
 			(error) => {
 				alert('Location access denied. Showing default location.');
-				const map = L.map('map').setView([51.505, -0.09], 13);
+				const map = L.map('map').setView([10.3157, 123.8854], 13);
 
 				L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
 					maxZoom: 20,
