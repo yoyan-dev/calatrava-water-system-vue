@@ -25,8 +25,13 @@
 					maxZoom: 20,
 					subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
 				}).addTo(map);
-
-				L.marker([latitude, longitude])
+				const customIcon = L.icon({
+					iconUrl: '/mark.png',
+					iconSize: [38, 38],
+					iconAnchor: [19, 38],
+					popupAnchor: [0, -38],
+				});
+				L.marker([latitude, longitude], { icon: customIcon })
 					.addTo(map)
 					.bindPopup('📍 You are here')
 					.openPopup();
@@ -43,10 +48,11 @@
 			},
 			(error) => {
 				alert('Location access denied. Showing default location.');
-				const map = L.map('map').setView([10.3157, 123.8854], 13);
+				const map = L.map('map').setView([51.505, -0.09], 13);
 
-				L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-					attribution: '&copy; OpenStreetMap contributors',
+				L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+					maxZoom: 20,
+					subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
 				}).addTo(map);
 
 				initMapListeners(map);
@@ -72,10 +78,3 @@
 		}
 	});
 </script>
-
-<style scoped>
-	#map {
-		border: 2px solid #ccc;
-		border-radius: 8px;
-	}
-</style>
