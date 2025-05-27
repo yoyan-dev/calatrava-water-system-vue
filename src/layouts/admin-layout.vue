@@ -153,17 +153,11 @@
 					</template>
 				</Menu>
 				<template #footer>
-					<div class="flex gap-4 items-center">
-						<RouterLink to="faq">
-							<i class="pi pi-question-circle"></i> FAQ
-						</RouterLink>
-						<hr class="border border-gray-600 h-10" />
-						<Button
-							size="small"
-							@click="logoutUser"
-							icon="pi pi-sign-out"
-							label="Sign Out" />
-					</div>
+					<Button
+						size="small"
+						@click="logoutUser"
+						icon="pi pi-sign-out"
+						label="Sign Out" />
 				</template>
 			</Drawer>
 			<div class="flex gap-5 px-0 md:px-5 h-screen overflow-auto">
