@@ -31,13 +31,14 @@
 					iconAnchor: [19, 38],
 					popupAnchor: [0, -38],
 				});
+
 				L.marker([latitude, longitude], { icon: customIcon })
 					.addTo(map)
 					.bindPopup('📍 You are here')
 					.openPopup();
 
 				store.coordinates.map((tag) => {
-					L.marker([tag.lat, tag.lng])
+					L.marker([tag.lat, tag.lng], { icon: customIcon })
 						.addTo(map)
 						.bindPopup(tag.name)
 						.openPopup();
