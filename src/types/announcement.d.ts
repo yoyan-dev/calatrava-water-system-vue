@@ -5,4 +5,5 @@ export interface Announcement {
 	createdAt?: any;
 	dueDate?: any;
 	type?: string;
+	area?: string;
 }
