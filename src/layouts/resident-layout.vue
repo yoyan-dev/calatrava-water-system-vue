@@ -124,7 +124,7 @@
 			</Toolbar>
 		</div>
 		<slot />
-		<div class="sticky bottom-0 z-10 block md:hidden lg:hidden">
+		<div class="fixed w-screen bottom-0 z-10 block md:hidden lg:hidden">
 			<div class="bg-white p-2 shadow-md border">
 				<div class="flex justify-between gap-5 items-center">
 					<RouterLink

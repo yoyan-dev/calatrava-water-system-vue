@@ -1,8 +1,9 @@
 export interface Announcement {
-  id?: string;
-  uid?: string;
-  content?: string;
-  createdAt?: any;
-  dueDate?: any;
-  type?: string;
+	id?: string;
+	uid?: string;
+	content?: string;
+	createdAt?: any;
+	dueDate?: any;
+	type?: string;
+	area?: string;
 }
