@@ -7,7 +7,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 export const coordinateRepository = {
 	async fetchCoordinates() {
-		const url = `${API_URL}/api/coordinates`;
+		const url = `${API_URL}/api/v1/coordinates`;
 
 		try {
 			const { data: response } = await useFetch(url).json<
@@ -22,7 +22,7 @@ export const coordinateRepository = {
 
 	async addCoordinate(payload: any) {
 		try {
-			const { data } = await useFetch(`${API_URL}/api/coordinates`, {
+			const { data } = await useFetch(`${API_URL}/api/v1/coordinates`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ export const coordinateRepository = {
 
 	async editCoordinate(uid: string, payload: any) {
 		try {
-			const { data } = await useFetch(`${API_URL}/api/coordinates/${uid}`, {
+			const { data } = await useFetch(`${API_URL}/api/v1/coordinates/${uid}`, {
 				method: 'PUT',
 				headers: {
 					'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ export const coordinateRepository = {
 	async deleteCoordinate(uid: string) {
 		try {
 			const { data, error } = await useFetch(
-				`${API_URL}/api/coordinates/${uid}`,
+				`${API_URL}/api/v1/coordinates/${uid}`,
 				{
 					method: 'DELETE',
 					headers: {

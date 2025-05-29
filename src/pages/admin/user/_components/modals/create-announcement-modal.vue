@@ -12,7 +12,7 @@
 	onMounted(async () => {
 		isLoading.value = true;
 		const { data: response } = await useFetch(
-			`${API_URL}/api/books`,
+			`${API_URL}/api/v1/books`,
 		).json<H3Response>();
 		isLoading.value = false;
 		console.log(response.value);

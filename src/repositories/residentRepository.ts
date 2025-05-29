@@ -11,7 +11,7 @@ export const residentRepository = {
 	async fetchResident(uid: string) {
 		try {
 			const { data: response } = await useFetch(
-				`${API_URL}/api/residents/${uid}`,
+				`${API_URL}/api/v1/residents/${uid}`,
 			).json<H3Response<Resident>>();
 			return camelize(response.value);
 		} catch (error) {
@@ -23,7 +23,7 @@ export const residentRepository = {
 	async fetchResidentLedgers(uid: string) {
 		try {
 			const { data: response } = await useFetch(
-				`${API_URL}/api/residents/ledger/${uid}`,
+				`${API_URL}/api/v1/residents/ledger/${uid}`,
 			).json<H3Response<Ledger[]>>();
 			return camelize(response.value);
 		} catch (error) {
@@ -35,7 +35,7 @@ export const residentRepository = {
 	async fetchResidentCollections(uid: string) {
 		try {
 			const { data: response } = await useFetch(
-				`${API_URL}/api/residents/collection/${uid}`,
+				`${API_URL}/api/v1/residents/collection/${uid}`,
 			).json<H3Response<Collection[]>>();
 			return camelize(response.value);
 		} catch (error) {
@@ -46,7 +46,7 @@ export const residentRepository = {
 
 	async fetchResidents(params: Record<string, any>) {
 		const queryString = new URLSearchParams(params).toString();
-		const url = `${API_URL}/api/residents${
+		const url = `${API_URL}/api/v1/residents${
 			queryString ? '?' + queryString : ''
 		}`;
 

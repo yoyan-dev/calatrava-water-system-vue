@@ -9,7 +9,7 @@ export const billingRepository = {
 	async fetchBilling(uid: string) {
 		try {
 			const { data: response } = await useFetch(
-				`${API_URL}/api/billings/${uid}`,
+				`${API_URL}/api/v1/billings/${uid}`,
 			).json<H3Response<Billing>>();
 			return camelize(response.value);
 		} catch (error) {
@@ -20,7 +20,7 @@ export const billingRepository = {
 
 	async fetchBillings(params: Record<string, any>) {
 		const queryString = new URLSearchParams(params).toString();
-		const url = `${API_URL}/api/billings${
+		const url = `${API_URL}/api/v1/billings${
 			queryString ? '?' + queryString : ''
 		}`;
 
@@ -37,7 +37,7 @@ export const billingRepository = {
 
 	async addBillings(payload: FormData) {
 		try {
-			const { data, error } = await useFetch(`${API_URL}/api/billings`, {
+			const { data, error } = await useFetch(`${API_URL}/api/v1/billings`, {
 				method: 'POST',
 				body: payload,
 			}).json<H3Response>();
@@ -59,13 +59,16 @@ export const billingRepository = {
 
 	async updateBilling({ uid, billing }: { uid: string; billing: Billing }) {
 		try {
-			const { data, error } = await useFetch(`${API_URL}/api/billings/${uid}`, {
-				method: 'PUT',
-				headers: {
-					'Content-Type': 'application/json',
+			const { data, error } = await useFetch(
+				`${API_URL}/api/v1/billings/${uid}`,
+				{
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(billing),
 				},
-				body: JSON.stringify(billing),
-			}).json<H3Response>();
+			).json<H3Response>();
 
 			if (error.value) {
 				throw new Error(error.value.message || 'Network error');
@@ -83,10 +86,13 @@ export const billingRepository = {
 
 	async deleteBilling({ uid, accountno }: { uid: string; accountno: string }) {
 		try {
-			const { data, error } = await useFetch(`${API_URL}/api/billings/${uid}`, {
-				method: 'DELETE',
-				body: accountno,
-			}).json<H3Response>();
+			const { data, error } = await useFetch(
+				`${API_URL}/api/v1/billings/${uid}`,
+				{
+					method: 'DELETE',
+					body: accountno,
+				},
+			).json<H3Response>();
 
 			if (error.value) {
 				throw new Error(error.value.message || 'Network error');
@@ -104,7 +110,7 @@ export const billingRepository = {
 
 	async deleteBillings(payload: Billing[]) {
 		try {
-			const { data, error } = await useFetch(`${API_URL}/api/billings`, {
+			const { data, error } = await useFetch(`${API_URL}/api/v1/billings`, {
 				method: 'DELETE',
 				headers: {
 					'Content-Type': 'application/json',
