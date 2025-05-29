@@ -16,7 +16,7 @@
 		).json<H3Response>();
 		isLoading.value = false;
 		console.log(response.value);
-		areas.value = response.value?.data || [];
+		areas.value = response.value?.data?.books || [];
 	});
 
 	const toast = useToast();
