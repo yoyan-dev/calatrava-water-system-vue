@@ -12,7 +12,7 @@
 	onMounted(async () => {
 		isLoading.value = true;
 		const { data: response } = await useFetch(
-			`${API_URL}/api/books`,
+			`${API_URL}/api/v1/books`,
 		).json<H3Response>();
 		isLoading.value = false;
 		console.log(response.value);
@@ -39,9 +39,17 @@
 	<Button
 		severity="primary"
 		icon="pi pi-send"
-		label="Announcement"
 		size="small"
+		class="visible md:hidden"
 		@click="visible = true" />
+	<div class="hidden md:block">
+		<Button
+			severity="primary"
+			icon="pi pi-send"
+			label="Announcement"
+			size="small"
+			@click="visible = true" />
+	</div>
 	<Dialog
 		v-model:visible="visible"
 		modal
@@ -77,7 +85,8 @@
 							v-model.trim="announcement.area"
 							autofocus
 							placeholder="Select an area"
-							clearable
+							showClear
+							highlightOnSelect
 							fluid />
 					</div>
 					<div>

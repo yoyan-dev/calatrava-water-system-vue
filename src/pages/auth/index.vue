@@ -27,20 +27,37 @@
 		isSubmitted.value = true;
 		errorMessage.value = '';
 		try {
-			const { data: token } = await useFetch(
-				`${import.meta.env.VITE_API_URL}/api/auth/${
+			const { data: token, error } = await useFetch(
+				`${import.meta.env.VITE_API_URL}/api/v1/auth/${
 					initialValues.value.accountNumber
 				}`,
 			).json<H3Response<string>>();
 
+			if (error.value) {
+				throw error.value;
+			}
+
 			const user = await signInWithCustomToken(auth!, token.value?.data ?? '');
-			console.log(user);
 			if (user) {
 				router.push('/resident');
-				console.log(user);
 			}
-		} catch (e) {
-			errorMessage.value = 'Failed to sign in. Please try again.';
+		} catch (e: any) {
+			switch (e?.code) {
+				case 'auth/invalid-custom-token':
+					errorMessage.value = 'Invalid authentication token.';
+					break;
+				case 'auth/user-disabled':
+					errorMessage.value = 'This user account has been disabled.';
+					break;
+				case 'auth/user-not-found':
+					errorMessage.value = 'No user found for this account number.';
+					break;
+				case 'auth/network-request-failed':
+					errorMessage.value = 'Network error. Please check your connection.';
+					break;
+				default:
+					errorMessage.value = 'Failed to sign in. Please try again.';
+			}
 			console.error(e);
 		}
 		isLoading.value = false;
