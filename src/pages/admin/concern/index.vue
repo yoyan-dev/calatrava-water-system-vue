@@ -16,6 +16,7 @@
 	const store = useConcernStore();
 	const selectedArea = ref();
 	const toast = useToast();
+	const status = ref('pending');
 
 	onMounted(async () => {
 		await store.fetchConcerns();
@@ -24,12 +25,21 @@
 			if (findItem) return;
 			areas.value.push(item.area);
 		});
+		console.log(store.concerns);
 	});
 
 	const filteredConcern = computed(() => {
-		if (!selectedArea.value) return store.concerns;
+		if (!selectedArea.value)
+			return store.concerns.filter(
+				(item: any) =>
+					item.status === status.value ||
+					(!item.status && status.value === 'pending'),
+			);
 		return store.concerns.filter(
-			(item: any) => item.area === selectedArea.value,
+			(item: any) =>
+				item.area === selectedArea.value &&
+				(item.status === status.value ||
+					(!item.status && status.value === 'pending')),
 		);
 	});
 
@@ -49,7 +59,7 @@
 <template>
 	<div
 		class="bg-surface-0 dark:bg-surface-900 p-4 py-6 md:p-6 border rounded-lg">
-		<div class="flex justify-between flex-wrap items-center py-2">
+		<div class="flex justify-between flex-wrap items-center">
 			<div class="py-2 text-xl">List of Concerns</div>
 			<div v-if="selectedArea">
 				<span class="capitalize bg-primary-200 rounded-lg px-2">{{
@@ -62,17 +72,34 @@
 						: `${filteredConcern.length} concern`
 				}}
 			</div>
-			<Select
-				:options="areas"
-				placeholder="Select Area"
-				checkmark
-				v-model="selectedArea"
-				:highlightOnSelect="false"
-				class="w-full md:w-56"
-				showClear />
 		</div>
-		<div class="border-b pb-2">
-			Total concerns: {{ filteredConcern.length }}
+		<div class="border-b pb-2 flex items-center justify-between">
+			<span> Total {{ status }} concerns: {{ filteredConcern.length }} </span>
+			<div>
+				<Select
+					:options="areas"
+					placeholder="Select Area"
+					checkmark
+					size="small"
+					v-model="selectedArea"
+					:highlightOnSelect="false"
+					class="w-full md:w-56"
+					showClear />
+				<Button
+					v-if="status === 'pending'"
+					severity="primary"
+					size="small"
+					text
+					@click="status = 'resolved'"
+					label="Resolved Concern" />
+				<Button
+					v-else
+					severity="warn"
+					size="small"
+					text
+					@click="status = 'pending'"
+					label="Pending Concern" />
+			</div>
 		</div>
 		<div v-if="!store.isLoading">
 			<div v-if="filteredConcern.length === 0">No concern found.</div>
@@ -90,34 +117,40 @@
 								: 'border border-gray-400 bg-gray-100'
 						">
 						<div class="flex items-start space-x-4">
-							<div
-								class="w-10 h-10 min-w-10 min-h-10 bg-primary text-white rounded-full flex items-center justify-center">
-								<span class="text-lg font-bold">{{
-									concern.name?.charAt(0).toUpperCase()
-								}}</span>
-							</div>
 							<div class="flex-1">
-								<div class="flex justify-between w-full items-start">
-									<div>
-										<h2 class="text-lg font-semibold capitalize">
-											{{ concern.name }}
-										</h2>
+								<div
+									class="flex gap-4 w-full flex-wrap flex-col md:flex-row items-start pb-2">
+									<div class="flex gap-4 items-center">
+										<div
+											class="w-10 h-10 min-w-10 min-h-10 bg-primary text-white rounded-full flex items-center justify-center">
+											<span class="text-lg font-bold">{{
+												concern.name?.charAt(0).toUpperCase()
+											}}</span>
+										</div>
+										<div class="flex flex-col items-start">
+											<span class="text-lg font-semibold capitalize">
+												{{ concern.name }}
+											</span>
+											<span
+												class="text-blue-600 px-1 bg-blue-100 text-xs rounded capitalize"
+												>{{ concern.area }}</span
+											>
+										</div>
 									</div>
-									<span
-										class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded capitalize"
-										>{{ concern.area }}</span
-									>
-								</div>
-								<div class="flex justify-between">
-									<p class="text-sm text-gray-500">
-										{{ concern.content }}
-									</p>
-									<Button
-										v-if="concern.status === 'pending' || !concern.status"
-										severity="success"
-										size="small"
-										text
-										label="Mark as Resolved" />
+									<div
+										class="flex justify-between flex-col md:flex-row w-full flex-1">
+										<p
+											class="text-sm text-gray-500 flex-1 bg-slate-100 rounded-sm p-2">
+											{{ concern.content }}
+										</p>
+										<Button
+											v-if="concern.status === 'pending' || !concern.status"
+											severity="success"
+											size="small"
+											text
+											@click="markAsResolved(concern)"
+											label="Mark as Resolved" />
+									</div>
 								</div>
 								<div class="text-end text-sm text-gray-400">
 									<span> {{ formatDate(concern.createdAt) }}</span>

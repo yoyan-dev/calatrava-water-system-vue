@@ -77,7 +77,8 @@
 							v-model.trim="announcement.area"
 							autofocus
 							placeholder="Select an area"
-							clearable
+							showClear
+							highlightOnSelect
 							fluid />
 					</div>
 					<div>
