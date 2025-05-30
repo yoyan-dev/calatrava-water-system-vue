@@ -42,7 +42,7 @@
 				router.push('/resident');
 			}
 		} catch (e: any) {
-			switch (e?.code) {
+			switch (e.code) {
 				case 'auth/invalid-custom-token':
 					errorMessage.value = 'Invalid authentication token.';
 					break;
@@ -56,9 +56,9 @@
 					errorMessage.value = 'Network error. Please check your connection.';
 					break;
 				default:
-					errorMessage.value = 'Failed to sign in. Please try again.';
+					errorMessage.value = 'Unknown Error. Please try again.';
 			}
-			console.error(e);
+			console.error(e.code);
 		}
 		isLoading.value = false;
 	}
@@ -106,7 +106,7 @@
 					:loading="isLoading" />
 				<RouterLink
 					class="text-primary"
-					to="auth/admin"
+					to="/auth/admin"
 					>Admin log in <i class="pi pi-arrow-right"></i>
 				</RouterLink>
 			</form>
