@@ -80,7 +80,7 @@
 					<Column
 						class="whitespace-nowrap text-ellipsis"
 						field="waterBill"
-						header="Water Bill">
+						header="Bill Amount">
 						<template #body="slotProps">
 							<span class="rounded-md text-primary">
 								<i name="pi pi-money-bill"></i
@@ -148,6 +148,12 @@
 										<span>Water Bill:</span>
 										<span class="text-gray-500">{{
 											slotProps.data.billamnt
+										}}</span>
+									</div>
+									<div class="flex justify-between items-end gap-3">
+										<span>Enviromental Fee:</span>
+										<span class="text-gray-500">{{
+											slotProps.data.enviromentFee
 										}}</span>
 									</div>
 									<div class="flex justify-between items-end gap-3">
