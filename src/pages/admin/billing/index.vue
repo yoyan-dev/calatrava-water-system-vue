@@ -134,11 +134,11 @@
 					</Column>
 					<Column
 						class="whitespace-nowrap text-ellipsis"
-						header="Bill Amount">
+						header="Total Bill">
 						<template #body="slotProps">
 							<span class="rounded-md text-primary">
 								<i name="pi pi-money-bill"></i
-								>{{ formatToPeso(slotProps.data.billamnt) }}
+								>{{ formatToPeso(slotProps.data.totalBill) }}
 							</span>
 						</template>
 					</Column>
