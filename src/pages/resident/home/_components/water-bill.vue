@@ -76,7 +76,7 @@
 				<div>
 					<label class="text-surface-500">Amount</label><br />
 					<span>
-						{{ formatToPeso(props.resident.billings?.[0].billamnt) }}
+						{{ formatToPeso(props.resident.billings?.[0].totalBill || 0) }}
 					</span>
 				</div>
 			</div>
