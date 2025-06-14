@@ -7,7 +7,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 export const faqRepository = {
 	async fetchFaqs() {
-		const url = `${API_URL}/api/v1/faqs`;
+		const url = `${API_URL}/faqs`;
 
 		try {
 			const { data: response } = await useFetch(url).json<H3Response<Faq[]>>();
@@ -20,7 +20,7 @@ export const faqRepository = {
 
 	async addFaq(payload: any) {
 		try {
-			const { data } = await useFetch(`${API_URL}/api/v1/faqs`, {
+			const { data } = await useFetch(`${API_URL}/faqs`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ export const faqRepository = {
 
 	async editFaq(uid: string, payload: any) {
 		try {
-			const { data } = await useFetch(`${API_URL}/api/v1/faqs/${uid}`, {
+			const { data } = await useFetch(`${API_URL}/faqs/${uid}`, {
 				method: 'PUT',
 				headers: {
 					'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ export const faqRepository = {
 
 	async deleteFaq(uid: string) {
 		try {
-			const { data, error } = await useFetch(`${API_URL}/api/v1/faqs/${uid}`, {
+			const { data, error } = await useFetch(`${API_URL}/faqs/${uid}`, {
 				method: 'DELETE',
 				headers: {
 					'Content-Type': 'application/json',

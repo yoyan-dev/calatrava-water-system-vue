@@ -7,7 +7,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 export const reminderRepository = {
 	async fetchReminders() {
-		const url = `${API_URL}/api/v1/reminders/`;
+		const url = `${API_URL}/reminders/`;
 		try {
 			const { data: response } = await useFetch(url).json<H3Response>();
 			return camelize(response.value);
@@ -24,7 +24,7 @@ export const reminderRepository = {
 		params: Record<string, any>;
 	}) {
 		const queryString = new URLSearchParams(params).toString();
-		const url = `${API_URL}/api/v1/reminders/${uid}${
+		const url = `${API_URL}/reminders/${uid}${
 			queryString ? '?' + queryString : ''
 		}`;
 
@@ -39,7 +39,7 @@ export const reminderRepository = {
 
 	async addReminder(payload: Reminder) {
 		try {
-			const { data, error } = await useFetch(`${API_URL}/api/v1/reminders`, {
+			const { data, error } = await useFetch(`${API_URL}/reminders`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

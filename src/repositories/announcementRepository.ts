@@ -8,7 +8,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 export const AnnouncementRepository = {
 	async fetchAnnouncements(params: Record<string, any>) {
 		const queryString = new URLSearchParams(params).toString();
-		const url = `${API_URL}/api/v1/announcements/${
+		const url = `${API_URL}/announcements/${
 			queryString ? '?' + queryString : ''
 		}`;
 
@@ -24,16 +24,13 @@ export const AnnouncementRepository = {
 	async addAnnouncement(payload: Announcement) {
 		console.log(payload);
 		try {
-			const { data, error } = await useFetch(
-				`${API_URL}/api/v1/announcements`,
-				{
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify(payload),
+			const { data, error } = await useFetch(`${API_URL}/announcements`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
 				},
-			).json<H3Response>();
+				body: JSON.stringify(payload),
+			}).json<H3Response>();
 
 			if (error.value) {
 				throw new Error(error.value.message || 'Network error');
