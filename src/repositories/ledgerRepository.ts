@@ -8,9 +8,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 export const ledgerRepository = {
 	async fetchLedgers(params: Record<string, any>) {
 		const queryString = new URLSearchParams(params).toString();
-		const url = `${API_URL}/api/v1/ledgers${
-			queryString ? '?' + queryString : ''
-		}`;
+		const url = `${API_URL}/ledgers${queryString ? '?' + queryString : ''}`;
 
 		try {
 			const { data: response } = await useFetch(url).json<
@@ -25,7 +23,7 @@ export const ledgerRepository = {
 
 	async addLedgers(payload: FormData) {
 		try {
-			const { data } = await useFetch(`${API_URL}/api/v1/ledgers`, {
+			const { data } = await useFetch(`${API_URL}/ledgers`, {
 				method: 'POST',
 				body: payload,
 			}).json<H3Response>();
@@ -43,7 +41,7 @@ export const ledgerRepository = {
 
 	async deleteLedgers(payload: Ledger[]) {
 		try {
-			const { data, error } = await useFetch(`${API_URL}/api/v1/ledgers`, {
+			const { data, error } = await useFetch(`${API_URL}/ledgers`, {
 				method: 'DELETE',
 				headers: {
 					'Content-Type': 'application/json',

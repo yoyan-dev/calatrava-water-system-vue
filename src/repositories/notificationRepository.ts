@@ -6,7 +6,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 export const notificationRepository = {
 	async fetchNotifications() {
-		const url = `${API_URL}/api/v1/notifications`;
+		const url = `${API_URL}/notifications`;
 
 		try {
 			const { data: response } = await useFetch(url).json<
@@ -20,7 +20,7 @@ export const notificationRepository = {
 	},
 	async markAsAllRead() {
 		try {
-			const { data } = await useFetch(`${API_URL}/api/v1/notifications`, {
+			const { data } = await useFetch(`${API_URL}/notifications`, {
 				method: 'PUT',
 			}).json<H3Response>();
 

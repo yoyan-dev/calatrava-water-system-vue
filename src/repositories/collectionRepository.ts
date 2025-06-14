@@ -8,9 +8,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 export const collectionRepository = {
 	async fetchCollections(params: Record<string, any>) {
 		const queryString = new URLSearchParams(params).toString();
-		const url = `${API_URL}/api/v1/collections${
-			queryString ? '?' + queryString : ''
-		}`;
+		const url = `${API_URL}/collections${queryString ? '?' + queryString : ''}`;
 
 		try {
 			const { data: response } = await useFetch(url, {
@@ -25,7 +23,7 @@ export const collectionRepository = {
 
 	async addCollections(payload: FormData) {
 		try {
-			const { data } = await useFetch(`${API_URL}/api/v1/collections`, {
+			const { data } = await useFetch(`${API_URL}/collections`, {
 				method: 'POST',
 				body: payload,
 			}).json<H3Response>();
@@ -43,7 +41,7 @@ export const collectionRepository = {
 
 	async deleteCollections(payload: Collection[]) {
 		try {
-			const { data, error } = await useFetch(`${API_URL}/api/v1/collections`, {
+			const { data, error } = await useFetch(`${API_URL}/collections`, {
 				method: 'DELETE',
 				headers: {
 					'Content-Type': 'application/json',

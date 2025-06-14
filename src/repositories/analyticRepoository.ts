@@ -9,9 +9,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 export const AnalyticRepository = {
 	async fetchLineAnalytics() {
 		try {
-			const { data: response } = await useFetch(
-				`${API_URL}/api/v1/analytics/line`,
-			)
+			const { data: response } = await useFetch(`${API_URL}/analytics/line`)
 				.get()
 				.json<H3Response<Line[]>>();
 			return camelize(response.value);
@@ -23,9 +21,7 @@ export const AnalyticRepository = {
 
 	async fetchTotalAnalytics() {
 		try {
-			const { data: response } = await useFetch(
-				`${API_URL}/api/v1/analytics/total`,
-			)
+			const { data: response } = await useFetch(`${API_URL}/analytics/total`)
 				.get()
 				.json<H3Response<Total>>();
 			return camelize(response.value);

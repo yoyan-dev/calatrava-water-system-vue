@@ -7,7 +7,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 export const concernRepository = {
 	async fetchConcerns() {
-		const url = `${API_URL}/api/v1/concerns`;
+		const url = `${API_URL}/concerns`;
 
 		try {
 			const { data: response } = await useFetch(url).json<
@@ -22,7 +22,7 @@ export const concernRepository = {
 
 	async addConcern(payload: any) {
 		try {
-			const { data } = await useFetch(`${API_URL}/api/v1/concerns`, {
+			const { data } = await useFetch(`${API_URL}/concerns`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ export const concernRepository = {
 	},
 	async editConcern(uid: string, payload: any) {
 		try {
-			const { data } = await useFetch(`${API_URL}/api/v1/concerns/${uid}`, {
+			const { data } = await useFetch(`${API_URL}/concerns/${uid}`, {
 				method: 'PUT',
 				headers: {
 					'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ export const concernRepository = {
 
 	// async deleteConcern(payload: Concern[]) {
 	//     try {
-	//         const { data, error } = await useFetch(`${API_URL}/api/v1/concerns`, {
+	//         const { data, error } = await useFetch(`${API_URL}/concerns`, {
 	//             method: 'DELETE',
 	//             headers: {
 	//                 'Content-Type': 'application/json',

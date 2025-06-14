@@ -7,7 +7,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 export const coordinateRepository = {
 	async fetchCoordinates() {
-		const url = `${API_URL}/api/v1/coordinates`;
+		const url = `${API_URL}/coordinates`;
 
 		try {
 			const { data: response } = await useFetch(url).json<
@@ -22,7 +22,7 @@ export const coordinateRepository = {
 
 	async addCoordinate(payload: any) {
 		try {
-			const { data } = await useFetch(`${API_URL}/api/v1/coordinates`, {
+			const { data } = await useFetch(`${API_URL}/coordinates`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ export const coordinateRepository = {
 
 	async editCoordinate(uid: string, payload: any) {
 		try {
-			const { data } = await useFetch(`${API_URL}/api/v1/coordinates/${uid}`, {
+			const { data } = await useFetch(`${API_URL}/coordinates/${uid}`, {
 				method: 'PUT',
 				headers: {
 					'Content-Type': 'application/json',
@@ -66,16 +66,13 @@ export const coordinateRepository = {
 
 	async deleteCoordinate(uid: string) {
 		try {
-			const { data, error } = await useFetch(
-				`${API_URL}/api/v1/coordinates/${uid}`,
-				{
-					method: 'DELETE',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify(uid),
+			const { data, error } = await useFetch(`${API_URL}/coordinates/${uid}`, {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json',
 				},
-			).json<H3Response>();
+				body: JSON.stringify(uid),
+			}).json<H3Response>();
 
 			if (error.value) {
 				throw new Error(error.value.message || 'Network error');

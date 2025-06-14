@@ -79,8 +79,8 @@
 
 <template>
 	<main class="flex h-screen w-full text-surface-600">
-		<div class="w-full flex flex-col gap-5 bg-gray-50">
-			<nav class="bg-white">
+		<div class="w-full flex flex-col gap-5 bg-gray-100">
+			<nav class="bg-white border-b">
 				<div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-3">
 					<div class="relative flex h-16 items-center justify-between">
 						<div class="flex flex-1 items-center justify-start">
@@ -163,7 +163,7 @@
 			<div class="flex gap-5 px-0 md:px-5 h-screen overflow-auto">
 				<aside class="w-64 h-full transition-transform hidden lg:block">
 					<div
-						class="h-full p-4 overflow-y-auto flex flex-col bg-white rounded-lg dark:bg-gray-800">
+						class="h-full p-4 overflow-y-auto flex flex-col bg-white rounded-lg border shadow dark:bg-gray-800">
 						<div class="flex items-center mb-3">
 							<span
 								class="self-center flex items-center text-2xl font-semibold whitespace-nowrap dark:text-white"
