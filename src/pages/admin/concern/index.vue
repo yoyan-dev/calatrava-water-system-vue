@@ -12,7 +12,7 @@
 		return '';
 	};
 
-	const areas = ref([]);
+	const areas = ref<any>([]);
 	const store = useConcernStore();
 	const selectedArea = ref();
 	const toast = useToast();
@@ -21,7 +21,7 @@
 	onMounted(async () => {
 		await store.fetchConcerns();
 		store.concerns.map((item: any) => {
-			const findItem = areas.value.find((row) => row === item.area);
+			const findItem = areas.value.find((row: any) => row === item.area);
 			if (findItem) return;
 			areas.value.push(item.area);
 		});
@@ -58,7 +58,7 @@
 </script>
 <template>
 	<div
-		class="bg-surface-0 dark:bg-surface-900 p-4 py-6 md:p-6 border rounded-lg">
+		class="bg-surface-0 dark:bg-surface-900 p-4 py-6 md:p-6 border rounded-lg shadow">
 		<div class="flex justify-between flex-wrap items-center">
 			<div class="py-2 text-xl">List of Concerns</div>
 			<div v-if="selectedArea">
