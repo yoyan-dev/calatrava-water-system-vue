@@ -12,11 +12,10 @@
 	onMounted(async () => {
 		isLoading.value = true;
 		const { data: response } = await useFetch(
-			`${API_URL}/api/v1/books`,
+			`${API_URL}/books`,
 		).json<H3Response>();
 		isLoading.value = false;
-		console.log(response.value);
-		areas.value = response.value?.data?.books || [];
+		areas.value = response.value?.data || [];
 	});
 
 	const toast = useToast();

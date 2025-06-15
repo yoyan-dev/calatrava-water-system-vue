@@ -6,14 +6,14 @@
 	const toast = useToast();
 	const store = useFaqStore();
 	const dialogRef = inject<any>('dialogRef');
-	const uid = ref();
+	const id = ref();
 
 	onMounted(() => {
-		uid.value = dialogRef.value.data.uid;
+		id.value = dialogRef.value.data.id;
 	});
 
 	async function deleteFaq() {
-		const res = await store.deleteFaq(uid.value!);
+		const res = await store.deleteFaq(id.value!);
 		toast.add({
 			severity: res.status,
 			summary: res.statusMessage,
@@ -44,6 +44,7 @@
 				text
 				@click="onClose" />
 			<Button
+				:loading="store.isLoading"
 				label="Yes"
 				icon="pi pi-check"
 				type="submit" />

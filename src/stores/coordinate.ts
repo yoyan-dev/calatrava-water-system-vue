@@ -13,7 +13,7 @@ export const useCoordinateStore = defineStore('coordinate', () => {
 		isLoading.value = true;
 		const response = await coordinateRepository.fetchCoordinates();
 		coordinates.value = response?.data || [];
-		totalCoordinates.value = response?.total || 0;
+		totalCoordinates.value = response?.meta?.total || 0;
 		isLoading.value = false;
 	}
 

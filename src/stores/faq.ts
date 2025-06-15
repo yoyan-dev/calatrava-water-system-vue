@@ -13,7 +13,7 @@ export const useFaqStore = defineStore('faq', () => {
 		isLoading.value = true;
 		const response = await faqRepository.fetchFaqs();
 		faqs.value = response?.data || [];
-		totalFaqs.value = response?.total || 0;
+		totalFaqs.value = response?.meta?.total || 0;
 		isLoading.value = false;
 	}
 

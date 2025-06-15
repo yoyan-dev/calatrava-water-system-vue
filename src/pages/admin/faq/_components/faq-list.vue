@@ -83,7 +83,7 @@
 													modal: true,
 												},
 												data: {
-													uid: faq.uid,
+													id: faq.id,
 												},
 											});
 										}

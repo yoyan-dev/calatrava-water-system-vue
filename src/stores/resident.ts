@@ -43,7 +43,7 @@ export const useResidentStore = defineStore('resident', () => {
 			offset: offset.value,
 		});
 		residents.value = response?.data || [];
-		totalResidents.value = response?.total || 0;
+		totalResidents.value = response?.meta?.total || 0;
 		isLoading.value = false;
 		console.log(residents.value);
 	}

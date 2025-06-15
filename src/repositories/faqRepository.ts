@@ -63,10 +63,6 @@ export const faqRepository = {
 		try {
 			const { data, error } = await useFetch(`${API_URL}/faqs/${uid}`, {
 				method: 'DELETE',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(uid),
 			}).json<H3Response>();
 
 			if (error.value) {

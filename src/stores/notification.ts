@@ -15,7 +15,7 @@ export const useNotificationStore = defineStore('notification', () => {
 		const response = await notificationRepository.fetchNotifications();
 		notifications.value = response?.data || [];
 		totalNotification.value =
-			response?.total ||
+			response?.meta?.total ||
 			notifications.value.filter((n) => n.isRead == false).length;
 		isLoading.value = false;
 		console.log(notifications.value);

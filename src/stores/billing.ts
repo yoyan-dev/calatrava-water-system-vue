@@ -30,7 +30,7 @@ export const useBillingStore = defineStore('billing', () => {
 		});
 
 		billings.value = response?.data || [];
-		totalBillings.value = response?.total || 0;
+		totalBillings.value = response?.meta?.total || 0;
 		isLoading.value = false;
 		console.log(billings.value);
 	}
