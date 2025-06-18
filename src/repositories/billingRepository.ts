@@ -43,7 +43,6 @@ export const billingRepository = {
 			if (error.value) {
 				throw new Error(error.value.message || 'Network error');
 			}
-
 			return data.value;
 		} catch (error) {
 			console.error('Error adding billing:', error);
