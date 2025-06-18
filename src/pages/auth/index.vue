@@ -28,7 +28,7 @@
 		errorMessage.value = '';
 		try {
 			const { data: token, error } = await useFetch(
-				`${import.meta.env.VITE_API_URL}/api/v1/auth/${
+				`${import.meta.env.VITE_API_URL}/auth/${
 					initialValues.value.accountNumber
 				}`,
 			).json<H3Response<string>>();
