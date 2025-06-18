@@ -83,20 +83,25 @@
 			<nav class="bg-white border-b">
 				<div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-3">
 					<div class="relative flex h-16 items-center justify-between">
-						<div class="flex flex-1 items-center justify-start">
-							<div class="flex shrink-0 items-center">
-								<img
-									class="h-8 w-auto"
-									src="/logo.png"
-									alt="Water System" />
-							</div>
+						<div class="flex flex-1 items-center gap-2 justify-start">
 							<div class="flex items-center lg:hidden">
 								<Button
-									icon="pi pi-align-center"
+									icon="pi pi-align-justify"
 									@click="visible = true"
 									text />
 							</div>
-							<div class="text-md md:text-xl">CALATRAVA WATER SYSTEM</div>
+							<div class="flex gap-1 items-center">
+								<div class="flex shrink-0 items-center">
+									<img
+										class="h-8 w-auto"
+										src="/logo.png"
+										alt="Water System" />
+								</div>
+								<div class="text-md md:text-xl">
+									<span class="hidden md:block">CALATRAVA WATER SYSTEM</span>
+									<span class="md:hidden text-base font-bold">CWS</span>
+								</div>
+							</div>
 						</div>
 						<div
 							class="absolute inset-y-0 right-0 flex items-center gap-2 pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
@@ -122,33 +127,40 @@
 				</div>
 			</nav>
 			<Drawer v-model:visible="visible">
-				<div class="flex flex-col items-center">
-					<Avatar
-						image="/logo.png"
-						class="mr-2"
-						size="xlarge"
-						shape="circle" />
-					<div class="text-lg text-center font-semibold">
-						CALATRAVA WATER SYSTEM
+				<template #header>
+					<div class="flex items-center">
+						<Avatar
+							image="/logo.png"
+							class="mr-2"
+							size="large"
+							shape="circle" />
+						<div class="text-xl text-center font-bold">CWS</div>
 					</div>
-				</div>
+				</template>
+
 				<Menu :model="items">
-					<template #item="{ item, props }">
+					<template #item="{ item }">
 						<RouterLink
-							v-slot="{ href, navigate }"
+							v-slot="{ navigate }"
 							:to="item.route"
 							custom
 							:class="
 								route.name == item.name ? 'bg-primary-100 text-primary' : ''
 							">
-							<a
-								v-ripple
-								:href="href"
-								v-bind="props.action"
-								@click="navigate">
-								<span :class="item.icon" />
+							<div
+								@click="
+									() => {
+										visible = false;
+										navigate();
+									}
+								"
+								:class="[
+									'flex items-center px-2 py-2 rounded-lg cursor-pointer hover:bg-primary-400 hover:text-white',
+									route.name === item.name ? 'bg-primary-100 text-primary' : '',
+								]">
+								<i :class="item.icon"></i>
 								<span class="ml-2">{{ item.label }}</span>
-							</a>
+							</div>
 						</RouterLink>
 					</template>
 				</Menu>
