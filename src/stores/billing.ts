@@ -43,24 +43,29 @@ export const useBillingStore = defineStore('billing', () => {
 	}
 
 	async function addBillings(payload: File): Promise<StoreResponse> {
-		isLoading.value = true;
-		const formData = new FormData();
-		formData.append('file', payload);
-		const response = await billingRepository.addBillings(formData);
-		if (response?.statusCode == 200) {
-			await fetchBillings();
+		try {
+			isLoading.value = true;
+			const formData = new FormData();
+			formData.append('file', payload);
+			const response = await billingRepository.addBillings(formData);
+			if (response?.statusCode == 200) {
+				await fetchBillings();
+			}
 			return {
 				status: 'success',
-				message: response.message,
-				statusMessage: response.statusMessage ?? '',
+				message: response?.message,
+				statusMessage: response?.statusMessage ?? '',
 			};
+		} catch (error: any) {
+			console.error('Error uploading CSV:', error);
+			return {
+				status: 'error',
+				message: error.message || 'Failed to upload CSV',
+				statusMessage: 'error',
+			};
+		} finally {
+			isLoading.value = false;
 		}
-		isLoading.value = false;
-		return {
-			status: 'error',
-			message: response?.message,
-			statusMessage: response?.statusMessage ?? '',
-		};
 	}
 
 	async function deleteBilling({

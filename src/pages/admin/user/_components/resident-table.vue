@@ -83,7 +83,7 @@
 				:value="props.residents"
 				v-model:selection="selectedResidents"
 				size="small"
-				dataKey="uid"
+				dataKey="id"
 				:loading="store.isLoading">
 				<template #empty>
 					<div class="flex items-center justify-center p-4">
@@ -96,18 +96,10 @@
 					:exportable="false"></Column>
 				<Column
 					class="whitespace-nowrap text-ellipsis"
-					header="id"
-					field="id">
-					<template #body="slotProps"
-						><span>{{ slotProps.data.id }}</span></template
-					>
-				</Column>
-				<Column
-					class="whitespace-nowrap text-ellipsis"
-					field="uid"
+					field="id"
 					header="Account No.">
 					<template #body="slotProps">
-						<div class="flex w-[20vh]">{{ slotProps.data.uid }}</div>
+						<div class="flex w-[20vh]">{{ slotProps.data.id }}</div>
 					</template>
 				</Column>
 				<Column

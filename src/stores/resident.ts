@@ -52,6 +52,7 @@ export const useResidentStore = defineStore('resident', () => {
 		isLoading.value = true;
 		const response = await residentRepository.fetchResident(uid);
 		resident.value = response?.data;
+		console.log(resident.value);
 		isLoading.value = false;
 	}
 
