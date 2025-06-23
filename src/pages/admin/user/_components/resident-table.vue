@@ -96,10 +96,10 @@
 					:exportable="false"></Column>
 				<Column
 					class="whitespace-nowrap text-ellipsis"
-					field="id"
+					field="accountno"
 					header="Account No.">
 					<template #body="slotProps">
-						<div class="flex w-[20vh]">{{ slotProps.data.id }}</div>
+						<div class="flex w-[20vh]">{{ slotProps.data.accountno }}</div>
 					</template>
 				</Column>
 				<Column
