@@ -35,7 +35,7 @@
 	function onToggled(event: Event, resident: Resident) {
 		op.value.hide();
 
-		if (selectedResident.value?.uid === resident.uid) {
+		if (selectedResident.value?.id === resident.id) {
 			selectedResident.value = null;
 		} else {
 			selectedResident.value = resident;

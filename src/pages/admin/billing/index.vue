@@ -38,7 +38,7 @@
 	function onToggled(event: Event, billing: Billing) {
 		op.value.hide();
 
-		if (selectedBill.value?.uid === billing.uid) {
+		if (selectedBill.value?.id === billing.id) {
 			selectedBill.value = null;
 		} else {
 			selectedBill.value = billing;
