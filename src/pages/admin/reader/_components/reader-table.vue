@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { FilterMatchMode } from "@primevue/core/api";
 import CreateModal from "./modals/create-modal.vue";
 import DeleteModal from "./modals/delete-modal.vue";
 import DeleteSelectedModal from "./modals/delete-selected-modal.vue";
@@ -8,7 +7,7 @@ import UpdateModal from "./modals/update-modal.vue";
 import type { Reader } from "@/types/reader";
 
 const filters = ref({
-  global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+  global: { value: null, matchMode: ""},
 });
 
 const selectedReaders = ref([]);
