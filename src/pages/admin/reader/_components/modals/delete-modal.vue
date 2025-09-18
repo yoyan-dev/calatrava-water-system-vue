@@ -36,7 +36,7 @@
 			class="flex flex-col gap-4"
 			@submit.prevent="deleteReader">
 			<div class="flex items-center gap-4">
-				<i class="pi pi-exclamation-triangle !text-3xl" />
+				<i class="pi pi-exclamation-triangle text-3xl!" />
 				<span>Are you sure you want to delete meter reader?</span>
 			</div>
 			<div class="w-full flex gap-4 justify-end items-center">

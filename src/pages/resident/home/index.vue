@@ -66,7 +66,7 @@
 							</p>
 						</div>
 					</div>
-					<span class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded">{{
+					<span class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-sm">{{
 						store.resident?.classtype
 					}}</span>
 				</div>
@@ -74,7 +74,7 @@
 					<div>
 						<h2 class="text-lg font-semibold">Analytics</h2>
 						<div
-							class="max-w-96 flex flex-col gap-3 border border-primary rounded-md p-3 mt-3 bg-gradient-to-b from-primary-800 to-primary-500">
+							class="max-w-96 flex flex-col gap-3 border border-primary rounded-md p-3 mt-3 bg-linear-to-b from-primary-800 to-primary-500">
 							<div class="text-lg text-white">Current total bill</div>
 							<div>
 								<span class="text-xl font-bold text-surface-200">{{

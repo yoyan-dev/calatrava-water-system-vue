@@ -175,7 +175,7 @@
 			<div class="flex gap-5 px-0 md:px-5 h-screen overflow-auto">
 				<aside class="w-64 h-full transition-transform hidden lg:block">
 					<div
-						class="h-full p-4 overflow-y-auto flex flex-col bg-white rounded-lg border shadow dark:bg-gray-800">
+						class="h-full p-4 overflow-y-auto flex flex-col bg-white rounded-lg border shadow-sm dark:bg-gray-800">
 						<div class="flex items-center mb-3">
 							<span
 								class="self-center flex items-center text-2xl font-semibold whitespace-nowrap dark:text-white"

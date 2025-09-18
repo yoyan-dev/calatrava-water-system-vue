@@ -148,7 +148,7 @@
 						:loading="concernStore.isLoading" />
 				</div>
 			</form>
-			<!-- <div class="shadow rounded-border p-2 md:p-3 lg:p-6  bg-white ">
+			<!-- <div class="shadow-sm rounded-border p-2 md:p-3 lg:p-6  bg-white ">
                 <div
                     class="text-xl font-medium text-surface-900 dark:text-surface-0 mb-2">
                     List of concerns

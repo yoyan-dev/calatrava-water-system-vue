@@ -19,7 +19,7 @@ const deleteProduct = () => {
         <Button icon="pi pi-trash" outlined rounded severity="danger" @click="deleteProductDialog = true" />
         <Dialog v-model:visible="deleteProductDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
             <div class="flex items-center gap-4">
-                <i class="pi pi-exclamation-triangle !text-3xl" />
+                <i class="pi pi-exclamation-triangle text-3xl!" />
                 <span v-if="product"
                     >Are you sure you want to delete <b>{{ props.product.name }}</b
                     >?</span

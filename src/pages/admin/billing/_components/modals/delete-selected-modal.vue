@@ -33,7 +33,7 @@
 			header="Confirm"
 			:modal="true">
 			<div class="flex items-center gap-4">
-				<i class="pi pi-exclamation-triangle !text-3xl" />
+				<i class="pi pi-exclamation-triangle text-3xl!" />
 				<span
 					>Are you sure you want to delete this selected
 					<b>Water Bills</b>?</span

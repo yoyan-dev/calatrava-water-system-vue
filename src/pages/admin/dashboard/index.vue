@@ -31,7 +31,7 @@
 		<div class="flex flex-col flex-wrap lg:flex-row gap-5 w-full">
 			<div class="grid md:grid-cols-3 gap-5 flex-1">
 				<div
-					class="bg-gradient-to-r from-primary-800 to-primary-500 p-3 shadow-sm border border-primary rounded-md relative flex-1">
+					class="bg-linear-to-r from-primary-800 to-primary-500 p-3 shadow-xs border border-primary rounded-md relative flex-1">
 					<div
 						class="text-lg text-slate-200 dark:text-surface-0 mb-2 flex justify-between">
 						Total Concessionaires
@@ -48,7 +48,7 @@
 					</div>
 				</div>
 				<div
-					class="bg-gradient-to-r from-primary-800 to-primary-500 p-3 shadow-sm border border-primary rounded-md relative flex-1">
+					class="bg-linear-to-r from-primary-800 to-primary-500 p-3 shadow-xs border border-primary rounded-md relative flex-1">
 					<div
 						class="text-lg text-slate-200 dark:text-surface-0 mb-2 flex justify-between">
 						Total Income
@@ -65,7 +65,7 @@
 					</div>
 				</div>
 				<div
-					class="bg-gradient-to-r from-primary-800 to-primary-500 p-3 shadow-sm border border-primary rounded-md relative flex-1">
+					class="bg-linear-to-r from-primary-800 to-primary-500 p-3 shadow-xs border border-primary rounded-md relative flex-1">
 					<div
 						class="text-lg text-slate-200 dark:text-surface-0 mb-2 flex justify-between">
 						Current month Income
@@ -110,7 +110,7 @@
     </div> -->
 		<div class="flex flex-wrap gap-4">
 			<div
-				class="flex-1 w-screen md:w-auto shadow-sm border rounded-md p-5 bg-white">
+				class="flex-1 w-screen md:w-auto shadow-xs border rounded-md p-5 bg-white">
 				<LineChart :data="analyticStore.lineData" />
 			</div>
 		</div>

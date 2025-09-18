@@ -54,7 +54,7 @@
 	<div
 		class="px-6 py-20 h-screen md:px-12 lg:px-20 flex items-center justify-center bg-[linear-gradient(-225deg,var(--p-primary-500),var(--p-primary-700)_48%,var(--p-primary-800))] dark:bg-[linear-gradient(-225deg,var(--p-primary-400),var(--p-primary-600)_48%,var(--p-primary-800))]">
 		<div
-			class="p-12 shadow text-center lg:w-[30rem] backdrop-blur-md rounded-xl bg-white">
+			class="p-12 shadow-sm text-center lg:w-120 backdrop-blur-md rounded-xl bg-white">
 			<Avatar
 				image="/logo.png"
 				class="mr-2"

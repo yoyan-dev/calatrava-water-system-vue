@@ -40,7 +40,7 @@
 			:responsiveOptions="responsiveOptions">
 			<template #item="slotProps">
 				<div
-					class="border border-surface-200 dark:border-surface-700 rounded m-2 p-4">
+					class="border border-surface-200 dark:border-surface-700 rounded-sm m-2 p-4">
 					<div class="flex gap-2 border rounded-md p-2">
 						<Avatar
 							icon="pi pi-user"

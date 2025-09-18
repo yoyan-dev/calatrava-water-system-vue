@@ -67,7 +67,7 @@
 	<div
 		class="px-3 py-20 h-screen md:px-12 lg:px-20 flex items-center flex-col justify-evenly">
 		<div
-			class="p-12 shadow text-center lg:w-[30rem] backdrop-blur-md border border-primary rounded-lg bg-white">
+			class="p-12 shadow-sm text-center lg:w-120 backdrop-blur-md border border-primary rounded-lg bg-white">
 			<div class="text-lg md:text-2xl font-medium text-primary">
 				CALATRAVA WATER SYSTEM
 			</div>

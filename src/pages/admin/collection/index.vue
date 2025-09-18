@@ -21,7 +21,7 @@
 
 <template>
 	<div
-		class="bg-surface-0 dark:bg-surface-900 p-4 py-6 md:p-6 border rounded-lg shadow">
+		class="bg-surface-0 dark:bg-surface-900 p-4 py-6 md:p-6 border rounded-lg shadow-sm">
 		<Header :totalCollections="store.totalCollections" />
 		<div class="flex flex-col gap-3">
 			<div>

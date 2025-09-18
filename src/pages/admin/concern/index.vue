@@ -58,7 +58,7 @@
 </script>
 <template>
 	<div
-		class="bg-surface-0 dark:bg-surface-900 p-4 py-6 md:p-6 border rounded-lg shadow">
+		class="bg-surface-0 dark:bg-surface-900 p-4 py-6 md:p-6 border rounded-lg shadow-sm">
 		<div class="flex justify-between flex-wrap items-center">
 			<div class="py-2 text-xl">List of Concerns</div>
 			<div v-if="selectedArea">
@@ -110,7 +110,7 @@
 					v-for="concern in filteredConcern"
 					:key="concern.uid">
 					<div
-						class="p-4 rounded-lg bg-white dark:bg-surface-800 shadow-sm mb-2"
+						class="p-4 rounded-lg bg-white dark:bg-surface-800 shadow-xs mb-2"
 						:class="
 							concern.status === 'resolved'
 								? 'opacity-50 border border-green-600 bg-green-100'
@@ -132,7 +132,7 @@
 												{{ concern.name }}
 											</span>
 											<span
-												class="text-blue-600 px-1 bg-blue-100 text-xs rounded capitalize"
+												class="text-blue-600 px-1 bg-blue-100 text-xs rounded-sm capitalize"
 												>{{ concern.area }}</span
 											>
 										</div>
@@ -140,7 +140,7 @@
 									<div
 										class="flex justify-between flex-col md:flex-row w-full flex-1">
 										<p
-											class="text-sm text-gray-500 flex-1 bg-slate-100 rounded-sm p-2">
+											class="text-sm text-gray-500 flex-1 bg-slate-100 rounded-xs p-2">
 											{{ concern.content }}
 										</p>
 										<Button

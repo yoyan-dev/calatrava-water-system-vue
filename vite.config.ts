@@ -4,11 +4,13 @@ import { defineConfig, loadEnv } from "vite";
 import vue from "@vitejs/plugin-vue";
 import vueDevTools from "vite-plugin-vue-devtools";
 import { VitePWA } from "vite-plugin-pwa";
+import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
 export default defineConfig(() => {
   return {
     plugins: [
+      tailwindcss(),
       vue(),
       vueDevTools(),
       VitePWA({
@@ -92,7 +94,7 @@ export default defineConfig(() => {
       hmr: true,
       watch: {
         usePolling: true,
-      }
-    }
+      },
+    },
   };
 });

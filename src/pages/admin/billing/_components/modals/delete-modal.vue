@@ -36,7 +36,7 @@ function onClose() {
 <template>
   <div>
     <div class="flex items-center gap-4">
-      <i class="pi pi-exclamation-triangle !text-3xl" />
+      <i class="pi pi-exclamation-triangle text-3xl!" />
       <span v-if="data?.uid"
         >Are you sure you want to delete <b>Water Bill</b>?</span
       >
