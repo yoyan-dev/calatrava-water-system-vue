@@ -26,7 +26,7 @@ export const useAdminStore = defineStore('admin', () => {
 	}): Promise<StoreResponse> {
 		isLoading.value = true;
 		const { data: response } = await useFetch(
-			`${import.meta.env.VITE_API_URL}/api/admin/${uid}`,
+			`${import.meta.env.VITE_API_URL}/admin/${uid}`,
 		)
 			.put(body)
 			.json<H3Response>();
