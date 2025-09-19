@@ -1,7 +1,9 @@
-@import 'tailwindcss';
-@import "tailwindcss-primeui";
 
-@custom-variant dark (&:where([class~="my-app-dark"], [class~="my-app-dark"] *));
+@import "tailwindcss";
+@import "tailwindcss-primeui";
+@import "./base.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 /*
   The default border color has changed to `currentcolor` in Tailwind CSS v4,
@@ -17,6 +19,13 @@
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
+    border-color: var(--color-gray-50, currentcolor);
+  }
+}
+
+@layer utilities {
+  /* Ensure PrimeVue components transition smoothly */
+  [class*="primevue"] {
+    transition: color 0.2s, background-color 0.2s, border-color 0.2s;
   }
 }

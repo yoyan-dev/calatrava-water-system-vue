@@ -1,8 +1,9 @@
 <template>
 	<div>
-		<h2 class="text-xl font-bold mb-2">📍 Geo-tag Water System</h2>
+		<h2 class="text-xl font-bold my-4">Geotag </h2>
 		<div
 			id="map"
+			class="w-full rounded-md"
 			style="height: 500px"></div>
 	</div>
 </template>

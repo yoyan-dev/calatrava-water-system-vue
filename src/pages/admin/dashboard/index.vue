@@ -25,7 +25,7 @@
 </script>
 
 <template>
-	<div class="p-5 bg-white rounded-md flex flex-col gap-5">
+	<div class="p-5 rounded-md flex flex-col gap-5">
 		<div class="text-2xl">Welcome! Admin</div>
 		<div class="text-lg">Dashboard</div>
 		<div class="flex flex-col flex-wrap lg:flex-row gap-5 w-full">
@@ -108,9 +108,9 @@
         </div>
       </div>
     </div> -->
-		<div class="flex flex-wrap gap-4">
+		<div>
 			<div
-				class="flex-1 w-screen md:w-auto shadow-xs border rounded-md p-5 bg-white">
+				class="flex-1 w-screen md:w-auto shadow-xs border border-surface-200 dark:border-surface-800  rounded-md p-5">
 				<LineChart :data="analyticStore.lineData" />
 			</div>
 		</div>
