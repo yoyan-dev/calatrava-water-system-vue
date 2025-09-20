@@ -12,7 +12,7 @@
 
 <template>
 	<div
-		class="bg-surface-0 dark:bg-surface-900 p-4 py-6 md:p-6 border rounded-lg shadow-sm">
+		class="bg-surface-0 dark:bg-surface-900 p-4 rounded-lg shadow-sm">
 		<Header :totalResident="store.totalResidents" />
 		<ResidentTable :residents="store.residents" />
 	</div>

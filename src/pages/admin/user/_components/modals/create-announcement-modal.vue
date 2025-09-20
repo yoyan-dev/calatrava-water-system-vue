@@ -42,14 +42,6 @@
 		size="small"
 		class="visible md:hidden"
 		@click="visible = true" />
-	<div class="hidden md:block">
-		<Button
-			severity="primary"
-			icon="pi pi-send"
-			label="Announcement"
-			size="small"
-			@click="visible = true" />
-	</div>
 	<Dialog
 		v-model:visible="visible"
 		modal
