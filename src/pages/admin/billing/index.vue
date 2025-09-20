@@ -62,9 +62,9 @@
 
 <template>
 	<div
-		class="bg-surface-0 dark:bg-surface-900 p-4 py-6 md:p-6 border rounded-lg shadow-sm">
+		class="bg-surface-0 dark:bg-surface-900 p-4 rounded-lg shadow-sm">
 		<Header :totalBillings="store.totalBillings" />
-		<div class="flex flex-col gap-3">
+		<div class="flex flex-col gap-4">
 			<div>
 				<div class="flex gap-5 flex-wrap items-start">
 					<div class="flex-1">
@@ -95,7 +95,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="border rounded-md">
+			<div>
 				<DataTable
 					v-model:expandedRows="expandedRows"
 					:value="store.billings"
