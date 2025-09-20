@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute, useRouter, RouterLink } from "vue-router";
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { signOut } from "firebase/auth";
 import { useFirebaseAuth } from "vuefire";
 import { useAdminStore } from "@/stores/admin";
@@ -8,15 +8,14 @@ import type { Admin } from "@/types/admin";
 import Notification from "./components/notification.vue";
 import ThemeToggle from "./components/theme-toggle.vue";
 import Button from "primevue/button";
-import Drawer from "primevue/drawer";
 import Avatar from "primevue/avatar";
-import Menu from "primevue/menu";
+import { Drawer } from "primevue";
 
 const route = useRoute();
 const router = useRouter();
-const visible = ref(false);
 const auth = useFirebaseAuth()!;
 const store = useAdminStore();
+const visible = ref(false);
 
 const items = ref([
   {
@@ -83,164 +82,187 @@ const logoutUser = async () => {
 </script>
 
 <template>
-  <main class="flex h-screen w-full text-surface-600 dark:text-surface-200">
-    <div class="w-full flex flex-col gap-4">
-      <nav class="border-b border-surface-200 dark:border-surface-800">
-        <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-3">
-          <div class="relative flex h-16 items-center justify-between">
-            <div class="flex flex-1 items-center gap-2 justify-start">
-              <div class="flex items-center lg:hidden">
-                <Button
-                  icon="pi pi-align-justify"
-                  @click="visible = true"
-                  text
-                  severity="secondary"
-                />
-              </div>
-              <div class="flex gap-1 items-center">
-                <div class="flex shrink-0 items-center">
-                  <img class="h-8 w-auto" src="/logo.png" alt="Calatrava Water System Logo" />
-                </div>
-                <div class="text-md md:text-xl font-bold text-surface-900 dark:text-surface-50">
-                  <span class="hidden md:block">CALATRAVA WATER SYSTEM</span>
-                  <span class="md:hidden">CWS</span>
-                </div>
-              </div>
+  <main class="flex h-screen w-full bg-surface-0 dark:bg-surface-950">
+    <!-- App Header -->
+    <nav
+      class="fixed top-0 left-0 right-0 z-30 bg-surface-0 dark:bg-surface-950 border-b border-surface-200 dark:border-surface-700"
+    >
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex h-14 items-center justify-between">
+          <div class="flex items-center gap-4">
+            <Button
+              class="hidden lg:!hidden"
+              icon="pi pi-bars"
+              severity="secondary"
+              text
+              @click="visible = true"
+            />
+            <div class="flex items-center gap-2">
+              <img
+                class="h-7 w-auto"
+                src="/logo.png"
+                alt="Calatrava Water System Logo"
+              />
+              <span
+                class="text-lg font-semibold text-surface-900 dark:text-surface-50"
+              >
+                <span class="hidden md:block">CALATRAVA WATER SYSTEM</span>
+                <span class="md:hidden">CWS</span>
+              </span>
             </div>
-            <div
-              class="absolute inset-y-0 right-0 flex items-center gap-2 pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
+          </div>
+          <div class="flex items-center gap-3">
+            <ThemeToggle />
+            <Notification />
+            <RouterLink
+              to="/admin/setting"
+              class="flex items-center justify-center w-9 h-9 border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800 hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors"
             >
-              <div class="mt-2 flex items-center gap-2">
-                <ThemeToggle />
-                <Notification />
-              </div>
-              <div class="relative ml-3">
-                <div>
-                  <RouterLink
-                    to="/admin/setting"
-                    class="relative flex rounded-full bg-surface-100 dark:bg-surface-700 text-sm focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface-50 dark:focus:ring-offset-surface-900 focus:outline-none"
-                    aria-expanded="false"
-                    aria-haspopup="true"
-                  >
-                    <img
-                      class="size-8 rounded-full"
-                      :src="admin.photoURL"
-                      alt="Admin Avatar"
-                    />
-                  </RouterLink>
-                </div>
-              </div>
-            </div>
+              <Avatar
+                :image="admin.photoURL || '/default.jpg'"
+                size="small"
+                shape="circle"
+                class="border-0"
+              />
+            </RouterLink>
           </div>
         </div>
-      </nav>
-      <Drawer v-model:visible="visible" class="dark:inset-x-0">
-        <template #header>
-          <div class="flex items-center">
+      </div>
+    </nav>
+
+    <!-- Main Content and Static Sidenav -->
+    <div class="flex w-full h-full pt-14 lg:pt-16 lg:pb-2 lg:pr-2">
+      <!-- Static Sidenav (Left Side) -->
+      <aside class="w-72 h-full dark:bg-surface-950 px-4 hidden md:block">
+        <div
+          class="h-full flex flex-col bg-primary-800 dark:bg-slate-800 rounded-xl p-4"
+        >
+          <!-- Header -->
+          <div
+            class="flex items-center gap-3 mb-4 border-b border-primary-300/50 dark:border-primary-900/50 pb-3"
+          >
             <Avatar
-              :image="admin.photoURL"
-              class="mr-2"
+              :image="admin.photoURL || '/default.jpg'"
               size="large"
               shape="circle"
+              class="border-2 border-primary-200 dark:border-primary-900"
             />
-            <div class="text-xl text-center font-bold text-surface-900 dark:text-surface-50">CWS Admin</div>
-          </div>
-        </template>
-
-        <Menu :model="items">
-          <template #item="{ item }">
-            <RouterLink
-              v-slot="{ navigate }"
-              :to="item.route"
-              custom
-              :class="
-                route.name == item.name ? 'bg-primary-50 dark:bg-primary-900/20 text-primary dark:text-primary-300' : ''
-              "
-            >
-              <div
-                @click="
-                  () => {
-                    visible = false;
-                    navigate();
-                  }
-                "
-                :class="[
-                  'flex items-center px-2 py-2 rounded-lg cursor-pointer hover:bg-primary-100 dark:hover:bg-primary-800/30 hover:text-primary dark:hover:text-primary-300 transition-colors',
-                  route.name === item.name ? 'bg-primary-50 dark:bg-primary-900/20 text-primary dark:text-primary-300' : '',
-                ]"
+            <div class="flex flex-col">
+              <span class="text-base text-surface-50 font-semibold">{{
+                admin.displayName
+              }}</span>
+              <span class="text-sm text-primary-100 dark:text-primary-300"
+                >Admin</span
               >
-                <i :class="item.icon" class="mr-2"></i>
+            </div>
+          </div>
+
+          <!-- Menu -->
+          <ul class="flex-grow space-y-2">
+            <li v-for="item in items" :key="item.name">
+              <RouterLink
+                :to="item.route"
+                class="flex items-center px-3 py-2.5 text-sm font-medium text-surface-50 hover:bg-primary-700/50 dark:hover:bg-primary-900/50 rounded-md transition-colors"
+                :class="{
+                  'bg-primary-700 dark:bg-primary-900 text-primary-50':
+                    route.name === item.name,
+                }"
+              >
+                <i :class="item.icon" class="mr-3 text-base"></i>
                 <span>{{ item.label }}</span>
-              </div>
-            </RouterLink>
-          </template>
-        </Menu>
-        <template #footer>
+              </RouterLink>
+            </li>
+          </ul>
+
+          <!-- Footer -->
           <Button
             size="small"
             @click="logoutUser"
             icon="pi pi-sign-out"
             label="Sign Out"
-            severity="secondary"
+            severity="danger"
+            outlined
             class="w-full mt-4"
           />
+        </div>
+      </aside>
+
+      <!-- Mobile Sidenav (Collapsible) -->
+      <Drawer
+        v-model:visible="visible"
+        class="lg:hidden bg-primary-800 dark:bg-slate-800 p-6 text-primary-100 dark:text-primary-300"
+      >
+        <template #container="{ closeCallback }">
+          <div class="flex flex-col h-full">
+            <div
+              class="flex items-center justify-between gap-3 mb-4 border-b border-primary-300/50 dark:border-slate-700/50 pb-3"
+            >
+              <Avatar
+                :image="admin.photoURL || '/default.jpg'"
+                size="large"
+                shape="circle"
+                class="border-2 border-primary-200 dark:border-slate-600"
+              />
+              <div class="flex flex-col">
+                <span
+                  class="text-base font-semibold"
+                  >{{ admin.displayName }}</span
+                >
+                <span class="text-sm text-primary dark:text-slate-300"
+                  >Admin</span
+                >
+              </div>
+              <Button
+                icon="pi pi-times"
+                severity="secondary"
+                text
+                class="ml-auto"
+                @click="closeCallback()"
+              />
+            </div>
+            <div class="overflow-y-auto">
+              <ul class="flex-grow space-y-2">
+                <li v-for="item in items" :key="item.name">
+                  <RouterLink
+                    :to="item.route"
+                    @click="visible = false"
+                    class="flex items-center px-3 py-2.5 text-sm font-medium hover:bg-primary-700/50 dark:hover:bg-slate-7 00/50 rounded-md transition-colors"
+                    :class="{
+                      'bg-primary-700 dark:bg-slate-700 text-primary-50 dark:text-surface-50':
+                        route.name === item.name,
+                    }"
+                  >
+                    <i :class="item.icon" class="mr-3 text-base"></i>
+                    <span>{{ item.label }}</span>
+                  </RouterLink>
+                </li>
+              </ul>
+            </div>
+
+            <div class="mt-auto">
+              <hr
+                class="mb-4 mx-4 border-t border-0 border-surface-200 dark:border-surface-700"
+              />
+              <Button
+                size="small"
+                @click="logoutUser"
+                icon="pi pi-sign-out"
+                label="Sign Out"
+                severity="danger"
+                outlined
+                class="w-full mt-4 text-surface-50 dark:text-surface-200 hover:bg-primary-700/50 dark:hover:bg-slate-700/50"
+              />
+            </div>
+          </div>
         </template>
       </Drawer>
 
-      <div class="flex gap-5 px-0 md:px-5 h-[calc(100vh-4rem)] overflow-hidden">
-        <aside class="w-64 h-full transition-transform hidden lg:block">
-          <div
-            class="h-full p-4 overflow-y-auto flex flex-col bg-surface-0 dark:bg-surface-900 rounded-lg border border-surface-200 dark:border-surface-700 shadow-sm"
-          >
-            <div class="flex items-center mb-3">
-              <Avatar :image="admin.photoURL" class="mr-2" size="large" shape="circle" />
-              <div>
-                <div class="font-semibold text-surface-900 dark:text-surface-50">{{ admin.displayName }}</div>
-                <span class="text-sm text-surface-500 dark:text-surface-400">Admin</span>
-              </div>
-            </div>
-            <hr class="border-surface-200 dark:border-surface-700 mb-3" />
-            <ul class="space-y-2 font-medium flex-grow">
-              <li v-for="item in items" :key="item.name">
-                <RouterLink
-                  :to="item.route"
-                  :class="[
-                    'flex items-center px-2 py-2 rounded-lg font-normal hover:bg-primary-100 dark:hover:bg-primary-800/30 hover:text-primary dark:hover:text-primary-300 transition-colors',
-                    route.name == item.name ? 'bg-primary-50 dark:bg-primary-900/20 text-primary dark:text-primary-300' : ''
-                  ]"
-                >
-                  <i :class="item.icon" class="mr-2 flex-shrink-0"></i>
-                  <span class="flex-1">{{ item.label }}</span>
-                </RouterLink>
-              </li>
-            </ul>
-            <Button
-              size="small"
-              @click="logoutUser"
-              icon="pi pi-sign-out"
-              label="Sign Out"
-              severity="secondary"
-              class="mt-auto w-full"
-            />
-          </div>
-        </aside>
-        <div class="px-0 border border-surface-200 dark:border-surface-800 rounded-lg flex-1 overflow-y-auto bg-surface-0 dark:bg-surface-900">
-          <slot />
-        </div>
+      <!-- Content Area -->
+      <div
+        class="flex-1 overflow-y-auto bg-gradient-to-br from-surface-50 to-surface-0 dark:from-surface-900 dark:to-surface-900 lg:rounded-2xl shadow-2xl"
+      >
+        <slot />
       </div>
     </div>
   </main>
 </template>
-
-<style scoped>
-/* Custom styles for better dark mode transitions if needed */
-.router-link-active {
-  background-color: var(--p-primary-50);
-  color: var(--p-primary-color);
-}
-
-.dark .router-link-active {
-  background-color: color-mix(in srgb, var(--p-primary-900), transparent 80%);
-  color: var(--p-primary-300);
-}
-</style>
