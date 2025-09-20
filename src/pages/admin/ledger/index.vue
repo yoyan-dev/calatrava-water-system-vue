@@ -59,6 +59,7 @@ onMounted(() => {
           v-model:selection="selectedLedgers"
           dataKey="uid"
           size="small"
+          class="text-sm"
           :rows="10"
         >
           <template #empty>

@@ -61,6 +61,7 @@ onMounted(() => {
           v-model:selection="selectedCollection"
           dataKey="uid"
           size="small"
+          class="text-sm"
           :rows="10"
         >
           <template #empty>

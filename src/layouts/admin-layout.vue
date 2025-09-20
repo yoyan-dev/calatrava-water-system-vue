@@ -111,12 +111,12 @@ const logoutUser = async () => {
               </span>
             </div>
           </div>
-          <div class="flex items-center gap-3">
+          <div class="flex items-center gap-1">
             <ThemeToggle />
             <Notification />
             <RouterLink
               to="/admin/setting"
-              class="flex items-center justify-center w-9 h-9 border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800 hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors"
+              class="flex items-center justify-center w-9 h-9 bg-surface-50 dark:bg-surface-800 hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors"
             >
               <Avatar
                 :image="admin.photoURL || '/default.jpg'"

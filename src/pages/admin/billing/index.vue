@@ -103,6 +103,7 @@
 					v-model:selection="selectedWaterBill"
 					dataKey="billNo"
 					size="small"
+					class="text-sm"
 					:rows="10">
 					<template #empty>
 						<div class="flex items-center justify-center p-4">

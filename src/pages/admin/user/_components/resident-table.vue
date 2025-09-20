@@ -88,12 +88,14 @@ function hidePopover() {
       size="small"
       dataKey="uid"
       :loading="store.isLoading"
+      class="text-sm"
     >
       <template #empty>
         <div class="flex items-center justify-center p-4">
           No residents found.
         </div>
       </template>
+      
       <Column
         class="whitespace-nowrap text-ellipsis"
         selectionMode="multiple"
@@ -110,7 +112,7 @@ function hidePopover() {
         header="Account No."
       >
         <template #body="slotProps">
-          <div class="flex w-[20vh]">{{ slotProps.data.uid }}</div>
+          <div class="flex w-[15vh]">{{ slotProps.data.uid }}</div>
         </template>
       </Column>
       <Column class="whitespace-nowrap text-ellipsis" header="Name">
