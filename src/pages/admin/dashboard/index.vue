@@ -25,9 +25,11 @@
 </script>
 
 <template>
-	<div class="p-5 rounded-md flex flex-col gap-5">
-		<div class="text-2xl">Welcome! Admin</div>
-		<div class="text-lg">Dashboard</div>
+	<div class="p-4 md:p-6 rounded-md flex flex-col gap-5">
+		<div class="flex justify-between items-center">
+			<div class="text-xl">Dashboard</div>
+			<div class="text-lg text-right italic">Welcome Admin!</div>
+		</div>
 		<div class="flex flex-col flex-wrap lg:flex-row gap-5 w-full">
 			<div class="grid md:grid-cols-3 gap-5 flex-1">
 				<div

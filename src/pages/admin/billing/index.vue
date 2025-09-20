@@ -62,7 +62,7 @@
 
 <template>
 	<div
-		class="bg-surface-0 dark:bg-surface-900 p-4 rounded-lg shadow-sm">
+		class="p-4 md:p-6">
 		<Header :totalBillings="store.totalBillings" />
 		<div class="flex flex-col gap-4">
 			<div>

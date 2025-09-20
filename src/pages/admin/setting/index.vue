@@ -2,7 +2,14 @@
 	import { ref } from 'vue';
 	import type { Admin } from '@/types/admin';
 	import { useAdminStore } from '@/stores/admin';
-	import { useToast } from 'primevue';
+	import { useToast } from 'primevue/usetoast';
+	import Avatar from 'primevue/avatar';
+	import Button from 'primevue/button';
+	import FileUpload from 'primevue/fileupload';
+	import InputGroup from 'primevue/inputgroup';
+	import InputGroupAddon from 'primevue/inputgroupaddon';
+	import InputText from 'primevue/inputtext';
+	import Password from 'primevue/password';
 
 	const store = useAdminStore();
 	const toast = useToast();
@@ -57,113 +64,125 @@
 		confirmPassword.value = '';
 	}
 </script>
+
 <template>
-	<div
-		class="bg-surface-0 dark:bg-surface-900 p-4 py-6 md:p-6 border rounded-lg">
-		<div class="text-lg font-semibold">Account setting</div>
+	<div class="p-4 md:p-6">
+		<h1 class="text-xl font-semibold text-surface-900 dark:text-surface-50">Settings</h1>
 		<div class="flex flex-col gap-4 mt-4">
-			<div class="flex gap-2 items-end">
-				<Avatar
-					:image="image"
-					class="mr-2"
-					size="xlarge"
-					v-if="image" />
-				<Avatar
-					:image="store.admin.photoURL"
-					class="mr-2"
-					size="xlarge"
-					v-else-if="store.admin.photoURL" />
-				<Avatar
-					image="/default.jpg"
-					class="mr-2"
-					size="xlarge"
-					v-else />
-				<Button
-					v-if="!isUpdate"
-					icon="pi pi-pen-to-square"
-					class="p-button-outlined"
-					size="small"
-					@click="isUpdate = !isUpdate"
-					>Edit
-				</Button>
-				<!-- <FileUpload
-					v-else
-					mode="basic"
-					@select="onFileSelect($event)"
-					customUpload
-					auto
-					severity="secondary"
-					class="p-button-outlined" /> -->
+			<!-- Account Section -->
+			<div>
+				<h2 class="text-lg font-medium text-surface-800 dark:text-surface-100">Account</h2>
+				<div class="flex flex-col gap-4 mt-4 p-4 border border-surface-200 dark:border-surface-700 rounded-lg bg-surface-50 dark:bg-surface-900">
+					<div class="flex items-end gap-4">
+						<Avatar
+							:image="image || store.admin.photoURL || '/default.jpg'"
+							size="xlarge"
+							class="border-2 border-surface-200 dark:border-surface-700 rounded-full"
+						/>
+						<div v-if="!isUpdate">
+							<Button
+								icon="pi pi-pen-to-square"
+								severity="secondary"
+								outlined
+								size="small"
+								@click="isUpdate = !isUpdate"
+							>
+								Edit
+							</Button>
+						</div>
+						<FileUpload
+							v-else
+							mode="basic"
+							@select="onFileSelect($event)"
+							customUpload
+							auto
+							severity="secondary"
+							chooseLabel="Upload Photo"
+							class="p-button-outlined p-button-sm"
+						/>
+					</div>
+					<div class="flex flex-col gap-4">
+						<span class="text-base font-semibold text-surface-800 dark:text-surface-100">Personal Details</span>
+						<div class="flex flex-wrap gap-4">
+							<div class="flex-1 min-w-[200px]">
+								<label for="name" class="text-sm font-medium text-surface-700 dark:text-surface-200">Full Name</label>
+								<InputGroup>
+									<InputGroupAddon class="bg-surface-100 dark:bg-surface-800">
+										<i class="pi pi-user text-surface-600 dark:text-surface-300"></i>
+									</InputGroupAddon>
+									<InputText
+										:disabled="!isUpdate"
+										v-model="store.admin.displayName"
+										placeholder="Enter your full name"
+										class="w-full"
+									/>
+								</InputGroup>
+							</div>
+							<div class="flex-1 min-w-[200px]">
+								<label for="email" class="text-sm font-medium text-surface-700 dark:text-surface-200">Email</label>
+								<InputGroup>
+									<InputGroupAddon class="bg-surface-100 dark:bg-surface-800">
+										<i class="pi pi-envelope text-surface-600 dark:text-surface-300"></i>
+									</InputGroupAddon>
+									<InputText
+										:disabled="!isUpdate"
+										v-model="store.admin.email"
+										placeholder="Email"
+										class="w-full"
+									/>
+								</InputGroup>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
-			<div class="p-4 border rounded-lg">
-				<span class="text-lg font-semibold">Personal Details</span><br />
-				<div class="flex gap-4 flex-wrap">
-					<div>
-						<label for="name">Fullname</label><br />
+
+			<!-- Password Section -->
+			<div v-if="isUpdate" class="p-4 border border-surface-200 dark:border-surface-700 rounded-lg bg-surface-50 dark:bg-surface-900">
+				<span class="text-base font-semibold text-surface-800 dark:text-surface-100">Change Password</span>
+				<div class="flex flex-wrap gap-4 mt-4">
+					<div class="flex-1 min-w-[200px]">
+						<label for="password" class="text-sm font-medium text-surface-700 dark:text-surface-200">New Password</label>
 						<InputGroup>
-							<InputGroupAddon>
-								<i class="pi pi-user"></i>
+							<InputGroupAddon class="bg-surface-100 dark:bg-surface-800">
+								<i class="pi pi-lock text-surface-600 dark:text-surface-300"></i>
 							</InputGroupAddon>
-							<InputText
-								:disabled="!isUpdate"
-								v-model="store.admin.displayName"
-								placeholder="Enter your full name" />
+							<Password
+								v-model="newPassword"
+								placeholder="New password"
+								:feedback="false"
+								toggleMask
+								class="w-full"
+							/>
 						</InputGroup>
 					</div>
-					<div>
-						<label for="email">Email</label><br />
+					<div class="flex-1 min-w-[200px]">
+						<label for="confirmPassword" class="text-sm font-medium text-surface-700 dark:text-surface-200">Confirm Password</label>
 						<InputGroup>
-							<InputGroupAddon>
-								<i class="pi pi-envelope"></i>
+							<InputGroupAddon class="bg-surface-100 dark:bg-surface-800">
+								<i class="pi pi-lock text-surface-600 dark:text-surface-300"></i>
 							</InputGroupAddon>
-							<InputText
-								:disabled="!isUpdate"
-								v-model="store.admin.email"
-								placeholder="Email" />
+							<Password
+								v-model="confirmPassword"
+								placeholder="Confirm password"
+								:feedback="false"
+								toggleMask
+								class="w-full"
+							/>
 						</InputGroup>
 					</div>
 				</div>
 			</div>
 
-			<div
-				class="p-4 border rounded-lg"
-				v-if="isUpdate">
-				<span class="text-lg font-semibold">Change Password</span><br />
-				<div class="flex gap-4 flex-wrap">
-					<div>
-						<label for="password">New Password</label><br />
-						<InputGroup>
-							<InputGroupAddon>
-								<i class="pi pi-lock"></i>
-							</InputGroupAddon>
-							<Password
-								v-model="newPassword"
-								placeholder="new password"
-								:feedback="false"
-								toggleMask />
-						</InputGroup>
-					</div>
-					<div>
-						<label for="password">Confirm password</label><br />
-						<InputGroup>
-							<InputGroupAddon>
-								<i class="pi pi-lock"></i>
-							</InputGroupAddon>
-							<Password
-								v-model="confirmPassword"
-								placeholder="confirm password"
-								:feedback="false"
-								toggleMask />
-						</InputGroup>
-					</div>
-				</div>
-			</div>
-			<div>
+			<!-- Action Buttons -->
+			<div v-if="isUpdate" class="flex justify-end">
 				<Button
-					v-if="isUpdate"
 					label="Update"
+					severity="primary"
 					:loading="store.isLoading"
-					@click="updateProfile(store.admin)" />
+					@click="updateProfile(store.admin)"
+					class="p-button-sm"
+				/>
 			</div>
 		</div>
 	</div>

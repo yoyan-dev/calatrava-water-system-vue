@@ -4,18 +4,11 @@ const props = defineProps<{
 }>();
 </script>
 <template>
-  <div class="flex justify-between mb-2">
+  <div class="flex justify-between items-center gap-4 mb-4">
+    <div class="text-xl">Collection</div>
     <div>
-      <div
-        class="text-xl md:text-3xl text-surface-900 dark:text-surface-0 mb-2"
-      >
-        Payment Collection
-      </div>
-    </div>
-    <div>
-      <div class="text-sm px-3 py-2 text-slate-600 bg-gray-50 rounded-full">
-        {{ totalCollections }} payments
-      </div>
+      <span class="mr-2">Records:</span>
+      <span class="text-primary font-semibold">{{ totalCollections }}</span>
     </div>
   </div>
 </template>
