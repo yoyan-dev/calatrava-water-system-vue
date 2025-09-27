@@ -7,6 +7,12 @@ import { format } from 'date-fns';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
+// Define the type for the grouped result
+interface GroupedCollection {
+	accountno: string;
+	records: Collection[];
+}
+
 export const useCollectionStore = defineStore('collection', () => {
 	// State
 	const collections = ref<Collection[]>([]);
@@ -19,6 +25,31 @@ export const useCollectionStore = defineStore('collection', () => {
 	// getters
 	const offset = computed(() => page.value * 10);
 	const formattedDate = computed(() => format(month.value, 'yyyy-M'));
+	const groupCollectionByAccount = computed(() => {
+		// Group records by accountno
+		const grouped = collections.value.reduce(
+			(acc: GroupedCollection[], collection) => {
+				// Find if an object with the same accountno already exists in the accumulator
+				let group = acc.find((item) => item.accountno === collection.accountno);
+
+				if (group) {
+					// If exists, push the collection to its records array
+					group.records.push(collection);
+				} else {
+					// If not, create a new group with the accountno and an array containing the collection
+					acc.push({
+						accountno: collection.accountno,
+						records: [collection],
+					});
+				}
+
+				return acc;
+			},
+			[],
+		);
+
+		return grouped;
+	});
 
 	// Actions
 	async function fetchCollections() {
@@ -93,12 +124,18 @@ export const useCollectionStore = defineStore('collection', () => {
 	);
 
 	return {
+		// State
 		isLoading,
 		totalCollections,
 		collections,
 		searchQuery,
 		month,
 		page,
+
+		// Getters
+		groupCollectionByAccount,
+
+		// Actions
 		fetchCollections,
 		addCollections,
 		deleteCollections,
