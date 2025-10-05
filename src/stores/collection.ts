@@ -38,7 +38,7 @@ export const useCollectionStore = defineStore('collection', () => {
 				} else {
 					// If not, create a new group with the accountno and an array containing the collection
 					acc.push({
-						accountno: collection.accountno,
+						accountno: collection.accountno as string,
 						records: [collection],
 					});
 				}
