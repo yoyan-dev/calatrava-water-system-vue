@@ -1,3 +1,4 @@
+import { auth } from '@/firebase/config';
 import { createRouter, createWebHistory } from 'vue-router';
 import { getCurrentUser } from 'vuefire';
 
@@ -116,12 +117,12 @@ const router = createRouter({
 	],
 });
 
-const ADMIN_USER_ID = 'GHh3aoG1qadCtG6Ey2cWQMTZy173';
+// const ADMIN_USER_ID = 'GHh3aoG1qadCtG6Ey2cWQMTZy173';
 
 router.beforeEach(async (to, from, next) => {
 	const user = await getCurrentUser();
 	const isAuthenticated = !!user;
-	const isAdmin = user?.uid === ADMIN_USER_ID;
+	const isAdmin = null; // to be continue
 
 	// Handle authenticated users trying to access guest-only routes
 	if (isAuthenticated && to.meta.requiresGuest) {
