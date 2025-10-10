@@ -68,9 +68,14 @@ const router = createRouter({
 					component: () => import('@/pages/admin/dashboard/index.vue'),
 				},
 				{
+					path: 'residents',
+					name: 'admin-residents',
+					component: () => import('@/pages/admin/residents/index.vue'),
+				},
+				{
 					path: 'users',
 					name: 'admin-users',
-					component: () => import('@/pages/admin/user/index.vue'),
+					component: () => import('@/pages/admin/users/index.vue'),
 				},
 				{
 					path: 'billings',
