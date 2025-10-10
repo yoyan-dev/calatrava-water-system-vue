@@ -26,9 +26,10 @@ if (process.env.NODE_ENV === 'development') {
 	});
 }
 
-setPersistence(auth, indexedDBLocalPersistence)
-	.catch(() => setPersistence(auth, browserLocalPersistence))
-	.then(() => console.log('Persistence set successfully'))
-	.catch((error) => console.error('Error setting persistence:', error));
+setPersistence(auth, indexedDBLocalPersistence).catch(() =>
+	setPersistence(auth, browserLocalPersistence),
+);
+// .then(() => console.log('Persistence set successfully'))
+// .catch((error) => console.error('Error setting persistence:', error));
 
 export { firebaseApp, messaging, auth };

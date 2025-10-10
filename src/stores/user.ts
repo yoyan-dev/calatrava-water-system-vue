@@ -21,15 +21,10 @@ export const useUserStore = defineStore('user', () => {
 
 	async function fetchUsers() {
 		isLoading.value = true;
-		const response = await userRepository.fetchUsers({
-			q: searchQuery.value,
-			offset: offset.value,
-		});
-
+		const response = await userRepository.fetchUsers();
 		users.value = response?.data || [];
 		totalUsers.value = response?.total || 0;
 		isLoading.value = false;
-		console.log(users.value);
 	}
 
 	async function fetchUser(uid: string) {
@@ -55,7 +50,10 @@ export const useUserStore = defineStore('user', () => {
 			}
 
 			const response = await userRepository.createUser(userData);
-			users.value.push(response?.data as User);
+			users.value.push({
+				...(response?.data as User),
+				customClaims: userData.customClaims,
+			});
 
 			return {
 				status: 'success',
@@ -124,16 +122,26 @@ export const useUserStore = defineStore('user', () => {
 	}
 
 	async function updateUser(
-		userData: User,
 		uid: string,
+		userData: User,
 	): Promise<StoreResponse> {
 		isLoading.value = true;
 		try {
 			const response = await userRepository.updateUser(uid, userData);
-			const result = users.value.find((item) => item.uid === uid);
-			if (result) {
-				Object.assign(result, response?.data);
+			const resultIndex = users.value.findIndex((item) => item.uid === uid);
+
+			if (resultIndex !== -1) {
+				// Full replacement with API data, then overlay custom claims
+				users.value[resultIndex] = {
+					...response?.data,
+					customClaims: {
+						...userData.customClaims,
+					}, // Merge if API doesn't update claims
+				};
+			} else {
+				console.warn('User not found in store for update:', uid);
 			}
+
 			return {
 				status: 'success',
 				statusMessage: 'Success message',

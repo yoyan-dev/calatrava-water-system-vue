@@ -18,12 +18,11 @@ export const userRepository = {
 		}
 	},
 
-	async fetchUsers(params: Record<string, any>) {
-		const queryString = new URLSearchParams(params).toString();
-		const url = `${API_URL}/users${queryString ? '?' + queryString : ''}`;
-
+	async fetchUsers() {
 		try {
-			const { data: response } = await useFetch(url, { refetch: true })
+			const { data: response } = await useFetch(`${API_URL}/users`, {
+				refetch: true,
+			})
 				.get()
 				.json<H3Response<User[]>>();
 			return camelize(response.value);

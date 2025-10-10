@@ -4,6 +4,7 @@ import {
 	SplitterPanel,
 	ConfirmationService,
 	DialogService,
+	DynamicDialog,
 	ToastService,
 	DataTable,
 	Column,
@@ -43,6 +44,7 @@ import {
 	AccordionPanel,
 	AccordionHeader,
 	AccordionContent,
+	ConfirmPopup,
 } from 'primevue';
 import PrimeVue from 'primevue/config';
 import Aura from '@primeuix/themes/aura';
@@ -78,6 +80,8 @@ export default {
 		app.component('DataTable', DataTable);
 		app.component('Column', Column);
 		app.component('ColumnGroup', ColumnGroup);
+		app.component('ConfirmPopup', ConfirmPopup);
+		app.component('DynamicDialog', DynamicDialog);
 		app.component('Row', Row);
 		app.component('InputText', InputText);
 		app.component('IconField', IconField);

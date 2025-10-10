@@ -1,53 +1,70 @@
 <script setup lang="ts">
-	import { onMounted } from 'vue';
+	import { onMounted, toRefs } from 'vue';
 	import { useToast } from 'primevue/usetoast';
-	import { useRouter } from 'vue-router';
 	import { useUserStore } from '@/stores/user';
+	import UserModalForm from './modals/user-modal-form.vue';
+	import { useConfirm } from 'primevue/useconfirm';
+	import { useDialog } from 'primevue/usedialog';
 
 	const toast = useToast();
-	const router = useRouter();
 	const userStore = useUserStore();
+	const confirmUserDelete = useConfirm();
+	const dialog = useDialog();
 
-	const { users, isLoading, totalUsers, searchQuery } = userStore;
+	const handleDialog = (user: any) => {
+		dialog.open(UserModalForm, {
+			props: {
+				header: `${user ? 'Edit' : 'Create'} User`,
+				style: { width: '30vw' },
+				dismissableMask: true,
+			},
+			data: { mode: user ? 'edit' : 'create', user },
+		});
+	};
+
+	const handleDelete = (user: any) => {
+		confirmUserDelete.require({
+			message: `Are you sure you want to delete user ${user.email}?`,
+			header: 'Confirmation',
+			icon: 'pi pi-exclamation-triangle',
+			rejectProps: {
+				label: 'Cancel',
+				severity: 'secondary',
+				outlined: true,
+			},
+			acceptProps: {
+				label: 'Delete',
+				severity: 'danger',
+			},
+			accept: () => onDelete(user),
+			reject: () => {
+				/* Do nothing on reject */
+			},
+		});
+	};
+
+	const { users, isLoading } = toRefs(userStore);
 
 	const fetchUsers = () => {
 		userStore.fetchUsers();
 	};
 
-	const onPage = (event: any) => {
-		userStore.page = event.page;
-	};
-
-	const onSearch = () => {
-		userStore.page = 0;
-		fetchUsers();
-	};
-
-	const onEdit = (user: any) => {
-		router.push({ name: 'users-edit', params: { id: user.uid } });
-	};
-
 	const onDelete = async (user: any) => {
-		const confirmed = confirm(
-			`Are you sure you want to delete user ${user.email}?`,
-		);
-		if (confirmed) {
-			const result = await userStore.deleteUser(user.uid);
-			if (result.status === 'success') {
-				toast.add({
-					severity: 'success',
-					summary: 'Success',
-					detail: result.message,
-					life: 3000,
-				});
-			} else {
-				toast.add({
-					severity: 'error',
-					summary: 'Error',
-					detail: result.message,
-					life: 3000,
-				});
-			}
+		const result = await userStore.deleteUser(user.uid);
+		if (result.status === 'success') {
+			toast.add({
+				severity: 'success',
+				summary: 'Success',
+				detail: result.message,
+				life: 3000,
+			});
+		} else {
+			toast.add({
+				severity: 'error',
+				summary: 'Error',
+				detail: result.message,
+				life: 3000,
+			});
 		}
 	};
 
@@ -58,23 +75,64 @@
 
 <template>
 	<div>
-		<div class="flex justify-between items-center gap-4 mb-4">
-			<div class="flex items-center gap-4">
-				<IconField>
-					<InputIcon class="pi pi-search" />
-					<InputText
-						v-model="searchQuery"
-						icon="pi pi-search"
-						placeholder="Search"
-						class="pl-10 w-64"
-						@keyup.enter="onSearch" />
-				</IconField>
-			</div>
+		<div class="flex justify-end items-center gap-4 mb-4">
 			<Button
-				icon="pi pi-user-plus"
-				severity="primary"
-				@click=""
-				class="text-white" />
+				label="Create User"
+				icon="pi pi-plus"
+				class="mt-4"
+				@click="handleDialog(null)" />
 		</div>
+
+		<!-- User Table -->
+		<DataTable
+			:value="users"
+			data-key="uid"
+			:rows="10"
+			:loading="isLoading">
+			<template #empty>
+				<div class="flex items-center justify-center p-4">
+					No billing found.
+				</div>
+			</template>
+
+			<Column
+				field="displayName"
+				header="Name" />
+			<Column
+				field="email"
+				header="Email" />
+			<Column
+				field="role"
+				header="Role">
+				<template #body="{ data }">
+					<span
+						class="capitalize"
+						:class="data.role === 'admin' ? 'text-red-600' : 'text-primary'">
+						{{ data.customClaims?.role }}
+					</span>
+				</template>
+			</Column>
+			<Column header="Actions">
+				<template #body="{ data }">
+					<div class="flex gap-2">
+						<Button
+							text
+							icon="pi pi-pencil"
+							severity="secondary"
+							size="small"
+							@click="handleDialog(data)" />
+						<Button
+							icon="pi pi-trash"
+							size="small"
+							severity="danger"
+							text
+							@click="handleDelete(data)" />
+					</div>
+				</template>
+			</Column>
+		</DataTable>
+
+		<!-- Dynamic Dialog Service -->
+		<DynamicDialog />
 	</div>
 </template>
