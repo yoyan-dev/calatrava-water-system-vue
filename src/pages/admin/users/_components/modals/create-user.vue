@@ -3,6 +3,7 @@
 	import { useUserStore } from '@/stores/user';
 	import type { User } from '@/types/user';
 	import { useToast } from 'primevue/usetoast';
+	import { validateForm } from '../../_composables/validate'; // Assuming similar validation composable; adjust if needed
 
 	const store = useUserStore();
 	const toast = useToast();
@@ -10,7 +11,7 @@
 	const isLoading = ref(false);
 
 	const user = ref<User>({});
-	const role = ref<'admin' | 'resident'>('resident');
+	const role = ref<'admin' | 'staff'>('staff');
 	const errorEmailMessage = ref('');
 
 	const isSubmitted = ref(false);
@@ -18,6 +19,14 @@
 	async function onSubmit() {
 		isLoading.value = true;
 		isSubmitted.value = true;
+
+		// Assuming validateForm handles email validation; adjust based on actual composable
+		const result = validateForm(user.value);
+		errorEmailMessage.value = result.errorEmailMessage || ''; // Assuming it returns errorEmailMessage
+		if (result.error) {
+			isLoading.value = false;
+			return;
+		}
 
 		// Simple client-side checks
 		if (!user.value.email || !user.value.displayName || !user.value.password) {

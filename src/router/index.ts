@@ -1,4 +1,3 @@
-import { auth } from '@/firebase/config';
 import { createRouter, createWebHistory } from 'vue-router';
 import { getCurrentUser } from 'vuefire';
 

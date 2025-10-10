@@ -1,5 +1,11 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import {
+	connectAuthEmulator,
+	getAuth,
+	indexedDBLocalPersistence,
+	setPersistence,
+	browserLocalPersistence,
+} from 'firebase/auth';
 import { getMessaging } from 'firebase/messaging';
 
 const firebaseConfig = {
@@ -14,5 +20,15 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const messaging = getMessaging(firebaseApp);
 const auth = getAuth(firebaseApp);
+if (process.env.NODE_ENV === 'development') {
+	connectAuthEmulator(auth, 'http://127.0.0.1:9099', {
+		disableWarnings: true,
+	});
+}
+
+setPersistence(auth, indexedDBLocalPersistence)
+	.catch(() => setPersistence(auth, browserLocalPersistence))
+	.then(() => console.log('Persistence set successfully'))
+	.catch((error) => console.error('Error setting persistence:', error));
 
 export { firebaseApp, messaging, auth };

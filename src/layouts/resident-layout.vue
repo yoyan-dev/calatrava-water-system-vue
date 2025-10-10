@@ -4,7 +4,7 @@
 	import { signOut } from 'firebase/auth';
 	import { getCurrentUser, useFirebaseAuth } from 'vuefire';
 	import useNotification from '@/composables/useNotification';
-	import { messaging } from '@/firebase/config';
+	import { messaging } from '@/plugins/firebase';
 	import { onMessage } from 'firebase/messaging';
 	import { useToast } from 'primevue';
 

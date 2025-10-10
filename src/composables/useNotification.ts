@@ -1,4 +1,4 @@
-import { messaging } from '@/firebase/config';
+import { messaging } from '@/plugins/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { getToken } from 'firebase/messaging';
 import { ref } from 'vue';
