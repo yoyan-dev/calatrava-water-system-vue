@@ -56,13 +56,10 @@
 	onMounted(() => {
 		store.fetchBillings();
 	});
-
-	watchEffect(() => console.log(store.billings));
 </script>
 
 <template>
-	<div
-		class="p-4 md:p-6">
+	<div class="p-4 md:p-6">
 		<Header :totalBillings="store.totalBillings" />
 		<div class="flex flex-col gap-4">
 			<div>
