@@ -69,7 +69,7 @@ import {
 const app = createApp(App);
 const auth = getAuth(firebaseApp);
 if (process.env.NODE_ENV === 'development') {
-	connectAuthEmulator(auth, 'http://127.0.0.1:9099');
+	connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
 }
 
 setPersistence(auth, indexedDBLocalPersistence)
