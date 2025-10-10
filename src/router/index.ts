@@ -119,32 +119,39 @@ const router = createRouter({
 
 // const ADMIN_USER_ID = 'GHh3aoG1qadCtG6Ey2cWQMTZy173';
 
-router.beforeEach(async (to, from, next) => {
-	const user = await getCurrentUser();
-	const isAuthenticated = !!user;
-	const isAdmin = null; // to be continue
+router.beforeEach(async (to, from) => {
+	try {
+		const user = await getCurrentUser();
+		const isAuthenticated = !!user;
+		let isAdmin = false;
 
-	// Handle authenticated users trying to access guest-only routes
-	if (isAuthenticated && to.meta.requiresGuest) {
-		return next(
-			isAdmin ? { name: 'admin-dashboard' } : { name: 'resident-home' },
-		);
+		if (user) {
+			const idTokenResult = await user.getIdTokenResult();
+			isAdmin = idTokenResult.claims?.role === 'admin';
+		}
+
+		// Handle authenticated users trying to access guest-only routes
+		if (isAuthenticated && to.meta.requiresGuest) {
+			return isAdmin ? { name: 'admin-dashboard' } : { name: 'resident-home' };
+		}
+
+		// Handle unauthenticated users trying to access protected routes
+		if (!isAuthenticated && to.meta.requiresAuth) {
+			return to.meta.requiresAdmin ? { name: 'admin-auth' } : { name: 'auth' };
+		}
+
+		// Handle non-admin users trying to access admin routes
+		if (to.meta.requiresAdmin && isAuthenticated && !isAdmin) {
+			return { name: 'resident-home' };
+		}
+
+		// Allow navigation if all checks pass
+		return;
+	} catch (error) {
+		console.error('Navigation guard error:', error);
+		// Optionally redirect to an error page or home
+		return { name: 'auth' };
 	}
-
-	// Handle unauthenticated users trying to access protected routes
-	if (!isAuthenticated && to.meta.requiresAuth) {
-		return next(
-			to.meta.requiresAdmin ? { name: 'admin-auth' } : { name: 'auth' },
-		);
-	}
-
-	// Handle non-admin users trying to access admin routes
-	if (to.meta.requiresAdmin && isAuthenticated && !isAdmin) {
-		return next({ name: 'resident-home' });
-	}
-
-	// Allow navigation if all checks pass
-	next();
 });
 
 export default router;
