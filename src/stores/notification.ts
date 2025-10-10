@@ -1,9 +1,7 @@
 import { notificationRepository } from '@/repositories/notificationRepository';
 import type { Notification } from '@/types/notification';
-import type { StoreResponse } from '@/types/store-response';
-import { format } from 'date-fns';
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 
 export const useNotificationStore = defineStore('notification', () => {
 	const notifications = ref<Notification[]>([]);
@@ -18,7 +16,6 @@ export const useNotificationStore = defineStore('notification', () => {
 			response?.total ||
 			notifications.value.filter((n) => n.isRead == false).length;
 		isLoading.value = false;
-		console.log(notifications.value);
 	}
 
 	async function markAsAllRead() {
