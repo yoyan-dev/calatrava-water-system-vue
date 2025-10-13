@@ -118,12 +118,12 @@
 						<Notification />
 						<RouterLink
 							to="/admin/setting"
-							class="flex items-center justify-center w-9 h-9 bg-surface-50 dark:bg-surface-800 hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors">
+							class="flex items-center justify-center w-9 h-9">
 							<Avatar
 								:image="admin.photoURL || '/default.jpg'"
 								size="small"
 								shape="circle"
-								class="border-0" />
+								class="border-0 shadow-md transition-all duration-300 hover:shadow-lg hover:scale-110" />
 						</RouterLink>
 					</div>
 				</div>
