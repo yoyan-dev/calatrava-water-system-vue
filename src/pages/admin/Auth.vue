@@ -50,51 +50,119 @@
 		}
 	}
 </script>
+
 <template>
 	<div
-		class="px-6 py-20 h-screen md:px-12 lg:px-20 flex items-center justify-center bg-[linear-gradient(-225deg,var(--p-primary-500),var(--p-primary-700)_48%,var(--p-primary-800))] dark:bg-[linear-gradient(-225deg,var(--p-primary-400),var(--p-primary-600)_48%,var(--p-primary-800))]">
-		<div
-			class="p-12 shadow-sm text-center lg:w-120 backdrop-blur-md rounded-xl bg-white">
-			<Avatar
-				image="/logo.png"
-				class="mr-2"
-				size="xlarge"
-				shape="circle" />
-			<div class="text-2xl font-medium">CALATRAVA WATER SYSTEM</div>
-			<div class="text-xl text-slate-500 mb-12">Welcome</div>
-			<form
-				@submit.prevent="onFormSubmit"
-				class="flex justify-center flex-col gap-4">
-				<div class="flex justify-center">
-					<Message
-						v-if="errorMessage"
-						severity="error"
-						size="small"
-						variant="simple"
-						>{{ errorMessage }}</Message
-					>
+		class="min-h-screen bg-gradient-to-br from-primary-50 via-primary-100 to-primary-200 px-4 py-12 md:px-8 lg:px-16 flex items-center justify-center relative overflow-hidden">
+		<!-- Animated background elements for depth and motion -->
+		<div class="absolute inset-0 pointer-events-none">
+			<div
+				class="absolute -top-40 -right-40 w-80 h-80 bg-primary-200/20 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+			<div
+				class="absolute -bottom-40 -left-40 w-80 h-80 bg-primary-200/20 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+			<div
+				class="absolute top-40 left-40 w-80 h-80 bg-primary-100/20 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+		</div>
+
+		<div class="w-full max-w-md z-10">
+			<!-- Main card white solid -->
+			<div
+				class="relative bg-white border border-gray-200 shadow-xl rounded-3xl p-8 md:p-10 transform transition-all duration-500 hover:scale-[1.02]">
+				<!-- Header with improved layout -->
+				<div class="text-center mb-8">
+					<div class="mx-auto mb-4">
+						<Avatar
+							image="/logo.png"
+							size="xlarge"
+							shape="circle" />
+					</div>
+					<h1 class="text-2xl md:text-3xl font-bold text-primary-800 mb-4">
+						Calatrava Water System
+					</h1>
+					<p class="text-xl font-light text-gray-600">Log in as Admin</p>
 				</div>
-				<div class="flex flex-col gap-1">
-					<InputText
-						v-model="initialValues.email"
-						name="email"
-						type="email"
-						placeholder="Email" />
-					<!-- <Message v-if="$form.username?.invalid" severity="error" size="small" variant="simple">{{ $form.username.error?.message }}</Message> -->
-				</div>
-				<div class="flex flex-col gap-1">
-					<Password
-						placeholder="Password"
-						v-model="initialValues.password"
-						:feedback="false"
-						toggleMask
-						fluid />
-				</div>
-				<Button
-					label="Submit"
-					type="submit"
-					:loading="isLoading" />
-			</form>
+
+				<!-- Form with enhanced inputs and spacing -->
+				<form
+					@submit.prevent="onFormSubmit"
+					class="space-y-6">
+					<!-- Error message positioned better -->
+					<div class="flex justify-center">
+						<Message
+							v-if="errorMessage"
+							severity="error"
+							size="small"
+							variant="simple"
+							class="bg-red-50 border-red-200 text-red-700">
+							{{ errorMessage }}
+						</Message>
+					</div>
+
+					<!-- Email field with IconField -->
+					<div class="space-y-2">
+						<label
+							for="email"
+							class="block text-sm font-medium text-gray-700"
+							>Email Address</label
+						>
+						<IconField class="w-full">
+							<InputIcon class="pi pi-envelope" />
+							<InputText
+								id="email"
+								v-model="initialValues.email"
+								name="email"
+								type="email"
+								placeholder="Enter your email"
+								class="w-full" />
+						</IconField>
+					</div>
+
+					<!-- Password field with IconField -->
+					<div class="space-y-2">
+						<label
+							for="password"
+							class="block text-sm font-medium text-gray-700"
+							>Password</label
+						>
+						<IconField class="w-full">
+							<InputIcon class="pi pi-lock" />
+							<Password
+								inputId="password"
+								placeholder="Enter your password"
+								v-model="initialValues.password"
+								:feedback="false"
+								toggleMask
+								fluid />
+						</IconField>
+					</div>
+
+					<!-- Submit button with enhanced styling -->
+					<Button
+						label="Sign In"
+						type="submit"
+						icon="pi pi-sign-in"
+						iconPos="right"
+						:loading="isLoading"
+						class="w-full py-3 text-lg font-semibold bg-primary-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5 hover:bg-primary-700" />
+				</form>
+			</div>
+
+			<!-- Subtle footer tagline -->
+			<p class="text-center text-gray-500 mt-8 text-sm">
+				Securely access your water services.
+			</p>
 		</div>
 	</div>
 </template>
+
+<style scoped>
+	.animate-pulse-slow {
+		animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+	}
+	.delay-1000 {
+		animation-delay: 1s;
+	}
+	.delay-2000 {
+		animation-delay: 2s;
+	}
+</style>
