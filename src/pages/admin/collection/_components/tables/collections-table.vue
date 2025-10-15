@@ -1,7 +1,9 @@
 <script setup lang="ts">
 	import { ref } from 'vue';
 	import CollectionRecordPanel from '../panels/collection-record-panel.vue';
+	import { useCollectionStore } from '@/stores/collection';
 
+	const store = useCollectionStore();
 	const props = defineProps({ selectedCollections: Array, collections: Array });
 	const selectedCollections = ref(props.selectedCollections);
 	const expandedRows = ref({});
@@ -21,11 +23,6 @@
 					No collection payment found.
 				</div>
 			</template>
-			<!-- <Column
-				class="whitespace-nowrap text-ellipsis"
-				selectionMode="multiple"
-				style="width: 3rem"
-				:exportable="false"></Column> -->
 			<Column
 				class="whitespace-nowrap text-ellipsis"
 				expander
@@ -74,5 +71,9 @@
 				</template>
 			</Column>
 		</DataTable>
+		<Paginator
+			:rows="10"
+			@page="(e) => (store.page = e.page + 1)"
+			:totalRecords="store.totalCollections" />
 	</div>
 </template>
