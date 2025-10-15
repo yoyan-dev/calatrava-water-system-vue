@@ -32,18 +32,27 @@
 				style="width: 5rem" />
 			<template #expansion="slotProps">
 				<div class="p-4">
-					<Accordion :value="0">
+					<Accordion>
 						<AccordionPanel
 							v-for="(item, index) in slotProps.data.records"
 							:key="item.uid"
 							:value="index">
 							<AccordionHeader>
-								<div>
-									<span
-										class="font-semibold text-gray-500 dark:text-gray-400 mr-4"
-										>Receipt#</span
-									>
-									<span class="text-primary">{{ item.receiptno }}</span>
+								<div class="text-sm">
+									<div>
+										<i class="pi pi-receipt mr-2" />
+										<span class="text-gray-500 dark:text-gray-400 mr-4"
+											>Receipt No.</span
+										>
+										<span class="text-primary">{{ item.receiptno }}</span>
+									</div>
+									<div>
+										<i class="pi pi-calendar mr-2" />
+										<span class="text-gray-500 dark:text-gray-400 mr-4"
+											>Payment Date</span
+										>
+										<span class="text-primary">{{ item.pymtdate }}</span>
+									</div>
 								</div>
 							</AccordionHeader>
 							<AccordionContent>

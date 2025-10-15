@@ -1,6 +1,5 @@
 <template>
-	<div
-		class="flex flex-col md:flex-row gap-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg shadow-sm">
+	<div class="flex flex-col md:flex-row gap-4">
 		<!-- Card 1: Account and Payment Info -->
 		<div
 			class="flex-1 p-4 bg-white dark:bg-gray-900 border border-gray-200 rounded-md shadow-sm">
