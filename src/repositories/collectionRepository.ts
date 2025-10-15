@@ -1,3 +1,4 @@
+// collectionRepository
 import { useFetch } from '@vueuse/core';
 import type { Collection } from '@/types/collection';
 import type { H3Response } from '@/types/h3response';

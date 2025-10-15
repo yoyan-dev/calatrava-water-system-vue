@@ -1,8 +1,6 @@
 import { collectionRepository } from '@/repositories/collectionRepository';
 import type { Collection } from '@/types/collection';
-import type { H3Response } from '@/types/h3response';
 import type { StoreResponse } from '@/types/store-response';
-import { watchDebounced } from '@vueuse/core';
 import { format } from 'date-fns';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
@@ -22,9 +20,9 @@ export const useCollectionStore = defineStore('collection', () => {
 	const totalCollections = ref(0);
 	const page = ref(0);
 
-	// getters
+	// Getters
 	const offset = computed(() => page.value * 10);
-	const formattedDate = computed(() => format(month.value, 'yyyy-M'));
+	const formattedDate = computed(() => format(month.value, 'yyyy-MM'));
 	const groupCollectionByAccount = computed(() => {
 		// Group records by accountno
 		const grouped = collections.value.reduce(
@@ -58,8 +56,6 @@ export const useCollectionStore = defineStore('collection', () => {
 			q: searchQuery.value,
 			month: formattedDate.value,
 			offset: offset.value,
-			orderBy: 'sysno',
-			order: 'desc',
 		});
 
 		collections.value = response?.data || [];
@@ -114,14 +110,6 @@ export const useCollectionStore = defineStore('collection', () => {
 			statusMessage: response?.statusMessage ?? '',
 		};
 	}
-
-	watchDebounced(
-		[searchQuery, formattedDate, offset],
-		(newQuery) => {
-			fetchCollections();
-		},
-		{ debounce: 300 },
-	);
 
 	return {
 		// State
