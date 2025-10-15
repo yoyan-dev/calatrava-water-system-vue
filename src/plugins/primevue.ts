@@ -45,6 +45,7 @@ import {
 	AccordionHeader,
 	AccordionContent,
 	ConfirmPopup,
+	Chip,
 } from 'primevue';
 import PrimeVue from 'primevue/config';
 import Aura from '@primeuix/themes/aura';
@@ -78,6 +79,7 @@ export default {
 		app.component('Splitter', Splitter);
 		app.component('SplitterPanel', SplitterPanel);
 		app.component('DataTable', DataTable);
+		app.component('Chip', Chip);
 		app.component('Column', Column);
 		app.component('ColumnGroup', ColumnGroup);
 		app.component('ConfirmPopup', ConfirmPopup);

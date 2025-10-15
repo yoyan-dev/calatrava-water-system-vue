@@ -8,6 +8,7 @@ import { computed, ref } from 'vue';
 // Define the type for the grouped result
 interface GroupedCollection {
 	accountno: string;
+	fullname: string;
 	records: Collection[];
 }
 
@@ -37,6 +38,7 @@ export const useCollectionStore = defineStore('collection', () => {
 					// If not, create a new group with the accountno and an array containing the collection
 					acc.push({
 						accountno: collection.accountno as string,
+						fullname: collection.fullname as string,
 						records: [collection],
 					});
 				}
@@ -46,7 +48,22 @@ export const useCollectionStore = defineStore('collection', () => {
 			[],
 		);
 
-		return grouped;
+		// Sort records in each group by pymtdate descending (latest first)
+		const parseDate = (dateStr: string) => {
+			const parts = dateStr.split('/');
+			return new Date(
+				`${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`,
+			);
+		};
+
+		return grouped.map((group) => ({
+			...group,
+			records: group.records.sort((a, b) => {
+				const dateA = a.pymtdate ? parseDate(a.pymtdate).getTime() : 0;
+				const dateB = b.pymtdate ? parseDate(b.pymtdate).getTime() : 0;
+				return dateB - dateA;
+			}),
+		}));
 	});
 
 	// Actions
