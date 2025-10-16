@@ -77,6 +77,7 @@
 									v-if="
 										item?.pymtdate === getMaxPymtdate(slotProps.data?.records)
 									"
+									icon="pi pi-check"
 									label="Latest"
 									class="ml-auto mr-4"
 									severity="info" />
