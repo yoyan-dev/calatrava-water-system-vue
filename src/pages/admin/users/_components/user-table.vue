@@ -90,9 +90,7 @@
 			:rows="10"
 			:loading="isLoading">
 			<template #empty>
-				<div class="flex items-center justify-center p-4">
-					No billing found.
-				</div>
+				<div class="flex items-center justify-center p-4">No users found.</div>
 			</template>
 
 			<Column
