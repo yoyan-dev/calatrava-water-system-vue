@@ -2,7 +2,6 @@ import { computed, ref } from 'vue';
 import { defineStore } from 'pinia';
 import type { Billing } from '@/types/billing';
 import type { StoreResponse } from '@/types/store-response';
-import { watchDebounced } from '@vueuse/core';
 import { format } from 'date-fns';
 import { billingRepository } from '@/repositories/billingRepository';
 
@@ -15,6 +14,8 @@ export const useBillingStore = defineStore('billing', () => {
 	const searchQuery = ref('');
 	const totalBillings = ref(0);
 	const page = ref(0);
+	const orderBy = ref('');
+	const order = ref<'asc' | 'desc'>('asc');
 
 	// getters
 	const offset = computed(() => page.value * 10);
@@ -27,6 +28,8 @@ export const useBillingStore = defineStore('billing', () => {
 			q: searchQuery.value,
 			month: formattedDate.value,
 			offset: offset.value,
+			orderBy: orderBy.value,
+			order: order.value,
 		});
 
 		billings.value = response?.data || [];
@@ -125,14 +128,6 @@ export const useBillingStore = defineStore('billing', () => {
 		};
 	}
 
-	watchDebounced(
-		[searchQuery, formattedDate, offset],
-		(newQuery) => {
-			fetchBillings();
-		},
-		{ debounce: 300 },
-	);
-
 	return {
 		billings,
 		billing,
@@ -140,6 +135,8 @@ export const useBillingStore = defineStore('billing', () => {
 		month,
 		searchQuery,
 		page,
+		orderBy,
+		order,
 		totalBillings,
 		fetchBilling,
 		fetchBillings,

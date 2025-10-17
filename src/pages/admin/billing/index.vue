@@ -2,9 +2,10 @@
 	import {
 		ref,
 		onMounted,
-		watchEffect,
 		nextTick,
 		defineAsyncComponent,
+		watch,
+		computed,
 	} from 'vue';
 	import Header from '@/pages/admin/billing/_components/header.vue';
 	import DeleteSelected from '@/pages/admin/billing/_components/modals/delete-selected-modal.vue';
@@ -14,6 +15,7 @@
 	import { useDialog } from 'primevue';
 	import type { Billing } from '@/types/billing';
 	import { formatToPeso } from '@/composables/currencyFormat';
+	import { watchDebounced } from '@vueuse/core';
 
 	const ViewReciept = defineAsyncComponent(
 		() => import('@/pages/admin/billing/_components/modals/view-reciept.vue'),
@@ -34,6 +36,29 @@
 	const expandedRows = ref({});
 	const op = ref();
 	const selectedBill = ref<Billing | null>();
+	const searchMenu = ref();
+
+	const searchBy = ref({ label: 'Account No.', value: 'accountno' });
+	const searchOptions = ref([
+		{ label: 'Account No.', value: 'accountno' },
+		{ label: 'Bill No.', value: 'billNo' },
+		{ label: 'Fullname', value: 'fullname' },
+		{ label: 'Book', value: 'book' },
+	]);
+
+	const menuItems = computed(() =>
+		searchOptions.value.map((option) => ({
+			label: option.label,
+			icon: searchBy.value.value === option.value ? 'pi pi-check' : undefined,
+			command: () => {
+				searchBy.value = option;
+			},
+		})),
+	);
+
+	function toggleSearchMenu(event: Event) {
+		searchMenu.value.toggle(event);
+	}
 
 	function onToggled(event: Event, billing: Billing) {
 		op.value.hide();
@@ -53,6 +78,25 @@
 		op.value.hide();
 	}
 
+	// Debounced search: reset page and fetch
+	watchDebounced(
+		() => store.searchQuery,
+		() => {
+			store.page = 0;
+			store.fetchBillings();
+		},
+		{ debounce: 300 },
+	);
+
+	watch(
+		() => searchBy.value,
+		() => {
+			store.orderBy = searchBy.value.value;
+			store.page = 0;
+		},
+		{ deep: true },
+	);
+
 	onMounted(() => {
 		store.fetchBillings();
 	});
@@ -64,15 +108,24 @@
 		<div class="flex flex-col gap-4">
 			<div>
 				<div class="flex gap-5 flex-wrap items-start">
-					<div class="flex-1">
+					<div class="flex-1 flex gap-3">
 						<IconField>
 							<InputIcon>
 								<i class="pi pi-search" />
 							</InputIcon>
 							<InputText
 								v-model="store.searchQuery"
-								placeholder="Search..." />
+								:placeholder="`Search by ${searchBy.label}`" />
 						</IconField>
+						<Button
+							icon="pi pi-filter"
+							@click="toggleSearchMenu"
+							class="p-button-text" />
+						<!-- Icon-only button -->
+						<Menu
+							ref="searchMenu"
+							:model="menuItems"
+							:popup="true" />
 					</div>
 					<div class="flex gap-3 justify-start md:justify-end w-full flex-1">
 						<FloatLabel variant="on">

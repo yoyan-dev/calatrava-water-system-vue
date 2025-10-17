@@ -46,6 +46,7 @@ import {
 	AccordionContent,
 	ConfirmPopup,
 	Chip,
+	Tooltip,
 } from 'primevue';
 import PrimeVue from 'primevue/config';
 import Aura from '@primeuix/themes/aura';
@@ -71,6 +72,9 @@ export default {
 		app.use(ConfirmationService);
 		app.use(DialogService);
 		app.use(ToastService);
+
+		// Directives
+		app.directive('tooltip', Tooltip);
 
 		// Primevue Components
 		app.component('Button', Button);
