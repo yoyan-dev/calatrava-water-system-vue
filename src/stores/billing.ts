@@ -1,9 +1,9 @@
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import type { Billing } from '@/types/billing';
 import type { StoreResponse } from '@/types/store-response';
-import { format } from 'date-fns';
 import { billingRepository } from '@/repositories/billingRepository';
+import { billingRepository as billRepo } from '@/repositories/v2/billingRepository';
 
 export const useBillingStore = defineStore('billing', () => {
 	// State
@@ -14,28 +14,35 @@ export const useBillingStore = defineStore('billing', () => {
 	const searchQuery = ref('');
 	const totalBillings = ref(0);
 	const page = ref(0);
-	const orderBy = ref('');
-	const order = ref<'asc' | 'desc'>('asc');
-
-	// getters
-	const offset = computed(() => page.value * 10);
-	const formattedDate = computed(() => format(month.value, 'yyyy-M'));
+	const lastDoc = ref<any>(null);
+	const orderByField = ref<string>('bill_no');
+	const orderDirection = ref<string>('desc');
 
 	// Actions
-	async function fetchBillings() {
-		isLoading.value = true;
-		const response = await billingRepository.fetchBillings({
-			q: searchQuery.value,
-			month: formattedDate.value,
-			offset: offset.value,
-			orderBy: orderBy.value,
-			order: order.value,
-		});
+	async function fetchBillings(refresh = false) {
+		if (refresh) {
+			lastDoc.value = null;
+			billings.value = [];
+		}
 
-		billings.value = response?.data || [];
-		totalBillings.value = response?.total || 0;
+		isLoading.value = true;
+		const response = await billRepo.paginateBillings({
+			limit: 10,
+			lastDoc: lastDoc.value,
+			searchQuery: searchQuery.value,
+			orderByField: orderByField.value,
+			orderDirection: orderDirection.value as 'asc' | 'desc',
+		});
+		if (response?.data) {
+			if (refresh) {
+				billings.value = response.data;
+			} else {
+				billings.value = [...billings.value, ...response.data];
+			}
+			lastDoc.value = response.lastDoc;
+			totalBillings.value = billings.value.length + (lastDoc.value ? 1 : 0);
+		}
 		isLoading.value = false;
-		console.log(billings.value);
 	}
 
 	async function fetchBilling(uid: string) {
@@ -135,8 +142,6 @@ export const useBillingStore = defineStore('billing', () => {
 		month,
 		searchQuery,
 		page,
-		orderBy,
-		order,
 		totalBillings,
 		fetchBilling,
 		fetchBillings,
