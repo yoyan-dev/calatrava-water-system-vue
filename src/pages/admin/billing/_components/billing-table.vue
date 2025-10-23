@@ -2,15 +2,19 @@
 	<div>
 		<DataTable
 			v-model:expandedRows="expandedRows"
-			:value="value"
-			:loading="loading"
+			v-model:first="first"
+			:value="store.billings"
+			:loading="store.isLoading"
+			:lazy="true"
 			dataKey="billNo"
 			size="small"
 			class="text-sm"
 			:rows="rows"
-			:paginator="true"
+			paginator
 			paginatorPosition="bottom"
-			:totalRecords="totalRecords"
+			:totalRecords="store.totalBillings"
+			currentPageReportTemplate="{first} to {last} of {totalRecords}"
+			paginatorTemplate="FirstPageLink PrevPageLink NextPageLink LastPageLink CurrentPageReport"
 			@page="onPage">
 			<template #empty>
 				<div class="flex items-center justify-center p-4">
@@ -63,7 +67,6 @@
 						type="button"
 						severity="secondary"
 						icon="pi pi-ellipsis-v"
-						@click="emit('toggle', $event, slotProps.data)"
 						text />
 				</template>
 			</Column>
@@ -75,29 +78,17 @@
 </template>
 
 <script setup lang="ts">
-	import { ref } from 'vue';
+	import { onMounted, ref } from 'vue';
 	import DataTable from 'primevue/datatable';
 	import Column from 'primevue/column';
 	import Tag from 'primevue/tag';
 	import Button from 'primevue/button';
 	import BillingExpansion from './billing-expansion.vue';
+	import { useBillingStore } from '@/stores/billing';
 
-	// Define props with types
-	const props = defineProps<{
-		value: Array<any>;
-		loading: boolean;
-		totalRecords: number;
-		rows?: number;
-	}>();
-
-	// Define emits
-	const emit = defineEmits<{
-		(e: 'update:selection', value: any): void;
-		(e: 'page', event: any): void;
-		(e: 'toggle', event: Event, data: any): void;
-	}>();
-
-	// Local state for expanded rows
+	const store = useBillingStore();
+	const first = ref(0); // Bind to DataTable
+	const rows = ref(10);
 	const expandedRows = ref([]);
 
 	// Format functions (assume these are imported or defined globally; adjust as needed)
@@ -118,6 +109,27 @@
 	};
 
 	const onPage = (event: any) => {
-		emit('page', event);
+		console.log(event);
+		const firstIndex = event.first;
+		const orderByField = event.sortField ?? 'bill_no';
+		const orderDirection = event.sortOrder === 1 ? 'asc' : 'desc';
+		const limit = event.rows;
+
+		first.value = event.first; // Keep DataTable in sync
+
+		store.fetchBillings({
+			firstIndex,
+			orderByField,
+			orderDirection,
+			limit,
+		});
 	};
+
+	// Initial load
+	onMounted(() => {
+		store.fetchBillings({
+			firstIndex: first.value,
+			limit: rows.value,
+		});
+	});
 </script>

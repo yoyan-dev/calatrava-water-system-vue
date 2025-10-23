@@ -10,39 +10,71 @@ export const useBillingStore = defineStore('billing', () => {
 	const billings = ref<Billing[]>([]);
 	const billing = ref<Billing>();
 	const isLoading = ref(false);
-	const month = ref(new Date());
-	const searchQuery = ref('');
 	const totalBillings = ref(0);
-	const page = ref(0);
-	const lastDoc = ref<any>(null);
-	const orderByField = ref<string>('bill_no');
-	const orderDirection = ref<string>('desc');
+	const lastFirstIndex = ref(null as null | number);
+	const startDoc = ref<null | any>(null);
+	const lastDoc = ref<null | any>(null);
 
 	// Actions
-	async function fetchBillings(refresh = false) {
-		if (refresh) {
-			lastDoc.value = null;
-			billings.value = [];
-		}
+	function resetPagination() {
+		lastFirstIndex.value = null;
+		startDoc.value = null;
+		lastDoc.value = null;
+	}
 
+	async function fetchBillings({
+		searchQuery,
+		firstIndex = 0,
+		orderByField = 'bill_no',
+		orderDirection = 'desc',
+		limit = 10,
+	}: {
+		searchQuery?: string;
+		firstIndex?: number;
+		orderByField?: string;
+		orderDirection?: 'asc' | 'desc';
+		limit?: number;
+	}) {
 		isLoading.value = true;
-		const response = await billRepo.paginateBillings({
-			limit: 10,
-			lastDoc: lastDoc.value,
-			searchQuery: searchQuery.value,
-			orderByField: orderByField.value,
-			orderDirection: orderDirection.value as 'asc' | 'desc',
-		});
-		if (response?.data) {
-			if (refresh) {
-				billings.value = response.data;
-			} else {
-				billings.value = [...billings.value, ...response.data];
+
+		try {
+			if (searchQuery) {
+				return;
 			}
-			lastDoc.value = response.lastDoc;
-			totalBillings.value = billings.value.length + (lastDoc.value ? 1 : 0);
+
+			let response;
+			if (lastFirstIndex.value !== null) {
+				const forward = firstIndex > lastFirstIndex.value;
+
+				response = await billRepo.paginateBillings({
+					limit,
+					forward,
+					cursorDoc: forward ? lastDoc.value : startDoc.value,
+					orderByField,
+					orderDirection,
+				});
+			} else {
+				response = await billRepo.paginateBillings({
+					limit,
+					orderByField,
+					orderDirection,
+				});
+			}
+
+			if (response) {
+				if (response?.data) {
+					billings.value = response.data;
+					totalBillings.value = response.totalBillings;
+					lastFirstIndex.value = firstIndex;
+					startDoc.value = response.startDoc;
+					lastDoc.value = response.lastDoc;
+				}
+			}
+		} catch (error) {
+			console.error('Error fetching billings:', error);
+		} finally {
+			isLoading.value = false;
 		}
-		isLoading.value = false;
 	}
 
 	async function fetchBilling(uid: string) {
@@ -53,24 +85,37 @@ export const useBillingStore = defineStore('billing', () => {
 	}
 
 	async function addBillings(payload: File): Promise<StoreResponse> {
-		isLoading.value = true;
-		const formData = new FormData();
-		formData.append('file', payload);
-		const response = await billingRepository.addBillings(formData);
-		if (response?.statusCode == 200) {
-			await fetchBillings();
+		try {
+			isLoading.value = true;
+			const formData = new FormData();
+			formData.append('file', payload);
+			const response = await billRepo.addBillings(formData);
+			if (response?.statusCode == 200) {
+				isLoading.value = false;
+				resetPagination();
+				await fetchBillings({
+					limit: 10,
+					firstIndex: 0,
+					orderByField: 'bill_no',
+					orderDirection: 'desc',
+				});
+
+				return {
+					status: 'success',
+					message: response.message,
+				};
+			}
 			return {
-				status: 'success',
-				message: response.message,
-				statusMessage: response.statusMessage ?? '',
+				status: 'error',
+				message: response?.message,
+			};
+		} catch (error) {
+			console.error('Error uploading CSV:', error);
+			return {
+				status: 'error',
+				message: 'Failed to upload CSV',
 			};
 		}
-		isLoading.value = false;
-		return {
-			status: 'error',
-			message: response?.message,
-			statusMessage: response?.statusMessage ?? '',
-		};
 	}
 
 	async function deleteBilling({
@@ -82,7 +127,6 @@ export const useBillingStore = defineStore('billing', () => {
 	}): Promise<StoreResponse> {
 		const response = await billingRepository.deleteBilling({ uid, accountno });
 		if (response?.statusCode == 200) {
-			await fetchBillings();
 			return {
 				status: 'success',
 				message: response.message,
@@ -100,7 +144,6 @@ export const useBillingStore = defineStore('billing', () => {
 		isLoading.value = true;
 		const response = await billingRepository.deleteBillings(payload);
 		if (response?.statusCode == 200) {
-			await fetchBillings();
 			return {
 				status: 'success',
 				message: response.message,
@@ -121,7 +164,6 @@ export const useBillingStore = defineStore('billing', () => {
 		isLoading.value = true;
 		const response = await billingRepository.updateBilling({ uid, billing });
 		if (response?.statusCode == 200) {
-			await fetchBillings();
 			return {
 				status: 'success',
 				message: response.message,
@@ -139,11 +181,10 @@ export const useBillingStore = defineStore('billing', () => {
 		billings,
 		billing,
 		isLoading,
-		month,
-		searchQuery,
-		page,
+		startDoc,
+		lastDoc,
+		lastFirstIndex,
 		totalBillings,
-		fetchBilling,
 		fetchBillings,
 		addBillings,
 		updateBilling,
