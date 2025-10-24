@@ -1,59 +1,57 @@
-type Customer @table {
-  fullName: String!
-  accountNo: String!
-  purokCode: String
-  billPurok: String
-  billBrgy: String
-  classType: String
+# Residents table: Stores unique customer data
+type Resident @table(key: "id") {
+	id: UUID! @default(expr: "uuidV4()")
+	fullName: String! # e.g., "alfredo señora"
+	book: Book! # Reference to Book type
+	classType: String! # e.g., "RESIDENTIAL"
+	notificationToken: String # Nullable
+	createdAt: Timestamp! @default(expr: "request.time")
 }
 
-type Meter @table {
-  customer: Customer!
-  meterNo: String!
+# Books table: Stores unique book codes
+type Book @table {
+	code: String! @unique # e.g., "calampisawan"
+	updatedAt: Timestamp! @default(expr: "request.time")
 }
 
-type BillingPeriod @table {
-  billDate: Date!
-  dueDate: Date!
-  prvDueDate: Date
-  prvBillDate: Date
-}
-
-type Bill @table {
-  customer: Customer!
-  meter: Meter!
-  period: BillingPeriod!
-  billNo: String!
-  currentReading: Int!
-  previousReading: Int!
-  waterUsage: Int!
-  totalBill: Float!
-  billAmount: Float!
-  paid: Boolean!
-  status: String!
-  previousUsed: Int
-  previousUsed2: Int
-  arrearsEnv: Float
-  arrearsAmount: Float
-  mPenalty: Float
-  duePenalty: Float
-  environmentFee: Float
-  nrWater: Int
-  createdAt: Timestamp
-  book: String
-  prvDiscon: Date
-  disconDate: Date
-  verified: Boolean
-  stubOut: String
-  mrSysNo: String
-  amortAmount: Float
-  mrrfDue: Float
-  penalty: Float
-}
-
-type Payment @table {
-  bill: Bill!
-  paymentDate: Date!
-  paymentReceipt: String!
-  paymentStatus: String
+# Billings table: Core billing data
+type Billing @table {
+	billNo: Int! # e.g., 90
+	billDate: Date! # e.g., "2025-10-06"
+	dueDate: Date! # e.g., "2025-10-14"
+	bStatus: String! # e.g., "2"
+	mrSysNo: Int! # e.g., 54565
+	penalized: String! # e.g., "0"
+	mPenalty: Float! # e.g., 0.0
+	discount: Float! # e.g., 0.0
+	paid: String! # e.g., "F"
+	verified: String! # e.g., "T"
+	arrearsAmt: Float! # e.g., 5.5
+	mrrfDue: Float! # e.g., 2.25
+	curReading: Int! # e.g., 3535
+	disconDate: Date # e.g., "2025-01-17"
+	mtrNo: String! # e.g., "9402982"
+	preReading: Int! # e.g., 3526
+	purokCode: String! # e.g., ""
+	billPurok: String! # e.g., ""
+	billBrgy: String! # e.g., ""
+	prevUsed: Int! # e.g., 0
+	prevUsed2: Int! # e.g., 0
+	prvBillDate: String! # e.g., "/  /"
+	prvDueDate: String! # e.g., "/  /"
+	prvDiscon: String! # e.g., "/  /"
+	stubOut: String! # e.g., ""
+	amortAmt: Float! # e.g., 0.0
+	nrWater: Int! # e.g., 0
+	resident: Resident! # Reference to Resident type
+	billAmt: Float! # e.g., 75.0
+	duePenalty: Float! # e.g., 0.0
+	arrearsEnv: Float! # e.g., -5.5
+	environmentFee: Float! # e.g., 0.0
+	totalBill: Float! # e.g., 75.0
+	waterUsage: Int! # e.g., 9
+	paymentReceipt: String # Nullable
+	paymentStatus: String # Nullable
+	paymentDate: Timestamp # Nullable
+	createdAt: Timestamp! @default(expr: "request.time")
 }

@@ -5,7 +5,7 @@
 	import { useFirebaseAuth } from 'vuefire';
 	import { useAdminStore } from '@/stores/admin';
 	import type { Admin } from '@/types/admin';
-	import Notification from './components/notification.vue';
+	// import Notification from './components/notification.vue';
 	import ThemeToggle from './components/theme-toggle.vue';
 	import Button from 'primevue/button';
 	import Avatar from 'primevue/avatar';
@@ -115,7 +115,7 @@
 					</div>
 					<div class="flex items-center gap-1">
 						<ThemeToggle />
-						<Notification />
+						<!-- <Notification /> -->
 						<RouterLink
 							to="/admin/setting"
 							class="flex items-center justify-center w-9 h-9">

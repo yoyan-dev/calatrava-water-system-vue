@@ -34,3 +34,4 @@ dev-dist
 
 #Firebase Related files
 .firebase
+dataconnect/.dataconnect
