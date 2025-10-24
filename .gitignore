@@ -31,3 +31,6 @@ coverage
 
 dev-dist/*
 dev-dist
+
+#Firebase Related files
+.firebase
