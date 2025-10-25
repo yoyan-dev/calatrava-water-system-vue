@@ -1,56 +1,11 @@
 mutation InsertBook($data: Book_Data!) {
-	book_insert(data: $data) {
-		code
-	}
+	book_insert(data: $data)
 }
 
 mutation InsertResident($data: Resident_Data!) {
-	resident_insert(data: $data) {
-		accountNo
-		fullName
-		classType
-		bookId
-	}
+	resident_insert(data: $data)
 }
 
 mutation InsertBilling($data: Billing_Data!) {
-	billing_insert(data: $data) {
-		billNo
-		billDate
-		dueDate
-		bStatus
-		mrSysNo
-		penalized
-		mPenalty
-		discount
-		paid
-		verified
-		arrearsAmt
-		mrrfDue
-		curReading
-		disconDate
-		mtrNo
-		preReading
-		purokCode
-		billPurok
-		billBrgy
-		prevUsed
-		prevUsed2
-		prvBillDate
-		prvDueDate
-		prvDiscon
-		stubOut
-		amortAmt
-		nrWater
-		residentId
-		billAmt
-		duePenalty
-		arrearsEnv
-		environmentFee
-		totalBill
-		waterUsage
-		paymentReceipt
-		paymentStatus
-		paymentDate
-	}
+	billing_insert(data: $data)
 }

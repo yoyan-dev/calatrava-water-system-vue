@@ -1,15 +1,5 @@
-query PaginateBillings(
-	$limit: Int
-	$orderBy: String
-	$orderDir: String
-	$offset: Int
-) {
-	billings(
-		limit: $limit
-		orderBy: $orderBy
-		orderDirection: $orderDirection
-		offset: $offset
-	) {
+query PaginatedBillings($limit: Int, $offset: Int) {
+	billings(limit: $limit, orderBy: [{ billNo: DESC }], offset: $offset) {
 		id
 		billNo
 		billDate

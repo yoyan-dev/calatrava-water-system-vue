@@ -7,7 +7,7 @@ export interface Billing {
 	dueDate?: any;
 	bStatus?: string;
 	mrSysNo?: string;
-	duePenalty?: string;
+	due_penalty?: string;
 	penalized?: string;
 	mPenalty?: string;
 	discount?: string;

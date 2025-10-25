@@ -4,6 +4,7 @@ import type { Billing } from '@/types/billing';
 import type { StoreResponse } from '@/types/store-response';
 import { billingRepository } from '@/repositories/billingRepository';
 import { billingRepository as billRepo } from '@/repositories/v2/billingRepository';
+import { billingRepository as billGraph } from '@/repositories/graph/billingRepository';
 
 export const useBillingStore = defineStore('billing', () => {
 	// State
@@ -89,7 +90,7 @@ export const useBillingStore = defineStore('billing', () => {
 			isLoading.value = true;
 			const formData = new FormData();
 			formData.append('file', payload);
-			const response = await billRepo.addBillings(formData);
+			const response = await billGraph.addBillings(formData);
 			if (response?.statusCode == 200) {
 				isLoading.value = false;
 				resetPagination();

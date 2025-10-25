@@ -12,7 +12,7 @@ import {
 	connectDataConnectEmulator,
 	getDataConnect,
 } from 'firebase/data-connect';
-import { connectorConfig } from '@dataconnect/generated';
+import { connectorConfig } from '@/dataconnect-generated';
 
 const firebaseConfig = {
 	apiKey: import.meta.env.VITE_API_KEY,
@@ -27,7 +27,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 const messaging = getMessaging(firebaseApp);
 const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
-const dataConnect = getDataConnect(connectorConfig);
+const dc = getDataConnect(connectorConfig);
 
 // Connect to emulators in development mode
 if (process.env.NODE_ENV === 'development') {
@@ -35,11 +35,11 @@ if (process.env.NODE_ENV === 'development') {
 		disableWarnings: true,
 	});
 	connectFirestoreEmulator(db, '127.0.0.1', 8080);
-	connectDataConnectEmulator(dataConnect, 'localhost', 9399);
+	connectDataConnectEmulator(dc, 'localhost', 9399);
 }
 
 setPersistence(auth, indexedDBLocalPersistence).catch(() =>
 	setPersistence(auth, browserLocalPersistence),
 );
 
-export { firebaseApp, messaging, auth, db };
+export { firebaseApp, messaging, auth, db, dc };
