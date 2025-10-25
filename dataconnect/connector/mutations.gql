@@ -1,11 +1,72 @@
-mutation InsertBook($data: Book_Data!) {
-	book_insert(data: $data)
+mutation CreateBook($book: String!) @transaction {
+	# Sub-query to check existence
+  existingBook: book(where: { code: { _eq: $book } }) {
+    id
+  } @check(expr: "response.existingResident == null", message: "Resident with account number ${$accountNo} already exists.")
+
+
+  # Step 2: Use @check on the insert operation, referencing the query
+  book_insert(data: { code: $book }) {
+    id
+  }
 }
 
-mutation InsertResident($data: Resident_Data!) {
-	resident_insert(data: $data)
+mutation CreateResident($bookId: UUID!, $accountNo: Int!, $fullName: String!, $classType: String!) @transaction {
+  existingResident: resident(where: {accountNo: {_eq: $accountNo}}) @redact {
+    id
+  }
+
+  resident_insert(data: {
+    accountNo: $accountNo,
+    fullName: $fullName,
+    classType: $classType,
+    bookId: $bookId,
+  }) @check(
+    expr: "response.existingResident.size() == 0",
+    message: "Resident with account number already exists"
+  ) {
+    id
+  }
 }
 
-mutation InsertBilling($data: Billing_Data!) {
-	billing_insert(data: $data)
+mutation CreateBilling($billNo: Int!, $billDate: Date!, $dueDate: Date!, $bStatus: String!, $mrSysNo: Int!, $penalized: String!, $mPenalty: Float!, $discount: Float!, $paid: String!, $verified: String!, $arrearsAmt: Float!, $mrrfDue: Float!, $curReading: Int!, $disconDate: Date, $mtrNo: String!, $preReading: Int!, $purokCode: String!, $billPurok: String!, $billBrgy: String!, $prevUsed: Int!, $prevUsed2: Int!, $prvBillDate: String!, $prvDueDate: String!, $prvDiscon: String!, $stubOut: String!, $amortAmt: Float!, $nrWater: Int!, $residentId: UUID!, $billAmt: Float!, $duePenalty: Float!, $arrearsEnv: Float!, $environmentFee: Float!, $totalBill: Float!, $waterUsage: Int!, $paymentReceipt: String, $paymentStatus: String, $paymentDate: Date) {
+	billing_insert(data: {
+	billNo: $billNo,
+    billDate: $billDate,
+    dueDate: $dueDate,
+    bStatus: $bStatus,
+    mrSysNo: $mrSysNo,
+    penalized: $penalized,
+    mPenalty: $mPenalty,
+    discount: $discount,
+    paid: $paid,
+    verified: $verified,
+    arrearsAmt: $arrearsAmt,
+    mrrfDue: $mrrfDue,
+    curReading: $curReading,
+    disconDate: $disconDate,
+    mtrNo: $mtrNo,
+    preReading: $preReading,
+    purokCode: $purokCode,
+    billPurok: $billPurok,
+    billBrgy: $billBrgy,
+    prevUsed: $prevUsed,
+    prevUsed2: $prevUsed2,
+    prvBillDate: $prvBillDate,
+    prvDueDate: $prvDueDate,
+    prvDiscon: $prvDiscon,
+    stubOut: $stubOut,
+    amortAmt: $amortAmt,
+    nrWater: $nrWater,
+    residentId: $residentId,
+    billAmt: $billAmt,
+    duePenalty: $duePenalty,
+    arrearsEnv: $arrearsEnv,
+    environmentFee: $environmentFee,
+    totalBill: $totalBill,
+    waterUsage: $waterUsage,
+    paymentReceipt: $paymentReceipt,
+    paymentStatus: $paymentStatus,
+    paymentDate: $paymentDate
+	}) 
 }

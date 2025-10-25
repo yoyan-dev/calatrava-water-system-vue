@@ -51,7 +51,7 @@ type Billing @table @index(fields: ["billNo"]) {
 	waterUsage: Int! # e.g., 9
 	paymentReceipt: String # Nullable
 	paymentStatus: String # Nullable
-	paymentDate: Timestamp # Nullable
+	paymentDate: Date # Nullable
 	createdAt: Timestamp! @default(expr: "request.time")
 	updatedAt: Timestamp! @default(expr: "request.time")
 }
