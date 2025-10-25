@@ -1,0 +1,62 @@
+query PaginateBillings(
+	$limit: Int
+	$orderBy: String
+	$orderDir: String
+	$offset: Int
+) {
+	billings(
+		limit: $limit
+		orderBy: $orderBy
+		orderDirection: $orderDirection
+		offset: $offset
+	) {
+		id
+		billNo
+		billDate
+		dueDate
+		bStatus
+		mrSysNo
+		penalized
+		mPenalty
+		discount
+		paid
+		verified
+		arrearsAmt
+		mrrfDue
+		curReading
+		disconDate
+		mtrNo
+		preReading
+		purokCode
+		billPurok
+		billBrgy
+		prevUsed
+		prevUsed2
+		prvBillDate
+		prvDueDate
+		prvDiscon
+		stubOut
+		amortAmt
+		nrWater
+		resident {
+			id
+			accountNo
+			fullName
+			classType
+			book {
+				code
+			}
+		}
+		billAmt
+		duePenalty
+		arrearsEnv
+		environmentFee
+		totalBill
+		waterUsage
+		paymentReceipt
+		paymentStatus
+		paymentDate
+		createdAt
+		updatedAt
+	}
+}

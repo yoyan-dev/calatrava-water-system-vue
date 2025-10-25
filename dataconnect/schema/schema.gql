@@ -1,21 +1,20 @@
-# Residents table: Stores unique customer data
-type Resident @table(key: "id") {
-	id: UUID! @default(expr: "uuidV4()")
-	fullName: String! # e.g., "alfredo señora"
-	book: Book! # Reference to Book type
-	classType: String! # e.g., "RESIDENTIAL"
-	notificationToken: String # Nullable
+type Book @table @index(fields: ["code"]) {
+	code: String!
 	createdAt: Timestamp! @default(expr: "request.time")
-}
-
-# Books table: Stores unique book codes
-type Book @table {
-	code: String! @unique # e.g., "calampisawan"
 	updatedAt: Timestamp! @default(expr: "request.time")
 }
 
-# Billings table: Core billing data
-type Billing @table {
+type Resident @table(key: "id") @index(fields: ["accountNo"]) {
+	id: UUID! @default(expr: "uuidV4()")
+	accountNo: Int!
+	book: Book!
+	fullName: String!
+	classType: String!
+	createdAt: Timestamp! @default(expr: "request.time")
+	updatedAt: Timestamp! @default(expr: "request.time")
+}
+
+type Billing @table @index(fields: ["billNo"]) {
 	billNo: Int! # e.g., 90
 	billDate: Date! # e.g., "2025-10-06"
 	dueDate: Date! # e.g., "2025-10-14"
@@ -54,4 +53,5 @@ type Billing @table {
 	paymentStatus: String # Nullable
 	paymentDate: Timestamp # Nullable
 	createdAt: Timestamp! @default(expr: "request.time")
+	updatedAt: Timestamp! @default(expr: "request.time")
 }
