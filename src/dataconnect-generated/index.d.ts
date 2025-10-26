@@ -20,694 +20,117 @@ export interface Book_Key {
   __typename?: 'Book_Key';
 }
 
-export interface InsertBillingData {
+export interface CreateBillingData {
   billing_insert: Billing_Key;
 }
 
-export interface InsertBillingVariables {
-  data: {
-    id?: UUIDString | null;
-    id_expr?: {
-    };
-      residentId?: UUIDString | null;
-      residentId_expr?: {
-      };
-        resident?: Resident_Key | null;
-        amortAmt?: number | null;
-        amortAmt_expr?: {
-        };
-          amortAmt_update?: ({
-            inc?: number | null;
-            dec?: number | null;
-          })[];
-            arrearsAmt?: number | null;
-            arrearsAmt_expr?: {
-            };
-              arrearsAmt_update?: ({
-                inc?: number | null;
-                dec?: number | null;
-              })[];
-                arrearsEnv?: number | null;
-                arrearsEnv_expr?: {
-                };
-                  arrearsEnv_update?: ({
-                    inc?: number | null;
-                    dec?: number | null;
-                  })[];
-                    bStatus?: string | null;
-                    bStatus_expr?: {
-                    };
-                      billAmt?: number | null;
-                      billAmt_expr?: {
-                      };
-                        billAmt_update?: ({
-                          inc?: number | null;
-                          dec?: number | null;
-                        })[];
-                          billBrgy?: string | null;
-                          billBrgy_expr?: {
-                          };
-                            billDate?: DateString | null;
-                            billDate_expr?: {
-                            };
-                              billDate_date?: {
-                                today?: {
-                                };
-                                  on?: DateString | null;
-                                  add?: {
-                                    days?: number;
-                                    weeks?: number;
-                                    months?: number;
-                                    years?: number;
-                                  };
-                                    sub?: {
-                                      days?: number;
-                                      weeks?: number;
-                                      months?: number;
-                                      years?: number;
-                                    };
-                                      truncateTo?: Date_Interval | null;
-                              };
-                                billDate_update?: ({
-                                  inc?: {
-                                    days?: number;
-                                    weeks?: number;
-                                    months?: number;
-                                    years?: number;
-                                  };
-                                    dec?: {
-                                      days?: number;
-                                      weeks?: number;
-                                      months?: number;
-                                      years?: number;
-                                    };
-                                })[];
-                                  billNo?: number | null;
-                                  billNo_expr?: {
-                                  };
-                                    billNo_update?: ({
-                                      inc?: number | null;
-                                      dec?: number | null;
-                                    })[];
-                                      billPurok?: string | null;
-                                      billPurok_expr?: {
-                                      };
-                                        createdAt?: TimestampString | null;
-                                        createdAt_expr?: {
-                                        };
-                                          createdAt_time?: {
-                                            now?: {
-                                            };
-                                              at?: TimestampString | null;
-                                              add?: {
-                                                milliseconds?: number;
-                                                seconds?: number;
-                                                minutes?: number;
-                                                hours?: number;
-                                                days?: number;
-                                                weeks?: number;
-                                                months?: number;
-                                                years?: number;
-                                              };
-                                                sub?: {
-                                                  milliseconds?: number;
-                                                  seconds?: number;
-                                                  minutes?: number;
-                                                  hours?: number;
-                                                  days?: number;
-                                                  weeks?: number;
-                                                  months?: number;
-                                                  years?: number;
-                                                };
-                                                  truncateTo?: Timestamp_Interval | null;
-                                          };
-                                            createdAt_update?: ({
-                                              inc?: {
-                                                milliseconds?: number;
-                                                seconds?: number;
-                                                minutes?: number;
-                                                hours?: number;
-                                                days?: number;
-                                                weeks?: number;
-                                                months?: number;
-                                                years?: number;
-                                              };
-                                                dec?: {
-                                                  milliseconds?: number;
-                                                  seconds?: number;
-                                                  minutes?: number;
-                                                  hours?: number;
-                                                  days?: number;
-                                                  weeks?: number;
-                                                  months?: number;
-                                                  years?: number;
-                                                };
-                                            })[];
-                                              curReading?: number | null;
-                                              curReading_expr?: {
-                                              };
-                                                curReading_update?: ({
-                                                  inc?: number | null;
-                                                  dec?: number | null;
-                                                })[];
-                                                  disconDate?: DateString | null;
-                                                  disconDate_expr?: {
-                                                  };
-                                                    disconDate_date?: {
-                                                      today?: {
-                                                      };
-                                                        on?: DateString | null;
-                                                        add?: {
-                                                          days?: number;
-                                                          weeks?: number;
-                                                          months?: number;
-                                                          years?: number;
-                                                        };
-                                                          sub?: {
-                                                            days?: number;
-                                                            weeks?: number;
-                                                            months?: number;
-                                                            years?: number;
-                                                          };
-                                                            truncateTo?: Date_Interval | null;
-                                                    };
-                                                      disconDate_update?: ({
-                                                        inc?: {
-                                                          days?: number;
-                                                          weeks?: number;
-                                                          months?: number;
-                                                          years?: number;
-                                                        };
-                                                          dec?: {
-                                                            days?: number;
-                                                            weeks?: number;
-                                                            months?: number;
-                                                            years?: number;
-                                                          };
-                                                      })[];
-                                                        discount?: number | null;
-                                                        discount_expr?: {
-                                                        };
-                                                          discount_update?: ({
-                                                            inc?: number | null;
-                                                            dec?: number | null;
-                                                          })[];
-                                                            dueDate?: DateString | null;
-                                                            dueDate_expr?: {
-                                                            };
-                                                              dueDate_date?: {
-                                                                today?: {
-                                                                };
-                                                                  on?: DateString | null;
-                                                                  add?: {
-                                                                    days?: number;
-                                                                    weeks?: number;
-                                                                    months?: number;
-                                                                    years?: number;
-                                                                  };
-                                                                    sub?: {
-                                                                      days?: number;
-                                                                      weeks?: number;
-                                                                      months?: number;
-                                                                      years?: number;
-                                                                    };
-                                                                      truncateTo?: Date_Interval | null;
-                                                              };
-                                                                dueDate_update?: ({
-                                                                  inc?: {
-                                                                    days?: number;
-                                                                    weeks?: number;
-                                                                    months?: number;
-                                                                    years?: number;
-                                                                  };
-                                                                    dec?: {
-                                                                      days?: number;
-                                                                      weeks?: number;
-                                                                      months?: number;
-                                                                      years?: number;
-                                                                    };
-                                                                })[];
-                                                                  duePenalty?: number | null;
-                                                                  duePenalty_expr?: {
-                                                                  };
-                                                                    duePenalty_update?: ({
-                                                                      inc?: number | null;
-                                                                      dec?: number | null;
-                                                                    })[];
-                                                                      environmentFee?: number | null;
-                                                                      environmentFee_expr?: {
-                                                                      };
-                                                                        environmentFee_update?: ({
-                                                                          inc?: number | null;
-                                                                          dec?: number | null;
-                                                                        })[];
-                                                                          mPenalty?: number | null;
-                                                                          mPenalty_expr?: {
-                                                                          };
-                                                                            mPenalty_update?: ({
-                                                                              inc?: number | null;
-                                                                              dec?: number | null;
-                                                                            })[];
-                                                                              mrSysNo?: number | null;
-                                                                              mrSysNo_expr?: {
-                                                                              };
-                                                                                mrSysNo_update?: ({
-                                                                                  inc?: number | null;
-                                                                                  dec?: number | null;
-                                                                                })[];
-                                                                                  mrrfDue?: number | null;
-                                                                                  mrrfDue_expr?: {
-                                                                                  };
-                                                                                    mrrfDue_update?: ({
-                                                                                      inc?: number | null;
-                                                                                      dec?: number | null;
-                                                                                    })[];
-                                                                                      mtrNo?: string | null;
-                                                                                      mtrNo_expr?: {
-                                                                                      };
-                                                                                        nrWater?: number | null;
-                                                                                        nrWater_expr?: {
-                                                                                        };
-                                                                                          nrWater_update?: ({
-                                                                                            inc?: number | null;
-                                                                                            dec?: number | null;
-                                                                                          })[];
-                                                                                            paid?: string | null;
-                                                                                            paid_expr?: {
-                                                                                            };
-                                                                                              paymentDate?: TimestampString | null;
-                                                                                              paymentDate_expr?: {
-                                                                                              };
-                                                                                                paymentDate_time?: {
-                                                                                                  now?: {
-                                                                                                  };
-                                                                                                    at?: TimestampString | null;
-                                                                                                    add?: {
-                                                                                                      milliseconds?: number;
-                                                                                                      seconds?: number;
-                                                                                                      minutes?: number;
-                                                                                                      hours?: number;
-                                                                                                      days?: number;
-                                                                                                      weeks?: number;
-                                                                                                      months?: number;
-                                                                                                      years?: number;
-                                                                                                    };
-                                                                                                      sub?: {
-                                                                                                        milliseconds?: number;
-                                                                                                        seconds?: number;
-                                                                                                        minutes?: number;
-                                                                                                        hours?: number;
-                                                                                                        days?: number;
-                                                                                                        weeks?: number;
-                                                                                                        months?: number;
-                                                                                                        years?: number;
-                                                                                                      };
-                                                                                                        truncateTo?: Timestamp_Interval | null;
-                                                                                                };
-                                                                                                  paymentDate_update?: ({
-                                                                                                    inc?: {
-                                                                                                      milliseconds?: number;
-                                                                                                      seconds?: number;
-                                                                                                      minutes?: number;
-                                                                                                      hours?: number;
-                                                                                                      days?: number;
-                                                                                                      weeks?: number;
-                                                                                                      months?: number;
-                                                                                                      years?: number;
-                                                                                                    };
-                                                                                                      dec?: {
-                                                                                                        milliseconds?: number;
-                                                                                                        seconds?: number;
-                                                                                                        minutes?: number;
-                                                                                                        hours?: number;
-                                                                                                        days?: number;
-                                                                                                        weeks?: number;
-                                                                                                        months?: number;
-                                                                                                        years?: number;
-                                                                                                      };
-                                                                                                  })[];
-                                                                                                    paymentReceipt?: string | null;
-                                                                                                    paymentReceipt_expr?: {
-                                                                                                    };
-                                                                                                      paymentStatus?: string | null;
-                                                                                                      paymentStatus_expr?: {
-                                                                                                      };
-                                                                                                        penalized?: string | null;
-                                                                                                        penalized_expr?: {
-                                                                                                        };
-                                                                                                          preReading?: number | null;
-                                                                                                          preReading_expr?: {
-                                                                                                          };
-                                                                                                            preReading_update?: ({
-                                                                                                              inc?: number | null;
-                                                                                                              dec?: number | null;
-                                                                                                            })[];
-                                                                                                              prevUsed?: number | null;
-                                                                                                              prevUsed_expr?: {
-                                                                                                              };
-                                                                                                                prevUsed_update?: ({
-                                                                                                                  inc?: number | null;
-                                                                                                                  dec?: number | null;
-                                                                                                                })[];
-                                                                                                                  prevUsed2?: number | null;
-                                                                                                                  prevUsed2_expr?: {
-                                                                                                                  };
-                                                                                                                    prevUsed2_update?: ({
-                                                                                                                      inc?: number | null;
-                                                                                                                      dec?: number | null;
-                                                                                                                    })[];
-                                                                                                                      prvBillDate?: string | null;
-                                                                                                                      prvBillDate_expr?: {
-                                                                                                                      };
-                                                                                                                        prvDiscon?: string | null;
-                                                                                                                        prvDiscon_expr?: {
-                                                                                                                        };
-                                                                                                                          prvDueDate?: string | null;
-                                                                                                                          prvDueDate_expr?: {
-                                                                                                                          };
-                                                                                                                            purokCode?: string | null;
-                                                                                                                            purokCode_expr?: {
-                                                                                                                            };
-                                                                                                                              stubOut?: string | null;
-                                                                                                                              stubOut_expr?: {
-                                                                                                                              };
-                                                                                                                                totalBill?: number | null;
-                                                                                                                                totalBill_expr?: {
-                                                                                                                                };
-                                                                                                                                  totalBill_update?: ({
-                                                                                                                                    inc?: number | null;
-                                                                                                                                    dec?: number | null;
-                                                                                                                                  })[];
-                                                                                                                                    updatedAt?: TimestampString | null;
-                                                                                                                                    updatedAt_expr?: {
-                                                                                                                                    };
-                                                                                                                                      updatedAt_time?: {
-                                                                                                                                        now?: {
-                                                                                                                                        };
-                                                                                                                                          at?: TimestampString | null;
-                                                                                                                                          add?: {
-                                                                                                                                            milliseconds?: number;
-                                                                                                                                            seconds?: number;
-                                                                                                                                            minutes?: number;
-                                                                                                                                            hours?: number;
-                                                                                                                                            days?: number;
-                                                                                                                                            weeks?: number;
-                                                                                                                                            months?: number;
-                                                                                                                                            years?: number;
-                                                                                                                                          };
-                                                                                                                                            sub?: {
-                                                                                                                                              milliseconds?: number;
-                                                                                                                                              seconds?: number;
-                                                                                                                                              minutes?: number;
-                                                                                                                                              hours?: number;
-                                                                                                                                              days?: number;
-                                                                                                                                              weeks?: number;
-                                                                                                                                              months?: number;
-                                                                                                                                              years?: number;
-                                                                                                                                            };
-                                                                                                                                              truncateTo?: Timestamp_Interval | null;
-                                                                                                                                      };
-                                                                                                                                        updatedAt_update?: ({
-                                                                                                                                          inc?: {
-                                                                                                                                            milliseconds?: number;
-                                                                                                                                            seconds?: number;
-                                                                                                                                            minutes?: number;
-                                                                                                                                            hours?: number;
-                                                                                                                                            days?: number;
-                                                                                                                                            weeks?: number;
-                                                                                                                                            months?: number;
-                                                                                                                                            years?: number;
-                                                                                                                                          };
-                                                                                                                                            dec?: {
-                                                                                                                                              milliseconds?: number;
-                                                                                                                                              seconds?: number;
-                                                                                                                                              minutes?: number;
-                                                                                                                                              hours?: number;
-                                                                                                                                              days?: number;
-                                                                                                                                              weeks?: number;
-                                                                                                                                              months?: number;
-                                                                                                                                              years?: number;
-                                                                                                                                            };
-                                                                                                                                        })[];
-                                                                                                                                          verified?: string | null;
-                                                                                                                                          verified_expr?: {
-                                                                                                                                          };
-                                                                                                                                            waterUsage?: number | null;
-                                                                                                                                            waterUsage_expr?: {
-                                                                                                                                            };
-                                                                                                                                              waterUsage_update?: ({
-                                                                                                                                                inc?: number | null;
-                                                                                                                                                dec?: number | null;
-                                                                                                                                              })[];
+export interface CreateBillingVariables {
+  billNo: number;
+  billDate: DateString;
+  dueDate: DateString;
+  bStatus: string;
+  mrSysNo: number;
+  penalized: string;
+  mPenalty: number;
+  discount: number;
+  paid: string;
+  verified: string;
+  arrearsAmt: number;
+  mrrfDue: number;
+  curReading: number;
+  disconDate?: DateString | null;
+  mtrNo: string;
+  preReading: number;
+  purokCode: string;
+  billPurok: string;
+  billBrgy: string;
+  prevUsed: number;
+  prevUsed2: number;
+  prvBillDate: string;
+  prvDueDate: string;
+  prvDiscon: string;
+  stubOut: string;
+  amortAmt: number;
+  nrWater: number;
+  residentId: UUIDString;
+  bookId: UUIDString;
+  billAmt: number;
+  duePenalty: number;
+  arrearsEnv: number;
+  environmentFee: number;
+  totalBill: number;
+  waterUsage: number;
+  paymentReceipt?: string | null;
+  paymentStatus?: string | null;
+  paymentDate?: DateString | null;
+}
+
+export interface CreateBookData {
+  query?: {
+    books: ({
+      id: UUIDString;
+    } & Book_Key)[];
   };
+    book_insert: Book_Key;
 }
 
-export interface InsertBookData {
-  book_insert: Book_Key;
+export interface CreateBookVariables {
+  name: string;
 }
 
-export interface InsertBookVariables {
-  data: {
-    id?: UUIDString | null;
-    id_expr?: {
-    };
-      code?: string | null;
-      code_expr?: {
-      };
-        createdAt?: TimestampString | null;
-        createdAt_expr?: {
-        };
-          createdAt_time?: {
-            now?: {
-            };
-              at?: TimestampString | null;
-              add?: {
-                milliseconds?: number;
-                seconds?: number;
-                minutes?: number;
-                hours?: number;
-                days?: number;
-                weeks?: number;
-                months?: number;
-                years?: number;
-              };
-                sub?: {
-                  milliseconds?: number;
-                  seconds?: number;
-                  minutes?: number;
-                  hours?: number;
-                  days?: number;
-                  weeks?: number;
-                  months?: number;
-                  years?: number;
-                };
-                  truncateTo?: Timestamp_Interval | null;
-          };
-            createdAt_update?: ({
-              inc?: {
-                milliseconds?: number;
-                seconds?: number;
-                minutes?: number;
-                hours?: number;
-                days?: number;
-                weeks?: number;
-                months?: number;
-                years?: number;
-              };
-                dec?: {
-                  milliseconds?: number;
-                  seconds?: number;
-                  minutes?: number;
-                  hours?: number;
-                  days?: number;
-                  weeks?: number;
-                  months?: number;
-                  years?: number;
-                };
-            })[];
-              updatedAt?: TimestampString | null;
-              updatedAt_expr?: {
-              };
-                updatedAt_time?: {
-                  now?: {
-                  };
-                    at?: TimestampString | null;
-                    add?: {
-                      milliseconds?: number;
-                      seconds?: number;
-                      minutes?: number;
-                      hours?: number;
-                      days?: number;
-                      weeks?: number;
-                      months?: number;
-                      years?: number;
-                    };
-                      sub?: {
-                        milliseconds?: number;
-                        seconds?: number;
-                        minutes?: number;
-                        hours?: number;
-                        days?: number;
-                        weeks?: number;
-                        months?: number;
-                        years?: number;
-                      };
-                        truncateTo?: Timestamp_Interval | null;
-                };
-                  updatedAt_update?: ({
-                    inc?: {
-                      milliseconds?: number;
-                      seconds?: number;
-                      minutes?: number;
-                      hours?: number;
-                      days?: number;
-                      weeks?: number;
-                      months?: number;
-                      years?: number;
-                    };
-                      dec?: {
-                        milliseconds?: number;
-                        seconds?: number;
-                        minutes?: number;
-                        hours?: number;
-                        days?: number;
-                        weeks?: number;
-                        months?: number;
-                        years?: number;
-                      };
-                  })[];
+export interface CreateResidentData {
+  query?: {
+    residents: ({
+      id: UUIDString;
+    } & Resident_Key)[];
   };
+    resident_insert: Resident_Key;
 }
 
-export interface InsertResidentData {
-  resident_insert: Resident_Key;
+export interface CreateResidentVariables {
+  accountNo: number;
+  fullName: string;
+  classType: string;
+  bookId: UUIDString;
 }
 
-export interface InsertResidentVariables {
-  data: {
-    id?: UUIDString | null;
-    id_expr?: {
+export interface GetBookByNameData {
+  books: ({
+    id: UUIDString;
+  } & Book_Key)[];
+}
+
+export interface GetBookByNameVariables {
+  name: string;
+}
+
+export interface GetBooksData {
+  books: ({
+    id: UUIDString;
+    name: string;
+  } & Book_Key)[];
+}
+
+export interface GetResidentByAccountNoData {
+  residents: ({
+    id: UUIDString;
+  } & Resident_Key)[];
+}
+
+export interface GetResidentByAccountNoVariables {
+  accountNo: number;
+}
+
+export interface GetResidentsData {
+  residents: ({
+    id: UUIDString;
+    accountNo: number;
+    fullName: string;
+    classType: string;
+    book: {
+      name: string;
     };
-      bookId?: UUIDString | null;
-      bookId_expr?: {
-      };
-        book?: Book_Key | null;
-        accountNo?: number | null;
-        accountNo_expr?: {
-        };
-          accountNo_update?: ({
-            inc?: number | null;
-            dec?: number | null;
-          })[];
-            classType?: string | null;
-            classType_expr?: {
-            };
-              createdAt?: TimestampString | null;
-              createdAt_expr?: {
-              };
-                createdAt_time?: {
-                  now?: {
-                  };
-                    at?: TimestampString | null;
-                    add?: {
-                      milliseconds?: number;
-                      seconds?: number;
-                      minutes?: number;
-                      hours?: number;
-                      days?: number;
-                      weeks?: number;
-                      months?: number;
-                      years?: number;
-                    };
-                      sub?: {
-                        milliseconds?: number;
-                        seconds?: number;
-                        minutes?: number;
-                        hours?: number;
-                        days?: number;
-                        weeks?: number;
-                        months?: number;
-                        years?: number;
-                      };
-                        truncateTo?: Timestamp_Interval | null;
-                };
-                  createdAt_update?: ({
-                    inc?: {
-                      milliseconds?: number;
-                      seconds?: number;
-                      minutes?: number;
-                      hours?: number;
-                      days?: number;
-                      weeks?: number;
-                      months?: number;
-                      years?: number;
-                    };
-                      dec?: {
-                        milliseconds?: number;
-                        seconds?: number;
-                        minutes?: number;
-                        hours?: number;
-                        days?: number;
-                        weeks?: number;
-                        months?: number;
-                        years?: number;
-                      };
-                  })[];
-                    fullName?: string | null;
-                    fullName_expr?: {
-                    };
-                      updatedAt?: TimestampString | null;
-                      updatedAt_expr?: {
-                      };
-                        updatedAt_time?: {
-                          now?: {
-                          };
-                            at?: TimestampString | null;
-                            add?: {
-                              milliseconds?: number;
-                              seconds?: number;
-                              minutes?: number;
-                              hours?: number;
-                              days?: number;
-                              weeks?: number;
-                              months?: number;
-                              years?: number;
-                            };
-                              sub?: {
-                                milliseconds?: number;
-                                seconds?: number;
-                                minutes?: number;
-                                hours?: number;
-                                days?: number;
-                                weeks?: number;
-                                months?: number;
-                                years?: number;
-                              };
-                                truncateTo?: Timestamp_Interval | null;
-                        };
-                          updatedAt_update?: ({
-                            inc?: {
-                              milliseconds?: number;
-                              seconds?: number;
-                              minutes?: number;
-                              hours?: number;
-                              days?: number;
-                              weeks?: number;
-                              months?: number;
-                              years?: number;
-                            };
-                              dec?: {
-                                milliseconds?: number;
-                                seconds?: number;
-                                minutes?: number;
-                                hours?: number;
-                                days?: number;
-                                weeks?: number;
-                                months?: number;
-                                years?: number;
-                              };
-                          })[];
-  };
+  } & Resident_Key)[];
 }
 
 export interface PaginatedBillingsData {
@@ -746,7 +169,7 @@ export interface PaginatedBillingsData {
       fullName: string;
       classType: string;
       book: {
-        code: string;
+        name: string;
       };
     } & Resident_Key;
       billAmt: number;
@@ -757,7 +180,7 @@ export interface PaginatedBillingsData {
       waterUsage: number;
       paymentReceipt?: string | null;
       paymentStatus?: string | null;
-      paymentDate?: TimestampString | null;
+      paymentDate?: DateString | null;
       createdAt: TimestampString;
       updatedAt: TimestampString;
   } & Billing_Key)[];
@@ -773,42 +196,6 @@ export interface Resident_Key {
   __typename?: 'Resident_Key';
 }
 
-interface InsertBookRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (vars: InsertBookVariables): MutationRef<InsertBookData, InsertBookVariables>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: InsertBookVariables): MutationRef<InsertBookData, InsertBookVariables>;
-  operationName: string;
-}
-export const insertBookRef: InsertBookRef;
-
-export function insertBook(vars: InsertBookVariables): MutationPromise<InsertBookData, InsertBookVariables>;
-export function insertBook(dc: DataConnect, vars: InsertBookVariables): MutationPromise<InsertBookData, InsertBookVariables>;
-
-interface InsertResidentRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (vars: InsertResidentVariables): MutationRef<InsertResidentData, InsertResidentVariables>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: InsertResidentVariables): MutationRef<InsertResidentData, InsertResidentVariables>;
-  operationName: string;
-}
-export const insertResidentRef: InsertResidentRef;
-
-export function insertResident(vars: InsertResidentVariables): MutationPromise<InsertResidentData, InsertResidentVariables>;
-export function insertResident(dc: DataConnect, vars: InsertResidentVariables): MutationPromise<InsertResidentData, InsertResidentVariables>;
-
-interface InsertBillingRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (vars: InsertBillingVariables): MutationRef<InsertBillingData, InsertBillingVariables>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: InsertBillingVariables): MutationRef<InsertBillingData, InsertBillingVariables>;
-  operationName: string;
-}
-export const insertBillingRef: InsertBillingRef;
-
-export function insertBilling(vars: InsertBillingVariables): MutationPromise<InsertBillingData, InsertBillingVariables>;
-export function insertBilling(dc: DataConnect, vars: InsertBillingVariables): MutationPromise<InsertBillingData, InsertBillingVariables>;
-
 interface PaginatedBillingsRef {
   /* Allow users to create refs without passing in DataConnect */
   (vars?: PaginatedBillingsVariables): QueryRef<PaginatedBillingsData, PaginatedBillingsVariables>;
@@ -820,4 +207,88 @@ export const paginatedBillingsRef: PaginatedBillingsRef;
 
 export function paginatedBillings(vars?: PaginatedBillingsVariables): QueryPromise<PaginatedBillingsData, PaginatedBillingsVariables>;
 export function paginatedBillings(dc: DataConnect, vars?: PaginatedBillingsVariables): QueryPromise<PaginatedBillingsData, PaginatedBillingsVariables>;
+
+interface GetBooksRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<GetBooksData, undefined>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect): QueryRef<GetBooksData, undefined>;
+  operationName: string;
+}
+export const getBooksRef: GetBooksRef;
+
+export function getBooks(): QueryPromise<GetBooksData, undefined>;
+export function getBooks(dc: DataConnect): QueryPromise<GetBooksData, undefined>;
+
+interface GetBookByNameRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: GetBookByNameVariables): QueryRef<GetBookByNameData, GetBookByNameVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: GetBookByNameVariables): QueryRef<GetBookByNameData, GetBookByNameVariables>;
+  operationName: string;
+}
+export const getBookByNameRef: GetBookByNameRef;
+
+export function getBookByName(vars: GetBookByNameVariables): QueryPromise<GetBookByNameData, GetBookByNameVariables>;
+export function getBookByName(dc: DataConnect, vars: GetBookByNameVariables): QueryPromise<GetBookByNameData, GetBookByNameVariables>;
+
+interface GetResidentByAccountNoRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: GetResidentByAccountNoVariables): QueryRef<GetResidentByAccountNoData, GetResidentByAccountNoVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: GetResidentByAccountNoVariables): QueryRef<GetResidentByAccountNoData, GetResidentByAccountNoVariables>;
+  operationName: string;
+}
+export const getResidentByAccountNoRef: GetResidentByAccountNoRef;
+
+export function getResidentByAccountNo(vars: GetResidentByAccountNoVariables): QueryPromise<GetResidentByAccountNoData, GetResidentByAccountNoVariables>;
+export function getResidentByAccountNo(dc: DataConnect, vars: GetResidentByAccountNoVariables): QueryPromise<GetResidentByAccountNoData, GetResidentByAccountNoVariables>;
+
+interface GetResidentsRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<GetResidentsData, undefined>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect): QueryRef<GetResidentsData, undefined>;
+  operationName: string;
+}
+export const getResidentsRef: GetResidentsRef;
+
+export function getResidents(): QueryPromise<GetResidentsData, undefined>;
+export function getResidents(dc: DataConnect): QueryPromise<GetResidentsData, undefined>;
+
+interface CreateBookRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreateBookVariables): MutationRef<CreateBookData, CreateBookVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: CreateBookVariables): MutationRef<CreateBookData, CreateBookVariables>;
+  operationName: string;
+}
+export const createBookRef: CreateBookRef;
+
+export function createBook(vars: CreateBookVariables): MutationPromise<CreateBookData, CreateBookVariables>;
+export function createBook(dc: DataConnect, vars: CreateBookVariables): MutationPromise<CreateBookData, CreateBookVariables>;
+
+interface CreateResidentRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreateResidentVariables): MutationRef<CreateResidentData, CreateResidentVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: CreateResidentVariables): MutationRef<CreateResidentData, CreateResidentVariables>;
+  operationName: string;
+}
+export const createResidentRef: CreateResidentRef;
+
+export function createResident(vars: CreateResidentVariables): MutationPromise<CreateResidentData, CreateResidentVariables>;
+export function createResident(dc: DataConnect, vars: CreateResidentVariables): MutationPromise<CreateResidentData, CreateResidentVariables>;
+
+interface CreateBillingRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreateBillingVariables): MutationRef<CreateBillingData, CreateBillingVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: CreateBillingVariables): MutationRef<CreateBillingData, CreateBillingVariables>;
+  operationName: string;
+}
+export const createBillingRef: CreateBillingRef;
+
+export function createBilling(vars: CreateBillingVariables): MutationPromise<CreateBillingData, CreateBillingVariables>;
+export function createBilling(dc: DataConnect, vars: CreateBillingVariables): MutationPromise<CreateBillingData, CreateBillingVariables>;
 

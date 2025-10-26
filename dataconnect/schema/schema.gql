@@ -1,21 +1,18 @@
-type Book @table @index(fields: ["code"]) {
-	code: String!
+type Book @table @index(fields: ["name"]) {
+	name: String! @unique
 	createdAt: Timestamp! @default(expr: "request.time")
 	updatedAt: Timestamp! @default(expr: "request.time")
 }
 
-type Resident @table(key: "id") @index(fields: ["accountNo"]) {
-	id: UUID! @default(expr: "uuidV4()")
-	accountNo: Int!
-	book: Book!
+type Resident @table @index(fields: ["accountNo"]) {
+	accountNo: Int! @unique
 	fullName: String!
 	classType: String!
-	createdAt: Timestamp! @default(expr: "request.time")
-	updatedAt: Timestamp! @default(expr: "request.time")
+	book: Book!
 }
 
 type Billing @table @index(fields: ["billNo"]) {
-	billNo: Int! # e.g., 90
+	billNo: Int! @unique # e.g., 90
 	billDate: Date! # e.g., "2025-10-06"
 	dueDate: Date! # e.g., "2025-10-14"
 	bStatus: String! # e.g., "2"
@@ -42,7 +39,6 @@ type Billing @table @index(fields: ["billNo"]) {
 	stubOut: String! # e.g., ""
 	amortAmt: Float! # e.g., 0.0
 	nrWater: Int! # e.g., 0
-	resident: Resident! # Reference to Resident type
 	billAmt: Float! # e.g., 75.0
 	duePenalty: Float! # e.g., 0.0
 	arrearsEnv: Float! # e.g., -5.5
@@ -52,6 +48,8 @@ type Billing @table @index(fields: ["billNo"]) {
 	paymentReceipt: String # Nullable
 	paymentStatus: String # Nullable
 	paymentDate: Date # Nullable
+	resident: Resident! # Reference to Resident type
+	book: Book! # Reference to Book type
 	createdAt: Timestamp! @default(expr: "request.time")
 	updatedAt: Timestamp! @default(expr: "request.time")
 }

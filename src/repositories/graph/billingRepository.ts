@@ -1,8 +1,10 @@
 import type { Billing } from '@/types/billing';
 import {
-	insertBook,
-	insertResident,
-	insertBilling,
+	createBook,
+	createBilling,
+	createResident,
+	getBookByName,
+	getResidentByAccountNo,
 } from '@/dataconnect-generated';
 
 class BillingRepository {
@@ -46,66 +48,87 @@ class BillingRepository {
 						...billingData
 					} = item;
 
-					if (!accountno || !fullname || !book) {
+					// Require essential fields including classtype to satisfy CreateResidentVariables.type requirements
+					if (!accountno || !fullname || !book || !classtype) {
 						return; // Skip invalid rows
 					}
 
 					// Use sequential awaits for dependent mutations
 					try {
-						const bookResult = await insertBook({
-							data: {
-								code: book.toLowerCase(),
-							},
+						let bookId;
+						let residentId;
+
+						const bookResult = await createBook({
+							name: book,
 						});
 
-						const residentResult = await insertResident({
-							data: {
+						if (!bookResult.data.book_insert) {
+							const bookResult = await getBookByName({
+								name: book,
+							});
+							if (!bookResult) {
+								return;
+							}
+							bookId = bookResult.data.books[0].id;
+						}
+
+						const residentResult = await createResident({
+							accountNo: Number(accountno),
+							bookId: bookResult.data.book_insert.id,
+							fullName: fullname,
+							classType: classtype as string,
+						});
+
+						if (!residentResult.data.resident_insert) {
+							const residentResult = await getResidentByAccountNo({
 								accountNo: Number(accountno),
-								bookId: bookResult.data.book_insert.id,
-								fullName: fullname,
-								classType: classtype,
-							},
-						});
+							});
+							if (!residentResult) {
+								return;
+							}
+							residentId = residentResult.data.residents[0].id;
+						}
 
-						const result = await insertBilling({
-							data: {
+						if (bookId && residentId) {
+							const result = await createBilling({
 								billNo: Number(item.billNo),
 								billDate: item.billDate,
 								dueDate: item.dueDate,
-								bStatus: item.bStatus,
+								bStatus: item.bStatus as string,
 								mrSysNo: Number(item.mrSysNo),
-								penalized: item.penalized,
+								penalized: item.penalized as string,
 								mPenalty: Number(item.mPenalty),
 								discount: Number(item.discount),
-								paid: item.paid,
-								verified: item.verified,
+								paid: item.paid as string,
+								verified: item.verified as string,
 								arrearsAmt: Number(item.arrearsamt),
 								mrrfDue: Number(item.mrrfdue),
 								curReading: Number(item.curreading),
 								disconDate: item.disconDate,
-								mtrNo: item.mtrNo,
+								mtrNo: item.mtrNo as string,
 								preReading: Number(item.prereading),
-								purokCode: item.purokcode,
-								billPurok: item.billpurok,
-								billBrgy: item.billbrgy,
+								purokCode: item.purokcode as string,
+								billPurok: item.billpurok as string,
+								billBrgy: item.billbrgy as string,
 								prevUsed: Number(item.prevused),
 								prevUsed2: Number(item.prevused2),
-								prvBillDate: item.prvbilldate,
-								prvDueDate: item.prvduedate,
-								prvDiscon: item.prvdiscon,
-								stubOut: item.stubout,
+								prvBillDate: item.prvbilldate as string,
+								prvDueDate: item.prvduedate as string,
+								prvDiscon: item.prvdiscon as string,
+								stubOut: item.stubout as string,
 								amortAmt: Number(item.amortamnt),
 								nrWater: Number(item.nrwater),
-								residentId: residentResult.data.resident_insert.id,
+								residentId: residentId,
+								bookId: bookId,
 								billAmt: item.billamnt,
 								duePenalty: Number(item.due_penalty),
 								arrearsEnv: Number(item.arrearsenv),
 								environmentFee: item.environmentFee,
-								totalBill: item.totalBill,
+								totalBill: Number(item.totalBill),
 								waterUsage: Number(item.waterusage),
 								paymentReceipt: item.paymentReceipt,
-							},
-						});
+							});
+						}
 					} catch (error) {
 						console.error(
 							`Error processing row with account number ${accountno}:`,

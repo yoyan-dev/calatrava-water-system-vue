@@ -7,42 +7,6 @@ const connectorConfig = {
 };
 exports.connectorConfig = connectorConfig;
 
-const insertBookRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return mutationRef(dcInstance, 'InsertBook', inputVars);
-}
-insertBookRef.operationName = 'InsertBook';
-exports.insertBookRef = insertBookRef;
-
-exports.insertBook = function insertBook(dcOrVars, vars) {
-  return executeMutation(insertBookRef(dcOrVars, vars));
-};
-
-const insertResidentRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return mutationRef(dcInstance, 'InsertResident', inputVars);
-}
-insertResidentRef.operationName = 'InsertResident';
-exports.insertResidentRef = insertResidentRef;
-
-exports.insertResident = function insertResident(dcOrVars, vars) {
-  return executeMutation(insertResidentRef(dcOrVars, vars));
-};
-
-const insertBillingRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return mutationRef(dcInstance, 'InsertBilling', inputVars);
-}
-insertBillingRef.operationName = 'InsertBilling';
-exports.insertBillingRef = insertBillingRef;
-
-exports.insertBilling = function insertBilling(dcOrVars, vars) {
-  return executeMutation(insertBillingRef(dcOrVars, vars));
-};
-
 const paginatedBillingsRef = (dcOrVars, vars) => {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars);
   dcInstance._useGeneratedSdk();
@@ -53,4 +17,88 @@ exports.paginatedBillingsRef = paginatedBillingsRef;
 
 exports.paginatedBillings = function paginatedBillings(dcOrVars, vars) {
   return executeQuery(paginatedBillingsRef(dcOrVars, vars));
+};
+
+const getBooksRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetBooks');
+}
+getBooksRef.operationName = 'GetBooks';
+exports.getBooksRef = getBooksRef;
+
+exports.getBooks = function getBooks(dc) {
+  return executeQuery(getBooksRef(dc));
+};
+
+const getBookByNameRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetBookByName', inputVars);
+}
+getBookByNameRef.operationName = 'GetBookByName';
+exports.getBookByNameRef = getBookByNameRef;
+
+exports.getBookByName = function getBookByName(dcOrVars, vars) {
+  return executeQuery(getBookByNameRef(dcOrVars, vars));
+};
+
+const getResidentByAccountNoRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetResidentByAccountNo', inputVars);
+}
+getResidentByAccountNoRef.operationName = 'GetResidentByAccountNo';
+exports.getResidentByAccountNoRef = getResidentByAccountNoRef;
+
+exports.getResidentByAccountNo = function getResidentByAccountNo(dcOrVars, vars) {
+  return executeQuery(getResidentByAccountNoRef(dcOrVars, vars));
+};
+
+const getResidentsRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetResidents');
+}
+getResidentsRef.operationName = 'GetResidents';
+exports.getResidentsRef = getResidentsRef;
+
+exports.getResidents = function getResidents(dc) {
+  return executeQuery(getResidentsRef(dc));
+};
+
+const createBookRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'CreateBook', inputVars);
+}
+createBookRef.operationName = 'CreateBook';
+exports.createBookRef = createBookRef;
+
+exports.createBook = function createBook(dcOrVars, vars) {
+  return executeMutation(createBookRef(dcOrVars, vars));
+};
+
+const createResidentRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'CreateResident', inputVars);
+}
+createResidentRef.operationName = 'CreateResident';
+exports.createResidentRef = createResidentRef;
+
+exports.createResident = function createResident(dcOrVars, vars) {
+  return executeMutation(createResidentRef(dcOrVars, vars));
+};
+
+const createBillingRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'CreateBilling', inputVars);
+}
+createBillingRef.operationName = 'CreateBilling';
+exports.createBillingRef = createBillingRef;
+
+exports.createBilling = function createBilling(dcOrVars, vars) {
+  return executeMutation(createBillingRef(dcOrVars, vars));
 };

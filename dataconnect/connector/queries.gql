@@ -1,4 +1,5 @@
-query PaginatedBillings($limit: Int, $offset: Int) {
+query PaginatedBillings($limit: Int = 10, $offset: Int = 0)
+@auth(expr: "auth.token.role == 'admin'") {
 	billings(limit: $limit, orderBy: [{ billNo: DESC }], offset: $offset) {
 		id
 		billNo
@@ -34,7 +35,7 @@ query PaginatedBillings($limit: Int, $offset: Int) {
 			fullName
 			classType
 			book {
-				code
+				name
 			}
 		}
 		billAmt
@@ -48,5 +49,37 @@ query PaginatedBillings($limit: Int, $offset: Int) {
 		paymentDate
 		createdAt
 		updatedAt
+	}
+}
+
+query GetBooks @auth(level: PUBLIC) {
+	books {
+		id
+		name
+	}
+}
+
+query GetBookByName($name: String!) @auth(level: PUBLIC) {
+	books(where: { name: { eq: $name } }) {
+		id
+	}
+}
+
+query GetResidentByAccountNo($accountNo: Int!)
+@auth(expr: "(auth.token.role == 'admin') || (auth != null)") {
+	residents(where: { accountNo: { eq: $accountNo } }) {
+		id
+	}
+}
+
+query GetResidents @auth(expr: "auth.token.role == 'admin'") {
+	residents {
+		id
+		accountNo
+		fullName
+		classType
+		book {
+			name
+		}
 	}
 }

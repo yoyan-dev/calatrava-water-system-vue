@@ -9,10 +9,14 @@ This README will guide you through the process of using the generated JavaScript
   - [*Connecting to the local Emulator*](#connecting-to-the-local-emulator)
 - [**Queries**](#queries)
   - [*PaginatedBillings*](#paginatedbillings)
+  - [*GetBooks*](#getbooks)
+  - [*GetBookByName*](#getbookbyname)
+  - [*GetResidentByAccountNo*](#getresidentbyaccountno)
+  - [*GetResidents*](#getresidents)
 - [**Mutations**](#mutations)
-  - [*InsertBook*](#insertbook)
-  - [*InsertResident*](#insertresident)
-  - [*InsertBilling*](#insertbilling)
+  - [*CreateBook*](#createbook)
+  - [*CreateResident*](#createresident)
+  - [*CreateBilling*](#createbilling)
 
 # Accessing the connector
 A connector is a collection of Queries and Mutations. One SDK is generated for each connector - this SDK is generated for the connector `calatrava-water-system`. You can find more information about connectors in the [Data Connect documentation](https://firebase.google.com/docs/data-connect#how-does).
@@ -138,7 +142,7 @@ export interface PaginatedBillingsData {
       fullName: string;
       classType: string;
       book: {
-        code: string;
+        name: string;
       };
     } & Resident_Key;
       billAmt: number;
@@ -149,7 +153,7 @@ export interface PaginatedBillingsData {
       waterUsage: number;
       paymentReceipt?: string | null;
       paymentStatus?: string | null;
-      paymentDate?: TimestampString | null;
+      paymentDate?: DateString | null;
       createdAt: TimestampString;
       updatedAt: TimestampString;
   } & Billing_Key)[];
@@ -224,6 +228,421 @@ executeQuery(ref).then((response) => {
 });
 ```
 
+## GetBooks
+You can execute the `GetBooks` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+getBooks(): QueryPromise<GetBooksData, undefined>;
+
+interface GetBooksRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<GetBooksData, undefined>;
+}
+export const getBooksRef: GetBooksRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
+```typescript
+getBooks(dc: DataConnect): QueryPromise<GetBooksData, undefined>;
+
+interface GetBooksRef {
+  ...
+  (dc: DataConnect): QueryRef<GetBooksData, undefined>;
+}
+export const getBooksRef: GetBooksRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the getBooksRef:
+```typescript
+const name = getBooksRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `GetBooks` query has no variables.
+### Return Type
+Recall that executing the `GetBooks` query returns a `QueryPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `GetBooksData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface GetBooksData {
+  books: ({
+    id: UUIDString;
+    name: string;
+  } & Book_Key)[];
+}
+```
+### Using `GetBooks`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, getBooks } from '@dataconnect/generated';
+
+
+// Call the `getBooks()` function to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await getBooks();
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await getBooks(dataConnect);
+
+console.log(data.books);
+
+// Or, you can use the `Promise` API.
+getBooks().then((response) => {
+  const data = response.data;
+  console.log(data.books);
+});
+```
+
+### Using `GetBooks`'s `QueryRef` function
+
+```typescript
+import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { connectorConfig, getBooksRef } from '@dataconnect/generated';
+
+
+// Call the `getBooksRef()` function to get a reference to the query.
+const ref = getBooksRef();
+
+// You can also pass in a `DataConnect` instance to the `QueryRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = getBooksRef(dataConnect);
+
+// Call `executeQuery()` on the reference to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeQuery(ref);
+
+console.log(data.books);
+
+// Or, you can use the `Promise` API.
+executeQuery(ref).then((response) => {
+  const data = response.data;
+  console.log(data.books);
+});
+```
+
+## GetBookByName
+You can execute the `GetBookByName` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+getBookByName(vars: GetBookByNameVariables): QueryPromise<GetBookByNameData, GetBookByNameVariables>;
+
+interface GetBookByNameRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: GetBookByNameVariables): QueryRef<GetBookByNameData, GetBookByNameVariables>;
+}
+export const getBookByNameRef: GetBookByNameRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
+```typescript
+getBookByName(dc: DataConnect, vars: GetBookByNameVariables): QueryPromise<GetBookByNameData, GetBookByNameVariables>;
+
+interface GetBookByNameRef {
+  ...
+  (dc: DataConnect, vars: GetBookByNameVariables): QueryRef<GetBookByNameData, GetBookByNameVariables>;
+}
+export const getBookByNameRef: GetBookByNameRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the getBookByNameRef:
+```typescript
+const name = getBookByNameRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `GetBookByName` query requires an argument of type `GetBookByNameVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface GetBookByNameVariables {
+  name: string;
+}
+```
+### Return Type
+Recall that executing the `GetBookByName` query returns a `QueryPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `GetBookByNameData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface GetBookByNameData {
+  books: ({
+    id: UUIDString;
+  } & Book_Key)[];
+}
+```
+### Using `GetBookByName`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, getBookByName, GetBookByNameVariables } from '@dataconnect/generated';
+
+// The `GetBookByName` query requires an argument of type `GetBookByNameVariables`:
+const getBookByNameVars: GetBookByNameVariables = {
+  name: ..., 
+};
+
+// Call the `getBookByName()` function to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await getBookByName(getBookByNameVars);
+// Variables can be defined inline as well.
+const { data } = await getBookByName({ name: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await getBookByName(dataConnect, getBookByNameVars);
+
+console.log(data.books);
+
+// Or, you can use the `Promise` API.
+getBookByName(getBookByNameVars).then((response) => {
+  const data = response.data;
+  console.log(data.books);
+});
+```
+
+### Using `GetBookByName`'s `QueryRef` function
+
+```typescript
+import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { connectorConfig, getBookByNameRef, GetBookByNameVariables } from '@dataconnect/generated';
+
+// The `GetBookByName` query requires an argument of type `GetBookByNameVariables`:
+const getBookByNameVars: GetBookByNameVariables = {
+  name: ..., 
+};
+
+// Call the `getBookByNameRef()` function to get a reference to the query.
+const ref = getBookByNameRef(getBookByNameVars);
+// Variables can be defined inline as well.
+const ref = getBookByNameRef({ name: ..., });
+
+// You can also pass in a `DataConnect` instance to the `QueryRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = getBookByNameRef(dataConnect, getBookByNameVars);
+
+// Call `executeQuery()` on the reference to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeQuery(ref);
+
+console.log(data.books);
+
+// Or, you can use the `Promise` API.
+executeQuery(ref).then((response) => {
+  const data = response.data;
+  console.log(data.books);
+});
+```
+
+## GetResidentByAccountNo
+You can execute the `GetResidentByAccountNo` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+getResidentByAccountNo(vars: GetResidentByAccountNoVariables): QueryPromise<GetResidentByAccountNoData, GetResidentByAccountNoVariables>;
+
+interface GetResidentByAccountNoRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: GetResidentByAccountNoVariables): QueryRef<GetResidentByAccountNoData, GetResidentByAccountNoVariables>;
+}
+export const getResidentByAccountNoRef: GetResidentByAccountNoRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
+```typescript
+getResidentByAccountNo(dc: DataConnect, vars: GetResidentByAccountNoVariables): QueryPromise<GetResidentByAccountNoData, GetResidentByAccountNoVariables>;
+
+interface GetResidentByAccountNoRef {
+  ...
+  (dc: DataConnect, vars: GetResidentByAccountNoVariables): QueryRef<GetResidentByAccountNoData, GetResidentByAccountNoVariables>;
+}
+export const getResidentByAccountNoRef: GetResidentByAccountNoRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the getResidentByAccountNoRef:
+```typescript
+const name = getResidentByAccountNoRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `GetResidentByAccountNo` query requires an argument of type `GetResidentByAccountNoVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface GetResidentByAccountNoVariables {
+  accountNo: number;
+}
+```
+### Return Type
+Recall that executing the `GetResidentByAccountNo` query returns a `QueryPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `GetResidentByAccountNoData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface GetResidentByAccountNoData {
+  residents: ({
+    id: UUIDString;
+  } & Resident_Key)[];
+}
+```
+### Using `GetResidentByAccountNo`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, getResidentByAccountNo, GetResidentByAccountNoVariables } from '@dataconnect/generated';
+
+// The `GetResidentByAccountNo` query requires an argument of type `GetResidentByAccountNoVariables`:
+const getResidentByAccountNoVars: GetResidentByAccountNoVariables = {
+  accountNo: ..., 
+};
+
+// Call the `getResidentByAccountNo()` function to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await getResidentByAccountNo(getResidentByAccountNoVars);
+// Variables can be defined inline as well.
+const { data } = await getResidentByAccountNo({ accountNo: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await getResidentByAccountNo(dataConnect, getResidentByAccountNoVars);
+
+console.log(data.residents);
+
+// Or, you can use the `Promise` API.
+getResidentByAccountNo(getResidentByAccountNoVars).then((response) => {
+  const data = response.data;
+  console.log(data.residents);
+});
+```
+
+### Using `GetResidentByAccountNo`'s `QueryRef` function
+
+```typescript
+import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { connectorConfig, getResidentByAccountNoRef, GetResidentByAccountNoVariables } from '@dataconnect/generated';
+
+// The `GetResidentByAccountNo` query requires an argument of type `GetResidentByAccountNoVariables`:
+const getResidentByAccountNoVars: GetResidentByAccountNoVariables = {
+  accountNo: ..., 
+};
+
+// Call the `getResidentByAccountNoRef()` function to get a reference to the query.
+const ref = getResidentByAccountNoRef(getResidentByAccountNoVars);
+// Variables can be defined inline as well.
+const ref = getResidentByAccountNoRef({ accountNo: ..., });
+
+// You can also pass in a `DataConnect` instance to the `QueryRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = getResidentByAccountNoRef(dataConnect, getResidentByAccountNoVars);
+
+// Call `executeQuery()` on the reference to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeQuery(ref);
+
+console.log(data.residents);
+
+// Or, you can use the `Promise` API.
+executeQuery(ref).then((response) => {
+  const data = response.data;
+  console.log(data.residents);
+});
+```
+
+## GetResidents
+You can execute the `GetResidents` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+getResidents(): QueryPromise<GetResidentsData, undefined>;
+
+interface GetResidentsRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<GetResidentsData, undefined>;
+}
+export const getResidentsRef: GetResidentsRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
+```typescript
+getResidents(dc: DataConnect): QueryPromise<GetResidentsData, undefined>;
+
+interface GetResidentsRef {
+  ...
+  (dc: DataConnect): QueryRef<GetResidentsData, undefined>;
+}
+export const getResidentsRef: GetResidentsRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the getResidentsRef:
+```typescript
+const name = getResidentsRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `GetResidents` query has no variables.
+### Return Type
+Recall that executing the `GetResidents` query returns a `QueryPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `GetResidentsData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface GetResidentsData {
+  residents: ({
+    id: UUIDString;
+    accountNo: number;
+    fullName: string;
+    classType: string;
+    book: {
+      name: string;
+    };
+  } & Resident_Key)[];
+}
+```
+### Using `GetResidents`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, getResidents } from '@dataconnect/generated';
+
+
+// Call the `getResidents()` function to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await getResidents();
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await getResidents(dataConnect);
+
+console.log(data.residents);
+
+// Or, you can use the `Promise` API.
+getResidents().then((response) => {
+  const data = response.data;
+  console.log(data.residents);
+});
+```
+
+### Using `GetResidents`'s `QueryRef` function
+
+```typescript
+import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { connectorConfig, getResidentsRef } from '@dataconnect/generated';
+
+
+// Call the `getResidentsRef()` function to get a reference to the query.
+const ref = getResidentsRef();
+
+// You can also pass in a `DataConnect` instance to the `QueryRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = getResidentsRef(dataConnect);
+
+// Call `executeQuery()` on the reference to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeQuery(ref);
+
+console.log(data.residents);
+
+// Or, you can use the `Promise` API.
+executeQuery(ref).then((response) => {
+  const data = response.data;
+  console.log(data.residents);
+});
+```
+
 # Mutations
 
 There are two ways to execute a Data Connect Mutation using the generated Web SDK:
@@ -239,985 +658,457 @@ The following is true for both the action shortcut function and the `MutationRef
 
 Below are examples of how to use the `calatrava-water-system` connector's generated functions to execute each mutation. You can also follow the examples from the [Data Connect documentation](https://firebase.google.com/docs/data-connect/web-sdk#using-mutations).
 
-## InsertBook
-You can execute the `InsertBook` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+## CreateBook
+You can execute the `CreateBook` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
 ```typescript
-insertBook(vars: InsertBookVariables): MutationPromise<InsertBookData, InsertBookVariables>;
+createBook(vars: CreateBookVariables): MutationPromise<CreateBookData, CreateBookVariables>;
 
-interface InsertBookRef {
+interface CreateBookRef {
   ...
   /* Allow users to create refs without passing in DataConnect */
-  (vars: InsertBookVariables): MutationRef<InsertBookData, InsertBookVariables>;
+  (vars: CreateBookVariables): MutationRef<CreateBookData, CreateBookVariables>;
 }
-export const insertBookRef: InsertBookRef;
+export const createBookRef: CreateBookRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
 ```typescript
-insertBook(dc: DataConnect, vars: InsertBookVariables): MutationPromise<InsertBookData, InsertBookVariables>;
+createBook(dc: DataConnect, vars: CreateBookVariables): MutationPromise<CreateBookData, CreateBookVariables>;
 
-interface InsertBookRef {
+interface CreateBookRef {
   ...
-  (dc: DataConnect, vars: InsertBookVariables): MutationRef<InsertBookData, InsertBookVariables>;
+  (dc: DataConnect, vars: CreateBookVariables): MutationRef<CreateBookData, CreateBookVariables>;
 }
-export const insertBookRef: InsertBookRef;
+export const createBookRef: CreateBookRef;
 ```
 
-If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the insertBookRef:
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the createBookRef:
 ```typescript
-const name = insertBookRef.operationName;
+const name = createBookRef.operationName;
 console.log(name);
 ```
 
 ### Variables
-The `InsertBook` mutation requires an argument of type `InsertBookVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+The `CreateBook` mutation requires an argument of type `CreateBookVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
 
 ```typescript
-export interface InsertBookVariables {
-  data: {
-    id?: UUIDString | null;
-    id_expr?: {
-    };
-      code?: string | null;
-      code_expr?: {
-      };
-        createdAt?: TimestampString | null;
-        createdAt_expr?: {
-        };
-          createdAt_time?: {
-            now?: {
-            };
-              at?: TimestampString | null;
-              add?: {
-                milliseconds?: number;
-                seconds?: number;
-                minutes?: number;
-                hours?: number;
-                days?: number;
-                weeks?: number;
-                months?: number;
-                years?: number;
-              };
-                sub?: {
-                  milliseconds?: number;
-                  seconds?: number;
-                  minutes?: number;
-                  hours?: number;
-                  days?: number;
-                  weeks?: number;
-                  months?: number;
-                  years?: number;
-                };
-                  truncateTo?: Timestamp_Interval | null;
-          };
-            createdAt_update?: ({
-              inc?: {
-                milliseconds?: number;
-                seconds?: number;
-                minutes?: number;
-                hours?: number;
-                days?: number;
-                weeks?: number;
-                months?: number;
-                years?: number;
-              };
-                dec?: {
-                  milliseconds?: number;
-                  seconds?: number;
-                  minutes?: number;
-                  hours?: number;
-                  days?: number;
-                  weeks?: number;
-                  months?: number;
-                  years?: number;
-                };
-            })[];
-              updatedAt?: TimestampString | null;
-              updatedAt_expr?: {
-              };
-                updatedAt_time?: {
-                  now?: {
-                  };
-                    at?: TimestampString | null;
-                    add?: {
-                      milliseconds?: number;
-                      seconds?: number;
-                      minutes?: number;
-                      hours?: number;
-                      days?: number;
-                      weeks?: number;
-                      months?: number;
-                      years?: number;
-                    };
-                      sub?: {
-                        milliseconds?: number;
-                        seconds?: number;
-                        minutes?: number;
-                        hours?: number;
-                        days?: number;
-                        weeks?: number;
-                        months?: number;
-                        years?: number;
-                      };
-                        truncateTo?: Timestamp_Interval | null;
-                };
-                  updatedAt_update?: ({
-                    inc?: {
-                      milliseconds?: number;
-                      seconds?: number;
-                      minutes?: number;
-                      hours?: number;
-                      days?: number;
-                      weeks?: number;
-                      months?: number;
-                      years?: number;
-                    };
-                      dec?: {
-                        milliseconds?: number;
-                        seconds?: number;
-                        minutes?: number;
-                        hours?: number;
-                        days?: number;
-                        weeks?: number;
-                        months?: number;
-                        years?: number;
-                      };
-                  })[];
-  };
+export interface CreateBookVariables {
+  name: string;
 }
 ```
 ### Return Type
-Recall that executing the `InsertBook` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+Recall that executing the `CreateBook` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
 
-The `data` property is an object of type `InsertBookData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+The `data` property is an object of type `CreateBookData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
 ```typescript
-export interface InsertBookData {
-  book_insert: Book_Key;
+export interface CreateBookData {
+  query?: {
+    books: ({
+      id: UUIDString;
+    } & Book_Key)[];
+  };
+    book_insert: Book_Key;
 }
 ```
-### Using `InsertBook`'s action shortcut function
+### Using `CreateBook`'s action shortcut function
 
 ```typescript
 import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, insertBook, InsertBookVariables } from '@dataconnect/generated';
+import { connectorConfig, createBook, CreateBookVariables } from '@dataconnect/generated';
 
-// The `InsertBook` mutation requires an argument of type `InsertBookVariables`:
-const insertBookVars: InsertBookVariables = {
-  data: ..., 
+// The `CreateBook` mutation requires an argument of type `CreateBookVariables`:
+const createBookVars: CreateBookVariables = {
+  name: ..., 
 };
 
-// Call the `insertBook()` function to execute the mutation.
+// Call the `createBook()` function to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await insertBook(insertBookVars);
+const { data } = await createBook(createBookVars);
 // Variables can be defined inline as well.
-const { data } = await insertBook({ data: ..., });
+const { data } = await createBook({ name: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
-const { data } = await insertBook(dataConnect, insertBookVars);
+const { data } = await createBook(dataConnect, createBookVars);
 
+console.log(data.query);
 console.log(data.book_insert);
 
 // Or, you can use the `Promise` API.
-insertBook(insertBookVars).then((response) => {
+createBook(createBookVars).then((response) => {
   const data = response.data;
+  console.log(data.query);
   console.log(data.book_insert);
 });
 ```
 
-### Using `InsertBook`'s `MutationRef` function
+### Using `CreateBook`'s `MutationRef` function
 
 ```typescript
 import { getDataConnect, executeMutation } from 'firebase/data-connect';
-import { connectorConfig, insertBookRef, InsertBookVariables } from '@dataconnect/generated';
+import { connectorConfig, createBookRef, CreateBookVariables } from '@dataconnect/generated';
 
-// The `InsertBook` mutation requires an argument of type `InsertBookVariables`:
-const insertBookVars: InsertBookVariables = {
-  data: ..., 
+// The `CreateBook` mutation requires an argument of type `CreateBookVariables`:
+const createBookVars: CreateBookVariables = {
+  name: ..., 
 };
 
-// Call the `insertBookRef()` function to get a reference to the mutation.
-const ref = insertBookRef(insertBookVars);
+// Call the `createBookRef()` function to get a reference to the mutation.
+const ref = createBookRef(createBookVars);
 // Variables can be defined inline as well.
-const ref = insertBookRef({ data: ..., });
+const ref = createBookRef({ name: ..., });
 
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);
-const ref = insertBookRef(dataConnect, insertBookVars);
+const ref = createBookRef(dataConnect, createBookVars);
 
 // Call `executeMutation()` on the reference to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await executeMutation(ref);
 
+console.log(data.query);
 console.log(data.book_insert);
 
 // Or, you can use the `Promise` API.
 executeMutation(ref).then((response) => {
   const data = response.data;
+  console.log(data.query);
   console.log(data.book_insert);
 });
 ```
 
-## InsertResident
-You can execute the `InsertResident` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+## CreateResident
+You can execute the `CreateResident` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
 ```typescript
-insertResident(vars: InsertResidentVariables): MutationPromise<InsertResidentData, InsertResidentVariables>;
+createResident(vars: CreateResidentVariables): MutationPromise<CreateResidentData, CreateResidentVariables>;
 
-interface InsertResidentRef {
+interface CreateResidentRef {
   ...
   /* Allow users to create refs without passing in DataConnect */
-  (vars: InsertResidentVariables): MutationRef<InsertResidentData, InsertResidentVariables>;
+  (vars: CreateResidentVariables): MutationRef<CreateResidentData, CreateResidentVariables>;
 }
-export const insertResidentRef: InsertResidentRef;
+export const createResidentRef: CreateResidentRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
 ```typescript
-insertResident(dc: DataConnect, vars: InsertResidentVariables): MutationPromise<InsertResidentData, InsertResidentVariables>;
+createResident(dc: DataConnect, vars: CreateResidentVariables): MutationPromise<CreateResidentData, CreateResidentVariables>;
 
-interface InsertResidentRef {
+interface CreateResidentRef {
   ...
-  (dc: DataConnect, vars: InsertResidentVariables): MutationRef<InsertResidentData, InsertResidentVariables>;
+  (dc: DataConnect, vars: CreateResidentVariables): MutationRef<CreateResidentData, CreateResidentVariables>;
 }
-export const insertResidentRef: InsertResidentRef;
+export const createResidentRef: CreateResidentRef;
 ```
 
-If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the insertResidentRef:
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the createResidentRef:
 ```typescript
-const name = insertResidentRef.operationName;
+const name = createResidentRef.operationName;
 console.log(name);
 ```
 
 ### Variables
-The `InsertResident` mutation requires an argument of type `InsertResidentVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+The `CreateResident` mutation requires an argument of type `CreateResidentVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
 
 ```typescript
-export interface InsertResidentVariables {
-  data: {
-    id?: UUIDString | null;
-    id_expr?: {
-    };
-      bookId?: UUIDString | null;
-      bookId_expr?: {
-      };
-        book?: Book_Key | null;
-        accountNo?: number | null;
-        accountNo_expr?: {
-        };
-          accountNo_update?: ({
-            inc?: number | null;
-            dec?: number | null;
-          })[];
-            classType?: string | null;
-            classType_expr?: {
-            };
-              createdAt?: TimestampString | null;
-              createdAt_expr?: {
-              };
-                createdAt_time?: {
-                  now?: {
-                  };
-                    at?: TimestampString | null;
-                    add?: {
-                      milliseconds?: number;
-                      seconds?: number;
-                      minutes?: number;
-                      hours?: number;
-                      days?: number;
-                      weeks?: number;
-                      months?: number;
-                      years?: number;
-                    };
-                      sub?: {
-                        milliseconds?: number;
-                        seconds?: number;
-                        minutes?: number;
-                        hours?: number;
-                        days?: number;
-                        weeks?: number;
-                        months?: number;
-                        years?: number;
-                      };
-                        truncateTo?: Timestamp_Interval | null;
-                };
-                  createdAt_update?: ({
-                    inc?: {
-                      milliseconds?: number;
-                      seconds?: number;
-                      minutes?: number;
-                      hours?: number;
-                      days?: number;
-                      weeks?: number;
-                      months?: number;
-                      years?: number;
-                    };
-                      dec?: {
-                        milliseconds?: number;
-                        seconds?: number;
-                        minutes?: number;
-                        hours?: number;
-                        days?: number;
-                        weeks?: number;
-                        months?: number;
-                        years?: number;
-                      };
-                  })[];
-                    fullName?: string | null;
-                    fullName_expr?: {
-                    };
-                      updatedAt?: TimestampString | null;
-                      updatedAt_expr?: {
-                      };
-                        updatedAt_time?: {
-                          now?: {
-                          };
-                            at?: TimestampString | null;
-                            add?: {
-                              milliseconds?: number;
-                              seconds?: number;
-                              minutes?: number;
-                              hours?: number;
-                              days?: number;
-                              weeks?: number;
-                              months?: number;
-                              years?: number;
-                            };
-                              sub?: {
-                                milliseconds?: number;
-                                seconds?: number;
-                                minutes?: number;
-                                hours?: number;
-                                days?: number;
-                                weeks?: number;
-                                months?: number;
-                                years?: number;
-                              };
-                                truncateTo?: Timestamp_Interval | null;
-                        };
-                          updatedAt_update?: ({
-                            inc?: {
-                              milliseconds?: number;
-                              seconds?: number;
-                              minutes?: number;
-                              hours?: number;
-                              days?: number;
-                              weeks?: number;
-                              months?: number;
-                              years?: number;
-                            };
-                              dec?: {
-                                milliseconds?: number;
-                                seconds?: number;
-                                minutes?: number;
-                                hours?: number;
-                                days?: number;
-                                weeks?: number;
-                                months?: number;
-                                years?: number;
-                              };
-                          })[];
-  };
+export interface CreateResidentVariables {
+  accountNo: number;
+  fullName: string;
+  classType: string;
+  bookId: UUIDString;
 }
 ```
 ### Return Type
-Recall that executing the `InsertResident` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+Recall that executing the `CreateResident` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
 
-The `data` property is an object of type `InsertResidentData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+The `data` property is an object of type `CreateResidentData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
 ```typescript
-export interface InsertResidentData {
-  resident_insert: Resident_Key;
+export interface CreateResidentData {
+  query?: {
+    residents: ({
+      id: UUIDString;
+    } & Resident_Key)[];
+  };
+    resident_insert: Resident_Key;
 }
 ```
-### Using `InsertResident`'s action shortcut function
+### Using `CreateResident`'s action shortcut function
 
 ```typescript
 import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, insertResident, InsertResidentVariables } from '@dataconnect/generated';
+import { connectorConfig, createResident, CreateResidentVariables } from '@dataconnect/generated';
 
-// The `InsertResident` mutation requires an argument of type `InsertResidentVariables`:
-const insertResidentVars: InsertResidentVariables = {
-  data: ..., 
+// The `CreateResident` mutation requires an argument of type `CreateResidentVariables`:
+const createResidentVars: CreateResidentVariables = {
+  accountNo: ..., 
+  fullName: ..., 
+  classType: ..., 
+  bookId: ..., 
 };
 
-// Call the `insertResident()` function to execute the mutation.
+// Call the `createResident()` function to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await insertResident(insertResidentVars);
+const { data } = await createResident(createResidentVars);
 // Variables can be defined inline as well.
-const { data } = await insertResident({ data: ..., });
+const { data } = await createResident({ accountNo: ..., fullName: ..., classType: ..., bookId: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
-const { data } = await insertResident(dataConnect, insertResidentVars);
+const { data } = await createResident(dataConnect, createResidentVars);
 
+console.log(data.query);
 console.log(data.resident_insert);
 
 // Or, you can use the `Promise` API.
-insertResident(insertResidentVars).then((response) => {
+createResident(createResidentVars).then((response) => {
   const data = response.data;
+  console.log(data.query);
   console.log(data.resident_insert);
 });
 ```
 
-### Using `InsertResident`'s `MutationRef` function
+### Using `CreateResident`'s `MutationRef` function
 
 ```typescript
 import { getDataConnect, executeMutation } from 'firebase/data-connect';
-import { connectorConfig, insertResidentRef, InsertResidentVariables } from '@dataconnect/generated';
+import { connectorConfig, createResidentRef, CreateResidentVariables } from '@dataconnect/generated';
 
-// The `InsertResident` mutation requires an argument of type `InsertResidentVariables`:
-const insertResidentVars: InsertResidentVariables = {
-  data: ..., 
+// The `CreateResident` mutation requires an argument of type `CreateResidentVariables`:
+const createResidentVars: CreateResidentVariables = {
+  accountNo: ..., 
+  fullName: ..., 
+  classType: ..., 
+  bookId: ..., 
 };
 
-// Call the `insertResidentRef()` function to get a reference to the mutation.
-const ref = insertResidentRef(insertResidentVars);
+// Call the `createResidentRef()` function to get a reference to the mutation.
+const ref = createResidentRef(createResidentVars);
 // Variables can be defined inline as well.
-const ref = insertResidentRef({ data: ..., });
+const ref = createResidentRef({ accountNo: ..., fullName: ..., classType: ..., bookId: ..., });
 
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);
-const ref = insertResidentRef(dataConnect, insertResidentVars);
+const ref = createResidentRef(dataConnect, createResidentVars);
 
 // Call `executeMutation()` on the reference to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await executeMutation(ref);
 
+console.log(data.query);
 console.log(data.resident_insert);
 
 // Or, you can use the `Promise` API.
 executeMutation(ref).then((response) => {
   const data = response.data;
+  console.log(data.query);
   console.log(data.resident_insert);
 });
 ```
 
-## InsertBilling
-You can execute the `InsertBilling` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+## CreateBilling
+You can execute the `CreateBilling` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
 ```typescript
-insertBilling(vars: InsertBillingVariables): MutationPromise<InsertBillingData, InsertBillingVariables>;
+createBilling(vars: CreateBillingVariables): MutationPromise<CreateBillingData, CreateBillingVariables>;
 
-interface InsertBillingRef {
+interface CreateBillingRef {
   ...
   /* Allow users to create refs without passing in DataConnect */
-  (vars: InsertBillingVariables): MutationRef<InsertBillingData, InsertBillingVariables>;
+  (vars: CreateBillingVariables): MutationRef<CreateBillingData, CreateBillingVariables>;
 }
-export const insertBillingRef: InsertBillingRef;
+export const createBillingRef: CreateBillingRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
 ```typescript
-insertBilling(dc: DataConnect, vars: InsertBillingVariables): MutationPromise<InsertBillingData, InsertBillingVariables>;
+createBilling(dc: DataConnect, vars: CreateBillingVariables): MutationPromise<CreateBillingData, CreateBillingVariables>;
 
-interface InsertBillingRef {
+interface CreateBillingRef {
   ...
-  (dc: DataConnect, vars: InsertBillingVariables): MutationRef<InsertBillingData, InsertBillingVariables>;
+  (dc: DataConnect, vars: CreateBillingVariables): MutationRef<CreateBillingData, CreateBillingVariables>;
 }
-export const insertBillingRef: InsertBillingRef;
+export const createBillingRef: CreateBillingRef;
 ```
 
-If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the insertBillingRef:
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the createBillingRef:
 ```typescript
-const name = insertBillingRef.operationName;
+const name = createBillingRef.operationName;
 console.log(name);
 ```
 
 ### Variables
-The `InsertBilling` mutation requires an argument of type `InsertBillingVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+The `CreateBilling` mutation requires an argument of type `CreateBillingVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
 
 ```typescript
-export interface InsertBillingVariables {
-  data: {
-    id?: UUIDString | null;
-    id_expr?: {
-    };
-      residentId?: UUIDString | null;
-      residentId_expr?: {
-      };
-        resident?: Resident_Key | null;
-        amortAmt?: number | null;
-        amortAmt_expr?: {
-        };
-          amortAmt_update?: ({
-            inc?: number | null;
-            dec?: number | null;
-          })[];
-            arrearsAmt?: number | null;
-            arrearsAmt_expr?: {
-            };
-              arrearsAmt_update?: ({
-                inc?: number | null;
-                dec?: number | null;
-              })[];
-                arrearsEnv?: number | null;
-                arrearsEnv_expr?: {
-                };
-                  arrearsEnv_update?: ({
-                    inc?: number | null;
-                    dec?: number | null;
-                  })[];
-                    bStatus?: string | null;
-                    bStatus_expr?: {
-                    };
-                      billAmt?: number | null;
-                      billAmt_expr?: {
-                      };
-                        billAmt_update?: ({
-                          inc?: number | null;
-                          dec?: number | null;
-                        })[];
-                          billBrgy?: string | null;
-                          billBrgy_expr?: {
-                          };
-                            billDate?: DateString | null;
-                            billDate_expr?: {
-                            };
-                              billDate_date?: {
-                                today?: {
-                                };
-                                  on?: DateString | null;
-                                  add?: {
-                                    days?: number;
-                                    weeks?: number;
-                                    months?: number;
-                                    years?: number;
-                                  };
-                                    sub?: {
-                                      days?: number;
-                                      weeks?: number;
-                                      months?: number;
-                                      years?: number;
-                                    };
-                                      truncateTo?: Date_Interval | null;
-                              };
-                                billDate_update?: ({
-                                  inc?: {
-                                    days?: number;
-                                    weeks?: number;
-                                    months?: number;
-                                    years?: number;
-                                  };
-                                    dec?: {
-                                      days?: number;
-                                      weeks?: number;
-                                      months?: number;
-                                      years?: number;
-                                    };
-                                })[];
-                                  billNo?: number | null;
-                                  billNo_expr?: {
-                                  };
-                                    billNo_update?: ({
-                                      inc?: number | null;
-                                      dec?: number | null;
-                                    })[];
-                                      billPurok?: string | null;
-                                      billPurok_expr?: {
-                                      };
-                                        createdAt?: TimestampString | null;
-                                        createdAt_expr?: {
-                                        };
-                                          createdAt_time?: {
-                                            now?: {
-                                            };
-                                              at?: TimestampString | null;
-                                              add?: {
-                                                milliseconds?: number;
-                                                seconds?: number;
-                                                minutes?: number;
-                                                hours?: number;
-                                                days?: number;
-                                                weeks?: number;
-                                                months?: number;
-                                                years?: number;
-                                              };
-                                                sub?: {
-                                                  milliseconds?: number;
-                                                  seconds?: number;
-                                                  minutes?: number;
-                                                  hours?: number;
-                                                  days?: number;
-                                                  weeks?: number;
-                                                  months?: number;
-                                                  years?: number;
-                                                };
-                                                  truncateTo?: Timestamp_Interval | null;
-                                          };
-                                            createdAt_update?: ({
-                                              inc?: {
-                                                milliseconds?: number;
-                                                seconds?: number;
-                                                minutes?: number;
-                                                hours?: number;
-                                                days?: number;
-                                                weeks?: number;
-                                                months?: number;
-                                                years?: number;
-                                              };
-                                                dec?: {
-                                                  milliseconds?: number;
-                                                  seconds?: number;
-                                                  minutes?: number;
-                                                  hours?: number;
-                                                  days?: number;
-                                                  weeks?: number;
-                                                  months?: number;
-                                                  years?: number;
-                                                };
-                                            })[];
-                                              curReading?: number | null;
-                                              curReading_expr?: {
-                                              };
-                                                curReading_update?: ({
-                                                  inc?: number | null;
-                                                  dec?: number | null;
-                                                })[];
-                                                  disconDate?: DateString | null;
-                                                  disconDate_expr?: {
-                                                  };
-                                                    disconDate_date?: {
-                                                      today?: {
-                                                      };
-                                                        on?: DateString | null;
-                                                        add?: {
-                                                          days?: number;
-                                                          weeks?: number;
-                                                          months?: number;
-                                                          years?: number;
-                                                        };
-                                                          sub?: {
-                                                            days?: number;
-                                                            weeks?: number;
-                                                            months?: number;
-                                                            years?: number;
-                                                          };
-                                                            truncateTo?: Date_Interval | null;
-                                                    };
-                                                      disconDate_update?: ({
-                                                        inc?: {
-                                                          days?: number;
-                                                          weeks?: number;
-                                                          months?: number;
-                                                          years?: number;
-                                                        };
-                                                          dec?: {
-                                                            days?: number;
-                                                            weeks?: number;
-                                                            months?: number;
-                                                            years?: number;
-                                                          };
-                                                      })[];
-                                                        discount?: number | null;
-                                                        discount_expr?: {
-                                                        };
-                                                          discount_update?: ({
-                                                            inc?: number | null;
-                                                            dec?: number | null;
-                                                          })[];
-                                                            dueDate?: DateString | null;
-                                                            dueDate_expr?: {
-                                                            };
-                                                              dueDate_date?: {
-                                                                today?: {
-                                                                };
-                                                                  on?: DateString | null;
-                                                                  add?: {
-                                                                    days?: number;
-                                                                    weeks?: number;
-                                                                    months?: number;
-                                                                    years?: number;
-                                                                  };
-                                                                    sub?: {
-                                                                      days?: number;
-                                                                      weeks?: number;
-                                                                      months?: number;
-                                                                      years?: number;
-                                                                    };
-                                                                      truncateTo?: Date_Interval | null;
-                                                              };
-                                                                dueDate_update?: ({
-                                                                  inc?: {
-                                                                    days?: number;
-                                                                    weeks?: number;
-                                                                    months?: number;
-                                                                    years?: number;
-                                                                  };
-                                                                    dec?: {
-                                                                      days?: number;
-                                                                      weeks?: number;
-                                                                      months?: number;
-                                                                      years?: number;
-                                                                    };
-                                                                })[];
-                                                                  duePenalty?: number | null;
-                                                                  duePenalty_expr?: {
-                                                                  };
-                                                                    duePenalty_update?: ({
-                                                                      inc?: number | null;
-                                                                      dec?: number | null;
-                                                                    })[];
-                                                                      environmentFee?: number | null;
-                                                                      environmentFee_expr?: {
-                                                                      };
-                                                                        environmentFee_update?: ({
-                                                                          inc?: number | null;
-                                                                          dec?: number | null;
-                                                                        })[];
-                                                                          mPenalty?: number | null;
-                                                                          mPenalty_expr?: {
-                                                                          };
-                                                                            mPenalty_update?: ({
-                                                                              inc?: number | null;
-                                                                              dec?: number | null;
-                                                                            })[];
-                                                                              mrSysNo?: number | null;
-                                                                              mrSysNo_expr?: {
-                                                                              };
-                                                                                mrSysNo_update?: ({
-                                                                                  inc?: number | null;
-                                                                                  dec?: number | null;
-                                                                                })[];
-                                                                                  mrrfDue?: number | null;
-                                                                                  mrrfDue_expr?: {
-                                                                                  };
-                                                                                    mrrfDue_update?: ({
-                                                                                      inc?: number | null;
-                                                                                      dec?: number | null;
-                                                                                    })[];
-                                                                                      mtrNo?: string | null;
-                                                                                      mtrNo_expr?: {
-                                                                                      };
-                                                                                        nrWater?: number | null;
-                                                                                        nrWater_expr?: {
-                                                                                        };
-                                                                                          nrWater_update?: ({
-                                                                                            inc?: number | null;
-                                                                                            dec?: number | null;
-                                                                                          })[];
-                                                                                            paid?: string | null;
-                                                                                            paid_expr?: {
-                                                                                            };
-                                                                                              paymentDate?: TimestampString | null;
-                                                                                              paymentDate_expr?: {
-                                                                                              };
-                                                                                                paymentDate_time?: {
-                                                                                                  now?: {
-                                                                                                  };
-                                                                                                    at?: TimestampString | null;
-                                                                                                    add?: {
-                                                                                                      milliseconds?: number;
-                                                                                                      seconds?: number;
-                                                                                                      minutes?: number;
-                                                                                                      hours?: number;
-                                                                                                      days?: number;
-                                                                                                      weeks?: number;
-                                                                                                      months?: number;
-                                                                                                      years?: number;
-                                                                                                    };
-                                                                                                      sub?: {
-                                                                                                        milliseconds?: number;
-                                                                                                        seconds?: number;
-                                                                                                        minutes?: number;
-                                                                                                        hours?: number;
-                                                                                                        days?: number;
-                                                                                                        weeks?: number;
-                                                                                                        months?: number;
-                                                                                                        years?: number;
-                                                                                                      };
-                                                                                                        truncateTo?: Timestamp_Interval | null;
-                                                                                                };
-                                                                                                  paymentDate_update?: ({
-                                                                                                    inc?: {
-                                                                                                      milliseconds?: number;
-                                                                                                      seconds?: number;
-                                                                                                      minutes?: number;
-                                                                                                      hours?: number;
-                                                                                                      days?: number;
-                                                                                                      weeks?: number;
-                                                                                                      months?: number;
-                                                                                                      years?: number;
-                                                                                                    };
-                                                                                                      dec?: {
-                                                                                                        milliseconds?: number;
-                                                                                                        seconds?: number;
-                                                                                                        minutes?: number;
-                                                                                                        hours?: number;
-                                                                                                        days?: number;
-                                                                                                        weeks?: number;
-                                                                                                        months?: number;
-                                                                                                        years?: number;
-                                                                                                      };
-                                                                                                  })[];
-                                                                                                    paymentReceipt?: string | null;
-                                                                                                    paymentReceipt_expr?: {
-                                                                                                    };
-                                                                                                      paymentStatus?: string | null;
-                                                                                                      paymentStatus_expr?: {
-                                                                                                      };
-                                                                                                        penalized?: string | null;
-                                                                                                        penalized_expr?: {
-                                                                                                        };
-                                                                                                          preReading?: number | null;
-                                                                                                          preReading_expr?: {
-                                                                                                          };
-                                                                                                            preReading_update?: ({
-                                                                                                              inc?: number | null;
-                                                                                                              dec?: number | null;
-                                                                                                            })[];
-                                                                                                              prevUsed?: number | null;
-                                                                                                              prevUsed_expr?: {
-                                                                                                              };
-                                                                                                                prevUsed_update?: ({
-                                                                                                                  inc?: number | null;
-                                                                                                                  dec?: number | null;
-                                                                                                                })[];
-                                                                                                                  prevUsed2?: number | null;
-                                                                                                                  prevUsed2_expr?: {
-                                                                                                                  };
-                                                                                                                    prevUsed2_update?: ({
-                                                                                                                      inc?: number | null;
-                                                                                                                      dec?: number | null;
-                                                                                                                    })[];
-                                                                                                                      prvBillDate?: string | null;
-                                                                                                                      prvBillDate_expr?: {
-                                                                                                                      };
-                                                                                                                        prvDiscon?: string | null;
-                                                                                                                        prvDiscon_expr?: {
-                                                                                                                        };
-                                                                                                                          prvDueDate?: string | null;
-                                                                                                                          prvDueDate_expr?: {
-                                                                                                                          };
-                                                                                                                            purokCode?: string | null;
-                                                                                                                            purokCode_expr?: {
-                                                                                                                            };
-                                                                                                                              stubOut?: string | null;
-                                                                                                                              stubOut_expr?: {
-                                                                                                                              };
-                                                                                                                                totalBill?: number | null;
-                                                                                                                                totalBill_expr?: {
-                                                                                                                                };
-                                                                                                                                  totalBill_update?: ({
-                                                                                                                                    inc?: number | null;
-                                                                                                                                    dec?: number | null;
-                                                                                                                                  })[];
-                                                                                                                                    updatedAt?: TimestampString | null;
-                                                                                                                                    updatedAt_expr?: {
-                                                                                                                                    };
-                                                                                                                                      updatedAt_time?: {
-                                                                                                                                        now?: {
-                                                                                                                                        };
-                                                                                                                                          at?: TimestampString | null;
-                                                                                                                                          add?: {
-                                                                                                                                            milliseconds?: number;
-                                                                                                                                            seconds?: number;
-                                                                                                                                            minutes?: number;
-                                                                                                                                            hours?: number;
-                                                                                                                                            days?: number;
-                                                                                                                                            weeks?: number;
-                                                                                                                                            months?: number;
-                                                                                                                                            years?: number;
-                                                                                                                                          };
-                                                                                                                                            sub?: {
-                                                                                                                                              milliseconds?: number;
-                                                                                                                                              seconds?: number;
-                                                                                                                                              minutes?: number;
-                                                                                                                                              hours?: number;
-                                                                                                                                              days?: number;
-                                                                                                                                              weeks?: number;
-                                                                                                                                              months?: number;
-                                                                                                                                              years?: number;
-                                                                                                                                            };
-                                                                                                                                              truncateTo?: Timestamp_Interval | null;
-                                                                                                                                      };
-                                                                                                                                        updatedAt_update?: ({
-                                                                                                                                          inc?: {
-                                                                                                                                            milliseconds?: number;
-                                                                                                                                            seconds?: number;
-                                                                                                                                            minutes?: number;
-                                                                                                                                            hours?: number;
-                                                                                                                                            days?: number;
-                                                                                                                                            weeks?: number;
-                                                                                                                                            months?: number;
-                                                                                                                                            years?: number;
-                                                                                                                                          };
-                                                                                                                                            dec?: {
-                                                                                                                                              milliseconds?: number;
-                                                                                                                                              seconds?: number;
-                                                                                                                                              minutes?: number;
-                                                                                                                                              hours?: number;
-                                                                                                                                              days?: number;
-                                                                                                                                              weeks?: number;
-                                                                                                                                              months?: number;
-                                                                                                                                              years?: number;
-                                                                                                                                            };
-                                                                                                                                        })[];
-                                                                                                                                          verified?: string | null;
-                                                                                                                                          verified_expr?: {
-                                                                                                                                          };
-                                                                                                                                            waterUsage?: number | null;
-                                                                                                                                            waterUsage_expr?: {
-                                                                                                                                            };
-                                                                                                                                              waterUsage_update?: ({
-                                                                                                                                                inc?: number | null;
-                                                                                                                                                dec?: number | null;
-                                                                                                                                              })[];
-  };
+export interface CreateBillingVariables {
+  billNo: number;
+  billDate: DateString;
+  dueDate: DateString;
+  bStatus: string;
+  mrSysNo: number;
+  penalized: string;
+  mPenalty: number;
+  discount: number;
+  paid: string;
+  verified: string;
+  arrearsAmt: number;
+  mrrfDue: number;
+  curReading: number;
+  disconDate?: DateString | null;
+  mtrNo: string;
+  preReading: number;
+  purokCode: string;
+  billPurok: string;
+  billBrgy: string;
+  prevUsed: number;
+  prevUsed2: number;
+  prvBillDate: string;
+  prvDueDate: string;
+  prvDiscon: string;
+  stubOut: string;
+  amortAmt: number;
+  nrWater: number;
+  residentId: UUIDString;
+  bookId: UUIDString;
+  billAmt: number;
+  duePenalty: number;
+  arrearsEnv: number;
+  environmentFee: number;
+  totalBill: number;
+  waterUsage: number;
+  paymentReceipt?: string | null;
+  paymentStatus?: string | null;
+  paymentDate?: DateString | null;
 }
 ```
 ### Return Type
-Recall that executing the `InsertBilling` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+Recall that executing the `CreateBilling` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
 
-The `data` property is an object of type `InsertBillingData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+The `data` property is an object of type `CreateBillingData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
 ```typescript
-export interface InsertBillingData {
+export interface CreateBillingData {
   billing_insert: Billing_Key;
 }
 ```
-### Using `InsertBilling`'s action shortcut function
+### Using `CreateBilling`'s action shortcut function
 
 ```typescript
 import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, insertBilling, InsertBillingVariables } from '@dataconnect/generated';
+import { connectorConfig, createBilling, CreateBillingVariables } from '@dataconnect/generated';
 
-// The `InsertBilling` mutation requires an argument of type `InsertBillingVariables`:
-const insertBillingVars: InsertBillingVariables = {
-  data: ..., 
+// The `CreateBilling` mutation requires an argument of type `CreateBillingVariables`:
+const createBillingVars: CreateBillingVariables = {
+  billNo: ..., 
+  billDate: ..., 
+  dueDate: ..., 
+  bStatus: ..., 
+  mrSysNo: ..., 
+  penalized: ..., 
+  mPenalty: ..., 
+  discount: ..., 
+  paid: ..., 
+  verified: ..., 
+  arrearsAmt: ..., 
+  mrrfDue: ..., 
+  curReading: ..., 
+  disconDate: ..., // optional
+  mtrNo: ..., 
+  preReading: ..., 
+  purokCode: ..., 
+  billPurok: ..., 
+  billBrgy: ..., 
+  prevUsed: ..., 
+  prevUsed2: ..., 
+  prvBillDate: ..., 
+  prvDueDate: ..., 
+  prvDiscon: ..., 
+  stubOut: ..., 
+  amortAmt: ..., 
+  nrWater: ..., 
+  residentId: ..., 
+  bookId: ..., 
+  billAmt: ..., 
+  duePenalty: ..., 
+  arrearsEnv: ..., 
+  environmentFee: ..., 
+  totalBill: ..., 
+  waterUsage: ..., 
+  paymentReceipt: ..., // optional
+  paymentStatus: ..., // optional
+  paymentDate: ..., // optional
 };
 
-// Call the `insertBilling()` function to execute the mutation.
+// Call the `createBilling()` function to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await insertBilling(insertBillingVars);
+const { data } = await createBilling(createBillingVars);
 // Variables can be defined inline as well.
-const { data } = await insertBilling({ data: ..., });
+const { data } = await createBilling({ billNo: ..., billDate: ..., dueDate: ..., bStatus: ..., mrSysNo: ..., penalized: ..., mPenalty: ..., discount: ..., paid: ..., verified: ..., arrearsAmt: ..., mrrfDue: ..., curReading: ..., disconDate: ..., mtrNo: ..., preReading: ..., purokCode: ..., billPurok: ..., billBrgy: ..., prevUsed: ..., prevUsed2: ..., prvBillDate: ..., prvDueDate: ..., prvDiscon: ..., stubOut: ..., amortAmt: ..., nrWater: ..., residentId: ..., bookId: ..., billAmt: ..., duePenalty: ..., arrearsEnv: ..., environmentFee: ..., totalBill: ..., waterUsage: ..., paymentReceipt: ..., paymentStatus: ..., paymentDate: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
-const { data } = await insertBilling(dataConnect, insertBillingVars);
+const { data } = await createBilling(dataConnect, createBillingVars);
 
 console.log(data.billing_insert);
 
 // Or, you can use the `Promise` API.
-insertBilling(insertBillingVars).then((response) => {
+createBilling(createBillingVars).then((response) => {
   const data = response.data;
   console.log(data.billing_insert);
 });
 ```
 
-### Using `InsertBilling`'s `MutationRef` function
+### Using `CreateBilling`'s `MutationRef` function
 
 ```typescript
 import { getDataConnect, executeMutation } from 'firebase/data-connect';
-import { connectorConfig, insertBillingRef, InsertBillingVariables } from '@dataconnect/generated';
+import { connectorConfig, createBillingRef, CreateBillingVariables } from '@dataconnect/generated';
 
-// The `InsertBilling` mutation requires an argument of type `InsertBillingVariables`:
-const insertBillingVars: InsertBillingVariables = {
-  data: ..., 
+// The `CreateBilling` mutation requires an argument of type `CreateBillingVariables`:
+const createBillingVars: CreateBillingVariables = {
+  billNo: ..., 
+  billDate: ..., 
+  dueDate: ..., 
+  bStatus: ..., 
+  mrSysNo: ..., 
+  penalized: ..., 
+  mPenalty: ..., 
+  discount: ..., 
+  paid: ..., 
+  verified: ..., 
+  arrearsAmt: ..., 
+  mrrfDue: ..., 
+  curReading: ..., 
+  disconDate: ..., // optional
+  mtrNo: ..., 
+  preReading: ..., 
+  purokCode: ..., 
+  billPurok: ..., 
+  billBrgy: ..., 
+  prevUsed: ..., 
+  prevUsed2: ..., 
+  prvBillDate: ..., 
+  prvDueDate: ..., 
+  prvDiscon: ..., 
+  stubOut: ..., 
+  amortAmt: ..., 
+  nrWater: ..., 
+  residentId: ..., 
+  bookId: ..., 
+  billAmt: ..., 
+  duePenalty: ..., 
+  arrearsEnv: ..., 
+  environmentFee: ..., 
+  totalBill: ..., 
+  waterUsage: ..., 
+  paymentReceipt: ..., // optional
+  paymentStatus: ..., // optional
+  paymentDate: ..., // optional
 };
 
-// Call the `insertBillingRef()` function to get a reference to the mutation.
-const ref = insertBillingRef(insertBillingVars);
+// Call the `createBillingRef()` function to get a reference to the mutation.
+const ref = createBillingRef(createBillingVars);
 // Variables can be defined inline as well.
-const ref = insertBillingRef({ data: ..., });
+const ref = createBillingRef({ billNo: ..., billDate: ..., dueDate: ..., bStatus: ..., mrSysNo: ..., penalized: ..., mPenalty: ..., discount: ..., paid: ..., verified: ..., arrearsAmt: ..., mrrfDue: ..., curReading: ..., disconDate: ..., mtrNo: ..., preReading: ..., purokCode: ..., billPurok: ..., billBrgy: ..., prevUsed: ..., prevUsed2: ..., prvBillDate: ..., prvDueDate: ..., prvDiscon: ..., stubOut: ..., amortAmt: ..., nrWater: ..., residentId: ..., bookId: ..., billAmt: ..., duePenalty: ..., arrearsEnv: ..., environmentFee: ..., totalBill: ..., waterUsage: ..., paymentReceipt: ..., paymentStatus: ..., paymentDate: ..., });
 
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);
-const ref = insertBillingRef(dataConnect, insertBillingVars);
+const ref = createBillingRef(dataConnect, createBillingVars);
 
 // Call `executeMutation()` on the reference to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.
