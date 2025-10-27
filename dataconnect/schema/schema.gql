@@ -55,45 +55,45 @@ type Billing @table @index(fields: ["billNo"]) {
 }
 
 type BillingFromCsv @table @index(fields: ["billNo"]) {
-  accountNo: Int!   # e.g 211200109
-  amortAmnt: Float!   # e.g 0
-  arrearsAmnt: Float!   # e.g 5.5
-  arrearsEnv: Float!   # e.g -5.5
-  bStatus: String!   # e.g "2"
-  billAmnt: Float!   # e.g 75
-  billBrgy: String!   # e.g ""
-  billDate: String!   # e.g "10/06/2025"
-  billNo: Int!   # e.g 90
-  billPurok: String!   # e.g ""
-  book: String!   # e.g "calampisawan"
-  classType: String!   # e.g "RESIDENTIAL"
-  curReading: Int!   # e.g 3535
-  discount: Float!   # e.g 0
-  disconDate: String!   # e.g "01/17/2025"
-  dueDate: String!   # e.g "10/14/2025"
-  duePenalty: Float!   # e.g 0
-  environmentFee: Float!   # e.g 0
-  fullName: String!   # e.g "alfredo se�ora"
-  mPenalty: Float!   # e.g 0
-  mrSysNo: Int!   # e.g 54565
-  mtrNo: String!   # e.g "9402982"
-  nrWater: Float!   # e.g 0
-  paid: String!   # e.g "F"
-  paymentDate: String   # e.g null
-  paymentReceipt: String   # e.g null
-  paymentStatus: String   # e.g null
-  preReading: Int!   # e.g 3526
-  prevUsed: Float!   # e.g 0
-  prevUsed2: Float!   # e.g 0
-  prvBillDate: String!   # e.g "/  /"
-  prvDiscon: String!   # e.g "/  /"
-  prvDueDate: String!   # e.g "/  /"
-  purokCode: String!   # e.g ""
-  residentId: String!   # e.g "211200109"
-  stubOut: String!   # e.g ""
-  totalBill: Float!   # e.g 75
-  verified: String!   # e.g "T"
-  waterUsage: Float!   # e.g 9
-  createdAt: Timestamp! @default(expr: "request.time")   # e.g 2025-10-20T12:28:03Z
-  updatedAt: Timestamp! @default(expr: "request.time")   # e.g 2025-10-20T12:28:03Z
+	accountNo: Int! # e.g 211200109
+	amortAmnt: Float! # e.g 0
+	arrearsAmnt: Float! # e.g 5.5
+	arrearsEnv: Float! # e.g -5.5
+	bStatus: String! # e.g "2"
+	billAmnt: Float! # e.g 75
+	billBrgy: String # e.g ""
+	billDate: String! # e.g "10/06/2025"
+	billNo: Int! # e.g 90
+	billPurok: String # e.g ""
+	book: String! # e.g "calampisawan"
+	classType: String! # e.g "RESIDENTIAL"
+	curReading: Int! # e.g 3535
+	discount: Float! # e.g 0
+	disconDate: String! # e.g "01/17/2025"
+	dueDate: String! # e.g "10/14/2025"
+	duePenalty: Float! # e.g 0
+	environmentFee: Float! # e.g 0
+	fullName: String! # e.g "alfredo se�ora"
+	mPenalty: Float! # e.g 0
+	mrSysNo: Int! # e.g 54565
+	mtrNo: String! # e.g "9402982"
+	nrWater: Float! # e.g 0
+	paid: String! # e.g "F"
+	paymentDate: String # e.g null
+	paymentReceipt: String # e.g null
+	paymentStatus: String # e.g null
+	preReading: Int! # e.g 3526
+	prevUsed: Float! # e.g 0
+	prevUsed2: Float! # e.g 0
+	prvBillDate: String! # e.g "/  /"
+	prvDiscon: String! # e.g "/  /"
+	prvDueDate: String! # e.g "/  /"
+	purokCode: String # e.g ""
+	residentId: String! # e.g "211200109"
+	stubOut: String # e.g ""
+	totalBill: Float! # e.g 75
+	verified: String! # e.g "T"
+	waterUsage: Float! # e.g 9
+	createdAt: Timestamp! @default(expr: "request.time") # e.g 2025-10-20T12:28:03Z
+	updatedAt: Timestamp! @default(expr: "request.time") # e.g 2025-10-20T12:28:03Z
 }

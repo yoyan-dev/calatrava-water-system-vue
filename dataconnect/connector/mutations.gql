@@ -171,13 +171,14 @@ mutation CreateBillingFromCsv(
 	$arrearsEnv: Float!
 	$bStatus: String!
 	$billAmnt: Float!
-	$billBrgy: String!
+	$billBrgy: String
 	$billDate: String!
 	$billNo: Int!
-	$billPurok: String!
+	$billPurok: String
 	$book: String!
 	$classType: String!
 	$curReading: Int!
+	$custNo: Int!
 	$discount: Float!
 	$disconDate: String!
 	$dueDate: String!
@@ -185,6 +186,7 @@ mutation CreateBillingFromCsv(
 	$environmentFee: Float!
 	$fullName: String!
 	$mPenalty: Float!
+	$mrrfDue: Float!
 	$mrSysNo: Int!
 	$mtrNo: String!
 	$nrWater: Float!
@@ -192,15 +194,16 @@ mutation CreateBillingFromCsv(
 	$paymentDate: String
 	$paymentReceipt: String
 	$paymentStatus: String
+	$penalized: Int!
 	$preReading: Int!
 	$prevUsed: Float!
 	$prevUsed2: Float!
 	$prvBillDate: String!
 	$prvDiscon: String!
 	$prvDueDate: String!
-	$purokCode: String!
+	$purokCode: String
 	$residentId: String!
-	$stubOut: String!
+	$stubOut: String
 	$totalBill: Float!
 	$verified: String!
 	$waterUsage: Float!

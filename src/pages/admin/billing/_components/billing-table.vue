@@ -18,7 +18,7 @@
 			@page="onPage">
 			<template #empty>
 				<div class="flex items-center justify-center p-4">
-					No billing found.
+					No billing records found.
 				</div>
 			</template>
 			<Column
@@ -30,17 +30,17 @@
 				style="width: 5rem" />
 			<Column
 				class="font-medium"
-				header="Bill No."
-				field="bill_no" />
+				header="Bill Number"
+				field="billNo" />
 			<Column
 				class="text-primary-600 font-bold"
 				header="Account Number"
-				field="accountno" />
+				field="accountNo" />
 			<Column
 				header="Billing Date"
-				field="bill_date">
+				field="billDate">
 				<template #body="slotProps">
-					{{ formatDate(slotProps.data.bill_date) }}
+					{{ formatDate(slotProps.data.billDate) }}
 				</template>
 			</Column>
 			<Column header="Total Bill">
@@ -59,6 +59,16 @@
 						:severity="getSeverity(slotProps.data.paymentStatus ?? 'unpaid')"
 						:value="slotProps.data.paymentStatus ?? 'unpaid'"
 						rounded />
+				</template>
+			</Column>
+			<Column header="Water Usage">
+				<template #body="slotProps">
+					<span>{{ slotProps.data.waterUsage }} L</span>
+				</template>
+			</Column>
+			<Column header="Customer Name">
+				<template #body="slotProps">
+					<span>{{ slotProps.data.fullName }}</span>
 				</template>
 			</Column>
 			<Column header="Actions">
@@ -127,9 +137,11 @@
 
 	// Initial load
 	onMounted(() => {
-		store.fetchBillings({
-			firstIndex: first.value,
+		store.fetchPaginateBillings({
 			limit: rows.value,
+			offset: first.value,
+			orderByField: 'billNo',
+			orderDirection: 'DESC',
 		});
 	});
 </script>

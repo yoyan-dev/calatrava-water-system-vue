@@ -100,6 +100,8 @@ The `PaginatedBillings` query has an optional argument of type `PaginatedBilling
 export interface PaginatedBillingsVariables {
   limit?: number | null;
   offset?: number | null;
+  orderByField?: string | null;
+  orderDirection?: string | null;
 }
 ```
 ### Return Type
@@ -115,10 +117,10 @@ export interface PaginatedBillingsData {
     arrearsEnv: number;
     bStatus: string;
     billAmnt: number;
-    billBrgy: string;
+    billBrgy?: string | null;
     billDate: string;
     billNo: number;
-    billPurok: string;
+    billPurok?: string | null;
     book: string;
     classType: string;
     curReading: number;
@@ -142,9 +144,9 @@ export interface PaginatedBillingsData {
     prvBillDate: string;
     prvDiscon: string;
     prvDueDate: string;
-    purokCode: string;
+    purokCode?: string | null;
     residentId: string;
-    stubOut: string;
+    stubOut?: string | null;
     totalBill: number;
     verified: string;
     waterUsage: number;
@@ -163,13 +165,15 @@ import { connectorConfig, paginatedBillings, PaginatedBillingsVariables } from '
 const paginatedBillingsVars: PaginatedBillingsVariables = {
   limit: ..., // optional
   offset: ..., // optional
+  orderByField: ..., // optional
+  orderDirection: ..., // optional
 };
 
 // Call the `paginatedBillings()` function to execute the query.
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await paginatedBillings(paginatedBillingsVars);
 // Variables can be defined inline as well.
-const { data } = await paginatedBillings({ limit: ..., offset: ..., });
+const { data } = await paginatedBillings({ limit: ..., offset: ..., orderByField: ..., orderDirection: ..., });
 // Since all variables are optional for this query, you can omit the `PaginatedBillingsVariables` argument.
 const { data } = await paginatedBillings();
 
@@ -196,12 +200,14 @@ import { connectorConfig, paginatedBillingsRef, PaginatedBillingsVariables } fro
 const paginatedBillingsVars: PaginatedBillingsVariables = {
   limit: ..., // optional
   offset: ..., // optional
+  orderByField: ..., // optional
+  orderDirection: ..., // optional
 };
 
 // Call the `paginatedBillingsRef()` function to get a reference to the query.
 const ref = paginatedBillingsRef(paginatedBillingsVars);
 // Variables can be defined inline as well.
-const ref = paginatedBillingsRef({ limit: ..., offset: ..., });
+const ref = paginatedBillingsRef({ limit: ..., offset: ..., orderByField: ..., orderDirection: ..., });
 // Since all variables are optional for this query, you can omit the `PaginatedBillingsVariables` argument.
 const ref = paginatedBillingsRef();
 
@@ -1157,13 +1163,14 @@ export interface CreateBillingFromCsvVariables {
   arrearsEnv: number;
   bStatus: string;
   billAmnt: number;
-  billBrgy: string;
+  billBrgy?: string | null;
   billDate: string;
   billNo: number;
-  billPurok: string;
+  billPurok?: string | null;
   book: string;
   classType: string;
   curReading: number;
+  custNo: number;
   discount: number;
   disconDate: string;
   dueDate: string;
@@ -1171,6 +1178,7 @@ export interface CreateBillingFromCsvVariables {
   environmentFee: number;
   fullName: string;
   mPenalty: number;
+  mrrfDue: number;
   mrSysNo: number;
   mtrNo: string;
   nrWater: number;
@@ -1178,15 +1186,16 @@ export interface CreateBillingFromCsvVariables {
   paymentDate?: string | null;
   paymentReceipt?: string | null;
   paymentStatus?: string | null;
+  penalized: number;
   preReading: number;
   prevUsed: number;
   prevUsed2: number;
   prvBillDate: string;
   prvDiscon: string;
   prvDueDate: string;
-  purokCode: string;
+  purokCode?: string | null;
   residentId: string;
-  stubOut: string;
+  stubOut?: string | null;
   totalBill: number;
   verified: string;
   waterUsage: number;
@@ -1215,13 +1224,14 @@ const createBillingFromCsvVars: CreateBillingFromCsvVariables = {
   arrearsEnv: ..., 
   bStatus: ..., 
   billAmnt: ..., 
-  billBrgy: ..., 
+  billBrgy: ..., // optional
   billDate: ..., 
   billNo: ..., 
-  billPurok: ..., 
+  billPurok: ..., // optional
   book: ..., 
   classType: ..., 
   curReading: ..., 
+  custNo: ..., 
   discount: ..., 
   disconDate: ..., 
   dueDate: ..., 
@@ -1229,6 +1239,7 @@ const createBillingFromCsvVars: CreateBillingFromCsvVariables = {
   environmentFee: ..., 
   fullName: ..., 
   mPenalty: ..., 
+  mrrfDue: ..., 
   mrSysNo: ..., 
   mtrNo: ..., 
   nrWater: ..., 
@@ -1236,15 +1247,16 @@ const createBillingFromCsvVars: CreateBillingFromCsvVariables = {
   paymentDate: ..., // optional
   paymentReceipt: ..., // optional
   paymentStatus: ..., // optional
+  penalized: ..., 
   preReading: ..., 
   prevUsed: ..., 
   prevUsed2: ..., 
   prvBillDate: ..., 
   prvDiscon: ..., 
   prvDueDate: ..., 
-  purokCode: ..., 
+  purokCode: ..., // optional
   residentId: ..., 
-  stubOut: ..., 
+  stubOut: ..., // optional
   totalBill: ..., 
   verified: ..., 
   waterUsage: ..., 
@@ -1254,7 +1266,7 @@ const createBillingFromCsvVars: CreateBillingFromCsvVariables = {
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await createBillingFromCsv(createBillingFromCsvVars);
 // Variables can be defined inline as well.
-const { data } = await createBillingFromCsv({ accountNo: ..., amortAmnt: ..., arrearsAmnt: ..., arrearsEnv: ..., bStatus: ..., billAmnt: ..., billBrgy: ..., billDate: ..., billNo: ..., billPurok: ..., book: ..., classType: ..., curReading: ..., discount: ..., disconDate: ..., dueDate: ..., duePenalty: ..., environmentFee: ..., fullName: ..., mPenalty: ..., mrSysNo: ..., mtrNo: ..., nrWater: ..., paid: ..., paymentDate: ..., paymentReceipt: ..., paymentStatus: ..., preReading: ..., prevUsed: ..., prevUsed2: ..., prvBillDate: ..., prvDiscon: ..., prvDueDate: ..., purokCode: ..., residentId: ..., stubOut: ..., totalBill: ..., verified: ..., waterUsage: ..., });
+const { data } = await createBillingFromCsv({ accountNo: ..., amortAmnt: ..., arrearsAmnt: ..., arrearsEnv: ..., bStatus: ..., billAmnt: ..., billBrgy: ..., billDate: ..., billNo: ..., billPurok: ..., book: ..., classType: ..., curReading: ..., custNo: ..., discount: ..., disconDate: ..., dueDate: ..., duePenalty: ..., environmentFee: ..., fullName: ..., mPenalty: ..., mrrfDue: ..., mrSysNo: ..., mtrNo: ..., nrWater: ..., paid: ..., paymentDate: ..., paymentReceipt: ..., paymentStatus: ..., penalized: ..., preReading: ..., prevUsed: ..., prevUsed2: ..., prvBillDate: ..., prvDiscon: ..., prvDueDate: ..., purokCode: ..., residentId: ..., stubOut: ..., totalBill: ..., verified: ..., waterUsage: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -1283,13 +1295,14 @@ const createBillingFromCsvVars: CreateBillingFromCsvVariables = {
   arrearsEnv: ..., 
   bStatus: ..., 
   billAmnt: ..., 
-  billBrgy: ..., 
+  billBrgy: ..., // optional
   billDate: ..., 
   billNo: ..., 
-  billPurok: ..., 
+  billPurok: ..., // optional
   book: ..., 
   classType: ..., 
   curReading: ..., 
+  custNo: ..., 
   discount: ..., 
   disconDate: ..., 
   dueDate: ..., 
@@ -1297,6 +1310,7 @@ const createBillingFromCsvVars: CreateBillingFromCsvVariables = {
   environmentFee: ..., 
   fullName: ..., 
   mPenalty: ..., 
+  mrrfDue: ..., 
   mrSysNo: ..., 
   mtrNo: ..., 
   nrWater: ..., 
@@ -1304,15 +1318,16 @@ const createBillingFromCsvVars: CreateBillingFromCsvVariables = {
   paymentDate: ..., // optional
   paymentReceipt: ..., // optional
   paymentStatus: ..., // optional
+  penalized: ..., 
   preReading: ..., 
   prevUsed: ..., 
   prevUsed2: ..., 
   prvBillDate: ..., 
   prvDiscon: ..., 
   prvDueDate: ..., 
-  purokCode: ..., 
+  purokCode: ..., // optional
   residentId: ..., 
-  stubOut: ..., 
+  stubOut: ..., // optional
   totalBill: ..., 
   verified: ..., 
   waterUsage: ..., 
@@ -1321,7 +1336,7 @@ const createBillingFromCsvVars: CreateBillingFromCsvVariables = {
 // Call the `createBillingFromCsvRef()` function to get a reference to the mutation.
 const ref = createBillingFromCsvRef(createBillingFromCsvVars);
 // Variables can be defined inline as well.
-const ref = createBillingFromCsvRef({ accountNo: ..., amortAmnt: ..., arrearsAmnt: ..., arrearsEnv: ..., bStatus: ..., billAmnt: ..., billBrgy: ..., billDate: ..., billNo: ..., billPurok: ..., book: ..., classType: ..., curReading: ..., discount: ..., disconDate: ..., dueDate: ..., duePenalty: ..., environmentFee: ..., fullName: ..., mPenalty: ..., mrSysNo: ..., mtrNo: ..., nrWater: ..., paid: ..., paymentDate: ..., paymentReceipt: ..., paymentStatus: ..., preReading: ..., prevUsed: ..., prevUsed2: ..., prvBillDate: ..., prvDiscon: ..., prvDueDate: ..., purokCode: ..., residentId: ..., stubOut: ..., totalBill: ..., verified: ..., waterUsage: ..., });
+const ref = createBillingFromCsvRef({ accountNo: ..., amortAmnt: ..., arrearsAmnt: ..., arrearsEnv: ..., bStatus: ..., billAmnt: ..., billBrgy: ..., billDate: ..., billNo: ..., billPurok: ..., book: ..., classType: ..., curReading: ..., custNo: ..., discount: ..., disconDate: ..., dueDate: ..., duePenalty: ..., environmentFee: ..., fullName: ..., mPenalty: ..., mrrfDue: ..., mrSysNo: ..., mtrNo: ..., nrWater: ..., paid: ..., paymentDate: ..., paymentReceipt: ..., paymentStatus: ..., penalized: ..., preReading: ..., prevUsed: ..., prevUsed2: ..., prvBillDate: ..., prvDiscon: ..., prvDueDate: ..., purokCode: ..., residentId: ..., stubOut: ..., totalBill: ..., verified: ..., waterUsage: ..., });
 
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);

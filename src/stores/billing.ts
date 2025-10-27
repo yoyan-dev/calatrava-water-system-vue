@@ -5,10 +5,21 @@ import type { StoreResponse } from '@/types/store-response';
 import { billingRepository } from '@/repositories/billingRepository';
 import { billingRepository as billRepo } from '@/repositories/v2/billingRepository';
 import { billingRepository as billGraph } from '@/repositories/graph/billingRepository';
+import type { PaginatedBillingsData } from '@/dataconnect-generated';
+
+type BillingItem = PaginatedBillingsData['billingFromCsvs'][number];
+
+interface PaginateOptions {
+	searchQuery?: string;
+	limit?: number;
+	offset?: number;
+	orderByField?: string;
+	orderDirection?: 'ASC' | 'DESC';
+}
 
 export const useBillingStore = defineStore('billing', () => {
 	// State
-	const billings = ref<Billing[]>([]);
+	const billings = ref<BillingItem[]>([]);
 	const billing = ref<Billing>();
 	const isLoading = ref(false);
 	const totalBillings = ref(0);
@@ -78,11 +89,31 @@ export const useBillingStore = defineStore('billing', () => {
 		}
 	}
 
-	async function fetchBilling(uid: string) {
+	async function fetchPaginateBillings({
+		searchQuery,
+		limit = 10,
+		offset = 0,
+		orderByField = 'bill_no',
+		orderDirection = 'DESC',
+	}: PaginateOptions) {
 		isLoading.value = true;
-		const response = await billingRepository.fetchBilling(uid);
-		billing.value = response?.data;
-		isLoading.value = false;
+		if (searchQuery) return;
+
+		try {
+			const data = await billGraph.paginateBilling(
+				limit,
+				offset,
+				orderByField,
+				orderDirection,
+			);
+			if (data) {
+				billings.value = data;
+			}
+		} catch (error) {
+			console.error('Error fetching billings:', error);
+		} finally {
+			isLoading.value = false;
+		}
 	}
 
 	async function addBillings(payload: File): Promise<StoreResponse> {
@@ -116,6 +147,8 @@ export const useBillingStore = defineStore('billing', () => {
 				status: 'error',
 				message: 'Failed to upload CSV',
 			};
+		} finally {
+			isLoading.value = false;
 		}
 	}
 
@@ -186,6 +219,7 @@ export const useBillingStore = defineStore('billing', () => {
 		lastDoc,
 		lastFirstIndex,
 		totalBillings,
+		fetchPaginateBillings,
 		fetchBillings,
 		addBillings,
 		updateBilling,

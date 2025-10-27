@@ -1,48 +1,52 @@
-query PaginatedBillings($limit: Int = 10, $offset: Int = 0)
-@auth(expr: "auth.token.role == 'admin'") {
-  billingFromCsvs(limit: $limit, orderBy: [{ billNo: DESC }], offset: $offset) {
-    accountNo
-    amortAmnt
-    arrearsAmnt
-    arrearsEnv
-    bStatus
-    billAmnt
-    billBrgy
-    billDate
-    billNo
-    billPurok
-    book
-    classType
-    curReading
-    discount
-    disconDate
-    dueDate
-    duePenalty
-    environmentFee
-    fullName
-    mPenalty
-    mrSysNo
-    mtrNo
-    nrWater
-    paid
-    paymentDate
-    paymentReceipt
-    paymentStatus
-    preReading
-    prevUsed
-    prevUsed2
-    prvBillDate
-    prvDiscon
-    prvDueDate
-    purokCode
-    residentId
-    stubOut
-    totalBill
-    verified
-    waterUsage
-    createdAt
-    updatedAt
-  }
+query PaginatedBillings(
+	$limit: Int = 10
+	$offset: Int = 0
+	$orderByField: String
+	$orderDirection: String
+) @auth(expr: "auth.token.role == 'admin'") {
+	billingFromCsvs(limit: $limit, orderBy: [{ billNo: DESC }], offset: $offset) {
+		accountNo
+		amortAmnt
+		arrearsAmnt
+		arrearsEnv
+		bStatus
+		billAmnt
+		billBrgy
+		billDate
+		billNo
+		billPurok
+		book
+		classType
+		curReading
+		discount
+		disconDate
+		dueDate
+		duePenalty
+		environmentFee
+		fullName
+		mPenalty
+		mrSysNo
+		mtrNo
+		nrWater
+		paid
+		paymentDate
+		paymentReceipt
+		paymentStatus
+		preReading
+		prevUsed
+		prevUsed2
+		prvBillDate
+		prvDiscon
+		prvDueDate
+		purokCode
+		residentId
+		stubOut
+		totalBill
+		verified
+		waterUsage
+		createdAt
+		updatedAt
+	}
 }
 
 query GetBooks @auth(level: PUBLIC) {

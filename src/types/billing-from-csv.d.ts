@@ -1,4 +1,4 @@
-export interface CreateBillingFromCsvVariables {
+export interface BillingFromCsv {
 	accountNo: number; // Always present in CSV, non-nullable in mutation
 	amortAmnt: number; // Present in CSV (e.g., 0), non-nullable
 	arrearsAmnt: number; // Present in CSV (e.g., 678, 0), non-nullable
@@ -12,6 +12,7 @@ export interface CreateBillingFromCsvVariables {
 	book: string; // Always present in CSV (e.g., "CALAMPISAWAN"), non-nullable
 	classType: string; // Always present in CSV (e.g., "RESIDENTIAL"), non-nullable
 	curReading: number; // Always present in CSV (e.g., 876, 2747), non-nullable
+	custNo: number; // non-nullable
 	discount: number; // Present in CSV (e.g., 0), non-nullable
 	disconDate: string; // Always present in CSV (e.g., "10/17/2025"), non-nullable
 	dueDate: string; // Always present in CSV (e.g., "10/14/2025"), non-nullable
@@ -20,12 +21,14 @@ export interface CreateBillingFromCsvVariables {
 	fullName: string; // Always present in CSV (e.g., "JESSICA  ABELLON"), non-nullable
 	mPenalty: number; // Present in CSV (e.g., 0), non-nullable
 	mrSysNo: number; // Always present in CSV (e.g., 54476), non-nullable
+	mrrfDue?: number; // "/  /" in CSV, should be optional
 	mtrNo: string; // Always present in CSV (e.g., "180405339"), non-nullable
 	nrWater: number; // Present in CSV (e.g., 0), non-nullable
 	paid: string; // Always present in CSV (e.g., "F"), non-nullable
 	paymentDate?: string | null; // Not in CSV, nullable in mutation
 	paymentReceipt?: string | null; // Not in CSV, nullable in mutation
 	paymentStatus?: string | null; // Not in CSV, nullable in mutation
+	penalized?: number; // "/  /" in CSV, should be optional
 	preReading: number; // Always present in CSV (e.g., 850, 2732), non-nullable
 	prevUsed: number; // Present in CSV (e.g., 0), non-nullable
 	prevUsed2: number; // Present in CSV (e.g., 0), non-nullable

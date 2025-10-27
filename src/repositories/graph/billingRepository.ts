@@ -1,5 +1,9 @@
-import { createBillingFromCsv } from '@/dataconnect-generated';
-import type { CreateBillingFromCsvVariables } from '@/types/billing-from-csv';
+import {
+	createBillingFromCsv,
+	paginatedBillings,
+	type CreateBillingFromCsvVariables,
+} from '@/dataconnect-generated';
+import type { BillingFromCsv } from '@/types/billing-from-csv';
 
 class BillingRepository {
 	async addBillingFromCsv(payload: FormData) {
@@ -31,6 +35,7 @@ class BillingRepository {
 					book: '',
 					classType: '',
 					curReading: 0,
+					custNo: 0,
 					discount: 0,
 					disconDate: '',
 					dueDate: '',
@@ -38,6 +43,7 @@ class BillingRepository {
 					environmentFee: 0,
 					fullName: '',
 					mPenalty: 0,
+					mrrfDue: 0,
 					mrSysNo: 0,
 					mtrNo: '',
 					nrWater: 0,
@@ -45,6 +51,7 @@ class BillingRepository {
 					paymentDate: null,
 					paymentReceipt: null,
 					paymentStatus: null,
+					penalized: 0,
 					preReading: 0,
 					prevUsed: 0,
 					prevUsed2: 0,
@@ -61,6 +68,7 @@ class BillingRepository {
 
 				header.forEach((key, index) => {
 					const value = values[index]?.trim() || '';
+
 					switch (key) {
 						case 'bill_no':
 							data.billNo = parseInt(value) || 0;
@@ -132,13 +140,13 @@ class BillingRepository {
 							data.preReading = parseInt(value) || 0;
 							break;
 						case 'purokcode':
-							data.purokCode = value;
+							data.purokCode = value || '';
 							break;
 						case 'billpurok':
-							data.billPurok = value;
+							data.billPurok = value || '';
 							break;
 						case 'billbrgy':
-							data.billBrgy = value;
+							data.billBrgy = value || '';
 							break;
 						case 'custno':
 							data.custNo = parseInt(value) || 0;
@@ -159,7 +167,7 @@ class BillingRepository {
 							data.prvDiscon = value;
 							break;
 						case 'stubout':
-							data.stubOut = value;
+							data.stubOut = value || '';
 							break;
 						case 'amortamnt':
 							data.amortAmnt = parseFloat(value) || 0;
@@ -173,71 +181,8 @@ class BillingRepository {
 					}
 				});
 
-				// Validate required fields
-				const requiredFields: (keyof CreateBillingFromCsvVariables)[] = [
-					'accountNo',
-					'amortAmnt',
-					'arrearsAmnt',
-					'arrearsEnv',
-					'bStatus',
-					'billAmnt',
-					'billBrgy',
-					'billDate',
-					'billNo',
-					'billPurok',
-					'book',
-					'classType',
-					'curReading',
-					'discount',
-					'disconDate',
-					'dueDate',
-					'duePenalty',
-					'environmentFee',
-					'fullName',
-					'mPenalty',
-					'mrSysNo',
-					'mtrNo',
-					'nrWater',
-					'paid',
-					'preReading',
-					'prevUsed',
-					'prevUsed2',
-					'prvBillDate',
-					'prvDiscon',
-					'prvDueDate',
-					'purokCode',
-					'residentId',
-					'stubOut',
-					'totalBill',
-					'verified',
-					'waterUsage',
-				];
-
-				for (const field of requiredFields) {
-					if (
-						data[field] === '' ||
-						(typeof data[field] === 'number' &&
-							data[field] === 0 &&
-							field !== 'amortAmnt' &&
-							field !== 'arrearsAmnt' &&
-							field !== 'arrearsEnv' &&
-							field !== 'billAmnt' &&
-							field !== 'discount' &&
-							field !== 'duePenalty' &&
-							field !== 'environmentFee' &&
-							field !== 'mPenalty' &&
-							field !== 'nrWater' &&
-							field !== 'prevUsed' &&
-							field !== 'prevUsed2' &&
-							field !== 'totalBill' &&
-							field !== 'waterUsage')
-					) {
-						throw new Error(`Missing or invalid required field: ${field}`);
-					}
-				}
-
-				// Call the mutation
-				await createBillingFromCsv(data);
+				const res = await createBillingFromCsv(data);
+				console.log(res);
 			}
 
 			return {
@@ -251,6 +196,30 @@ class BillingRepository {
 				error,
 			);
 			throw new Error(`Failed to process CSV: ${error}`);
+		}
+	}
+
+	async paginateBilling(
+		limit = 10,
+		offset = 0,
+		orderByField = 'billNo',
+		orderDirection = 'DESC',
+	) {
+		try {
+			const response = await paginatedBillings({
+				limit,
+				offset,
+				orderByField,
+				orderDirection,
+			});
+			if (response.data.billingFromCsvs.length > 0) {
+				return response.data.billingFromCsvs;
+			} else {
+				return [];
+			}
+		} catch (error) {
+			console.error('Error fetching billings:', error);
+			return [];
 		}
 	}
 }

@@ -40,13 +40,14 @@ export interface CreateBillingFromCsvVariables {
   arrearsEnv: number;
   bStatus: string;
   billAmnt: number;
-  billBrgy: string;
+  billBrgy?: string | null;
   billDate: string;
   billNo: number;
-  billPurok: string;
+  billPurok?: string | null;
   book: string;
   classType: string;
   curReading: number;
+  custNo: number;
   discount: number;
   disconDate: string;
   dueDate: string;
@@ -54,6 +55,7 @@ export interface CreateBillingFromCsvVariables {
   environmentFee: number;
   fullName: string;
   mPenalty: number;
+  mrrfDue: number;
   mrSysNo: number;
   mtrNo: string;
   nrWater: number;
@@ -61,15 +63,16 @@ export interface CreateBillingFromCsvVariables {
   paymentDate?: string | null;
   paymentReceipt?: string | null;
   paymentStatus?: string | null;
+  penalized: number;
   preReading: number;
   prevUsed: number;
   prevUsed2: number;
   prvBillDate: string;
   prvDiscon: string;
   prvDueDate: string;
-  purokCode: string;
+  purokCode?: string | null;
   residentId: string;
-  stubOut: string;
+  stubOut?: string | null;
   totalBill: number;
   verified: string;
   waterUsage: number;
@@ -192,10 +195,10 @@ export interface PaginatedBillingsData {
     arrearsEnv: number;
     bStatus: string;
     billAmnt: number;
-    billBrgy: string;
+    billBrgy?: string | null;
     billDate: string;
     billNo: number;
-    billPurok: string;
+    billPurok?: string | null;
     book: string;
     classType: string;
     curReading: number;
@@ -219,9 +222,9 @@ export interface PaginatedBillingsData {
     prvBillDate: string;
     prvDiscon: string;
     prvDueDate: string;
-    purokCode: string;
+    purokCode?: string | null;
     residentId: string;
-    stubOut: string;
+    stubOut?: string | null;
     totalBill: number;
     verified: string;
     waterUsage: number;
@@ -233,6 +236,8 @@ export interface PaginatedBillingsData {
 export interface PaginatedBillingsVariables {
   limit?: number | null;
   offset?: number | null;
+  orderByField?: string | null;
+  orderDirection?: string | null;
 }
 
 export interface Resident_Key {
