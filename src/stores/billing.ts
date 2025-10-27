@@ -90,7 +90,7 @@ export const useBillingStore = defineStore('billing', () => {
 			isLoading.value = true;
 			const formData = new FormData();
 			formData.append('file', payload);
-			const response = await billGraph.addBillings(formData);
+			const response = await billGraph.addBillingFromCsv(formData);
 			if (response?.statusCode == 200) {
 				isLoading.value = false;
 				resetPagination();

@@ -14,8 +14,20 @@ If a user is not using a supported framework, they can use the generated SDK dir
 Here's an example of how to use it with the first 5 operations:
 
 ```js
-import { paginatedBillings, getBooks, getBookByName, getResidentByAccountNo, getResidents, createBook, createResident, createBilling } from '@dataconnect/generated';
+import { createBook, createResident, createBilling, createBillingFromCsv, paginatedBillings, getBooks, getBookByName, getResidentByAccountNo, getResidents } from '@dataconnect/generated';
 
+
+// Operation CreateBook:  For variables, look at type CreateBookVars in ../index.d.ts
+const { data } = await CreateBook(dataConnect, createBookVars);
+
+// Operation CreateResident:  For variables, look at type CreateResidentVars in ../index.d.ts
+const { data } = await CreateResident(dataConnect, createResidentVars);
+
+// Operation CreateBilling:  For variables, look at type CreateBillingVars in ../index.d.ts
+const { data } = await CreateBilling(dataConnect, createBillingVars);
+
+// Operation CreateBillingFromCsv:  For variables, look at type CreateBillingFromCsvVars in ../index.d.ts
+const { data } = await CreateBillingFromCsv(dataConnect, createBillingFromCsvVars);
 
 // Operation PaginatedBillings:  For variables, look at type PaginatedBillingsVars in ../index.d.ts
 const { data } = await PaginatedBillings(dataConnect, paginatedBillingsVars);
@@ -31,15 +43,6 @@ const { data } = await GetResidentByAccountNo(dataConnect, getResidentByAccountN
 
 // Operation GetResidents: 
 const { data } = await GetResidents(dataConnect);
-
-// Operation CreateBook:  For variables, look at type CreateBookVars in ../index.d.ts
-const { data } = await CreateBook(dataConnect, createBookVars);
-
-// Operation CreateResident:  For variables, look at type CreateResidentVars in ../index.d.ts
-const { data } = await CreateResident(dataConnect, createResidentVars);
-
-// Operation CreateBilling:  For variables, look at type CreateBillingVars in ../index.d.ts
-const { data } = await CreateBilling(dataConnect, createBillingVars);
 
 
 ```

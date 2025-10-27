@@ -1,157 +1,256 @@
-import type { Billing } from '@/types/billing';
-import {
-	createBook,
-	createBilling,
-	createResident,
-	getBookByName,
-	getResidentByAccountNo,
-} from '@/dataconnect-generated';
+import { createBillingFromCsv } from '@/dataconnect-generated';
+import type { CreateBillingFromCsvVariables } from '@/types/billing-from-csv';
 
 class BillingRepository {
-	private parseCsvBilling(csv: string): Billing[] {
-		const lines = csv.trim().split('\n');
-		const headers = lines[0].split(',').map((h) => h.trim());
-		return lines.slice(1).map((line) => {
-			const values = line.split(',').map((v) => v.trim());
-			const obj: any = {};
-			headers.forEach((h, i) => {
-				obj[h] = values[i] || '';
-			});
-			return obj;
-		});
-	}
-
-	async addBillings(payload: FormData) {
+	async addBillingFromCsv(payload: FormData) {
 		try {
 			const file = payload.get('file') as File;
 			if (!file) throw new Error('No file uploaded');
 
-			const csvText = await file.text();
-			const data: Billing[] = this.parseCsvBilling(csvText);
-			if (!data.length) throw new Error('Empty CSV file');
+			// Read the CSV file content
+			const text = await file.text();
+			const rows = text.trim().split('\n').slice(1); // Skip header row
+			const header = text.trim().split('\n')[0].split(',');
 
-			const BATCH_SIZE = 500;
-			const allBatches: Promise<any>[] = [];
+			// Process each row
+			for (const row of rows) {
+				const values = row.split(',');
 
-			for (let i = 0; i < data.length; i += BATCH_SIZE) {
-				const chunk = data.slice(i, i + BATCH_SIZE);
-				const batchPromises = chunk.map(async (item) => {
-					const {
-						book,
-						fullname,
-						accountno,
-						waterusage,
-						arrearsenv,
-						due_penalty,
-						classtype,
-						billamnt,
-						...billingData
-					} = item;
+				// Map CSV headers to mutation variables (snake_case to camelCase)
+				const data: CreateBillingFromCsvVariables = {
+					accountNo: 0,
+					amortAmnt: 0,
+					arrearsAmnt: 0,
+					arrearsEnv: 0,
+					bStatus: '',
+					billAmnt: 0,
+					billBrgy: '',
+					billDate: '',
+					billNo: 0,
+					billPurok: '',
+					book: '',
+					classType: '',
+					curReading: 0,
+					discount: 0,
+					disconDate: '',
+					dueDate: '',
+					duePenalty: 0,
+					environmentFee: 0,
+					fullName: '',
+					mPenalty: 0,
+					mrSysNo: 0,
+					mtrNo: '',
+					nrWater: 0,
+					paid: '',
+					paymentDate: null,
+					paymentReceipt: null,
+					paymentStatus: null,
+					preReading: 0,
+					prevUsed: 0,
+					prevUsed2: 0,
+					prvBillDate: '',
+					prvDiscon: '',
+					prvDueDate: '',
+					purokCode: '',
+					residentId: '',
+					stubOut: '',
+					totalBill: 0,
+					verified: '',
+					waterUsage: 0,
+				};
 
-					// Require essential fields including classtype to satisfy CreateResidentVariables.type requirements
-					if (!accountno || !fullname || !book || !classtype) {
-						return; // Skip invalid rows
-					}
-
-					// Use sequential awaits for dependent mutations
-					try {
-						let bookId;
-						let residentId;
-
-						const bookResult = await createBook({
-							name: book,
-						});
-
-						if (!bookResult.data.book_insert) {
-							const bookResult = await getBookByName({
-								name: book,
-							});
-							if (!bookResult) {
-								return;
-							}
-							bookId = bookResult.data.books[0].id;
-						}
-
-						const residentResult = await createResident({
-							accountNo: Number(accountno),
-							bookId: bookResult.data.book_insert.id,
-							fullName: fullname,
-							classType: classtype as string,
-						});
-
-						if (!residentResult.data.resident_insert) {
-							const residentResult = await getResidentByAccountNo({
-								accountNo: Number(accountno),
-							});
-							if (!residentResult) {
-								return;
-							}
-							residentId = residentResult.data.residents[0].id;
-						}
-
-						if (bookId && residentId) {
-							const result = await createBilling({
-								billNo: Number(item.billNo),
-								billDate: item.billDate,
-								dueDate: item.dueDate,
-								bStatus: item.bStatus as string,
-								mrSysNo: Number(item.mrSysNo),
-								penalized: item.penalized as string,
-								mPenalty: Number(item.mPenalty),
-								discount: Number(item.discount),
-								paid: item.paid as string,
-								verified: item.verified as string,
-								arrearsAmt: Number(item.arrearsamt),
-								mrrfDue: Number(item.mrrfdue),
-								curReading: Number(item.curreading),
-								disconDate: item.disconDate,
-								mtrNo: item.mtrNo as string,
-								preReading: Number(item.prereading),
-								purokCode: item.purokcode as string,
-								billPurok: item.billpurok as string,
-								billBrgy: item.billbrgy as string,
-								prevUsed: Number(item.prevused),
-								prevUsed2: Number(item.prevused2),
-								prvBillDate: item.prvbilldate as string,
-								prvDueDate: item.prvduedate as string,
-								prvDiscon: item.prvdiscon as string,
-								stubOut: item.stubout as string,
-								amortAmt: Number(item.amortamnt),
-								nrWater: Number(item.nrwater),
-								residentId: residentId,
-								bookId: bookId,
-								billAmt: item.billamnt,
-								duePenalty: Number(item.due_penalty),
-								arrearsEnv: Number(item.arrearsenv),
-								environmentFee: item.environmentFee,
-								totalBill: Number(item.totalBill),
-								waterUsage: Number(item.waterusage),
-								paymentReceipt: item.paymentReceipt,
-							});
-						}
-					} catch (error) {
-						console.error(
-							`Error processing row with account number ${accountno}:`,
-							error,
-						);
+				header.forEach((key, index) => {
+					const value = values[index]?.trim() || '';
+					switch (key) {
+						case 'bill_no':
+							data.billNo = parseInt(value) || 0;
+							break;
+						case 'accountno':
+							data.accountNo = parseInt(value) || 0;
+							break;
+						case 'bill_date':
+							data.billDate = value;
+							break;
+						case 'due_date':
+							data.dueDate = value;
+							break;
+						case 'b_status':
+							data.bStatus = value;
+							break;
+						case 'mr_sys_no':
+							data.mrSysNo = parseInt(value) || 0;
+							break;
+						case 'due_penalty':
+							data.duePenalty = parseFloat(value) || 0;
+							break;
+						case 'penalized':
+							data.penalized = parseInt(value) || 0;
+							break;
+						case 'm_penalty':
+							data.mPenalty = parseFloat(value) || 0;
+							break;
+						case 'discount':
+							data.discount = parseFloat(value) || 0;
+							break;
+						case 'paid':
+							data.paid = value;
+							break;
+						case 'verified':
+							data.verified = value;
+							break;
+						case 'billamnt':
+							data.billAmnt = parseFloat(value) || 0;
+							break;
+						case 'arrearsamt':
+							data.arrearsAmnt = parseFloat(value) || 0;
+							break;
+						case 'mrrfdue':
+							data.mrrfDue = parseFloat(value) || 0;
+							break;
+						case 'waterusage':
+							data.waterUsage = parseFloat(value) || 0;
+							break;
+						case 'curreading':
+							data.curReading = parseInt(value) || 0;
+							break;
+						case 'discon_date':
+							data.disconDate = value;
+							break;
+						case 'mtr_no':
+							data.mtrNo = value;
+							break;
+						case 'book':
+							data.book = value;
+							break;
+						case 'classtype':
+							data.classType = value;
+							break;
+						case 'fullname':
+							data.fullName = value;
+							break;
+						case 'prereading':
+							data.preReading = parseInt(value) || 0;
+							break;
+						case 'purokcode':
+							data.purokCode = value;
+							break;
+						case 'billpurok':
+							data.billPurok = value;
+							break;
+						case 'billbrgy':
+							data.billBrgy = value;
+							break;
+						case 'custno':
+							data.custNo = parseInt(value) || 0;
+							break;
+						case 'prevused':
+							data.prevUsed = parseFloat(value) || 0;
+							break;
+						case 'prevused2':
+							data.prevUsed2 = parseFloat(value) || 0;
+							break;
+						case 'prvbilldate':
+							data.prvBillDate = value;
+							break;
+						case 'prvduedate':
+							data.prvDueDate = value;
+							break;
+						case 'prvdiscon':
+							data.prvDiscon = value;
+							break;
+						case 'stubout':
+							data.stubOut = value;
+							break;
+						case 'amortamnt':
+							data.amortAmnt = parseFloat(value) || 0;
+							break;
+						case 'nrwater':
+							data.nrWater = parseFloat(value) || 0;
+							break;
+						case 'arrearsenv':
+							data.arrearsEnv = parseFloat(value) || 0;
+							break;
 					}
 				});
-				allBatches.push(Promise.all(batchPromises));
+
+				// Validate required fields
+				const requiredFields: (keyof CreateBillingFromCsvVariables)[] = [
+					'accountNo',
+					'amortAmnt',
+					'arrearsAmnt',
+					'arrearsEnv',
+					'bStatus',
+					'billAmnt',
+					'billBrgy',
+					'billDate',
+					'billNo',
+					'billPurok',
+					'book',
+					'classType',
+					'curReading',
+					'discount',
+					'disconDate',
+					'dueDate',
+					'duePenalty',
+					'environmentFee',
+					'fullName',
+					'mPenalty',
+					'mrSysNo',
+					'mtrNo',
+					'nrWater',
+					'paid',
+					'preReading',
+					'prevUsed',
+					'prevUsed2',
+					'prvBillDate',
+					'prvDiscon',
+					'prvDueDate',
+					'purokCode',
+					'residentId',
+					'stubOut',
+					'totalBill',
+					'verified',
+					'waterUsage',
+				];
+
+				for (const field of requiredFields) {
+					if (
+						data[field] === '' ||
+						(typeof data[field] === 'number' &&
+							data[field] === 0 &&
+							field !== 'amortAmnt' &&
+							field !== 'arrearsAmnt' &&
+							field !== 'arrearsEnv' &&
+							field !== 'billAmnt' &&
+							field !== 'discount' &&
+							field !== 'duePenalty' &&
+							field !== 'environmentFee' &&
+							field !== 'mPenalty' &&
+							field !== 'nrWater' &&
+							field !== 'prevUsed' &&
+							field !== 'prevUsed2' &&
+							field !== 'totalBill' &&
+							field !== 'waterUsage')
+					) {
+						throw new Error(`Missing or invalid required field: ${field}`);
+					}
+				}
+
+				// Call the mutation
+				await createBillingFromCsv(data);
 			}
 
-			await Promise.all(allBatches); // Wait for all batches to complete
 			return {
 				success: true,
+				message: 'Billing records created successfully',
 				statusCode: 200,
-				message: 'Billings uploaded successfully',
 			};
 		} catch (error) {
-			console.error('Error uploading billings:', error);
-			return {
-				success: false,
-				statusCode: 500,
-				message: 'Failed to upload billings',
-			};
+			console.error(
+				'Error processing CSV and creating billing records:',
+				error,
+			);
+			throw new Error(`Failed to process CSV: ${error}`);
 		}
 	}
 }
