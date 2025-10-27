@@ -10,7 +10,6 @@ import type { PaginatedBillingsData } from '@/dataconnect-generated';
 type BillingItem = PaginatedBillingsData['billingFromCsvs'][number];
 
 interface PaginateOptions {
-	searchQuery?: string;
 	limit?: number;
 	offset?: number;
 	orderByField?: string;
@@ -34,70 +33,20 @@ export const useBillingStore = defineStore('billing', () => {
 		lastDoc.value = null;
 	}
 
-	async function fetchBillings({
-		searchQuery,
-		firstIndex = 0,
-		orderByField = 'bill_no',
-		orderDirection = 'desc',
-		limit = 10,
-	}: {
-		searchQuery?: string;
-		firstIndex?: number;
-		orderByField?: string;
-		orderDirection?: 'asc' | 'desc';
-		limit?: number;
-	}) {
-		isLoading.value = true;
+	async function fetchCountBillings() {
+		const count = await billRepo.getCountBillings();
+		console.log(count);
 
-		try {
-			if (searchQuery) {
-				return;
-			}
-
-			let response;
-			if (lastFirstIndex.value !== null) {
-				const forward = firstIndex > lastFirstIndex.value;
-
-				response = await billRepo.paginateBillings({
-					limit,
-					forward,
-					cursorDoc: forward ? lastDoc.value : startDoc.value,
-					orderByField,
-					orderDirection,
-				});
-			} else {
-				response = await billRepo.paginateBillings({
-					limit,
-					orderByField,
-					orderDirection,
-				});
-			}
-
-			if (response) {
-				if (response?.data) {
-					billings.value = response.data;
-					totalBillings.value = response.totalBillings;
-					lastFirstIndex.value = firstIndex;
-					startDoc.value = response.startDoc;
-					lastDoc.value = response.lastDoc;
-				}
-			}
-		} catch (error) {
-			console.error('Error fetching billings:', error);
-		} finally {
-			isLoading.value = false;
-		}
+		totalBillings.value = count;
 	}
 
 	async function fetchPaginateBillings({
-		searchQuery,
 		limit = 10,
 		offset = 0,
 		orderByField = 'bill_no',
 		orderDirection = 'DESC',
 	}: PaginateOptions) {
 		isLoading.value = true;
-		if (searchQuery) return;
 
 		try {
 			const data = await billGraph.paginateBilling(
@@ -219,8 +168,8 @@ export const useBillingStore = defineStore('billing', () => {
 		lastDoc,
 		lastFirstIndex,
 		totalBillings,
+		fetchCountBillings,
 		fetchPaginateBillings,
-		fetchBillings,
 		addBillings,
 		updateBilling,
 		deleteBilling,

@@ -12,9 +12,10 @@
 			:rows="rows"
 			paginator
 			paginatorPosition="bottom"
+			:rowsPerPageOptions="[5, 10, 20, 50]"
 			:totalRecords="store.totalBillings"
 			currentPageReportTemplate="{first} to {last} of {totalRecords}"
-			paginatorTemplate="FirstPageLink PrevPageLink NextPageLink LastPageLink CurrentPageReport"
+			paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport"
 			@page="onPage">
 			<template #empty>
 				<div class="flex items-center justify-center p-4">
@@ -30,12 +31,19 @@
 				style="width: 5rem" />
 			<Column
 				class="font-medium"
-				header="Bill Number"
+				header="Bill No."
 				field="billNo" />
 			<Column
 				class="text-primary-600 font-bold"
-				header="Account Number"
+				header="Account No."
 				field="accountNo" />
+
+			<Column header="Customer Name">
+				<template #body="slotProps">
+					<span class="uppercase">{{ slotProps.data.fullName }}</span>
+				</template>
+			</Column>
+
 			<Column
 				header="Billing Date"
 				field="billDate">
@@ -63,12 +71,7 @@
 			</Column>
 			<Column header="Water Usage">
 				<template #body="slotProps">
-					<span>{{ slotProps.data.waterUsage }} L</span>
-				</template>
-			</Column>
-			<Column header="Customer Name">
-				<template #body="slotProps">
-					<span>{{ slotProps.data.fullName }}</span>
+					<div class="text-center">{{ slotProps.data.waterUsage }}</div>
 				</template>
 			</Column>
 			<Column header="Actions">
@@ -120,18 +123,19 @@
 
 	const onPage = (event: any) => {
 		console.log(event);
-		const firstIndex = event.first;
+
+		const offset = event.first;
 		const orderByField = event.sortField ?? 'bill_no';
-		const orderDirection = event.sortOrder === 1 ? 'asc' : 'desc';
+		const orderDirection = event.sortOrder === 1 ? 'ASC' : 'DESC';
 		const limit = event.rows;
 
 		first.value = event.first; // Keep DataTable in sync
 
-		store.fetchBillings({
-			firstIndex,
+		store.fetchPaginateBillings({
+			limit,
+			offset,
 			orderByField,
 			orderDirection,
-			limit,
 		});
 	};
 
@@ -143,5 +147,7 @@
 			orderByField: 'billNo',
 			orderDirection: 'DESC',
 		});
+
+		store.fetchCountBillings();
 	});
 </script>

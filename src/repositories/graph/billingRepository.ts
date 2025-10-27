@@ -1,11 +1,21 @@
 import {
+	countBillingFromCsv,
 	createBillingFromCsv,
 	paginatedBillings,
 	type CreateBillingFromCsvVariables,
 } from '@/dataconnect-generated';
-import type { BillingFromCsv } from '@/types/billing-from-csv';
 
 class BillingRepository {
+	async countBillings() {
+		try {
+			const response = await countBillingFromCsv();
+			return response.data;
+		} catch (error) {
+			console.error('Error counting billings:', error);
+			return 0;
+		}
+	}
+
 	async addBillingFromCsv(payload: FormData) {
 		try {
 			const file = payload.get('file') as File;
@@ -59,7 +69,6 @@ class BillingRepository {
 					prvDiscon: '',
 					prvDueDate: '',
 					purokCode: '',
-					residentId: '',
 					stubOut: '',
 					totalBill: 0,
 					verified: '',
@@ -182,7 +191,6 @@ class BillingRepository {
 				});
 
 				const res = await createBillingFromCsv(data);
-				console.log(res);
 			}
 
 			return {

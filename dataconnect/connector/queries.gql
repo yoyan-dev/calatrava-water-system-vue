@@ -39,7 +39,6 @@ query PaginatedBillings(
 		prvDiscon
 		prvDueDate
 		purokCode
-		residentId
 		stubOut
 		totalBill
 		verified
@@ -49,34 +48,8 @@ query PaginatedBillings(
 	}
 }
 
-query GetBooks @auth(level: PUBLIC) {
-	books {
-		id
-		name
-	}
-}
-
-query GetBookByName($name: String!) @auth(level: PUBLIC) {
-	books(where: { name: { eq: $name } }) {
-		id
-	}
-}
-
-query GetResidentByAccountNo($accountNo: Int!)
-@auth(expr: "(auth.token.role == 'admin') || (auth != null)") {
-	residents(where: { accountNo: { eq: $accountNo } }) {
-		id
-	}
-}
-
-query GetResidents @auth(expr: "auth.token.role == 'admin'") {
-	residents {
-		id
-		accountNo
-		fullName
-		classType
-		book {
-			name
-		}
+query CountBillingFromCsv @auth(expr: "auth.token.role == 'admin'") {
+	billingFromCsvs {
+		_count
 	}
 }

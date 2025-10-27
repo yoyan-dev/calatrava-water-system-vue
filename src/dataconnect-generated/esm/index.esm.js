@@ -61,47 +61,14 @@ export function paginatedBillings(dcOrVars, vars) {
   return executeQuery(paginatedBillingsRef(dcOrVars, vars));
 }
 
-export const getBooksRef = (dc) => {
+export const countBillingFromCsvRef = (dc) => {
   const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
   dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'GetBooks');
+  return queryRef(dcInstance, 'CountBillingFromCsv');
 }
-getBooksRef.operationName = 'GetBooks';
+countBillingFromCsvRef.operationName = 'CountBillingFromCsv';
 
-export function getBooks(dc) {
-  return executeQuery(getBooksRef(dc));
-}
-
-export const getBookByNameRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'GetBookByName', inputVars);
-}
-getBookByNameRef.operationName = 'GetBookByName';
-
-export function getBookByName(dcOrVars, vars) {
-  return executeQuery(getBookByNameRef(dcOrVars, vars));
-}
-
-export const getResidentByAccountNoRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'GetResidentByAccountNo', inputVars);
-}
-getResidentByAccountNoRef.operationName = 'GetResidentByAccountNo';
-
-export function getResidentByAccountNo(dcOrVars, vars) {
-  return executeQuery(getResidentByAccountNoRef(dcOrVars, vars));
-}
-
-export const getResidentsRef = (dc) => {
-  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'GetResidents');
-}
-getResidentsRef.operationName = 'GetResidents';
-
-export function getResidents(dc) {
-  return executeQuery(getResidentsRef(dc));
+export function countBillingFromCsv(dc) {
+  return executeQuery(countBillingFromCsvRef(dc));
 }
 

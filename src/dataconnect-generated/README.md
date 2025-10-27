@@ -9,10 +9,7 @@ This README will guide you through the process of using the generated JavaScript
   - [*Connecting to the local Emulator*](#connecting-to-the-local-emulator)
 - [**Queries**](#queries)
   - [*PaginatedBillings*](#paginatedbillings)
-  - [*GetBooks*](#getbooks)
-  - [*GetBookByName*](#getbookbyname)
-  - [*GetResidentByAccountNo*](#getresidentbyaccountno)
-  - [*GetResidents*](#getresidents)
+  - [*CountBillingFromCsv*](#countbillingfromcsv)
 - [**Mutations**](#mutations)
   - [*CreateBook*](#createbook)
   - [*CreateResident*](#createresident)
@@ -145,7 +142,6 @@ export interface PaginatedBillingsData {
     prvDiscon: string;
     prvDueDate: string;
     purokCode?: string | null;
-    residentId: string;
     stubOut?: string | null;
     totalBill: number;
     verified: string;
@@ -228,418 +224,96 @@ executeQuery(ref).then((response) => {
 });
 ```
 
-## GetBooks
-You can execute the `GetBooks` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+## CountBillingFromCsv
+You can execute the `CountBillingFromCsv` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
 ```typescript
-getBooks(): QueryPromise<GetBooksData, undefined>;
+countBillingFromCsv(): QueryPromise<CountBillingFromCsvData, undefined>;
 
-interface GetBooksRef {
+interface CountBillingFromCsvRef {
   ...
   /* Allow users to create refs without passing in DataConnect */
-  (): QueryRef<GetBooksData, undefined>;
+  (): QueryRef<CountBillingFromCsvData, undefined>;
 }
-export const getBooksRef: GetBooksRef;
+export const countBillingFromCsvRef: CountBillingFromCsvRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
 ```typescript
-getBooks(dc: DataConnect): QueryPromise<GetBooksData, undefined>;
+countBillingFromCsv(dc: DataConnect): QueryPromise<CountBillingFromCsvData, undefined>;
 
-interface GetBooksRef {
+interface CountBillingFromCsvRef {
   ...
-  (dc: DataConnect): QueryRef<GetBooksData, undefined>;
+  (dc: DataConnect): QueryRef<CountBillingFromCsvData, undefined>;
 }
-export const getBooksRef: GetBooksRef;
+export const countBillingFromCsvRef: CountBillingFromCsvRef;
 ```
 
-If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the getBooksRef:
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the countBillingFromCsvRef:
 ```typescript
-const name = getBooksRef.operationName;
+const name = countBillingFromCsvRef.operationName;
 console.log(name);
 ```
 
 ### Variables
-The `GetBooks` query has no variables.
+The `CountBillingFromCsv` query has no variables.
 ### Return Type
-Recall that executing the `GetBooks` query returns a `QueryPromise` that resolves to an object with a `data` property.
+Recall that executing the `CountBillingFromCsv` query returns a `QueryPromise` that resolves to an object with a `data` property.
 
-The `data` property is an object of type `GetBooksData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+The `data` property is an object of type `CountBillingFromCsvData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
 ```typescript
-export interface GetBooksData {
-  books: ({
-    id: UUIDString;
-    name: string;
-  } & Book_Key)[];
+export interface CountBillingFromCsvData {
+  billingFromCsvs: ({
+    _count: number;
+  })[];
 }
 ```
-### Using `GetBooks`'s action shortcut function
+### Using `CountBillingFromCsv`'s action shortcut function
 
 ```typescript
 import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, getBooks } from '@dataconnect/generated';
+import { connectorConfig, countBillingFromCsv } from '@dataconnect/generated';
 
 
-// Call the `getBooks()` function to execute the query.
+// Call the `countBillingFromCsv()` function to execute the query.
 // You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await getBooks();
+const { data } = await countBillingFromCsv();
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
-const { data } = await getBooks(dataConnect);
+const { data } = await countBillingFromCsv(dataConnect);
 
-console.log(data.books);
+console.log(data.billingFromCsvs);
 
 // Or, you can use the `Promise` API.
-getBooks().then((response) => {
+countBillingFromCsv().then((response) => {
   const data = response.data;
-  console.log(data.books);
+  console.log(data.billingFromCsvs);
 });
 ```
 
-### Using `GetBooks`'s `QueryRef` function
+### Using `CountBillingFromCsv`'s `QueryRef` function
 
 ```typescript
 import { getDataConnect, executeQuery } from 'firebase/data-connect';
-import { connectorConfig, getBooksRef } from '@dataconnect/generated';
+import { connectorConfig, countBillingFromCsvRef } from '@dataconnect/generated';
 
 
-// Call the `getBooksRef()` function to get a reference to the query.
-const ref = getBooksRef();
+// Call the `countBillingFromCsvRef()` function to get a reference to the query.
+const ref = countBillingFromCsvRef();
 
 // You can also pass in a `DataConnect` instance to the `QueryRef` function.
 const dataConnect = getDataConnect(connectorConfig);
-const ref = getBooksRef(dataConnect);
+const ref = countBillingFromCsvRef(dataConnect);
 
 // Call `executeQuery()` on the reference to execute the query.
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await executeQuery(ref);
 
-console.log(data.books);
+console.log(data.billingFromCsvs);
 
 // Or, you can use the `Promise` API.
 executeQuery(ref).then((response) => {
   const data = response.data;
-  console.log(data.books);
-});
-```
-
-## GetBookByName
-You can execute the `GetBookByName` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
-```typescript
-getBookByName(vars: GetBookByNameVariables): QueryPromise<GetBookByNameData, GetBookByNameVariables>;
-
-interface GetBookByNameRef {
-  ...
-  /* Allow users to create refs without passing in DataConnect */
-  (vars: GetBookByNameVariables): QueryRef<GetBookByNameData, GetBookByNameVariables>;
-}
-export const getBookByNameRef: GetBookByNameRef;
-```
-You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
-```typescript
-getBookByName(dc: DataConnect, vars: GetBookByNameVariables): QueryPromise<GetBookByNameData, GetBookByNameVariables>;
-
-interface GetBookByNameRef {
-  ...
-  (dc: DataConnect, vars: GetBookByNameVariables): QueryRef<GetBookByNameData, GetBookByNameVariables>;
-}
-export const getBookByNameRef: GetBookByNameRef;
-```
-
-If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the getBookByNameRef:
-```typescript
-const name = getBookByNameRef.operationName;
-console.log(name);
-```
-
-### Variables
-The `GetBookByName` query requires an argument of type `GetBookByNameVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
-
-```typescript
-export interface GetBookByNameVariables {
-  name: string;
-}
-```
-### Return Type
-Recall that executing the `GetBookByName` query returns a `QueryPromise` that resolves to an object with a `data` property.
-
-The `data` property is an object of type `GetBookByNameData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
-```typescript
-export interface GetBookByNameData {
-  books: ({
-    id: UUIDString;
-  } & Book_Key)[];
-}
-```
-### Using `GetBookByName`'s action shortcut function
-
-```typescript
-import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, getBookByName, GetBookByNameVariables } from '@dataconnect/generated';
-
-// The `GetBookByName` query requires an argument of type `GetBookByNameVariables`:
-const getBookByNameVars: GetBookByNameVariables = {
-  name: ..., 
-};
-
-// Call the `getBookByName()` function to execute the query.
-// You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await getBookByName(getBookByNameVars);
-// Variables can be defined inline as well.
-const { data } = await getBookByName({ name: ..., });
-
-// You can also pass in a `DataConnect` instance to the action shortcut function.
-const dataConnect = getDataConnect(connectorConfig);
-const { data } = await getBookByName(dataConnect, getBookByNameVars);
-
-console.log(data.books);
-
-// Or, you can use the `Promise` API.
-getBookByName(getBookByNameVars).then((response) => {
-  const data = response.data;
-  console.log(data.books);
-});
-```
-
-### Using `GetBookByName`'s `QueryRef` function
-
-```typescript
-import { getDataConnect, executeQuery } from 'firebase/data-connect';
-import { connectorConfig, getBookByNameRef, GetBookByNameVariables } from '@dataconnect/generated';
-
-// The `GetBookByName` query requires an argument of type `GetBookByNameVariables`:
-const getBookByNameVars: GetBookByNameVariables = {
-  name: ..., 
-};
-
-// Call the `getBookByNameRef()` function to get a reference to the query.
-const ref = getBookByNameRef(getBookByNameVars);
-// Variables can be defined inline as well.
-const ref = getBookByNameRef({ name: ..., });
-
-// You can also pass in a `DataConnect` instance to the `QueryRef` function.
-const dataConnect = getDataConnect(connectorConfig);
-const ref = getBookByNameRef(dataConnect, getBookByNameVars);
-
-// Call `executeQuery()` on the reference to execute the query.
-// You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await executeQuery(ref);
-
-console.log(data.books);
-
-// Or, you can use the `Promise` API.
-executeQuery(ref).then((response) => {
-  const data = response.data;
-  console.log(data.books);
-});
-```
-
-## GetResidentByAccountNo
-You can execute the `GetResidentByAccountNo` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
-```typescript
-getResidentByAccountNo(vars: GetResidentByAccountNoVariables): QueryPromise<GetResidentByAccountNoData, GetResidentByAccountNoVariables>;
-
-interface GetResidentByAccountNoRef {
-  ...
-  /* Allow users to create refs without passing in DataConnect */
-  (vars: GetResidentByAccountNoVariables): QueryRef<GetResidentByAccountNoData, GetResidentByAccountNoVariables>;
-}
-export const getResidentByAccountNoRef: GetResidentByAccountNoRef;
-```
-You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
-```typescript
-getResidentByAccountNo(dc: DataConnect, vars: GetResidentByAccountNoVariables): QueryPromise<GetResidentByAccountNoData, GetResidentByAccountNoVariables>;
-
-interface GetResidentByAccountNoRef {
-  ...
-  (dc: DataConnect, vars: GetResidentByAccountNoVariables): QueryRef<GetResidentByAccountNoData, GetResidentByAccountNoVariables>;
-}
-export const getResidentByAccountNoRef: GetResidentByAccountNoRef;
-```
-
-If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the getResidentByAccountNoRef:
-```typescript
-const name = getResidentByAccountNoRef.operationName;
-console.log(name);
-```
-
-### Variables
-The `GetResidentByAccountNo` query requires an argument of type `GetResidentByAccountNoVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
-
-```typescript
-export interface GetResidentByAccountNoVariables {
-  accountNo: number;
-}
-```
-### Return Type
-Recall that executing the `GetResidentByAccountNo` query returns a `QueryPromise` that resolves to an object with a `data` property.
-
-The `data` property is an object of type `GetResidentByAccountNoData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
-```typescript
-export interface GetResidentByAccountNoData {
-  residents: ({
-    id: UUIDString;
-  } & Resident_Key)[];
-}
-```
-### Using `GetResidentByAccountNo`'s action shortcut function
-
-```typescript
-import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, getResidentByAccountNo, GetResidentByAccountNoVariables } from '@dataconnect/generated';
-
-// The `GetResidentByAccountNo` query requires an argument of type `GetResidentByAccountNoVariables`:
-const getResidentByAccountNoVars: GetResidentByAccountNoVariables = {
-  accountNo: ..., 
-};
-
-// Call the `getResidentByAccountNo()` function to execute the query.
-// You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await getResidentByAccountNo(getResidentByAccountNoVars);
-// Variables can be defined inline as well.
-const { data } = await getResidentByAccountNo({ accountNo: ..., });
-
-// You can also pass in a `DataConnect` instance to the action shortcut function.
-const dataConnect = getDataConnect(connectorConfig);
-const { data } = await getResidentByAccountNo(dataConnect, getResidentByAccountNoVars);
-
-console.log(data.residents);
-
-// Or, you can use the `Promise` API.
-getResidentByAccountNo(getResidentByAccountNoVars).then((response) => {
-  const data = response.data;
-  console.log(data.residents);
-});
-```
-
-### Using `GetResidentByAccountNo`'s `QueryRef` function
-
-```typescript
-import { getDataConnect, executeQuery } from 'firebase/data-connect';
-import { connectorConfig, getResidentByAccountNoRef, GetResidentByAccountNoVariables } from '@dataconnect/generated';
-
-// The `GetResidentByAccountNo` query requires an argument of type `GetResidentByAccountNoVariables`:
-const getResidentByAccountNoVars: GetResidentByAccountNoVariables = {
-  accountNo: ..., 
-};
-
-// Call the `getResidentByAccountNoRef()` function to get a reference to the query.
-const ref = getResidentByAccountNoRef(getResidentByAccountNoVars);
-// Variables can be defined inline as well.
-const ref = getResidentByAccountNoRef({ accountNo: ..., });
-
-// You can also pass in a `DataConnect` instance to the `QueryRef` function.
-const dataConnect = getDataConnect(connectorConfig);
-const ref = getResidentByAccountNoRef(dataConnect, getResidentByAccountNoVars);
-
-// Call `executeQuery()` on the reference to execute the query.
-// You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await executeQuery(ref);
-
-console.log(data.residents);
-
-// Or, you can use the `Promise` API.
-executeQuery(ref).then((response) => {
-  const data = response.data;
-  console.log(data.residents);
-});
-```
-
-## GetResidents
-You can execute the `GetResidents` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
-```typescript
-getResidents(): QueryPromise<GetResidentsData, undefined>;
-
-interface GetResidentsRef {
-  ...
-  /* Allow users to create refs without passing in DataConnect */
-  (): QueryRef<GetResidentsData, undefined>;
-}
-export const getResidentsRef: GetResidentsRef;
-```
-You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
-```typescript
-getResidents(dc: DataConnect): QueryPromise<GetResidentsData, undefined>;
-
-interface GetResidentsRef {
-  ...
-  (dc: DataConnect): QueryRef<GetResidentsData, undefined>;
-}
-export const getResidentsRef: GetResidentsRef;
-```
-
-If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the getResidentsRef:
-```typescript
-const name = getResidentsRef.operationName;
-console.log(name);
-```
-
-### Variables
-The `GetResidents` query has no variables.
-### Return Type
-Recall that executing the `GetResidents` query returns a `QueryPromise` that resolves to an object with a `data` property.
-
-The `data` property is an object of type `GetResidentsData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
-```typescript
-export interface GetResidentsData {
-  residents: ({
-    id: UUIDString;
-    accountNo: number;
-    fullName: string;
-    classType: string;
-    book: {
-      name: string;
-    };
-  } & Resident_Key)[];
-}
-```
-### Using `GetResidents`'s action shortcut function
-
-```typescript
-import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, getResidents } from '@dataconnect/generated';
-
-
-// Call the `getResidents()` function to execute the query.
-// You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await getResidents();
-
-// You can also pass in a `DataConnect` instance to the action shortcut function.
-const dataConnect = getDataConnect(connectorConfig);
-const { data } = await getResidents(dataConnect);
-
-console.log(data.residents);
-
-// Or, you can use the `Promise` API.
-getResidents().then((response) => {
-  const data = response.data;
-  console.log(data.residents);
-});
-```
-
-### Using `GetResidents`'s `QueryRef` function
-
-```typescript
-import { getDataConnect, executeQuery } from 'firebase/data-connect';
-import { connectorConfig, getResidentsRef } from '@dataconnect/generated';
-
-
-// Call the `getResidentsRef()` function to get a reference to the query.
-const ref = getResidentsRef();
-
-// You can also pass in a `DataConnect` instance to the `QueryRef` function.
-const dataConnect = getDataConnect(connectorConfig);
-const ref = getResidentsRef(dataConnect);
-
-// Call `executeQuery()` on the reference to execute the query.
-// You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await executeQuery(ref);
-
-console.log(data.residents);
-
-// Or, you can use the `Promise` API.
-executeQuery(ref).then((response) => {
-  const data = response.data;
-  console.log(data.residents);
+  console.log(data.billingFromCsvs);
 });
 ```
 
@@ -1194,7 +868,6 @@ export interface CreateBillingFromCsvVariables {
   prvDiscon: string;
   prvDueDate: string;
   purokCode?: string | null;
-  residentId: string;
   stubOut?: string | null;
   totalBill: number;
   verified: string;
@@ -1255,7 +928,6 @@ const createBillingFromCsvVars: CreateBillingFromCsvVariables = {
   prvDiscon: ..., 
   prvDueDate: ..., 
   purokCode: ..., // optional
-  residentId: ..., 
   stubOut: ..., // optional
   totalBill: ..., 
   verified: ..., 
@@ -1266,7 +938,7 @@ const createBillingFromCsvVars: CreateBillingFromCsvVariables = {
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await createBillingFromCsv(createBillingFromCsvVars);
 // Variables can be defined inline as well.
-const { data } = await createBillingFromCsv({ accountNo: ..., amortAmnt: ..., arrearsAmnt: ..., arrearsEnv: ..., bStatus: ..., billAmnt: ..., billBrgy: ..., billDate: ..., billNo: ..., billPurok: ..., book: ..., classType: ..., curReading: ..., custNo: ..., discount: ..., disconDate: ..., dueDate: ..., duePenalty: ..., environmentFee: ..., fullName: ..., mPenalty: ..., mrrfDue: ..., mrSysNo: ..., mtrNo: ..., nrWater: ..., paid: ..., paymentDate: ..., paymentReceipt: ..., paymentStatus: ..., penalized: ..., preReading: ..., prevUsed: ..., prevUsed2: ..., prvBillDate: ..., prvDiscon: ..., prvDueDate: ..., purokCode: ..., residentId: ..., stubOut: ..., totalBill: ..., verified: ..., waterUsage: ..., });
+const { data } = await createBillingFromCsv({ accountNo: ..., amortAmnt: ..., arrearsAmnt: ..., arrearsEnv: ..., bStatus: ..., billAmnt: ..., billBrgy: ..., billDate: ..., billNo: ..., billPurok: ..., book: ..., classType: ..., curReading: ..., custNo: ..., discount: ..., disconDate: ..., dueDate: ..., duePenalty: ..., environmentFee: ..., fullName: ..., mPenalty: ..., mrrfDue: ..., mrSysNo: ..., mtrNo: ..., nrWater: ..., paid: ..., paymentDate: ..., paymentReceipt: ..., paymentStatus: ..., penalized: ..., preReading: ..., prevUsed: ..., prevUsed2: ..., prvBillDate: ..., prvDiscon: ..., prvDueDate: ..., purokCode: ..., stubOut: ..., totalBill: ..., verified: ..., waterUsage: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -1326,7 +998,6 @@ const createBillingFromCsvVars: CreateBillingFromCsvVariables = {
   prvDiscon: ..., 
   prvDueDate: ..., 
   purokCode: ..., // optional
-  residentId: ..., 
   stubOut: ..., // optional
   totalBill: ..., 
   verified: ..., 
@@ -1336,7 +1007,7 @@ const createBillingFromCsvVars: CreateBillingFromCsvVariables = {
 // Call the `createBillingFromCsvRef()` function to get a reference to the mutation.
 const ref = createBillingFromCsvRef(createBillingFromCsvVars);
 // Variables can be defined inline as well.
-const ref = createBillingFromCsvRef({ accountNo: ..., amortAmnt: ..., arrearsAmnt: ..., arrearsEnv: ..., bStatus: ..., billAmnt: ..., billBrgy: ..., billDate: ..., billNo: ..., billPurok: ..., book: ..., classType: ..., curReading: ..., custNo: ..., discount: ..., disconDate: ..., dueDate: ..., duePenalty: ..., environmentFee: ..., fullName: ..., mPenalty: ..., mrrfDue: ..., mrSysNo: ..., mtrNo: ..., nrWater: ..., paid: ..., paymentDate: ..., paymentReceipt: ..., paymentStatus: ..., penalized: ..., preReading: ..., prevUsed: ..., prevUsed2: ..., prvBillDate: ..., prvDiscon: ..., prvDueDate: ..., purokCode: ..., residentId: ..., stubOut: ..., totalBill: ..., verified: ..., waterUsage: ..., });
+const ref = createBillingFromCsvRef({ accountNo: ..., amortAmnt: ..., arrearsAmnt: ..., arrearsEnv: ..., bStatus: ..., billAmnt: ..., billBrgy: ..., billDate: ..., billNo: ..., billPurok: ..., book: ..., classType: ..., curReading: ..., custNo: ..., discount: ..., disconDate: ..., dueDate: ..., duePenalty: ..., environmentFee: ..., fullName: ..., mPenalty: ..., mrrfDue: ..., mrSysNo: ..., mtrNo: ..., nrWater: ..., paid: ..., paymentDate: ..., paymentReceipt: ..., paymentStatus: ..., penalized: ..., preReading: ..., prevUsed: ..., prevUsed2: ..., prvBillDate: ..., prvDiscon: ..., prvDueDate: ..., purokCode: ..., stubOut: ..., totalBill: ..., verified: ..., waterUsage: ..., });
 
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);

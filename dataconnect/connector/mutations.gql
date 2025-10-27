@@ -202,7 +202,6 @@ mutation CreateBillingFromCsv(
 	$prvDiscon: String!
 	$prvDueDate: String!
 	$purokCode: String
-	$residentId: String!
 	$stubOut: String
 	$totalBill: Float!
 	$verified: String!
@@ -244,7 +243,6 @@ mutation CreateBillingFromCsv(
 			prvDiscon: $prvDiscon
 			prvDueDate: $prvDueDate
 			purokCode: $purokCode
-			residentId: $residentId
 			stubOut: $stubOut
 			totalBill: $totalBill
 			verified: $verified

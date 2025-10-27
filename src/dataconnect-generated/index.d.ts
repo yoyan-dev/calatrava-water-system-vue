@@ -25,6 +25,12 @@ export interface Book_Key {
   __typename?: 'Book_Key';
 }
 
+export interface CountBillingFromCsvData {
+  billingFromCsvs: ({
+    _count: number;
+  })[];
+}
+
 export interface CreateBillingData {
   billing_insert: Billing_Key;
 }
@@ -71,7 +77,6 @@ export interface CreateBillingFromCsvVariables {
   prvDiscon: string;
   prvDueDate: string;
   purokCode?: string | null;
-  residentId: string;
   stubOut?: string | null;
   totalBill: number;
   verified: string;
@@ -148,45 +153,6 @@ export interface CreateResidentVariables {
   bookId: UUIDString;
 }
 
-export interface GetBookByNameData {
-  books: ({
-    id: UUIDString;
-  } & Book_Key)[];
-}
-
-export interface GetBookByNameVariables {
-  name: string;
-}
-
-export interface GetBooksData {
-  books: ({
-    id: UUIDString;
-    name: string;
-  } & Book_Key)[];
-}
-
-export interface GetResidentByAccountNoData {
-  residents: ({
-    id: UUIDString;
-  } & Resident_Key)[];
-}
-
-export interface GetResidentByAccountNoVariables {
-  accountNo: number;
-}
-
-export interface GetResidentsData {
-  residents: ({
-    id: UUIDString;
-    accountNo: number;
-    fullName: string;
-    classType: string;
-    book: {
-      name: string;
-    };
-  } & Resident_Key)[];
-}
-
 export interface PaginatedBillingsData {
   billingFromCsvs: ({
     accountNo: number;
@@ -223,7 +189,6 @@ export interface PaginatedBillingsData {
     prvDiscon: string;
     prvDueDate: string;
     purokCode?: string | null;
-    residentId: string;
     stubOut?: string | null;
     totalBill: number;
     verified: string;
@@ -305,51 +270,15 @@ export const paginatedBillingsRef: PaginatedBillingsRef;
 export function paginatedBillings(vars?: PaginatedBillingsVariables): QueryPromise<PaginatedBillingsData, PaginatedBillingsVariables>;
 export function paginatedBillings(dc: DataConnect, vars?: PaginatedBillingsVariables): QueryPromise<PaginatedBillingsData, PaginatedBillingsVariables>;
 
-interface GetBooksRef {
+interface CountBillingFromCsvRef {
   /* Allow users to create refs without passing in DataConnect */
-  (): QueryRef<GetBooksData, undefined>;
+  (): QueryRef<CountBillingFromCsvData, undefined>;
   /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect): QueryRef<GetBooksData, undefined>;
+  (dc: DataConnect): QueryRef<CountBillingFromCsvData, undefined>;
   operationName: string;
 }
-export const getBooksRef: GetBooksRef;
+export const countBillingFromCsvRef: CountBillingFromCsvRef;
 
-export function getBooks(): QueryPromise<GetBooksData, undefined>;
-export function getBooks(dc: DataConnect): QueryPromise<GetBooksData, undefined>;
-
-interface GetBookByNameRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (vars: GetBookByNameVariables): QueryRef<GetBookByNameData, GetBookByNameVariables>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: GetBookByNameVariables): QueryRef<GetBookByNameData, GetBookByNameVariables>;
-  operationName: string;
-}
-export const getBookByNameRef: GetBookByNameRef;
-
-export function getBookByName(vars: GetBookByNameVariables): QueryPromise<GetBookByNameData, GetBookByNameVariables>;
-export function getBookByName(dc: DataConnect, vars: GetBookByNameVariables): QueryPromise<GetBookByNameData, GetBookByNameVariables>;
-
-interface GetResidentByAccountNoRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (vars: GetResidentByAccountNoVariables): QueryRef<GetResidentByAccountNoData, GetResidentByAccountNoVariables>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: GetResidentByAccountNoVariables): QueryRef<GetResidentByAccountNoData, GetResidentByAccountNoVariables>;
-  operationName: string;
-}
-export const getResidentByAccountNoRef: GetResidentByAccountNoRef;
-
-export function getResidentByAccountNo(vars: GetResidentByAccountNoVariables): QueryPromise<GetResidentByAccountNoData, GetResidentByAccountNoVariables>;
-export function getResidentByAccountNo(dc: DataConnect, vars: GetResidentByAccountNoVariables): QueryPromise<GetResidentByAccountNoData, GetResidentByAccountNoVariables>;
-
-interface GetResidentsRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (): QueryRef<GetResidentsData, undefined>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect): QueryRef<GetResidentsData, undefined>;
-  operationName: string;
-}
-export const getResidentsRef: GetResidentsRef;
-
-export function getResidents(): QueryPromise<GetResidentsData, undefined>;
-export function getResidents(dc: DataConnect): QueryPromise<GetResidentsData, undefined>;
+export function countBillingFromCsv(): QueryPromise<CountBillingFromCsvData, undefined>;
+export function countBillingFromCsv(dc: DataConnect): QueryPromise<CountBillingFromCsvData, undefined>;
 
