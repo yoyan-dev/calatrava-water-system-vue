@@ -55,7 +55,7 @@ type Billing @table @index(fields: ["billNo"]) {
 }
 
 type BillingFromCsv @table @index(fields: ["billNo"]) {
-	accountNo: Int! # e.g 211200109
+	accountNo: String! @searchable # e.g 211200109
 	amortAmnt: Float! # e.g 0
 	arrearsAmnt: Float! # e.g 5.5
 	arrearsEnv: Float! # e.g -5.5
@@ -63,7 +63,7 @@ type BillingFromCsv @table @index(fields: ["billNo"]) {
 	billAmnt: Float! # e.g 75
 	billBrgy: String # e.g ""
 	billDate: String! # e.g "10/06/2025"
-	billNo: Int! @unique # e.g 90
+	billNo: String! @unique @searchable # e.g 90
 	billPurok: String # e.g ""
 	book: String! @searchable # e.g "calampisawan"
 	classType: String! # e.g "RESIDENTIAL"

@@ -5,7 +5,10 @@ import type { StoreResponse } from '@/types/store-response';
 import { billingRepository } from '@/repositories/billingRepository';
 import { billingRepository as billRepo } from '@/repositories/v2/billingRepository';
 import { billingRepository as billGraph } from '@/repositories/graph/billingRepository';
-import type { PaginatedBillingsData } from '@/dataconnect-generated';
+import type {
+	CountBillingFromCsvData,
+	PaginatedBillingsData,
+} from '@/dataconnect-generated';
 
 type BillingItem = PaginatedBillingsData['billingFromCsvs'][number];
 
@@ -21,23 +24,24 @@ export const useBillingStore = defineStore('billing', () => {
 	const billings = ref<BillingItem[]>([]);
 	const billing = ref<Billing>();
 	const isLoading = ref(false);
-	const totalBillings = ref(0);
-	const lastFirstIndex = ref(null as null | number);
-	const startDoc = ref<null | any>(null);
-	const lastDoc = ref<null | any>(null);
+	const totalBillings = ref<number>(0);
+	const searchQuery = ref<string>('');
 
 	// Actions
-	function resetPagination() {
-		lastFirstIndex.value = null;
-		startDoc.value = null;
-		lastDoc.value = null;
+
+	async function fetchSearchBillings(query: string) {
+		try {
+			const data = await billGraph.searchBillings(query);
+			billings.value = data as BillingItem[];
+		} catch (error) {
+			console.error('Error searching billings:', error);
+		}
 	}
 
 	async function fetchCountBillings() {
-		const count = await billRepo.getCountBillings();
-		console.log(count);
-
-		totalBillings.value = count;
+		const result = await billGraph.countBillings();
+		totalBillings.value =
+			Array.isArray(result) && result.length > 0 ? result[0]._count : 0;
 	}
 
 	async function fetchPaginateBillings({
@@ -73,12 +77,9 @@ export const useBillingStore = defineStore('billing', () => {
 			const response = await billGraph.addBillingFromCsv(formData);
 			if (response?.statusCode == 200) {
 				isLoading.value = false;
-				resetPagination();
-				await fetchBillings({
+				await fetchPaginateBillings({
 					limit: 10,
-					firstIndex: 0,
-					orderByField: 'bill_no',
-					orderDirection: 'desc',
+					offset: 0,
 				});
 
 				return {
@@ -164,10 +165,9 @@ export const useBillingStore = defineStore('billing', () => {
 		billings,
 		billing,
 		isLoading,
-		startDoc,
-		lastDoc,
-		lastFirstIndex,
 		totalBillings,
+		searchQuery,
+		fetchSearchBillings,
 		fetchCountBillings,
 		fetchPaginateBillings,
 		addBillings,

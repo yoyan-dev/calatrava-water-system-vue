@@ -4,7 +4,11 @@ query PaginatedBillings(
 	$orderByField: String
 	$orderDirection: String
 ) @auth(expr: "auth.token.role == 'admin'") {
-	billingFromCsvs(limit: $limit, orderBy: [{ billNo: DESC }], offset: $offset) {
+	billingFromCsvs(
+		limit: $limit
+		orderBy: [{ mrSysNo: DESC }]
+		offset: $offset
+	) {
 		accountNo
 		amortAmnt
 		arrearsAmnt
@@ -51,5 +55,51 @@ query PaginatedBillings(
 query CountBillingFromCsv @auth(expr: "auth.token.role == 'admin'") {
 	billingFromCsvs {
 		_count
+	}
+}
+
+query SearchBillingFromCsv($query: String, $limit: Int = 10)
+@auth(expr: "auth.token.role == 'admin'") {
+	billingFromCsvs_search(query: $query, limit: $limit) {
+		accountNo
+		amortAmnt
+		arrearsAmnt
+		arrearsEnv
+		bStatus
+		billAmnt
+		billBrgy
+		billDate
+		billNo
+		billPurok
+		book
+		classType
+		curReading
+		discount
+		disconDate
+		dueDate
+		duePenalty
+		environmentFee
+		fullName
+		mPenalty
+		mrSysNo
+		mtrNo
+		nrWater
+		paid
+		paymentDate
+		paymentReceipt
+		paymentStatus
+		preReading
+		prevUsed
+		prevUsed2
+		prvBillDate
+		prvDiscon
+		prvDueDate
+		purokCode
+		stubOut
+		totalBill
+		verified
+		waterUsage
+		createdAt
+		updatedAt
 	}
 }

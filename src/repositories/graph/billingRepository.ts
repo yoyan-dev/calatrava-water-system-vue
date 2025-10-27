@@ -2,6 +2,7 @@ import {
 	countBillingFromCsv,
 	createBillingFromCsv,
 	paginatedBillings,
+	searchBillingFromCsv,
 	type CreateBillingFromCsvVariables,
 } from '@/dataconnect-generated';
 
@@ -9,10 +10,24 @@ class BillingRepository {
 	async countBillings() {
 		try {
 			const response = await countBillingFromCsv();
-			return response.data;
+			return response.data.billingFromCsvs;
 		} catch (error) {
 			console.error('Error counting billings:', error);
 			return 0;
+		}
+	}
+
+	async searchBillings(keyword: any) {
+		if (!keyword || typeof keyword !== 'string') {
+			console.error('Invalid keyword:', keyword);
+			return [];
+		}
+		try {
+			const response = await searchBillingFromCsv({ query: keyword });
+			return response.data.billingFromCsvs_search || [];
+		} catch (error) {
+			console.error('Error searching billings:', error);
+			return [];
 		}
 	}
 
@@ -32,7 +47,7 @@ class BillingRepository {
 
 				// Map CSV headers to mutation variables (snake_case to camelCase)
 				const data: CreateBillingFromCsvVariables = {
-					accountNo: 0,
+					accountNo: '',
 					amortAmnt: 0,
 					arrearsAmnt: 0,
 					arrearsEnv: 0,
@@ -40,7 +55,7 @@ class BillingRepository {
 					billAmnt: 0,
 					billBrgy: '',
 					billDate: '',
-					billNo: 0,
+					billNo: '',
 					billPurok: '',
 					book: '',
 					classType: '',
@@ -80,10 +95,10 @@ class BillingRepository {
 
 					switch (key) {
 						case 'bill_no':
-							data.billNo = parseInt(value) || 0;
+							data.billNo = value || '';
 							break;
 						case 'accountno':
-							data.accountNo = parseInt(value) || 0;
+							data.accountNo = value || '';
 							break;
 						case 'bill_date':
 							data.billDate = value;

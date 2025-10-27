@@ -72,3 +72,14 @@ export function countBillingFromCsv(dc) {
   return executeQuery(countBillingFromCsvRef(dc));
 }
 
+export const searchBillingFromCsvRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'SearchBillingFromCsv', inputVars);
+}
+searchBillingFromCsvRef.operationName = 'SearchBillingFromCsv';
+
+export function searchBillingFromCsv(dcOrVars, vars) {
+  return executeQuery(searchBillingFromCsvRef(dcOrVars, vars));
+}
+

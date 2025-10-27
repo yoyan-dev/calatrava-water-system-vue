@@ -40,7 +40,7 @@ export interface CreateBillingFromCsvData {
 }
 
 export interface CreateBillingFromCsvVariables {
-  accountNo: number;
+  accountNo: string;
   amortAmnt: number;
   arrearsAmnt: number;
   arrearsEnv: number;
@@ -48,7 +48,7 @@ export interface CreateBillingFromCsvVariables {
   billAmnt: number;
   billBrgy?: string | null;
   billDate: string;
-  billNo: number;
+  billNo: string;
   billPurok?: string | null;
   book: string;
   classType: string;
@@ -155,7 +155,7 @@ export interface CreateResidentVariables {
 
 export interface PaginatedBillingsData {
   billingFromCsvs: ({
-    accountNo: number;
+    accountNo: string;
     amortAmnt: number;
     arrearsAmnt: number;
     arrearsEnv: number;
@@ -163,7 +163,7 @@ export interface PaginatedBillingsData {
     billAmnt: number;
     billBrgy?: string | null;
     billDate: string;
-    billNo: number;
+    billNo: string;
     billPurok?: string | null;
     book: string;
     classType: string;
@@ -208,6 +208,56 @@ export interface PaginatedBillingsVariables {
 export interface Resident_Key {
   id: UUIDString;
   __typename?: 'Resident_Key';
+}
+
+export interface SearchBillingFromCsvData {
+  billingFromCsvs_search: ({
+    accountNo: string;
+    amortAmnt: number;
+    arrearsAmnt: number;
+    arrearsEnv: number;
+    bStatus: string;
+    billAmnt: number;
+    billBrgy?: string | null;
+    billDate: string;
+    billNo: string;
+    billPurok?: string | null;
+    book: string;
+    classType: string;
+    curReading: number;
+    discount: number;
+    disconDate: string;
+    dueDate: string;
+    duePenalty: number;
+    environmentFee: number;
+    fullName: string;
+    mPenalty: number;
+    mrSysNo: number;
+    mtrNo: string;
+    nrWater: number;
+    paid: string;
+    paymentDate?: string | null;
+    paymentReceipt?: string | null;
+    paymentStatus?: string | null;
+    preReading: number;
+    prevUsed: number;
+    prevUsed2: number;
+    prvBillDate: string;
+    prvDiscon: string;
+    prvDueDate: string;
+    purokCode?: string | null;
+    stubOut?: string | null;
+    totalBill: number;
+    verified: string;
+    waterUsage: number;
+    createdAt: TimestampString;
+    updatedAt: TimestampString;
+  })[];
+}
+
+export interface SearchBillingFromCsvVariables {
+  query?: string | null;
+  limit?: number | null;
 }
 
 interface CreateBookRef {
@@ -281,4 +331,16 @@ export const countBillingFromCsvRef: CountBillingFromCsvRef;
 
 export function countBillingFromCsv(): QueryPromise<CountBillingFromCsvData, undefined>;
 export function countBillingFromCsv(dc: DataConnect): QueryPromise<CountBillingFromCsvData, undefined>;
+
+interface SearchBillingFromCsvRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars?: SearchBillingFromCsvVariables): QueryRef<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars?: SearchBillingFromCsvVariables): QueryRef<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
+  operationName: string;
+}
+export const searchBillingFromCsvRef: SearchBillingFromCsvRef;
+
+export function searchBillingFromCsv(vars?: SearchBillingFromCsvVariables): QueryPromise<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
+export function searchBillingFromCsv(dc: DataConnect, vars?: SearchBillingFromCsvVariables): QueryPromise<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
 

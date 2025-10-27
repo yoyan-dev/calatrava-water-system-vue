@@ -10,6 +10,7 @@ This README will guide you through the process of using the generated JavaScript
 - [**Queries**](#queries)
   - [*PaginatedBillings*](#paginatedbillings)
   - [*CountBillingFromCsv*](#countbillingfromcsv)
+  - [*SearchBillingFromCsv*](#searchbillingfromcsv)
 - [**Mutations**](#mutations)
   - [*CreateBook*](#createbook)
   - [*CreateResident*](#createresident)
@@ -108,7 +109,7 @@ The `data` property is an object of type `PaginatedBillingsData`, which is defin
 ```typescript
 export interface PaginatedBillingsData {
   billingFromCsvs: ({
-    accountNo: number;
+    accountNo: string;
     amortAmnt: number;
     arrearsAmnt: number;
     arrearsEnv: number;
@@ -116,7 +117,7 @@ export interface PaginatedBillingsData {
     billAmnt: number;
     billBrgy?: string | null;
     billDate: string;
-    billNo: number;
+    billNo: string;
     billPurok?: string | null;
     book: string;
     classType: string;
@@ -314,6 +315,163 @@ console.log(data.billingFromCsvs);
 executeQuery(ref).then((response) => {
   const data = response.data;
   console.log(data.billingFromCsvs);
+});
+```
+
+## SearchBillingFromCsv
+You can execute the `SearchBillingFromCsv` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+searchBillingFromCsv(vars?: SearchBillingFromCsvVariables): QueryPromise<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
+
+interface SearchBillingFromCsvRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars?: SearchBillingFromCsvVariables): QueryRef<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
+}
+export const searchBillingFromCsvRef: SearchBillingFromCsvRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
+```typescript
+searchBillingFromCsv(dc: DataConnect, vars?: SearchBillingFromCsvVariables): QueryPromise<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
+
+interface SearchBillingFromCsvRef {
+  ...
+  (dc: DataConnect, vars?: SearchBillingFromCsvVariables): QueryRef<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
+}
+export const searchBillingFromCsvRef: SearchBillingFromCsvRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the searchBillingFromCsvRef:
+```typescript
+const name = searchBillingFromCsvRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `SearchBillingFromCsv` query has an optional argument of type `SearchBillingFromCsvVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface SearchBillingFromCsvVariables {
+  query?: string | null;
+  limit?: number | null;
+}
+```
+### Return Type
+Recall that executing the `SearchBillingFromCsv` query returns a `QueryPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `SearchBillingFromCsvData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface SearchBillingFromCsvData {
+  billingFromCsvs_search: ({
+    accountNo: string;
+    amortAmnt: number;
+    arrearsAmnt: number;
+    arrearsEnv: number;
+    bStatus: string;
+    billAmnt: number;
+    billBrgy?: string | null;
+    billDate: string;
+    billNo: string;
+    billPurok?: string | null;
+    book: string;
+    classType: string;
+    curReading: number;
+    discount: number;
+    disconDate: string;
+    dueDate: string;
+    duePenalty: number;
+    environmentFee: number;
+    fullName: string;
+    mPenalty: number;
+    mrSysNo: number;
+    mtrNo: string;
+    nrWater: number;
+    paid: string;
+    paymentDate?: string | null;
+    paymentReceipt?: string | null;
+    paymentStatus?: string | null;
+    preReading: number;
+    prevUsed: number;
+    prevUsed2: number;
+    prvBillDate: string;
+    prvDiscon: string;
+    prvDueDate: string;
+    purokCode?: string | null;
+    stubOut?: string | null;
+    totalBill: number;
+    verified: string;
+    waterUsage: number;
+    createdAt: TimestampString;
+    updatedAt: TimestampString;
+  })[];
+}
+```
+### Using `SearchBillingFromCsv`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, searchBillingFromCsv, SearchBillingFromCsvVariables } from '@dataconnect/generated';
+
+// The `SearchBillingFromCsv` query has an optional argument of type `SearchBillingFromCsvVariables`:
+const searchBillingFromCsvVars: SearchBillingFromCsvVariables = {
+  query: ..., // optional
+  limit: ..., // optional
+};
+
+// Call the `searchBillingFromCsv()` function to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await searchBillingFromCsv(searchBillingFromCsvVars);
+// Variables can be defined inline as well.
+const { data } = await searchBillingFromCsv({ query: ..., limit: ..., });
+// Since all variables are optional for this query, you can omit the `SearchBillingFromCsvVariables` argument.
+const { data } = await searchBillingFromCsv();
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await searchBillingFromCsv(dataConnect, searchBillingFromCsvVars);
+
+console.log(data.billingFromCsvs_search);
+
+// Or, you can use the `Promise` API.
+searchBillingFromCsv(searchBillingFromCsvVars).then((response) => {
+  const data = response.data;
+  console.log(data.billingFromCsvs_search);
+});
+```
+
+### Using `SearchBillingFromCsv`'s `QueryRef` function
+
+```typescript
+import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { connectorConfig, searchBillingFromCsvRef, SearchBillingFromCsvVariables } from '@dataconnect/generated';
+
+// The `SearchBillingFromCsv` query has an optional argument of type `SearchBillingFromCsvVariables`:
+const searchBillingFromCsvVars: SearchBillingFromCsvVariables = {
+  query: ..., // optional
+  limit: ..., // optional
+};
+
+// Call the `searchBillingFromCsvRef()` function to get a reference to the query.
+const ref = searchBillingFromCsvRef(searchBillingFromCsvVars);
+// Variables can be defined inline as well.
+const ref = searchBillingFromCsvRef({ query: ..., limit: ..., });
+// Since all variables are optional for this query, you can omit the `SearchBillingFromCsvVariables` argument.
+const ref = searchBillingFromCsvRef();
+
+// You can also pass in a `DataConnect` instance to the `QueryRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = searchBillingFromCsvRef(dataConnect, searchBillingFromCsvVars);
+
+// Call `executeQuery()` on the reference to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeQuery(ref);
+
+console.log(data.billingFromCsvs_search);
+
+// Or, you can use the `Promise` API.
+executeQuery(ref).then((response) => {
+  const data = response.data;
+  console.log(data.billingFromCsvs_search);
 });
 ```
 
@@ -831,7 +989,7 @@ The `CreateBillingFromCsv` mutation requires an argument of type `CreateBillingF
 
 ```typescript
 export interface CreateBillingFromCsvVariables {
-  accountNo: number;
+  accountNo: string;
   amortAmnt: number;
   arrearsAmnt: number;
   arrearsEnv: number;
@@ -839,7 +997,7 @@ export interface CreateBillingFromCsvVariables {
   billAmnt: number;
   billBrgy?: string | null;
   billDate: string;
-  billNo: number;
+  billNo: string;
   billPurok?: string | null;
   book: string;
   classType: string;

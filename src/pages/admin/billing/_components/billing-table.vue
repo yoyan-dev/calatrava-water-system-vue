@@ -10,6 +10,7 @@
 			size="small"
 			class="text-sm"
 			:rows="rows"
+			:globalFilterFields="['billNo']"
 			paginator
 			paginatorPosition="bottom"
 			:rowsPerPageOptions="[5, 10, 20, 50]"
@@ -69,11 +70,6 @@
 						rounded />
 				</template>
 			</Column>
-			<Column header="Water Usage">
-				<template #body="slotProps">
-					<div class="text-center">{{ slotProps.data.waterUsage }}</div>
-				</template>
-			</Column>
 			<Column header="Actions">
 				<template #body="slotProps">
 					<Button
@@ -91,11 +87,7 @@
 </template>
 
 <script setup lang="ts">
-	import { onMounted, ref } from 'vue';
-	import DataTable from 'primevue/datatable';
-	import Column from 'primevue/column';
-	import Tag from 'primevue/tag';
-	import Button from 'primevue/button';
+	import { onMounted, ref, reactive } from 'vue';
 	import BillingExpansion from './billing-expansion.vue';
 	import { useBillingStore } from '@/stores/billing';
 
@@ -139,15 +131,18 @@
 		});
 	};
 
-	// Initial load
-	onMounted(() => {
+	const fetchBillingData = () => {
 		store.fetchPaginateBillings({
 			limit: rows.value,
 			offset: first.value,
 			orderByField: 'billNo',
 			orderDirection: 'DESC',
 		});
+	};
 
+	// Initial load
+	onMounted(() => {
+		fetchBillingData();
 		store.fetchCountBillings();
 	});
 </script>

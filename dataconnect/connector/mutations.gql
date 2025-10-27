@@ -165,7 +165,7 @@ mutation CreateBilling(
 }
 
 mutation CreateBillingFromCsv(
-	$accountNo: Int!
+	$accountNo: String!
 	$amortAmnt: Float!
 	$arrearsAmnt: Float!
 	$arrearsEnv: Float!
@@ -173,7 +173,7 @@ mutation CreateBillingFromCsv(
 	$billAmnt: Float!
 	$billBrgy: String
 	$billDate: String!
-	$billNo: Int!
+	$billNo: String!
 	$billPurok: String
 	$book: String!
 	$classType: String!
