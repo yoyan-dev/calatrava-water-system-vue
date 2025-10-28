@@ -131,6 +131,6 @@
 		</DataTable>
 
 		<!-- Dynamic Dialog Service -->
-		<DynamicDialog />
+		<!-- <DynamicDialog /> -->
 	</div>
 </template>

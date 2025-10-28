@@ -255,3 +255,92 @@ mutation DeleteBillingFromCsv($id: UUID!)
 @auth(expr: "auth.token.role == 'admin'") {
 	billingFromCsv_delete(id: $id)
 }
+
+mutation UpdateBillingFromCsv(
+	$id: UUID!
+	$accountNo: String
+	$amortAmnt: Float
+	$arrearsAmnt: Float
+	$arrearsEnv: Float
+	$bStatus: String
+	$billAmnt: Float
+	$billBrgy: String
+	$billDate: String
+	$billNo: String
+	$billPurok: String
+	$book: String
+	$classType: String
+	$curReading: Int
+	$custNo: Int
+	$discount: Float
+	$disconDate: String
+	$dueDate: String
+	$duePenalty: Float
+	$environmentFee: Float
+	$fullName: String
+	$mPenalty: Float
+	$mrrfDue: Float
+	$mrSysNo: Int
+	$mtrNo: String
+	$nrWater: Float
+	$paid: String
+	$paymentDate: String
+	$paymentReceipt: String
+	$paymentStatus: String
+	$penalized: Int
+	$preReading: Int
+	$prevUsed: Float
+	$prevUsed2: Float
+	$prvBillDate: String
+	$prvDiscon: String
+	$prvDueDate: String
+	$purokCode: String
+	$stubOut: String
+	$totalBill: Float
+	$verified: String
+	$waterUsage: Float
+) @auth(expr: "auth.token.role == 'admin'") {
+	billingFromCsv_update(
+		id: $id
+		data: {
+			accountNo: $accountNo
+			amortAmnt: $amortAmnt
+			arrearsAmnt: $arrearsAmnt
+			arrearsEnv: $arrearsEnv
+			bStatus: $bStatus
+			billAmnt: $billAmnt
+			billBrgy: $billBrgy
+			billDate: $billDate
+			billNo: $billNo
+			billPurok: $billPurok
+			book: $book
+			classType: $classType
+			curReading: $curReading
+			discount: $discount
+			disconDate: $disconDate
+			dueDate: $dueDate
+			duePenalty: $duePenalty
+			environmentFee: $environmentFee
+			fullName: $fullName
+			mPenalty: $mPenalty
+			mrSysNo: $mrSysNo
+			mtrNo: $mtrNo
+			nrWater: $nrWater
+			paid: $paid
+			paymentDate: $paymentDate
+			paymentReceipt: $paymentReceipt
+			paymentStatus: $paymentStatus
+			preReading: $preReading
+			prevUsed: $prevUsed
+			prevUsed2: $prevUsed2
+			prvBillDate: $prvBillDate
+			prvDiscon: $prvDiscon
+			prvDueDate: $prvDueDate
+			purokCode: $purokCode
+			stubOut: $stubOut
+			totalBill: $totalBill
+			verified: $verified
+			waterUsage: $waterUsage
+		}
+	)
+}

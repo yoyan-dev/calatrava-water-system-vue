@@ -4,6 +4,7 @@ import {
 	deleteBillingFromCsv,
 	paginatedBillings,
 	searchBillingFromCsv,
+	updateBillingFromCsv,
 	type CreateBillingFromCsvVariables,
 } from '@/dataconnect-generated';
 
@@ -38,6 +39,15 @@ class BillingRepository {
 			if (response?.data?.billingFromCsv_delete?.id) return { success: true };
 		} catch (error) {
 			console.error('Error deleting billing:', error);
+		}
+	}
+
+	async updateBillingFromCsv(payload: any) {
+		try {
+			const response = await updateBillingFromCsv(payload);
+			if (response?.data?.billingFromCsv_update?.id) return { success: true };
+		} catch (error) {
+			console.error('Error updating billing:', error);
 		}
 	}
 

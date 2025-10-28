@@ -192,24 +192,28 @@ export const useBillingStore = defineStore('billing', () => {
 		}
 	}
 
-	async function updateBilling(
-		billing: Billing,
-		uid: string,
-	): Promise<StoreResponse> {
+	async function updateBillingFromCsv(
+		id: string,
+		payload: Partial<BillingItem>,
+	) {
 		isLoading.value = true;
-		const response = await billingRepository.updateBilling({ uid, billing });
-		if (response?.statusCode == 200) {
-			return {
-				status: 'success',
-				message: response.message,
-				statusMessage: response.statusMessage ?? '',
-			};
+		try {
+			const response = await billGraph.updateBillingFromCsv({ id, ...payload });
+			if (response?.success) {
+				const index = billings.value.findIndex((item) => item.id === id);
+				if (index !== -1) {
+					billings.value[index] = { ...billings.value[index], ...payload };
+				}
+				return {
+					status: 'success',
+					message: 'Billing updated successfully',
+				};
+			}
+		} catch (error) {
+			console.error('Error updating billing:', error);
+		} finally {
+			isLoading.value = false;
 		}
-		return {
-			status: 'error',
-			message: response?.message,
-			statusMessage: response?.statusMessage ?? '',
-		};
 	}
 
 	return {
@@ -222,7 +226,7 @@ export const useBillingStore = defineStore('billing', () => {
 		fetchCountBillings,
 		fetchPaginateBillings,
 		addBillings,
-		updateBilling,
+		updateBillingFromCsv,
 		deleteSelectedBillings,
 	};
 });

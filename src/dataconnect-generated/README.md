@@ -17,6 +17,7 @@ This README will guide you through the process of using the generated JavaScript
   - [*CreateBilling*](#createbilling)
   - [*CreateBillingFromCsv*](#createbillingfromcsv)
   - [*DeleteBillingFromCsv*](#deletebillingfromcsv)
+  - [*UpdateBillingFromCsv*](#updatebillingfromcsv)
 
 # Accessing the connector
 A connector is a collection of Queries and Mutations. One SDK is generated for each connector - this SDK is generated for the connector `calatrava-water-system`. You can find more information about connectors in the [Data Connect documentation](https://firebase.google.com/docs/data-connect#how-does).
@@ -1292,6 +1293,238 @@ console.log(data.billingFromCsv_delete);
 executeMutation(ref).then((response) => {
   const data = response.data;
   console.log(data.billingFromCsv_delete);
+});
+```
+
+## UpdateBillingFromCsv
+You can execute the `UpdateBillingFromCsv` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+updateBillingFromCsv(vars: UpdateBillingFromCsvVariables): MutationPromise<UpdateBillingFromCsvData, UpdateBillingFromCsvVariables>;
+
+interface UpdateBillingFromCsvRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: UpdateBillingFromCsvVariables): MutationRef<UpdateBillingFromCsvData, UpdateBillingFromCsvVariables>;
+}
+export const updateBillingFromCsvRef: UpdateBillingFromCsvRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+updateBillingFromCsv(dc: DataConnect, vars: UpdateBillingFromCsvVariables): MutationPromise<UpdateBillingFromCsvData, UpdateBillingFromCsvVariables>;
+
+interface UpdateBillingFromCsvRef {
+  ...
+  (dc: DataConnect, vars: UpdateBillingFromCsvVariables): MutationRef<UpdateBillingFromCsvData, UpdateBillingFromCsvVariables>;
+}
+export const updateBillingFromCsvRef: UpdateBillingFromCsvRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the updateBillingFromCsvRef:
+```typescript
+const name = updateBillingFromCsvRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `UpdateBillingFromCsv` mutation requires an argument of type `UpdateBillingFromCsvVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface UpdateBillingFromCsvVariables {
+  id: UUIDString;
+  accountNo?: string | null;
+  amortAmnt?: number | null;
+  arrearsAmnt?: number | null;
+  arrearsEnv?: number | null;
+  bStatus?: string | null;
+  billAmnt?: number | null;
+  billBrgy?: string | null;
+  billDate?: string | null;
+  billNo?: string | null;
+  billPurok?: string | null;
+  book?: string | null;
+  classType?: string | null;
+  curReading?: number | null;
+  custNo?: number | null;
+  discount?: number | null;
+  disconDate?: string | null;
+  dueDate?: string | null;
+  duePenalty?: number | null;
+  environmentFee?: number | null;
+  fullName?: string | null;
+  mPenalty?: number | null;
+  mrrfDue?: number | null;
+  mrSysNo?: number | null;
+  mtrNo?: string | null;
+  nrWater?: number | null;
+  paid?: string | null;
+  paymentDate?: string | null;
+  paymentReceipt?: string | null;
+  paymentStatus?: string | null;
+  penalized?: number | null;
+  preReading?: number | null;
+  prevUsed?: number | null;
+  prevUsed2?: number | null;
+  prvBillDate?: string | null;
+  prvDiscon?: string | null;
+  prvDueDate?: string | null;
+  purokCode?: string | null;
+  stubOut?: string | null;
+  totalBill?: number | null;
+  verified?: string | null;
+  waterUsage?: number | null;
+}
+```
+### Return Type
+Recall that executing the `UpdateBillingFromCsv` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `UpdateBillingFromCsvData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface UpdateBillingFromCsvData {
+  billingFromCsv_update?: BillingFromCsv_Key | null;
+}
+```
+### Using `UpdateBillingFromCsv`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, updateBillingFromCsv, UpdateBillingFromCsvVariables } from '@dataconnect/generated';
+
+// The `UpdateBillingFromCsv` mutation requires an argument of type `UpdateBillingFromCsvVariables`:
+const updateBillingFromCsvVars: UpdateBillingFromCsvVariables = {
+  id: ..., 
+  accountNo: ..., // optional
+  amortAmnt: ..., // optional
+  arrearsAmnt: ..., // optional
+  arrearsEnv: ..., // optional
+  bStatus: ..., // optional
+  billAmnt: ..., // optional
+  billBrgy: ..., // optional
+  billDate: ..., // optional
+  billNo: ..., // optional
+  billPurok: ..., // optional
+  book: ..., // optional
+  classType: ..., // optional
+  curReading: ..., // optional
+  custNo: ..., // optional
+  discount: ..., // optional
+  disconDate: ..., // optional
+  dueDate: ..., // optional
+  duePenalty: ..., // optional
+  environmentFee: ..., // optional
+  fullName: ..., // optional
+  mPenalty: ..., // optional
+  mrrfDue: ..., // optional
+  mrSysNo: ..., // optional
+  mtrNo: ..., // optional
+  nrWater: ..., // optional
+  paid: ..., // optional
+  paymentDate: ..., // optional
+  paymentReceipt: ..., // optional
+  paymentStatus: ..., // optional
+  penalized: ..., // optional
+  preReading: ..., // optional
+  prevUsed: ..., // optional
+  prevUsed2: ..., // optional
+  prvBillDate: ..., // optional
+  prvDiscon: ..., // optional
+  prvDueDate: ..., // optional
+  purokCode: ..., // optional
+  stubOut: ..., // optional
+  totalBill: ..., // optional
+  verified: ..., // optional
+  waterUsage: ..., // optional
+};
+
+// Call the `updateBillingFromCsv()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await updateBillingFromCsv(updateBillingFromCsvVars);
+// Variables can be defined inline as well.
+const { data } = await updateBillingFromCsv({ id: ..., accountNo: ..., amortAmnt: ..., arrearsAmnt: ..., arrearsEnv: ..., bStatus: ..., billAmnt: ..., billBrgy: ..., billDate: ..., billNo: ..., billPurok: ..., book: ..., classType: ..., curReading: ..., custNo: ..., discount: ..., disconDate: ..., dueDate: ..., duePenalty: ..., environmentFee: ..., fullName: ..., mPenalty: ..., mrrfDue: ..., mrSysNo: ..., mtrNo: ..., nrWater: ..., paid: ..., paymentDate: ..., paymentReceipt: ..., paymentStatus: ..., penalized: ..., preReading: ..., prevUsed: ..., prevUsed2: ..., prvBillDate: ..., prvDiscon: ..., prvDueDate: ..., purokCode: ..., stubOut: ..., totalBill: ..., verified: ..., waterUsage: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await updateBillingFromCsv(dataConnect, updateBillingFromCsvVars);
+
+console.log(data.billingFromCsv_update);
+
+// Or, you can use the `Promise` API.
+updateBillingFromCsv(updateBillingFromCsvVars).then((response) => {
+  const data = response.data;
+  console.log(data.billingFromCsv_update);
+});
+```
+
+### Using `UpdateBillingFromCsv`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, updateBillingFromCsvRef, UpdateBillingFromCsvVariables } from '@dataconnect/generated';
+
+// The `UpdateBillingFromCsv` mutation requires an argument of type `UpdateBillingFromCsvVariables`:
+const updateBillingFromCsvVars: UpdateBillingFromCsvVariables = {
+  id: ..., 
+  accountNo: ..., // optional
+  amortAmnt: ..., // optional
+  arrearsAmnt: ..., // optional
+  arrearsEnv: ..., // optional
+  bStatus: ..., // optional
+  billAmnt: ..., // optional
+  billBrgy: ..., // optional
+  billDate: ..., // optional
+  billNo: ..., // optional
+  billPurok: ..., // optional
+  book: ..., // optional
+  classType: ..., // optional
+  curReading: ..., // optional
+  custNo: ..., // optional
+  discount: ..., // optional
+  disconDate: ..., // optional
+  dueDate: ..., // optional
+  duePenalty: ..., // optional
+  environmentFee: ..., // optional
+  fullName: ..., // optional
+  mPenalty: ..., // optional
+  mrrfDue: ..., // optional
+  mrSysNo: ..., // optional
+  mtrNo: ..., // optional
+  nrWater: ..., // optional
+  paid: ..., // optional
+  paymentDate: ..., // optional
+  paymentReceipt: ..., // optional
+  paymentStatus: ..., // optional
+  penalized: ..., // optional
+  preReading: ..., // optional
+  prevUsed: ..., // optional
+  prevUsed2: ..., // optional
+  prvBillDate: ..., // optional
+  prvDiscon: ..., // optional
+  prvDueDate: ..., // optional
+  purokCode: ..., // optional
+  stubOut: ..., // optional
+  totalBill: ..., // optional
+  verified: ..., // optional
+  waterUsage: ..., // optional
+};
+
+// Call the `updateBillingFromCsvRef()` function to get a reference to the mutation.
+const ref = updateBillingFromCsvRef(updateBillingFromCsvVars);
+// Variables can be defined inline as well.
+const ref = updateBillingFromCsvRef({ id: ..., accountNo: ..., amortAmnt: ..., arrearsAmnt: ..., arrearsEnv: ..., bStatus: ..., billAmnt: ..., billBrgy: ..., billDate: ..., billNo: ..., billPurok: ..., book: ..., classType: ..., curReading: ..., custNo: ..., discount: ..., disconDate: ..., dueDate: ..., duePenalty: ..., environmentFee: ..., fullName: ..., mPenalty: ..., mrrfDue: ..., mrSysNo: ..., mtrNo: ..., nrWater: ..., paid: ..., paymentDate: ..., paymentReceipt: ..., paymentStatus: ..., penalized: ..., preReading: ..., prevUsed: ..., prevUsed2: ..., prvBillDate: ..., prvDiscon: ..., prvDueDate: ..., purokCode: ..., stubOut: ..., totalBill: ..., verified: ..., waterUsage: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = updateBillingFromCsvRef(dataConnect, updateBillingFromCsvVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.billingFromCsv_update);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.billingFromCsv_update);
 });
 ```
 

@@ -76,6 +76,7 @@
 			<Column header="Actions">
 				<template #body="slotProps">
 					<Button
+						@click="toggleActionMenu($event, slotProps.data)"
 						type="button"
 						severity="secondary"
 						icon="pi pi-ellipsis-v"
@@ -86,6 +87,12 @@
 				<BillingExpansion :billing="slotProps.data" />
 			</template>
 		</DataTable>
+
+		<Menu
+			ref="actionMenu"
+			id="overlay_menu"
+			:model="actionItems"
+			:popup="true" />
 	</div>
 </template>
 
@@ -93,12 +100,16 @@
 	import { onMounted, ref } from 'vue';
 	import BillingExpansion from './billing-expansion.vue';
 	import { useBillingStore } from '@/stores/billing';
+	import { useDialog } from 'primevue/usedialog';
+	import EditBilling from './modals/edit-billing.vue';
 
+	const dialog = useDialog();
 	const store = useBillingStore();
 	const first = ref(0); // Bind to DataTable
 	const rows = ref(10);
 	const expandedRows = ref([]);
 	const selectedBillings = ref();
+	const selectedBillingForAction = ref();
 	const emit = defineEmits(['updateSelection']);
 	const clearSelection = () => {
 		selectedBillings.value = [];
@@ -107,6 +118,29 @@
 	defineExpose({
 		clearSelection,
 	});
+
+	const actionMenu = ref();
+	const actionItems = ref([
+		{
+			label: 'Edit',
+			icon: 'pi pi-pencil',
+			command: () => {
+				dialog.open(EditBilling, {
+					data: {
+						billing: selectedBillingForAction.value,
+					},
+				});
+			},
+		},
+		{
+			label: 'Delete',
+			icon: 'pi pi-trash',
+		},
+	]);
+	const toggleActionMenu = (event: any, data: any) => {
+		actionMenu.value.toggle(event);
+		selectedBillingForAction.value = data;
+	};
 
 	// Format functions (assume these are imported or defined globally; adjust as needed)
 	const formatToPeso = (value: number) => `₱${value.toFixed(2)}`; // Example formatter

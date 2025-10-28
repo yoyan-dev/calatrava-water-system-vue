@@ -269,6 +269,55 @@ export interface SearchBillingFromCsvVariables {
   limit?: number | null;
 }
 
+export interface UpdateBillingFromCsvData {
+  billingFromCsv_update?: BillingFromCsv_Key | null;
+}
+
+export interface UpdateBillingFromCsvVariables {
+  id: UUIDString;
+  accountNo?: string | null;
+  amortAmnt?: number | null;
+  arrearsAmnt?: number | null;
+  arrearsEnv?: number | null;
+  bStatus?: string | null;
+  billAmnt?: number | null;
+  billBrgy?: string | null;
+  billDate?: string | null;
+  billNo?: string | null;
+  billPurok?: string | null;
+  book?: string | null;
+  classType?: string | null;
+  curReading?: number | null;
+  custNo?: number | null;
+  discount?: number | null;
+  disconDate?: string | null;
+  dueDate?: string | null;
+  duePenalty?: number | null;
+  environmentFee?: number | null;
+  fullName?: string | null;
+  mPenalty?: number | null;
+  mrrfDue?: number | null;
+  mrSysNo?: number | null;
+  mtrNo?: string | null;
+  nrWater?: number | null;
+  paid?: string | null;
+  paymentDate?: string | null;
+  paymentReceipt?: string | null;
+  paymentStatus?: string | null;
+  penalized?: number | null;
+  preReading?: number | null;
+  prevUsed?: number | null;
+  prevUsed2?: number | null;
+  prvBillDate?: string | null;
+  prvDiscon?: string | null;
+  prvDueDate?: string | null;
+  purokCode?: string | null;
+  stubOut?: string | null;
+  totalBill?: number | null;
+  verified?: string | null;
+  waterUsage?: number | null;
+}
+
 interface CreateBookRef {
   /* Allow users to create refs without passing in DataConnect */
   (vars: CreateBookVariables): MutationRef<CreateBookData, CreateBookVariables>;
@@ -328,6 +377,18 @@ export const deleteBillingFromCsvRef: DeleteBillingFromCsvRef;
 
 export function deleteBillingFromCsv(vars: DeleteBillingFromCsvVariables): MutationPromise<DeleteBillingFromCsvData, DeleteBillingFromCsvVariables>;
 export function deleteBillingFromCsv(dc: DataConnect, vars: DeleteBillingFromCsvVariables): MutationPromise<DeleteBillingFromCsvData, DeleteBillingFromCsvVariables>;
+
+interface UpdateBillingFromCsvRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: UpdateBillingFromCsvVariables): MutationRef<UpdateBillingFromCsvData, UpdateBillingFromCsvVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: UpdateBillingFromCsvVariables): MutationRef<UpdateBillingFromCsvData, UpdateBillingFromCsvVariables>;
+  operationName: string;
+}
+export const updateBillingFromCsvRef: UpdateBillingFromCsvRef;
+
+export function updateBillingFromCsv(vars: UpdateBillingFromCsvVariables): MutationPromise<UpdateBillingFromCsvData, UpdateBillingFromCsvVariables>;
+export function updateBillingFromCsv(dc: DataConnect, vars: UpdateBillingFromCsvVariables): MutationPromise<UpdateBillingFromCsvData, UpdateBillingFromCsvVariables>;
 
 interface PaginatedBillingsRef {
   /* Allow users to create refs without passing in DataConnect */
