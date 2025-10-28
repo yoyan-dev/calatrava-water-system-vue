@@ -87,7 +87,7 @@
 </template>
 
 <script setup lang="ts">
-	import { onMounted, ref, reactive } from 'vue';
+	import { onMounted, ref } from 'vue';
 	import BillingExpansion from './billing-expansion.vue';
 	import { useBillingStore } from '@/stores/billing';
 
