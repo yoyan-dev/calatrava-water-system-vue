@@ -45,6 +45,7 @@ import {
 	AccordionHeader,
 	AccordionContent,
 	ConfirmPopup,
+	ConfirmDialog,
 	Chip,
 	Tooltip,
 } from 'primevue';
@@ -87,6 +88,7 @@ export default {
 		app.component('Column', Column);
 		app.component('ColumnGroup', ColumnGroup);
 		app.component('ConfirmPopup', ConfirmPopup);
+		app.component('ConfirmDialog', ConfirmDialog);
 		app.component('DynamicDialog', DynamicDialog);
 		app.component('Row', Row);
 		app.component('InputText', InputText);

@@ -1,6 +1,7 @@
 import {
 	countBillingFromCsv,
 	createBillingFromCsv,
+	deleteBillingFromCsv,
 	paginatedBillings,
 	searchBillingFromCsv,
 	type CreateBillingFromCsvVariables,
@@ -28,6 +29,15 @@ class BillingRepository {
 		} catch (error) {
 			console.error('Error searching billings:', error);
 			return [];
+		}
+	}
+
+	async deleteBillingFromCsv(id: string) {
+		try {
+			const response = await deleteBillingFromCsv({ id });
+			if (response?.data?.billingFromCsv_delete?.id) return { success: true };
+		} catch (error) {
+			console.error('Error deleting billing:', error);
 		}
 	}
 

@@ -14,7 +14,7 @@ If a user is not using a supported framework, they can use the generated SDK dir
 Here's an example of how to use it with the first 5 operations:
 
 ```js
-import { createBook, createResident, createBilling, createBillingFromCsv, paginatedBillings, countBillingFromCsv, searchBillingFromCsv } from '@dataconnect/generated';
+import { createBook, createResident, createBilling, createBillingFromCsv, deleteBillingFromCsv, paginatedBillings, countBillingFromCsv, searchBillingFromCsv } from '@dataconnect/generated';
 
 
 // Operation CreateBook:  For variables, look at type CreateBookVars in ../index.d.ts
@@ -28,6 +28,9 @@ const { data } = await CreateBilling(dataConnect, createBillingVars);
 
 // Operation CreateBillingFromCsv:  For variables, look at type CreateBillingFromCsvVars in ../index.d.ts
 const { data } = await CreateBillingFromCsv(dataConnect, createBillingFromCsvVars);
+
+// Operation DeleteBillingFromCsv:  For variables, look at type DeleteBillingFromCsvVars in ../index.d.ts
+const { data } = await DeleteBillingFromCsv(dataConnect, deleteBillingFromCsvVars);
 
 // Operation PaginatedBillings:  For variables, look at type PaginatedBillingsVars in ../index.d.ts
 const { data } = await PaginatedBillings(dataConnect, paginatedBillingsVars);

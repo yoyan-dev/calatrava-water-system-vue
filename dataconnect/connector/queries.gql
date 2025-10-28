@@ -9,6 +9,7 @@ query PaginatedBillings(
 		orderBy: [{ mrSysNo: DESC }]
 		offset: $offset
 	) {
+		id
 		accountNo
 		amortAmnt
 		arrearsAmnt

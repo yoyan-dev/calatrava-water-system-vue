@@ -30,16 +30,11 @@ export const useBillingStore = defineStore('billing', () => {
 	// Actions
 
 	async function fetchSearchBillings(query: string) {
-		isLoading.value = true;
 		try {
 			const data = await billGraph.searchBillings(query);
 			billings.value = data as BillingItem[];
 		} catch (error) {
 			console.error('Error searching billings:', error);
-		} finally {
-			setTimeout(() => {
-				isLoading.value = false;
-			}, 1500);
 		}
 	}
 
@@ -107,43 +102,94 @@ export const useBillingStore = defineStore('billing', () => {
 		}
 	}
 
-	async function deleteBilling({
-		accountno,
-		uid,
-	}: {
-		accountno: string;
-		uid: string;
-	}): Promise<StoreResponse> {
-		const response = await billingRepository.deleteBilling({ uid, accountno });
-		if (response?.statusCode == 200) {
+	async function deleteSelectedBillings(selected: Array<BillingItem>): Promise<{
+		status: 'success' | 'error' | 'partial';
+		message: string;
+		deleted: number;
+		failed: number;
+	}> {
+		if (!selected || selected.length === 0) {
 			return {
 				status: 'success',
-				message: response.message,
-				statusMessage: response.statusMessage ?? '',
+				message: 'No billings selected to delete',
+				deleted: 0,
+				failed: 0,
 			};
 		}
-		return {
-			status: 'error',
-			message: response?.message,
-			statusMessage: response?.statusMessage ?? '',
-		};
-	}
 
-	async function deleteBillings(payload: Billing[]): Promise<StoreResponse> {
 		isLoading.value = true;
-		const response = await billingRepository.deleteBillings(payload);
-		if (response?.statusCode == 200) {
+		const results = [];
+
+		try {
+			// Map each deletion to a promise
+			const deletionPromises = selected.map(async (item) => {
+				try {
+					const response = await billGraph.deleteBillingFromCsv(item.id);
+					return { ...response, id: item.id };
+				} catch (err) {
+					console.error(`Failed to delete billing ID: ${item.id}`, err);
+					return {
+						success: false,
+						message: 'Network or server error',
+						id: item.id,
+					};
+				}
+			});
+
+			// Execute all deletions concurrently
+			const responses = await Promise.all(deletionPromises);
+			results.push(...responses);
+
+			// Filter successful deletions
+			const successful = responses.filter((r) => r.success);
+			const failed = responses.filter((r) => !r.success);
+
+			// Remove only successfully deleted items from local state
+			const deletedIds = successful.map((r) => r.id);
+			billings.value = billings.value.filter(
+				(bill) => !deletedIds.includes(bill.id),
+			);
+
+			// Update total count (optional: only if you track it separately)
+			if (typeof totalBillings.value === 'number') {
+				totalBillings.value = Math.max(
+					0,
+					totalBillings.value - successful.length,
+				);
+			}
+
+			// Determine overall status
+			const status =
+				failed.length === 0
+					? 'success'
+					: successful.length === 0
+					? 'error'
+					: 'partial';
+
+			const message =
+				status === 'success'
+					? `Successfully deleted ${successful.length} billing(s)`
+					: status === 'partial'
+					? `Deleted ${successful.length}, failed ${failed.length}`
+					: `Failed to delete ${failed.length} billing(s)`;
+
 			return {
-				status: 'success',
-				message: response.message,
-				statusMessage: response.statusMessage ?? '',
+				status,
+				message,
+				deleted: successful.length,
+				failed: failed.length,
 			};
+		} catch (error) {
+			console.error('Unexpected error in deleteSelectedBillings:', error);
+			return {
+				status: 'error',
+				message: 'An unexpected error occurred',
+				deleted: 0,
+				failed: selected.length,
+			};
+		} finally {
+			isLoading.value = false;
 		}
-		return {
-			status: 'error',
-			message: response?.message,
-			statusMessage: response?.statusMessage ?? '',
-		};
 	}
 
 	async function updateBilling(
@@ -177,7 +223,6 @@ export const useBillingStore = defineStore('billing', () => {
 		fetchPaginateBillings,
 		addBillings,
 		updateBilling,
-		deleteBilling,
-		deleteBillings,
+		deleteSelectedBillings,
 	};
 });

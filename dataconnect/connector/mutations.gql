@@ -250,3 +250,8 @@ mutation CreateBillingFromCsv(
 		}
 	)
 }
+
+mutation DeleteBillingFromCsv($id: UUID!)
+@auth(expr: "auth.token.role == 'admin'") {
+	billingFromCsv_delete(id: $id)
+}

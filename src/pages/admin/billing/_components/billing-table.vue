@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<DataTable
-			v-model:selection="selectedBilling"
+			v-model:selection="selectedBillings"
 			v-model:expandedRows="expandedRows"
 			v-model:first="first"
 			:value="store.billings"
@@ -16,10 +16,11 @@
 			paginatorPosition="bottom"
 			:rowsPerPageOptions="[5, 10, 20, 50]"
 			:totalRecords="store.totalBillings"
+			selectionMode="multiple"
 			currentPageReportTemplate="{first} to {last} of {totalRecords}"
 			paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport"
 			@page="onPage"
-			@selection="onRowSelect">
+			@update:selection="onSelectionUpdate">
 			<template #empty>
 				<div class="flex items-center justify-center p-4">
 					No billing records found.
@@ -97,15 +98,22 @@
 	const first = ref(0); // Bind to DataTable
 	const rows = ref(10);
 	const expandedRows = ref([]);
-	const selectedBilling = ref();
-	const emit = defineEmits(['selected']);
+	const selectedBillings = ref();
+	const emit = defineEmits(['updateSelection']);
+	const clearSelection = () => {
+		selectedBillings.value = [];
+	};
+
+	defineExpose({
+		clearSelection,
+	});
 
 	// Format functions (assume these are imported or defined globally; adjust as needed)
 	const formatToPeso = (value: number) => `₱${value.toFixed(2)}`; // Example formatter
 	const formatDate = (date: string) => new Date(date).toLocaleDateString(); // Example date formatter
 
-	const onRowSelect = () => {
-		emit('selected', selectedBilling.value);
+	const onSelectionUpdate = (updatedSelectionData: any) => {
+		emit('updateSelection', updatedSelectionData);
 	};
 
 	const getSeverity = (status: string) => {

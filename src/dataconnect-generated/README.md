@@ -16,6 +16,7 @@ This README will guide you through the process of using the generated JavaScript
   - [*CreateResident*](#createresident)
   - [*CreateBilling*](#createbilling)
   - [*CreateBillingFromCsv*](#createbillingfromcsv)
+  - [*DeleteBillingFromCsv*](#deletebillingfromcsv)
 
 # Accessing the connector
 A connector is a collection of Queries and Mutations. One SDK is generated for each connector - this SDK is generated for the connector `calatrava-water-system`. You can find more information about connectors in the [Data Connect documentation](https://firebase.google.com/docs/data-connect#how-does).
@@ -109,6 +110,7 @@ The `data` property is an object of type `PaginatedBillingsData`, which is defin
 ```typescript
 export interface PaginatedBillingsData {
   billingFromCsvs: ({
+    id: UUIDString;
     accountNo: string;
     amortAmnt: number;
     arrearsAmnt: number;
@@ -149,7 +151,7 @@ export interface PaginatedBillingsData {
     waterUsage: number;
     createdAt: TimestampString;
     updatedAt: TimestampString;
-  })[];
+  } & BillingFromCsv_Key)[];
 }
 ```
 ### Using `PaginatedBillings`'s action shortcut function
@@ -1181,6 +1183,115 @@ console.log(data.billingFromCsv_insert);
 executeMutation(ref).then((response) => {
   const data = response.data;
   console.log(data.billingFromCsv_insert);
+});
+```
+
+## DeleteBillingFromCsv
+You can execute the `DeleteBillingFromCsv` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+deleteBillingFromCsv(vars: DeleteBillingFromCsvVariables): MutationPromise<DeleteBillingFromCsvData, DeleteBillingFromCsvVariables>;
+
+interface DeleteBillingFromCsvRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: DeleteBillingFromCsvVariables): MutationRef<DeleteBillingFromCsvData, DeleteBillingFromCsvVariables>;
+}
+export const deleteBillingFromCsvRef: DeleteBillingFromCsvRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+deleteBillingFromCsv(dc: DataConnect, vars: DeleteBillingFromCsvVariables): MutationPromise<DeleteBillingFromCsvData, DeleteBillingFromCsvVariables>;
+
+interface DeleteBillingFromCsvRef {
+  ...
+  (dc: DataConnect, vars: DeleteBillingFromCsvVariables): MutationRef<DeleteBillingFromCsvData, DeleteBillingFromCsvVariables>;
+}
+export const deleteBillingFromCsvRef: DeleteBillingFromCsvRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the deleteBillingFromCsvRef:
+```typescript
+const name = deleteBillingFromCsvRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `DeleteBillingFromCsv` mutation requires an argument of type `DeleteBillingFromCsvVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface DeleteBillingFromCsvVariables {
+  id: UUIDString;
+}
+```
+### Return Type
+Recall that executing the `DeleteBillingFromCsv` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `DeleteBillingFromCsvData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface DeleteBillingFromCsvData {
+  billingFromCsv_delete?: BillingFromCsv_Key | null;
+}
+```
+### Using `DeleteBillingFromCsv`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, deleteBillingFromCsv, DeleteBillingFromCsvVariables } from '@dataconnect/generated';
+
+// The `DeleteBillingFromCsv` mutation requires an argument of type `DeleteBillingFromCsvVariables`:
+const deleteBillingFromCsvVars: DeleteBillingFromCsvVariables = {
+  id: ..., 
+};
+
+// Call the `deleteBillingFromCsv()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await deleteBillingFromCsv(deleteBillingFromCsvVars);
+// Variables can be defined inline as well.
+const { data } = await deleteBillingFromCsv({ id: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await deleteBillingFromCsv(dataConnect, deleteBillingFromCsvVars);
+
+console.log(data.billingFromCsv_delete);
+
+// Or, you can use the `Promise` API.
+deleteBillingFromCsv(deleteBillingFromCsvVars).then((response) => {
+  const data = response.data;
+  console.log(data.billingFromCsv_delete);
+});
+```
+
+### Using `DeleteBillingFromCsv`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, deleteBillingFromCsvRef, DeleteBillingFromCsvVariables } from '@dataconnect/generated';
+
+// The `DeleteBillingFromCsv` mutation requires an argument of type `DeleteBillingFromCsvVariables`:
+const deleteBillingFromCsvVars: DeleteBillingFromCsvVariables = {
+  id: ..., 
+};
+
+// Call the `deleteBillingFromCsvRef()` function to get a reference to the mutation.
+const ref = deleteBillingFromCsvRef(deleteBillingFromCsvVars);
+// Variables can be defined inline as well.
+const ref = deleteBillingFromCsvRef({ id: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = deleteBillingFromCsvRef(dataConnect, deleteBillingFromCsvVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.billingFromCsv_delete);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.billingFromCsv_delete);
 });
 ```
 

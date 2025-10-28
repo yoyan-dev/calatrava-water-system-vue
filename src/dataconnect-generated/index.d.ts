@@ -153,8 +153,17 @@ export interface CreateResidentVariables {
   bookId: UUIDString;
 }
 
+export interface DeleteBillingFromCsvData {
+  billingFromCsv_delete?: BillingFromCsv_Key | null;
+}
+
+export interface DeleteBillingFromCsvVariables {
+  id: UUIDString;
+}
+
 export interface PaginatedBillingsData {
   billingFromCsvs: ({
+    id: UUIDString;
     accountNo: string;
     amortAmnt: number;
     arrearsAmnt: number;
@@ -195,7 +204,7 @@ export interface PaginatedBillingsData {
     waterUsage: number;
     createdAt: TimestampString;
     updatedAt: TimestampString;
-  })[];
+  } & BillingFromCsv_Key)[];
 }
 
 export interface PaginatedBillingsVariables {
@@ -307,6 +316,18 @@ export const createBillingFromCsvRef: CreateBillingFromCsvRef;
 
 export function createBillingFromCsv(vars: CreateBillingFromCsvVariables): MutationPromise<CreateBillingFromCsvData, CreateBillingFromCsvVariables>;
 export function createBillingFromCsv(dc: DataConnect, vars: CreateBillingFromCsvVariables): MutationPromise<CreateBillingFromCsvData, CreateBillingFromCsvVariables>;
+
+interface DeleteBillingFromCsvRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: DeleteBillingFromCsvVariables): MutationRef<DeleteBillingFromCsvData, DeleteBillingFromCsvVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: DeleteBillingFromCsvVariables): MutationRef<DeleteBillingFromCsvData, DeleteBillingFromCsvVariables>;
+  operationName: string;
+}
+export const deleteBillingFromCsvRef: DeleteBillingFromCsvRef;
+
+export function deleteBillingFromCsv(vars: DeleteBillingFromCsvVariables): MutationPromise<DeleteBillingFromCsvData, DeleteBillingFromCsvVariables>;
+export function deleteBillingFromCsv(dc: DataConnect, vars: DeleteBillingFromCsvVariables): MutationPromise<DeleteBillingFromCsvData, DeleteBillingFromCsvVariables>;
 
 interface PaginatedBillingsRef {
   /* Allow users to create refs without passing in DataConnect */

@@ -55,6 +55,18 @@ exports.createBillingFromCsv = function createBillingFromCsv(dcOrVars, vars) {
   return executeMutation(createBillingFromCsvRef(dcOrVars, vars));
 };
 
+const deleteBillingFromCsvRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'DeleteBillingFromCsv', inputVars);
+}
+deleteBillingFromCsvRef.operationName = 'DeleteBillingFromCsv';
+exports.deleteBillingFromCsvRef = deleteBillingFromCsvRef;
+
+exports.deleteBillingFromCsv = function deleteBillingFromCsv(dcOrVars, vars) {
+  return executeMutation(deleteBillingFromCsvRef(dcOrVars, vars));
+};
+
 const paginatedBillingsRef = (dcOrVars, vars) => {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars);
   dcInstance._useGeneratedSdk();

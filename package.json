@@ -8,7 +8,8 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"type-check": "vue-tsc --build",
-		"emulators": "firebase emulators:start --import=./firebase-emulator-data --export-on-exit"
+		"emulators": "firebase emulators:start --import=./firebase-emulator-data --export-on-exit",
+		"dataconnect:sdk": "firebase dataconnect:sdk:generate --watch"
 	},
 	"dependencies": {
 		"@dataconnect/generated": "link:src/dataconnect-generated",
