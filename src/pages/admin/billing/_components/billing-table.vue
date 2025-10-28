@@ -1,6 +1,7 @@
 <template>
 	<div>
 		<DataTable
+			v-model:selection="selectedBilling"
 			v-model:expandedRows="expandedRows"
 			v-model:first="first"
 			:value="store.billings"
@@ -17,7 +18,8 @@
 			:totalRecords="store.totalBillings"
 			currentPageReportTemplate="{first} to {last} of {totalRecords}"
 			paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport"
-			@page="onPage">
+			@page="onPage"
+			@selection="onRowSelect">
 			<template #empty>
 				<div class="flex items-center justify-center p-4">
 					No billing records found.
@@ -95,10 +97,16 @@
 	const first = ref(0); // Bind to DataTable
 	const rows = ref(10);
 	const expandedRows = ref([]);
+	const selectedBilling = ref();
+	const emit = defineEmits(['selected']);
 
 	// Format functions (assume these are imported or defined globally; adjust as needed)
 	const formatToPeso = (value: number) => `₱${value.toFixed(2)}`; // Example formatter
 	const formatDate = (date: string) => new Date(date).toLocaleDateString(); // Example date formatter
+
+	const onRowSelect = () => {
+		emit('selected', selectedBilling.value);
+	};
 
 	const getSeverity = (status: string) => {
 		switch (status.toLowerCase()) {
@@ -114,8 +122,6 @@
 	};
 
 	const onPage = (event: any) => {
-		console.log(event);
-
 		const offset = event.first;
 		const orderByField = event.sortField ?? 'bill_no';
 		const orderDirection = event.sortOrder === 1 ? 'ASC' : 'DESC';

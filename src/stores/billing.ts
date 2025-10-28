@@ -30,11 +30,16 @@ export const useBillingStore = defineStore('billing', () => {
 	// Actions
 
 	async function fetchSearchBillings(query: string) {
+		isLoading.value = true;
 		try {
 			const data = await billGraph.searchBillings(query);
 			billings.value = data as BillingItem[];
 		} catch (error) {
 			console.error('Error searching billings:', error);
+		} finally {
+			setTimeout(() => {
+				isLoading.value = false;
+			}, 1500);
 		}
 	}
 

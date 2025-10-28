@@ -3,6 +3,10 @@
 	import BillingTable from './_components/billing-table.vue';
 	import ImportModal from './_components/modals/import-modal.vue';
 	import SearchInput from './_components/search-input.vue';
+
+	const onSelected = (data: Array<any>) => {
+		console.log([...data]);
+	};
 </script>
 <template>
 	<div class="p-4 md:p-6">
@@ -14,7 +18,7 @@
 			</div>
 
 			<div>
-				<BillingTable />
+				<BillingTable @selected="onSelected" />
 			</div>
 		</div>
 	</div>
