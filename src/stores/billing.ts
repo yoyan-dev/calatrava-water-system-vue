@@ -102,6 +102,21 @@ export const useBillingStore = defineStore('billing', () => {
 		}
 	}
 
+	async function deleteOneBilling(id: string) {
+		try {
+			const response = await billGraph.deleteBillingFromCsv(id);
+			if (response?.success) {
+				billings.value = billings.value.filter((item) => item.id !== id);
+				return {
+					status: 'success',
+					message: 'Billing deleted successfully',
+				};
+			}
+		} catch (error) {
+			console.error('Error deleting billing:', error);
+		}
+	}
+
 	async function deleteSelectedBillings(selected: Array<BillingItem>): Promise<{
 		status: 'success' | 'error' | 'partial';
 		message: string;
@@ -227,6 +242,7 @@ export const useBillingStore = defineStore('billing', () => {
 		fetchPaginateBillings,
 		addBillings,
 		updateBillingFromCsv,
+		deleteOneBilling,
 		deleteSelectedBillings,
 	};
 });
