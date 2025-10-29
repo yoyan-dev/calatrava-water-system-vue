@@ -2,15 +2,9 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import type { Billing } from '@/types/billing';
 import type { StoreResponse } from '@/types/store-response';
-import { billingRepository } from '@/repositories/billingRepository';
-import { billingRepository as billRepo } from '@/repositories/v2/billingRepository';
 import { billingRepository as billGraph } from '@/repositories/graph/billingRepository';
-import type {
-	CountBillingFromCsvData,
-	PaginatedBillingsData,
-} from '@/dataconnect-generated';
-
-type BillingItem = PaginatedBillingsData['billingFromCsvs'][number];
+import type { PaginatedBillingsData } from '@/dataconnect-generated';
+import type { BillingItemFromCsv } from '@/types/billing-from-csv';
 
 interface PaginateOptions {
 	limit?: number;
@@ -21,7 +15,7 @@ interface PaginateOptions {
 
 export const useBillingStore = defineStore('billing', () => {
 	// State
-	const billings = ref<BillingItem[]>([]);
+	const billings = ref<BillingItemFromCsv[]>([]);
 	const billing = ref<Billing>();
 	const isLoading = ref(false);
 	const totalBillings = ref<number>(0);
@@ -32,7 +26,7 @@ export const useBillingStore = defineStore('billing', () => {
 	async function fetchSearchBillings(query: string) {
 		try {
 			const data = await billGraph.searchBillings(query);
-			billings.value = data as BillingItem[];
+			billings.value = data as BillingItemFromCsv[];
 		} catch (error) {
 			console.error('Error searching billings:', error);
 		}
@@ -69,7 +63,7 @@ export const useBillingStore = defineStore('billing', () => {
 		}
 	}
 
-	async function addBillings(payload: File): Promise<StoreResponse> {
+	async function addBillingsFromCsv(payload: File): Promise<StoreResponse> {
 		try {
 			isLoading.value = true;
 			const formData = new FormData();
@@ -81,6 +75,8 @@ export const useBillingStore = defineStore('billing', () => {
 					limit: 10,
 					offset: 0,
 				});
+
+				await fetchCountBillings();
 
 				return {
 					status: 'success',
@@ -117,7 +113,9 @@ export const useBillingStore = defineStore('billing', () => {
 		}
 	}
 
-	async function deleteSelectedBillings(selected: Array<BillingItem>): Promise<{
+	async function deleteSelectedBillings(
+		selected: Array<BillingItemFromCsv>,
+	): Promise<{
 		status: 'success' | 'error' | 'partial';
 		message: string;
 		deleted: number;
@@ -209,7 +207,7 @@ export const useBillingStore = defineStore('billing', () => {
 
 	async function updateBillingFromCsv(
 		id: string,
-		payload: Partial<BillingItem>,
+		payload: Partial<BillingItemFromCsv>,
 	) {
 		isLoading.value = true;
 		try {
@@ -240,7 +238,7 @@ export const useBillingStore = defineStore('billing', () => {
 		fetchSearchBillings,
 		fetchCountBillings,
 		fetchPaginateBillings,
-		addBillings,
+		addBillingsFromCsv,
 		updateBillingFromCsv,
 		deleteOneBilling,
 		deleteSelectedBillings,

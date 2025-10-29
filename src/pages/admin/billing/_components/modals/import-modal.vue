@@ -20,7 +20,7 @@
 			return;
 		}
 		isUploading.value = true;
-		const res = await store.addBillings(selectedFile.value);
+		const res = await store.addBillingsFromCsv(selectedFile.value);
 		toast.add({
 			severity: res.status,
 			summary: res.statusMessage || 'Upload Status',
