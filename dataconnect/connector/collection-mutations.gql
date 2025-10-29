@@ -1,0 +1,88 @@
+# mutation CreateCollectionFromCsv(
+# 	$accountNo: String!
+# 	$amortize: Float
+# 	$arrearsAmt: Float
+# 	$arrearsEnv: Float
+# 	$bankGroup: Int
+# 	$bankId: String
+# 	$bankOnline: Float
+# 	$batchNo: String
+# 	$billNo: String
+# 	$branch: String
+# 	$cash: Float!
+# 	$check: Float!
+# 	$checkDate: String
+# 	$checkNo: String
+# 	$cmrrfAmnt: Float!
+# 	$custNo: Int!
+# 	$discAmnt: Float!
+# 	$envFee: Float!
+# 	$fullName: String!
+# 	$mrrfAmnt: Float!
+# 	$onlineref: String
+# 	$othrApply: Float
+# 	$othrIncome: Float
+# 	$othrReconn: Float
+# 	$pacyAmnt: Float!
+# 	$papYAmnt: Float!
+# 	$payArrears: Boolean!
+# 	$penAmnt: Float!
+# 	$pymtDate: String!
+# 	$pymtMethod: Int!
+# 	$receiptNo: String!
+# 	$receiptStatus: String!
+# 	$receiptType: String!
+# 	$runBalance: Float
+# 	$sysNo: Int!
+# 	$teller: String!
+# 	$trackDt: String!
+# 	$waterBill: Float!
+# ) @auth(expr: "auth.token.role == 'admin'") {
+# 	collectionFromCsv_insert(
+# 		data: {
+# 			accountNo: $accountNo
+# 			amortize: $amortize
+# 			arrearsAmt: $arrearsAmt
+# 			arrearsEnv: $arrearsEnv
+# 			bankGroup: $bankGroup
+# 			bankId: $bankId
+# 			bankOnline: $bankOnline
+# 			batchNo: $batchNo
+# 			billNo: $billNo
+# 			branch: $branch
+# 			cash: $cash
+# 			check: $check
+# 			checkDate: $checkDate
+# 			checkNo: $checkNo
+# 			cmrrfAmnt: $cmrrfAmnt
+# 			custNo: $custNo
+# 			discAmnt: $discAmnt
+# 			envFee: $envFee
+# 			fullName: $fullName
+# 			mrrfAmnt: $mrrfAmnt
+# 			onlineref: $onlineref
+# 			othrApply: $othrApply
+# 			othrIncome: $othrIncome
+# 			othrReconn: $othrReconn
+# 			pacyAmnt: $pacyAmnt
+# 			papYAmnt: $papYAmnt
+# 			payArrears: $payArrears
+# 			penAmnt: $penAmnt
+# 			pymtDate: $pymtDate
+# 			pymtMethod: $pymtMethod
+# 			receiptNo: $receiptNo
+# 			receiptStatus: $receiptStatus
+# 			receiptType: $receiptType
+# 			runBalance: $runBalance
+# 			sysNo: $sysNo
+# 			teller: $teller
+# 			trackDt: $trackDt
+# 			waterBill: $waterBill
+# 		}
+# 	)
+# }
+
+mutation CreateCollectionFromCsv($data: CollectionFromCsv_Data!)
+@auth(expr: "auth.token.role == 'admin'") {
+	collectionFromCsv_insert(data: $data)
+}

@@ -3,7 +3,15 @@
 		class="p-4 m-2 bg-white dark:bg-surface-800 rounded-lg shadow-md border border-gray-200 dark:border-surface-600">
 		<!-- Header -->
 		<div class="flex justify-between items-center mb-4">
-			<h5 class="font-bold text-xl">Bill No. {{ billing.billNo }}</h5>
+			<div>
+				<h5 class="font-bold text-xl">Bill No. {{ billing.billNo }}</h5>
+				<div class="text-xs text-surface-600 dark:text-surface-400">
+					<div>Uploaded: {{ formatTimestamp(billing.createdAt) }}</div>
+					<div v-if="billing.updatedAt">
+						Updated: {{ formatTimestamp(billing.updatedAt) }}
+					</div>
+				</div>
+			</div>
 			<div class="flex gap-2">
 				<!-- Paid / Unpaid -->
 				<div
@@ -261,19 +269,18 @@
 		</div>
 
 		<!-- Payment Info -->
-		<div
+		<!-- <div
 			v-if="billing.paid === 'T'"
 			class="mt-3 text-center text-sm text-green-600 dark:text-green-400">
 			Paid on {{ formatDate(billing.paymentDate) }} • Receipt:
 			{{ billing.paymentReceipt }}
-		</div>
+		</div> -->
 	</div>
 </template>
 
 <script setup lang="ts">
 	import { computed } from 'vue';
-	import Tag from 'primevue/tag';
-	import Badge from 'primevue/badge';
+	import { format } from 'date-fns';
 
 	const props = defineProps<{
 		billing: {
@@ -322,6 +329,9 @@
 
 	// Formatters
 	const formatToPeso = (value: number) => `₱${value.toFixed(2)}`;
+	const formatTimestamp = (timestamp: string) => {
+		return format(new Date(timestamp), 'MMM dd, yyyy | hh:mm a');
+	};
 
 	const formatDate = (date: string) => {
 		if (!date || date.includes('/  /')) return '—';

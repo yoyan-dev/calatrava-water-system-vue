@@ -97,6 +97,220 @@ export interface CreateBookVariables {
   name: string;
 }
 
+export interface CreateCollectionFromCsvData {
+  collectionFromCsv_insert: CollectionFromCsv_Key;
+}
+
+export interface CreateCollectionFromCsvVariables {
+  data: {
+    id?: UUIDString | null;
+    id_expr?: {
+    };
+      accountNo?: string | null;
+      accountNo_expr?: {
+      };
+        amortize?: number | null;
+        amortize_expr?: {
+        };
+          amortize_update?: ({
+            inc?: number | null;
+            dec?: number | null;
+          })[];
+            arrearsAmt?: number | null;
+            arrearsAmt_expr?: {
+            };
+              arrearsAmt_update?: ({
+                inc?: number | null;
+                dec?: number | null;
+              })[];
+                arrearsEnv?: number | null;
+                arrearsEnv_expr?: {
+                };
+                  arrearsEnv_update?: ({
+                    inc?: number | null;
+                    dec?: number | null;
+                  })[];
+                    bankGroup?: number | null;
+                    bankGroup_expr?: {
+                    };
+                      bankGroup_update?: ({
+                        inc?: number | null;
+                        dec?: number | null;
+                      })[];
+                        bankId?: string | null;
+                        bankId_expr?: {
+                        };
+                          bankOnline?: number | null;
+                          bankOnline_expr?: {
+                          };
+                            bankOnline_update?: ({
+                              inc?: number | null;
+                              dec?: number | null;
+                            })[];
+                              batchNo?: string | null;
+                              batchNo_expr?: {
+                              };
+                                billNo?: string | null;
+                                billNo_expr?: {
+                                };
+                                  branch?: string | null;
+                                  branch_expr?: {
+                                  };
+                                    cash?: number | null;
+                                    cash_expr?: {
+                                    };
+                                      cash_update?: ({
+                                        inc?: number | null;
+                                        dec?: number | null;
+                                      })[];
+                                        check?: number | null;
+                                        check_expr?: {
+                                        };
+                                          check_update?: ({
+                                            inc?: number | null;
+                                            dec?: number | null;
+                                          })[];
+                                            checkDate?: string | null;
+                                            checkDate_expr?: {
+                                            };
+                                              checkNo?: string | null;
+                                              checkNo_expr?: {
+                                              };
+                                                cmrrfAmnt?: number | null;
+                                                cmrrfAmnt_expr?: {
+                                                };
+                                                  cmrrfAmnt_update?: ({
+                                                    inc?: number | null;
+                                                    dec?: number | null;
+                                                  })[];
+                                                    custNo?: number | null;
+                                                    custNo_expr?: {
+                                                    };
+                                                      custNo_update?: ({
+                                                        inc?: number | null;
+                                                        dec?: number | null;
+                                                      })[];
+                                                        discAmnt?: number | null;
+                                                        discAmnt_expr?: {
+                                                        };
+                                                          discAmnt_update?: ({
+                                                            inc?: number | null;
+                                                            dec?: number | null;
+                                                          })[];
+                                                            envFee?: number | null;
+                                                            envFee_expr?: {
+                                                            };
+                                                              envFee_update?: ({
+                                                                inc?: number | null;
+                                                                dec?: number | null;
+                                                              })[];
+                                                                fullName?: string | null;
+                                                                fullName_expr?: {
+                                                                };
+                                                                  mrrfAmnt?: number | null;
+                                                                  mrrfAmnt_expr?: {
+                                                                  };
+                                                                    mrrfAmnt_update?: ({
+                                                                      inc?: number | null;
+                                                                      dec?: number | null;
+                                                                    })[];
+                                                                      onlineref?: string | null;
+                                                                      onlineref_expr?: {
+                                                                      };
+                                                                        othrApply?: number | null;
+                                                                        othrApply_expr?: {
+                                                                        };
+                                                                          othrApply_update?: ({
+                                                                            inc?: number | null;
+                                                                            dec?: number | null;
+                                                                          })[];
+                                                                            othrIncome?: number | null;
+                                                                            othrIncome_expr?: {
+                                                                            };
+                                                                              othrIncome_update?: ({
+                                                                                inc?: number | null;
+                                                                                dec?: number | null;
+                                                                              })[];
+                                                                                othrReconn?: number | null;
+                                                                                othrReconn_expr?: {
+                                                                                };
+                                                                                  othrReconn_update?: ({
+                                                                                    inc?: number | null;
+                                                                                    dec?: number | null;
+                                                                                  })[];
+                                                                                    pacyAmnt?: number | null;
+                                                                                    pacyAmnt_expr?: {
+                                                                                    };
+                                                                                      pacyAmnt_update?: ({
+                                                                                        inc?: number | null;
+                                                                                        dec?: number | null;
+                                                                                      })[];
+                                                                                        papYAmnt?: number | null;
+                                                                                        papYAmnt_expr?: {
+                                                                                        };
+                                                                                          papYAmnt_update?: ({
+                                                                                            inc?: number | null;
+                                                                                            dec?: number | null;
+                                                                                          })[];
+                                                                                            payArrears?: boolean | null;
+                                                                                            payArrears_expr?: {
+                                                                                            };
+                                                                                              penAmnt?: number | null;
+                                                                                              penAmnt_expr?: {
+                                                                                              };
+                                                                                                penAmnt_update?: ({
+                                                                                                  inc?: number | null;
+                                                                                                  dec?: number | null;
+                                                                                                })[];
+                                                                                                  pymtDate?: string | null;
+                                                                                                  pymtDate_expr?: {
+                                                                                                  };
+                                                                                                    pymtMethod?: number | null;
+                                                                                                    pymtMethod_expr?: {
+                                                                                                    };
+                                                                                                      pymtMethod_update?: ({
+                                                                                                        inc?: number | null;
+                                                                                                        dec?: number | null;
+                                                                                                      })[];
+                                                                                                        receiptNo?: string | null;
+                                                                                                        receiptNo_expr?: {
+                                                                                                        };
+                                                                                                          receiptStatus?: string | null;
+                                                                                                          receiptStatus_expr?: {
+                                                                                                          };
+                                                                                                            receiptType?: string | null;
+                                                                                                            receiptType_expr?: {
+                                                                                                            };
+                                                                                                              runBalance?: number | null;
+                                                                                                              runBalance_expr?: {
+                                                                                                              };
+                                                                                                                runBalance_update?: ({
+                                                                                                                  inc?: number | null;
+                                                                                                                  dec?: number | null;
+                                                                                                                })[];
+                                                                                                                  sysNo?: number | null;
+                                                                                                                  sysNo_expr?: {
+                                                                                                                  };
+                                                                                                                    sysNo_update?: ({
+                                                                                                                      inc?: number | null;
+                                                                                                                      dec?: number | null;
+                                                                                                                    })[];
+                                                                                                                      teller?: string | null;
+                                                                                                                      teller_expr?: {
+                                                                                                                      };
+                                                                                                                        trackDt?: string | null;
+                                                                                                                        trackDt_expr?: {
+                                                                                                                        };
+                                                                                                                          waterBill?: number | null;
+                                                                                                                          waterBill_expr?: {
+                                                                                                                          };
+                                                                                                                            waterBill_update?: ({
+                                                                                                                              inc?: number | null;
+                                                                                                                              dec?: number | null;
+                                                                                                                            })[];
+  };
+}
+
 export interface CreateResidentData {
   query?: {
     residents: ({
@@ -163,7 +377,7 @@ export interface PaginatedBillingsData {
     verified: string;
     waterUsage: number;
     createdAt: TimestampString;
-    updatedAt: TimestampString;
+    updatedAt?: TimestampString | null;
   } & BillingFromCsv_Key)[];
 }
 
@@ -220,7 +434,7 @@ export interface SearchBillingFromCsvData {
     verified: string;
     waterUsage: number;
     createdAt: TimestampString;
-    updatedAt: TimestampString;
+    updatedAt?: TimestampString | null;
   })[];
 }
 
@@ -337,6 +551,18 @@ export const updateBillingFromCsvRef: UpdateBillingFromCsvRef;
 
 export function updateBillingFromCsv(vars: UpdateBillingFromCsvVariables): MutationPromise<UpdateBillingFromCsvData, UpdateBillingFromCsvVariables>;
 export function updateBillingFromCsv(dc: DataConnect, vars: UpdateBillingFromCsvVariables): MutationPromise<UpdateBillingFromCsvData, UpdateBillingFromCsvVariables>;
+
+interface CreateCollectionFromCsvRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreateCollectionFromCsvVariables): MutationRef<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: CreateCollectionFromCsvVariables): MutationRef<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
+  operationName: string;
+}
+export const createCollectionFromCsvRef: CreateCollectionFromCsvRef;
+
+export function createCollectionFromCsv(vars: CreateCollectionFromCsvVariables): MutationPromise<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
+export function createCollectionFromCsv(dc: DataConnect, vars: CreateCollectionFromCsvVariables): MutationPromise<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
 
 interface PaginatedBillingsRef {
   /* Allow users to create refs without passing in DataConnect */

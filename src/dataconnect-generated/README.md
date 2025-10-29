@@ -17,6 +17,7 @@ This README will guide you through the process of using the generated JavaScript
   - [*CreateBillingFromCsv*](#createbillingfromcsv)
   - [*DeleteBillingFromCsv*](#deletebillingfromcsv)
   - [*UpdateBillingFromCsv*](#updatebillingfromcsv)
+  - [*CreateCollectionFromCsv*](#createcollectionfromcsv)
 
 # Accessing the connector
 A connector is a collection of Queries and Mutations. One SDK is generated for each connector - this SDK is generated for the connector `calatrava-water-system`. You can find more information about connectors in the [Data Connect documentation](https://firebase.google.com/docs/data-connect#how-does).
@@ -150,7 +151,7 @@ export interface PaginatedBillingsData {
     verified: string;
     waterUsage: number;
     createdAt: TimestampString;
-    updatedAt: TimestampString;
+    updatedAt?: TimestampString | null;
   } & BillingFromCsv_Key)[];
 }
 ```
@@ -404,7 +405,7 @@ export interface SearchBillingFromCsvData {
     verified: string;
     waterUsage: number;
     createdAt: TimestampString;
-    updatedAt: TimestampString;
+    updatedAt?: TimestampString | null;
   })[];
 }
 ```
@@ -1304,6 +1305,321 @@ console.log(data.billingFromCsv_update);
 executeMutation(ref).then((response) => {
   const data = response.data;
   console.log(data.billingFromCsv_update);
+});
+```
+
+## CreateCollectionFromCsv
+You can execute the `CreateCollectionFromCsv` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+createCollectionFromCsv(vars: CreateCollectionFromCsvVariables): MutationPromise<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
+
+interface CreateCollectionFromCsvRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreateCollectionFromCsvVariables): MutationRef<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
+}
+export const createCollectionFromCsvRef: CreateCollectionFromCsvRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+createCollectionFromCsv(dc: DataConnect, vars: CreateCollectionFromCsvVariables): MutationPromise<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
+
+interface CreateCollectionFromCsvRef {
+  ...
+  (dc: DataConnect, vars: CreateCollectionFromCsvVariables): MutationRef<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
+}
+export const createCollectionFromCsvRef: CreateCollectionFromCsvRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the createCollectionFromCsvRef:
+```typescript
+const name = createCollectionFromCsvRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `CreateCollectionFromCsv` mutation requires an argument of type `CreateCollectionFromCsvVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface CreateCollectionFromCsvVariables {
+  data: {
+    id?: UUIDString | null;
+    id_expr?: {
+    };
+      accountNo?: string | null;
+      accountNo_expr?: {
+      };
+        amortize?: number | null;
+        amortize_expr?: {
+        };
+          amortize_update?: ({
+            inc?: number | null;
+            dec?: number | null;
+          })[];
+            arrearsAmt?: number | null;
+            arrearsAmt_expr?: {
+            };
+              arrearsAmt_update?: ({
+                inc?: number | null;
+                dec?: number | null;
+              })[];
+                arrearsEnv?: number | null;
+                arrearsEnv_expr?: {
+                };
+                  arrearsEnv_update?: ({
+                    inc?: number | null;
+                    dec?: number | null;
+                  })[];
+                    bankGroup?: number | null;
+                    bankGroup_expr?: {
+                    };
+                      bankGroup_update?: ({
+                        inc?: number | null;
+                        dec?: number | null;
+                      })[];
+                        bankId?: string | null;
+                        bankId_expr?: {
+                        };
+                          bankOnline?: number | null;
+                          bankOnline_expr?: {
+                          };
+                            bankOnline_update?: ({
+                              inc?: number | null;
+                              dec?: number | null;
+                            })[];
+                              batchNo?: string | null;
+                              batchNo_expr?: {
+                              };
+                                billNo?: string | null;
+                                billNo_expr?: {
+                                };
+                                  branch?: string | null;
+                                  branch_expr?: {
+                                  };
+                                    cash?: number | null;
+                                    cash_expr?: {
+                                    };
+                                      cash_update?: ({
+                                        inc?: number | null;
+                                        dec?: number | null;
+                                      })[];
+                                        check?: number | null;
+                                        check_expr?: {
+                                        };
+                                          check_update?: ({
+                                            inc?: number | null;
+                                            dec?: number | null;
+                                          })[];
+                                            checkDate?: string | null;
+                                            checkDate_expr?: {
+                                            };
+                                              checkNo?: string | null;
+                                              checkNo_expr?: {
+                                              };
+                                                cmrrfAmnt?: number | null;
+                                                cmrrfAmnt_expr?: {
+                                                };
+                                                  cmrrfAmnt_update?: ({
+                                                    inc?: number | null;
+                                                    dec?: number | null;
+                                                  })[];
+                                                    custNo?: number | null;
+                                                    custNo_expr?: {
+                                                    };
+                                                      custNo_update?: ({
+                                                        inc?: number | null;
+                                                        dec?: number | null;
+                                                      })[];
+                                                        discAmnt?: number | null;
+                                                        discAmnt_expr?: {
+                                                        };
+                                                          discAmnt_update?: ({
+                                                            inc?: number | null;
+                                                            dec?: number | null;
+                                                          })[];
+                                                            envFee?: number | null;
+                                                            envFee_expr?: {
+                                                            };
+                                                              envFee_update?: ({
+                                                                inc?: number | null;
+                                                                dec?: number | null;
+                                                              })[];
+                                                                fullName?: string | null;
+                                                                fullName_expr?: {
+                                                                };
+                                                                  mrrfAmnt?: number | null;
+                                                                  mrrfAmnt_expr?: {
+                                                                  };
+                                                                    mrrfAmnt_update?: ({
+                                                                      inc?: number | null;
+                                                                      dec?: number | null;
+                                                                    })[];
+                                                                      onlineref?: string | null;
+                                                                      onlineref_expr?: {
+                                                                      };
+                                                                        othrApply?: number | null;
+                                                                        othrApply_expr?: {
+                                                                        };
+                                                                          othrApply_update?: ({
+                                                                            inc?: number | null;
+                                                                            dec?: number | null;
+                                                                          })[];
+                                                                            othrIncome?: number | null;
+                                                                            othrIncome_expr?: {
+                                                                            };
+                                                                              othrIncome_update?: ({
+                                                                                inc?: number | null;
+                                                                                dec?: number | null;
+                                                                              })[];
+                                                                                othrReconn?: number | null;
+                                                                                othrReconn_expr?: {
+                                                                                };
+                                                                                  othrReconn_update?: ({
+                                                                                    inc?: number | null;
+                                                                                    dec?: number | null;
+                                                                                  })[];
+                                                                                    pacyAmnt?: number | null;
+                                                                                    pacyAmnt_expr?: {
+                                                                                    };
+                                                                                      pacyAmnt_update?: ({
+                                                                                        inc?: number | null;
+                                                                                        dec?: number | null;
+                                                                                      })[];
+                                                                                        papYAmnt?: number | null;
+                                                                                        papYAmnt_expr?: {
+                                                                                        };
+                                                                                          papYAmnt_update?: ({
+                                                                                            inc?: number | null;
+                                                                                            dec?: number | null;
+                                                                                          })[];
+                                                                                            payArrears?: boolean | null;
+                                                                                            payArrears_expr?: {
+                                                                                            };
+                                                                                              penAmnt?: number | null;
+                                                                                              penAmnt_expr?: {
+                                                                                              };
+                                                                                                penAmnt_update?: ({
+                                                                                                  inc?: number | null;
+                                                                                                  dec?: number | null;
+                                                                                                })[];
+                                                                                                  pymtDate?: string | null;
+                                                                                                  pymtDate_expr?: {
+                                                                                                  };
+                                                                                                    pymtMethod?: number | null;
+                                                                                                    pymtMethod_expr?: {
+                                                                                                    };
+                                                                                                      pymtMethod_update?: ({
+                                                                                                        inc?: number | null;
+                                                                                                        dec?: number | null;
+                                                                                                      })[];
+                                                                                                        receiptNo?: string | null;
+                                                                                                        receiptNo_expr?: {
+                                                                                                        };
+                                                                                                          receiptStatus?: string | null;
+                                                                                                          receiptStatus_expr?: {
+                                                                                                          };
+                                                                                                            receiptType?: string | null;
+                                                                                                            receiptType_expr?: {
+                                                                                                            };
+                                                                                                              runBalance?: number | null;
+                                                                                                              runBalance_expr?: {
+                                                                                                              };
+                                                                                                                runBalance_update?: ({
+                                                                                                                  inc?: number | null;
+                                                                                                                  dec?: number | null;
+                                                                                                                })[];
+                                                                                                                  sysNo?: number | null;
+                                                                                                                  sysNo_expr?: {
+                                                                                                                  };
+                                                                                                                    sysNo_update?: ({
+                                                                                                                      inc?: number | null;
+                                                                                                                      dec?: number | null;
+                                                                                                                    })[];
+                                                                                                                      teller?: string | null;
+                                                                                                                      teller_expr?: {
+                                                                                                                      };
+                                                                                                                        trackDt?: string | null;
+                                                                                                                        trackDt_expr?: {
+                                                                                                                        };
+                                                                                                                          waterBill?: number | null;
+                                                                                                                          waterBill_expr?: {
+                                                                                                                          };
+                                                                                                                            waterBill_update?: ({
+                                                                                                                              inc?: number | null;
+                                                                                                                              dec?: number | null;
+                                                                                                                            })[];
+  };
+}
+```
+### Return Type
+Recall that executing the `CreateCollectionFromCsv` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `CreateCollectionFromCsvData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface CreateCollectionFromCsvData {
+  collectionFromCsv_insert: CollectionFromCsv_Key;
+}
+```
+### Using `CreateCollectionFromCsv`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, createCollectionFromCsv, CreateCollectionFromCsvVariables } from '@dataconnect/generated';
+
+// The `CreateCollectionFromCsv` mutation requires an argument of type `CreateCollectionFromCsvVariables`:
+const createCollectionFromCsvVars: CreateCollectionFromCsvVariables = {
+  data: ..., 
+};
+
+// Call the `createCollectionFromCsv()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await createCollectionFromCsv(createCollectionFromCsvVars);
+// Variables can be defined inline as well.
+const { data } = await createCollectionFromCsv({ data: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await createCollectionFromCsv(dataConnect, createCollectionFromCsvVars);
+
+console.log(data.collectionFromCsv_insert);
+
+// Or, you can use the `Promise` API.
+createCollectionFromCsv(createCollectionFromCsvVars).then((response) => {
+  const data = response.data;
+  console.log(data.collectionFromCsv_insert);
+});
+```
+
+### Using `CreateCollectionFromCsv`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, createCollectionFromCsvRef, CreateCollectionFromCsvVariables } from '@dataconnect/generated';
+
+// The `CreateCollectionFromCsv` mutation requires an argument of type `CreateCollectionFromCsvVariables`:
+const createCollectionFromCsvVars: CreateCollectionFromCsvVariables = {
+  data: ..., 
+};
+
+// Call the `createCollectionFromCsvRef()` function to get a reference to the mutation.
+const ref = createCollectionFromCsvRef(createCollectionFromCsvVars);
+// Variables can be defined inline as well.
+const ref = createCollectionFromCsvRef({ data: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = createCollectionFromCsvRef(dataConnect, createCollectionFromCsvVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.collectionFromCsv_insert);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.collectionFromCsv_insert);
 });
 ```
 

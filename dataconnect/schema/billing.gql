@@ -94,5 +94,5 @@ type BillingFromCsv @table @index(fields: ["billNo"]) {
 	verified: String! # e.g "T"
 	waterUsage: Float! # e.g 9
 	createdAt: Timestamp! @default(expr: "request.time") # e.g 2025-10-20T12:28:03Z
-	updatedAt: Timestamp! @default(expr: "request.time") # e.g 2025-10-20T12:28:03Z
+	updatedAt: Timestamp # e.g 2025-10-20T12:28:03Z
 }

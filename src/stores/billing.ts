@@ -71,10 +71,7 @@ export const useBillingStore = defineStore('billing', () => {
 			const response = await billGraph.addBillingFromCsv(formData);
 			if (response?.statusCode == 200) {
 				isLoading.value = false;
-				await fetchPaginateBillings({
-					limit: 10,
-					offset: 0,
-				});
+				billings.value = [...billings.value, ...response.data];
 
 				await fetchCountBillings();
 
@@ -213,9 +210,14 @@ export const useBillingStore = defineStore('billing', () => {
 		try {
 			const response = await billGraph.updateBillingFromCsv({ id, ...payload });
 			if (response?.success) {
+				const timestamp = new Date().toISOString();
 				const index = billings.value.findIndex((item) => item.id === id);
 				if (index !== -1) {
-					billings.value[index] = { ...billings.value[index], ...payload };
+					billings.value[index] = {
+						...billings.value[index],
+						updatedAt: timestamp,
+						...payload,
+					};
 				}
 				return {
 					status: 'success',

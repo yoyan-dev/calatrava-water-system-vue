@@ -220,6 +220,7 @@ mutation UpdateBillingFromCsv(
 			totalBill: $totalBill
 			verified: $verified
 			waterUsage: $waterUsage
+			updatedAt_expr: "request.time"
 		}
 	)
 }

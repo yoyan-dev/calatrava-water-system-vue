@@ -61,6 +61,7 @@ class BillingRepository {
 			const rows = text.trim().split('\n').slice(1); // Skip header row
 			const header = text.trim().split('\n')[0].split(',');
 
+			const billingData = [];
 			// Process each row
 			for (const row of rows) {
 				const values = row.split(',');
@@ -226,12 +227,16 @@ class BillingRepository {
 				});
 
 				const res = await createBillingFromCsv(data);
+				const timestamp = new Date().toISOString();
+				const id = res.data.billingFromCsv_insert.id;
+				billingData.push({ id, createdAt: timestamp, ...data });
 			}
 
 			return {
 				success: true,
 				message: 'Billing records created successfully',
 				statusCode: 200,
+				data: billingData,
 			};
 		} catch (error) {
 			console.error(
