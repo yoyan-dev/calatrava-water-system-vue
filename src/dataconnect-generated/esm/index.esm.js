@@ -28,17 +28,6 @@ export function createResident(dcOrVars, vars) {
   return executeMutation(createResidentRef(dcOrVars, vars));
 }
 
-export const createBillingRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return mutationRef(dcInstance, 'CreateBilling', inputVars);
-}
-createBillingRef.operationName = 'CreateBilling';
-
-export function createBilling(dcOrVars, vars) {
-  return executeMutation(createBillingRef(dcOrVars, vars));
-}
-
 export const createBillingFromCsvRef = (dcOrVars, vars) => {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();

@@ -31,10 +31,6 @@ export interface CountBillingFromCsvData {
   })[];
 }
 
-export interface CreateBillingData {
-  billing_insert: Billing_Key;
-}
-
 export interface CreateBillingFromCsvData {
   billingFromCsv_insert: BillingFromCsv_Key;
 }
@@ -81,47 +77,6 @@ export interface CreateBillingFromCsvVariables {
   totalBill: number;
   verified: string;
   waterUsage: number;
-}
-
-export interface CreateBillingVariables {
-  billNo: number;
-  billDate: DateString;
-  dueDate: DateString;
-  bStatus: string;
-  mrSysNo: number;
-  penalized: string;
-  mPenalty: number;
-  discount: number;
-  paid: string;
-  verified: string;
-  arrearsAmt: number;
-  mrrfDue: number;
-  curReading: number;
-  disconDate?: DateString | null;
-  mtrNo: string;
-  preReading: number;
-  purokCode: string;
-  billPurok: string;
-  billBrgy: string;
-  prevUsed: number;
-  prevUsed2: number;
-  prvBillDate: string;
-  prvDueDate: string;
-  prvDiscon: string;
-  stubOut: string;
-  amortAmt: number;
-  nrWater: number;
-  residentId: UUIDString;
-  bookId: UUIDString;
-  billAmt: number;
-  duePenalty: number;
-  arrearsEnv: number;
-  environmentFee: number;
-  totalBill: number;
-  waterUsage: number;
-  paymentReceipt?: string | null;
-  paymentStatus?: string | null;
-  paymentDate?: DateString | null;
 }
 
 export interface CreateBookData {
@@ -341,18 +296,6 @@ export const createResidentRef: CreateResidentRef;
 
 export function createResident(vars: CreateResidentVariables): MutationPromise<CreateResidentData, CreateResidentVariables>;
 export function createResident(dc: DataConnect, vars: CreateResidentVariables): MutationPromise<CreateResidentData, CreateResidentVariables>;
-
-interface CreateBillingRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (vars: CreateBillingVariables): MutationRef<CreateBillingData, CreateBillingVariables>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: CreateBillingVariables): MutationRef<CreateBillingData, CreateBillingVariables>;
-  operationName: string;
-}
-export const createBillingRef: CreateBillingRef;
-
-export function createBilling(vars: CreateBillingVariables): MutationPromise<CreateBillingData, CreateBillingVariables>;
-export function createBilling(dc: DataConnect, vars: CreateBillingVariables): MutationPromise<CreateBillingData, CreateBillingVariables>;
 
 interface CreateBillingFromCsvRef {
   /* Allow users to create refs without passing in DataConnect */

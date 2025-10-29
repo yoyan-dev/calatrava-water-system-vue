@@ -1,5 +1,6 @@
 <template>
 	<Menu
+		class="py-2"
 		ref="menuRef"
 		:model="actionItems"
 		:popup="true" />
@@ -73,6 +74,18 @@
 						}
 					},
 				});
+			},
+		},
+		{
+			label: `Mark ${props.rowData?.paid === 'F' ? 'Paid' : 'Unpaid'}`,
+			icon: `pi pi-receipt`,
+			command: () => {
+				const paidObj = {
+					paid: props.rowData?.paid === 'F' ? 'T' : 'F',
+					paymentStatus: props.rowData?.paid === 'F' ? 'paid' : 'unpaid',
+				};
+
+				store.updateBillingFromCsv(props.rowData.id, paidObj);
 			},
 		},
 	]);
