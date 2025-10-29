@@ -7,11 +7,10 @@
 			:value="store.billings"
 			:loading="store.isLoading"
 			:lazy="true"
-			dataKey="billNo"
+			dataKey="id"
 			size="small"
 			class="text-sm"
 			:rows="rows"
-			:globalFilterFields="['billNo']"
 			paginator
 			paginatorPosition="bottom"
 			:rowsPerPageOptions="[5, 10, 20, 50]"
@@ -32,7 +31,7 @@
 				:exportable="false" />
 			<Column
 				expander
-				style="width: 5rem" />
+				style="width: 1rem" />
 			<Column
 				class="font-medium"
 				header="Bill No."

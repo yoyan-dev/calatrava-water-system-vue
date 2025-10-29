@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import type { StoreResponse } from '@/types/store-response';
-import { collectionRepository as billGraph } from '@/repositories/graph/collectionRepository';
+import { collectionRepository as collectionGraph } from '@/repositories/graph/collectionRepository';
 import type { CollectionItemFromCsv } from '@/types/collection-from-csv';
 
 interface PaginateOptions {
@@ -13,7 +13,7 @@ interface PaginateOptions {
 
 export const useCollectionStore = defineStore('Collection', () => {
 	// State
-	const Collections = ref<CollectionItemFromCsv[]>([]);
+	const collections = ref<CollectionItemFromCsv[]>([]);
 	const isLoading = ref(false);
 	const totalCollections = ref<number>(0);
 	const searchQuery = ref<string>('');
@@ -22,15 +22,15 @@ export const useCollectionStore = defineStore('Collection', () => {
 
 	async function fetchSearchCollections(query: string) {
 		try {
-			const data = await billGraph.searchCollections(query);
-			Collections.value = data as CollectionItemFromCsv[];
+			const data = await collectionGraph.searchCollections(query);
+			collections.value = data as CollectionItemFromCsv[];
 		} catch (error) {
 			console.error('Error searching Collections:', error);
 		}
 	}
 
 	async function fetchCountCollections() {
-		const result = await billGraph.countCollections();
+		const result = await collectionGraph.countCollections();
 		totalCollections.value =
 			Array.isArray(result) && result.length > 0 ? result[0]._count : 0;
 	}
@@ -38,20 +38,20 @@ export const useCollectionStore = defineStore('Collection', () => {
 	async function fetchPaginateCollections({
 		limit = 10,
 		offset = 0,
-		orderByField = 'bill_no',
+		orderByField = 'sysNo',
 		orderDirection = 'DESC',
 	}: PaginateOptions) {
 		isLoading.value = true;
 
 		try {
-			const data = await billGraph.paginateCollection(
+			const data = await collectionGraph.paginateCollection(
 				limit,
 				offset,
 				orderByField,
 				orderDirection,
 			);
 			if (data) {
-				Collections.value = data;
+				collections.value = data;
 			}
 		} catch (error) {
 			console.error('Error fetching Collections:', error);
@@ -65,10 +65,10 @@ export const useCollectionStore = defineStore('Collection', () => {
 			isLoading.value = true;
 			const formData = new FormData();
 			formData.append('file', payload);
-			const response = await billGraph.addCollectionFromCsv(formData);
+			const response = await collectionGraph.addCollectionFromCsv(formData);
 			if (response?.statusCode == 200) {
 				isLoading.value = false;
-				Collections.value = [...Collections.value, ...response.data];
+				collections.value = [...collections.value, ...response.data];
 
 				await fetchCountCollections();
 
@@ -94,9 +94,9 @@ export const useCollectionStore = defineStore('Collection', () => {
 
 	async function deleteOneCollection(id: string) {
 		try {
-			const response = await billGraph.deleteCollectionFromCsv(id);
+			const response = await collectionGraph.deleteCollectionFromCsv(id);
 			if (response?.success) {
-				Collections.value = Collections.value.filter((item) => item.id !== id);
+				collections.value = collections.value.filter((item) => item.id !== id);
 				return {
 					status: 'success',
 					message: 'Collection deleted successfully',
@@ -131,7 +131,9 @@ export const useCollectionStore = defineStore('Collection', () => {
 			// Map each deletion to a promise
 			const deletionPromises = selected.map(async (item) => {
 				try {
-					const response = await billGraph.deleteCollectionFromCsv(item.id);
+					const response = await collectionGraph.deleteCollectionFromCsv(
+						item.id,
+					);
 					return { ...response, id: item.id };
 				} catch (err) {
 					console.error(`Failed to delete Collection ID: ${item.id}`, err);
@@ -153,8 +155,8 @@ export const useCollectionStore = defineStore('Collection', () => {
 
 			// Remove only successfully deleted items from local state
 			const deletedIds = successful.map((r) => r.id);
-			Collections.value = Collections.value.filter(
-				(bill) => !deletedIds.includes(bill.id),
+			collections.value = collections.value.filter(
+				(item) => !deletedIds.includes(item.id),
 			);
 
 			// Update total count (optional: only if you track it separately)
@@ -205,16 +207,16 @@ export const useCollectionStore = defineStore('Collection', () => {
 	) {
 		isLoading.value = true;
 		try {
-			const response = await billGraph.updateCollectionFromCsv({
+			const response = await collectionGraph.updateCollectionFromCsv({
 				id,
 				...payload,
 			});
 			if (response?.success) {
 				const timestamp = new Date().toISOString();
-				const index = Collections.value.findIndex((item) => item.id === id);
+				const index = collections.value.findIndex((item) => item.id === id);
 				if (index !== -1) {
-					Collections.value[index] = {
-						...Collections.value[index],
+					collections.value[index] = {
+						...collections.value[index],
 						updatedAt: timestamp,
 						...payload,
 					};
@@ -232,7 +234,7 @@ export const useCollectionStore = defineStore('Collection', () => {
 	}
 
 	return {
-		Collections,
+		collections,
 		isLoading,
 		totalCollections,
 		searchQuery,

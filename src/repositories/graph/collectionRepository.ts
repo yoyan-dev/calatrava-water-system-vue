@@ -7,6 +7,7 @@ import {
 	updateCollectionFromCsv,
 	type CreateCollectionFromCsvVariables,
 } from '@/dataconnect-generated';
+import Papa from 'papaparse';
 
 class CollectionRepository {
 	async countCollections() {
@@ -58,18 +59,32 @@ class CollectionRepository {
 			const file = payload.get('file') as File;
 			if (!file) throw new Error('No file uploaded');
 
-			// Read the CSV file content
+			// -------------------------------------------------
+			// 1. Parse CSV – handles commas inside quotes
+			// -------------------------------------------------
 			const text = await file.text();
-			const rows = text.trim().split('\n').slice(1); // Skip header row
-			const header = text.trim().split('\n')[0].split(',');
+
+			const parseResult = Papa.parse(text, {
+				header: false, // we keep the raw header line
+				skipEmptyLines: true,
+				dynamicTyping: false, // keep everything as string first
+			});
+
+			if (parseResult.errors.length) {
+				console.warn('CSV parse warnings:', parseResult.errors);
+			}
+
+			const rawRows = parseResult.data as string[][]; // each row = array of cells
+			const header = rawRows[0]; // first row = header
+			const rows = rawRows.slice(1); // data rows
 
 			const collectionData: any[] = [];
 
-			// Process each row
-			for (const row of rows) {
-				const values = row.split(',');
-
-				// Initialize data object matching CreateCollectionFromCsvVariables
+			// -------------------------------------------------
+			// 2. Map each row → mutation variables
+			// -------------------------------------------------
+			for (const rawValues of rows) {
+				// rawValues already have quotes stripped by PapaParse
 				const data: CreateCollectionFromCsvVariables = {
 					accountNo: '',
 					amortize: 0,
@@ -111,11 +126,10 @@ class CollectionRepository {
 					waterBill: 0,
 				};
 
-				// Map CSV headers (snake_case) to camelCase mutation variables
-				header.forEach((key, index) => {
-					const rawValue = values[index] || '';
-					const value = rawValue.replace(/^"|"$/g, '').trim(); // Remove quotes
+				header.forEach((key, idx) => {
+					let value = (rawValues[idx] ?? '').trim();
 
+					// ---- custom per-column handling ----
 					switch (key) {
 						case 'sysno':
 							data.sysNo = parseInt(value) || 0;
@@ -170,7 +184,7 @@ class CollectionRepository {
 							break;
 						case 'fullname':
 							data.fullName = value;
-							break;
+							break; // ← now correct!
 						case 'onlineref':
 							data.onlineref = value;
 							break;
@@ -234,16 +248,14 @@ class CollectionRepository {
 					}
 				});
 
-				// Execute mutation
+				// -------------------------------------------------
+				// 3. Call mutation
+				// -------------------------------------------------
 				const res = await createCollectionFromCsv(data);
-				const timestamp = new Date().toISOString();
 				const id = res.data.collectionFromCsv_insert.id;
+				const timestamp = new Date().toISOString();
 
-				collectionData.push({
-					id,
-					createdAt: timestamp,
-					...data,
-				});
+				collectionData.push({ id, createdAt: timestamp, ...data });
 			}
 
 			return {
@@ -253,10 +265,7 @@ class CollectionRepository {
 				data: collectionData,
 			};
 		} catch (error) {
-			console.error(
-				'Error processing CSV and creating collection records:',
-				error,
-			);
+			console.error('Error processing CSV:', error);
 			throw new Error(
 				`Failed to process CSV: ${
 					error instanceof Error ? error.message : error

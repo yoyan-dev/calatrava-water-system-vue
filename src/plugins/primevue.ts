@@ -48,6 +48,7 @@ import {
 	ConfirmDialog,
 	Chip,
 	Tooltip,
+	ToggleSwitch,
 } from 'primevue';
 import PrimeVue from 'primevue/config';
 import Aura from '@primeuix/themes/aura';
@@ -123,5 +124,6 @@ export default {
 		app.component('AccordionPanel', AccordionPanel);
 		app.component('AccordionHeader', AccordionHeader);
 		app.component('AccordionContent', AccordionContent);
+		app.component('ToggleSwitch', ToggleSwitch);
 	},
 };
