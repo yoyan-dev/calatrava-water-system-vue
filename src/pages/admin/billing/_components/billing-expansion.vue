@@ -5,19 +5,37 @@
 		<div class="flex justify-between items-center mb-4">
 			<h5 class="font-bold text-xl">Bill No. {{ billing.billNo }}</h5>
 			<div class="flex gap-2">
-				<Tag
-					:value="billing.paid === 'T' ? 'PAID' : 'UNPAID'"
-					:severity="billing.paid === 'T' ? 'success' : 'danger'" />
-				<Tag
-					:icon="billing.verified === 'T' ? 'pi pi-check' : undefined"
-					:severity="billing.verified === 'T' ? 'success' : 'warning'">
-					<div class="flex items-center px-1">
-						{{ billing.verified === 'T' ? 'Verified' : 'Unverified' }}
-					</div>
-				</Tag>
+				<!-- Paid / Unpaid -->
+				<div
+					:class="[
+						'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-base  font-normal',
+						billing.paid === 'T'
+							? ' text-green-600 dark:text-green-400'
+							: ' text-red-600 dark:text-red-400',
+					]">
+					<i
+						v-if="billing.paid === 'T'"
+						class="pi pi-check-square text-[0.85em]" />
+					<span>{{ billing.paid === 'T' ? 'Paid' : 'Unpaid' }}</span>
+				</div>
+
+				<!-- Verified / Unverified -->
+				<div
+					:class="[
+						'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-base  font-normal',
+						billing.verified === 'T'
+							? ' text-emerald-600 dark:text-emerald-400'
+							: ' text-amber-600 dark:text-amber-400',
+					]">
+					<i
+						v-if="billing.verified === 'T'"
+						class="pi pi-verified text-[0.85em]" />
+					<span>{{
+						billing.verified === 'T' ? 'Verified' : 'Unverified'
+					}}</span>
+				</div>
 			</div>
 		</div>
-
 		<!-- Consumer Name -->
 		<div class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md">
 			<p class="text-sm text-gray-600 dark:text-surface-300">Consumer:</p>
