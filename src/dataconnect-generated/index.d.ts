@@ -273,6 +273,42 @@ export interface UpdateBillingFromCsvVariables {
   waterUsage?: number | null;
 }
 
+interface PaginatedBillingsRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars?: PaginatedBillingsVariables): QueryRef<PaginatedBillingsData, PaginatedBillingsVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars?: PaginatedBillingsVariables): QueryRef<PaginatedBillingsData, PaginatedBillingsVariables>;
+  operationName: string;
+}
+export const paginatedBillingsRef: PaginatedBillingsRef;
+
+export function paginatedBillings(vars?: PaginatedBillingsVariables): QueryPromise<PaginatedBillingsData, PaginatedBillingsVariables>;
+export function paginatedBillings(dc: DataConnect, vars?: PaginatedBillingsVariables): QueryPromise<PaginatedBillingsData, PaginatedBillingsVariables>;
+
+interface CountBillingFromCsvRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<CountBillingFromCsvData, undefined>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect): QueryRef<CountBillingFromCsvData, undefined>;
+  operationName: string;
+}
+export const countBillingFromCsvRef: CountBillingFromCsvRef;
+
+export function countBillingFromCsv(): QueryPromise<CountBillingFromCsvData, undefined>;
+export function countBillingFromCsv(dc: DataConnect): QueryPromise<CountBillingFromCsvData, undefined>;
+
+interface SearchBillingFromCsvRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars?: SearchBillingFromCsvVariables): QueryRef<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars?: SearchBillingFromCsvVariables): QueryRef<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
+  operationName: string;
+}
+export const searchBillingFromCsvRef: SearchBillingFromCsvRef;
+
+export function searchBillingFromCsv(vars?: SearchBillingFromCsvVariables): QueryPromise<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
+export function searchBillingFromCsv(dc: DataConnect, vars?: SearchBillingFromCsvVariables): QueryPromise<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
+
 interface CreateBookRef {
   /* Allow users to create refs without passing in DataConnect */
   (vars: CreateBookVariables): MutationRef<CreateBookData, CreateBookVariables>;
@@ -332,40 +368,4 @@ export const updateBillingFromCsvRef: UpdateBillingFromCsvRef;
 
 export function updateBillingFromCsv(vars: UpdateBillingFromCsvVariables): MutationPromise<UpdateBillingFromCsvData, UpdateBillingFromCsvVariables>;
 export function updateBillingFromCsv(dc: DataConnect, vars: UpdateBillingFromCsvVariables): MutationPromise<UpdateBillingFromCsvData, UpdateBillingFromCsvVariables>;
-
-interface PaginatedBillingsRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (vars?: PaginatedBillingsVariables): QueryRef<PaginatedBillingsData, PaginatedBillingsVariables>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars?: PaginatedBillingsVariables): QueryRef<PaginatedBillingsData, PaginatedBillingsVariables>;
-  operationName: string;
-}
-export const paginatedBillingsRef: PaginatedBillingsRef;
-
-export function paginatedBillings(vars?: PaginatedBillingsVariables): QueryPromise<PaginatedBillingsData, PaginatedBillingsVariables>;
-export function paginatedBillings(dc: DataConnect, vars?: PaginatedBillingsVariables): QueryPromise<PaginatedBillingsData, PaginatedBillingsVariables>;
-
-interface CountBillingFromCsvRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (): QueryRef<CountBillingFromCsvData, undefined>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect): QueryRef<CountBillingFromCsvData, undefined>;
-  operationName: string;
-}
-export const countBillingFromCsvRef: CountBillingFromCsvRef;
-
-export function countBillingFromCsv(): QueryPromise<CountBillingFromCsvData, undefined>;
-export function countBillingFromCsv(dc: DataConnect): QueryPromise<CountBillingFromCsvData, undefined>;
-
-interface SearchBillingFromCsvRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (vars?: SearchBillingFromCsvVariables): QueryRef<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars?: SearchBillingFromCsvVariables): QueryRef<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
-  operationName: string;
-}
-export const searchBillingFromCsvRef: SearchBillingFromCsvRef;
-
-export function searchBillingFromCsv(vars?: SearchBillingFromCsvVariables): QueryPromise<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
-export function searchBillingFromCsv(dc: DataConnect, vars?: SearchBillingFromCsvVariables): QueryPromise<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
 

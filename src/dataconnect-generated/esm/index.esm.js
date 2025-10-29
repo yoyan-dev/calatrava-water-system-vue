@@ -6,6 +6,39 @@ export const connectorConfig = {
   location: 'asia-southeast1'
 };
 
+export const paginatedBillingsRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'PaginatedBillings', inputVars);
+}
+paginatedBillingsRef.operationName = 'PaginatedBillings';
+
+export function paginatedBillings(dcOrVars, vars) {
+  return executeQuery(paginatedBillingsRef(dcOrVars, vars));
+}
+
+export const countBillingFromCsvRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'CountBillingFromCsv');
+}
+countBillingFromCsvRef.operationName = 'CountBillingFromCsv';
+
+export function countBillingFromCsv(dc) {
+  return executeQuery(countBillingFromCsvRef(dc));
+}
+
+export const searchBillingFromCsvRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'SearchBillingFromCsv', inputVars);
+}
+searchBillingFromCsvRef.operationName = 'SearchBillingFromCsv';
+
+export function searchBillingFromCsv(dcOrVars, vars) {
+  return executeQuery(searchBillingFromCsvRef(dcOrVars, vars));
+}
+
 export const createBookRef = (dcOrVars, vars) => {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
@@ -59,38 +92,5 @@ updateBillingFromCsvRef.operationName = 'UpdateBillingFromCsv';
 
 export function updateBillingFromCsv(dcOrVars, vars) {
   return executeMutation(updateBillingFromCsvRef(dcOrVars, vars));
-}
-
-export const paginatedBillingsRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'PaginatedBillings', inputVars);
-}
-paginatedBillingsRef.operationName = 'PaginatedBillings';
-
-export function paginatedBillings(dcOrVars, vars) {
-  return executeQuery(paginatedBillingsRef(dcOrVars, vars));
-}
-
-export const countBillingFromCsvRef = (dc) => {
-  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'CountBillingFromCsv');
-}
-countBillingFromCsvRef.operationName = 'CountBillingFromCsv';
-
-export function countBillingFromCsv(dc) {
-  return executeQuery(countBillingFromCsvRef(dc));
-}
-
-export const searchBillingFromCsvRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'SearchBillingFromCsv', inputVars);
-}
-searchBillingFromCsvRef.operationName = 'SearchBillingFromCsv';
-
-export function searchBillingFromCsv(dcOrVars, vars) {
-  return executeQuery(searchBillingFromCsvRef(dcOrVars, vars));
 }
 

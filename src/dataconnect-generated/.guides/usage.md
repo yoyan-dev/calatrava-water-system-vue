@@ -14,8 +14,17 @@ If a user is not using a supported framework, they can use the generated SDK dir
 Here's an example of how to use it with the first 5 operations:
 
 ```js
-import { createBook, createResident, createBillingFromCsv, deleteBillingFromCsv, updateBillingFromCsv, paginatedBillings, countBillingFromCsv, searchBillingFromCsv } from '@dataconnect/generated';
+import { paginatedBillings, countBillingFromCsv, searchBillingFromCsv, createBook, createResident, createBillingFromCsv, deleteBillingFromCsv, updateBillingFromCsv } from '@dataconnect/generated';
 
+
+// Operation PaginatedBillings:  For variables, look at type PaginatedBillingsVars in ../index.d.ts
+const { data } = await PaginatedBillings(dataConnect, paginatedBillingsVars);
+
+// Operation CountBillingFromCsv: 
+const { data } = await CountBillingFromCsv(dataConnect);
+
+// Operation SearchBillingFromCsv:  For variables, look at type SearchBillingFromCsvVars in ../index.d.ts
+const { data } = await SearchBillingFromCsv(dataConnect, searchBillingFromCsvVars);
 
 // Operation CreateBook:  For variables, look at type CreateBookVars in ../index.d.ts
 const { data } = await CreateBook(dataConnect, createBookVars);
@@ -31,15 +40,6 @@ const { data } = await DeleteBillingFromCsv(dataConnect, deleteBillingFromCsvVar
 
 // Operation UpdateBillingFromCsv:  For variables, look at type UpdateBillingFromCsvVars in ../index.d.ts
 const { data } = await UpdateBillingFromCsv(dataConnect, updateBillingFromCsvVars);
-
-// Operation PaginatedBillings:  For variables, look at type PaginatedBillingsVars in ../index.d.ts
-const { data } = await PaginatedBillings(dataConnect, paginatedBillingsVars);
-
-// Operation CountBillingFromCsv: 
-const { data } = await CountBillingFromCsv(dataConnect);
-
-// Operation SearchBillingFromCsv:  For variables, look at type SearchBillingFromCsvVars in ../index.d.ts
-const { data } = await SearchBillingFromCsv(dataConnect, searchBillingFromCsvVars);
 
 
 ```
