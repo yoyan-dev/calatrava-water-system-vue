@@ -88,26 +88,18 @@
 			</template>
 		</DataTable>
 
-		<Menu
+		<TableROwActions
 			ref="actionMenu"
-			id="overlay_menu"
-			:model="actionItems"
-			:popup="true" />
+			:rowData="selectedBillingForAction" />
 	</div>
 </template>
 
 <script setup lang="ts">
 	import { onMounted, ref } from 'vue';
 	import BillingExpansion from './billing-expansion.vue';
+	import TableROwActions from './table-row-actions.vue';
 	import { useBillingStore } from '@/stores/billing';
-	import { useDialog } from 'primevue/usedialog';
-	import EditBilling from './modals/edit-billing.vue';
-	import { useConfirm } from 'primevue/useconfirm';
-	import { useToast } from 'primevue/usetoast';
 
-	const toast = useToast();
-	const confirm = useConfirm();
-	const dialog = useDialog();
 	const store = useBillingStore();
 	const first = ref(0); // Bind to DataTable
 	const rows = ref(10);
@@ -124,52 +116,6 @@
 	});
 
 	const actionMenu = ref();
-	const actionItems = ref([
-		{
-			label: 'Edit',
-			icon: 'pi pi-pencil',
-			command: () => {
-				dialog.open(EditBilling, {
-					data: {
-						billing: selectedBillingForAction.value,
-					},
-				});
-			},
-		},
-		{
-			label: 'Delete',
-			icon: 'pi pi-trash',
-			command: () => {
-				confirm.require({
-					message: 'Are you sure you want to delete this billing record?',
-					header: 'Confirm',
-					icon: 'pi pi-exclamation-triangle',
-					acceptProps: {
-						severity: 'danger',
-						label: 'Yes, Delete',
-					},
-					rejectProps: {
-						severity: 'secondary',
-						label: 'Cancel',
-					},
-					accept: async () => {
-						try {
-							await store.deleteOneBilling(selectedBillingForAction.value.id);
-							toast.add({
-								severity: 'success',
-								summary: 'Success',
-								detail: 'Billing deleted successfully',
-							});
-							clearSelection();
-							fetchBillingData();
-						} catch (error) {
-							console.error('Delete failed:', error);
-						}
-					},
-				});
-			},
-		},
-	]);
 	const toggleActionMenu = (event: any, data: any) => {
 		actionMenu.value.toggle(event);
 		selectedBillingForAction.value = data;
