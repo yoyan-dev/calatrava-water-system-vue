@@ -36,6 +36,12 @@ export interface CountBillingFromCsvData {
   })[];
 }
 
+export interface CountCollectionFromCsvData {
+  collectionFromCsvs: ({
+    _count: number;
+  })[];
+}
+
 export interface CreateBillingFromCsvData {
   billingFromCsv_insert: BillingFromCsv_Key;
 }
@@ -102,213 +108,44 @@ export interface CreateCollectionFromCsvData {
 }
 
 export interface CreateCollectionFromCsvVariables {
-  data: {
-    id?: UUIDString | null;
-    id_expr?: {
-    };
-      accountNo?: string | null;
-      accountNo_expr?: {
-      };
-        amortize?: number | null;
-        amortize_expr?: {
-        };
-          amortize_update?: ({
-            inc?: number | null;
-            dec?: number | null;
-          })[];
-            arrearsAmt?: number | null;
-            arrearsAmt_expr?: {
-            };
-              arrearsAmt_update?: ({
-                inc?: number | null;
-                dec?: number | null;
-              })[];
-                arrearsEnv?: number | null;
-                arrearsEnv_expr?: {
-                };
-                  arrearsEnv_update?: ({
-                    inc?: number | null;
-                    dec?: number | null;
-                  })[];
-                    bankGroup?: number | null;
-                    bankGroup_expr?: {
-                    };
-                      bankGroup_update?: ({
-                        inc?: number | null;
-                        dec?: number | null;
-                      })[];
-                        bankId?: string | null;
-                        bankId_expr?: {
-                        };
-                          bankOnline?: number | null;
-                          bankOnline_expr?: {
-                          };
-                            bankOnline_update?: ({
-                              inc?: number | null;
-                              dec?: number | null;
-                            })[];
-                              batchNo?: string | null;
-                              batchNo_expr?: {
-                              };
-                                billNo?: string | null;
-                                billNo_expr?: {
-                                };
-                                  branch?: string | null;
-                                  branch_expr?: {
-                                  };
-                                    cash?: number | null;
-                                    cash_expr?: {
-                                    };
-                                      cash_update?: ({
-                                        inc?: number | null;
-                                        dec?: number | null;
-                                      })[];
-                                        check?: number | null;
-                                        check_expr?: {
-                                        };
-                                          check_update?: ({
-                                            inc?: number | null;
-                                            dec?: number | null;
-                                          })[];
-                                            checkDate?: string | null;
-                                            checkDate_expr?: {
-                                            };
-                                              checkNo?: string | null;
-                                              checkNo_expr?: {
-                                              };
-                                                cmrrfAmnt?: number | null;
-                                                cmrrfAmnt_expr?: {
-                                                };
-                                                  cmrrfAmnt_update?: ({
-                                                    inc?: number | null;
-                                                    dec?: number | null;
-                                                  })[];
-                                                    custNo?: number | null;
-                                                    custNo_expr?: {
-                                                    };
-                                                      custNo_update?: ({
-                                                        inc?: number | null;
-                                                        dec?: number | null;
-                                                      })[];
-                                                        discAmnt?: number | null;
-                                                        discAmnt_expr?: {
-                                                        };
-                                                          discAmnt_update?: ({
-                                                            inc?: number | null;
-                                                            dec?: number | null;
-                                                          })[];
-                                                            envFee?: number | null;
-                                                            envFee_expr?: {
-                                                            };
-                                                              envFee_update?: ({
-                                                                inc?: number | null;
-                                                                dec?: number | null;
-                                                              })[];
-                                                                fullName?: string | null;
-                                                                fullName_expr?: {
-                                                                };
-                                                                  mrrfAmnt?: number | null;
-                                                                  mrrfAmnt_expr?: {
-                                                                  };
-                                                                    mrrfAmnt_update?: ({
-                                                                      inc?: number | null;
-                                                                      dec?: number | null;
-                                                                    })[];
-                                                                      onlineref?: string | null;
-                                                                      onlineref_expr?: {
-                                                                      };
-                                                                        othrApply?: number | null;
-                                                                        othrApply_expr?: {
-                                                                        };
-                                                                          othrApply_update?: ({
-                                                                            inc?: number | null;
-                                                                            dec?: number | null;
-                                                                          })[];
-                                                                            othrIncome?: number | null;
-                                                                            othrIncome_expr?: {
-                                                                            };
-                                                                              othrIncome_update?: ({
-                                                                                inc?: number | null;
-                                                                                dec?: number | null;
-                                                                              })[];
-                                                                                othrReconn?: number | null;
-                                                                                othrReconn_expr?: {
-                                                                                };
-                                                                                  othrReconn_update?: ({
-                                                                                    inc?: number | null;
-                                                                                    dec?: number | null;
-                                                                                  })[];
-                                                                                    pacyAmnt?: number | null;
-                                                                                    pacyAmnt_expr?: {
-                                                                                    };
-                                                                                      pacyAmnt_update?: ({
-                                                                                        inc?: number | null;
-                                                                                        dec?: number | null;
-                                                                                      })[];
-                                                                                        papYAmnt?: number | null;
-                                                                                        papYAmnt_expr?: {
-                                                                                        };
-                                                                                          papYAmnt_update?: ({
-                                                                                            inc?: number | null;
-                                                                                            dec?: number | null;
-                                                                                          })[];
-                                                                                            payArrears?: boolean | null;
-                                                                                            payArrears_expr?: {
-                                                                                            };
-                                                                                              penAmnt?: number | null;
-                                                                                              penAmnt_expr?: {
-                                                                                              };
-                                                                                                penAmnt_update?: ({
-                                                                                                  inc?: number | null;
-                                                                                                  dec?: number | null;
-                                                                                                })[];
-                                                                                                  pymtDate?: string | null;
-                                                                                                  pymtDate_expr?: {
-                                                                                                  };
-                                                                                                    pymtMethod?: number | null;
-                                                                                                    pymtMethod_expr?: {
-                                                                                                    };
-                                                                                                      pymtMethod_update?: ({
-                                                                                                        inc?: number | null;
-                                                                                                        dec?: number | null;
-                                                                                                      })[];
-                                                                                                        receiptNo?: string | null;
-                                                                                                        receiptNo_expr?: {
-                                                                                                        };
-                                                                                                          receiptStatus?: string | null;
-                                                                                                          receiptStatus_expr?: {
-                                                                                                          };
-                                                                                                            receiptType?: string | null;
-                                                                                                            receiptType_expr?: {
-                                                                                                            };
-                                                                                                              runBalance?: number | null;
-                                                                                                              runBalance_expr?: {
-                                                                                                              };
-                                                                                                                runBalance_update?: ({
-                                                                                                                  inc?: number | null;
-                                                                                                                  dec?: number | null;
-                                                                                                                })[];
-                                                                                                                  sysNo?: number | null;
-                                                                                                                  sysNo_expr?: {
-                                                                                                                  };
-                                                                                                                    sysNo_update?: ({
-                                                                                                                      inc?: number | null;
-                                                                                                                      dec?: number | null;
-                                                                                                                    })[];
-                                                                                                                      teller?: string | null;
-                                                                                                                      teller_expr?: {
-                                                                                                                      };
-                                                                                                                        trackDt?: string | null;
-                                                                                                                        trackDt_expr?: {
-                                                                                                                        };
-                                                                                                                          waterBill?: number | null;
-                                                                                                                          waterBill_expr?: {
-                                                                                                                          };
-                                                                                                                            waterBill_update?: ({
-                                                                                                                              inc?: number | null;
-                                                                                                                              dec?: number | null;
-                                                                                                                            })[];
-  };
+  accountNo: string;
+  amortize?: number | null;
+  arrearsAmt?: number | null;
+  arrearsEnv?: number | null;
+  bankGroup?: number | null;
+  bankId?: string | null;
+  bankOnline?: number | null;
+  batchNo?: string | null;
+  billNo?: string | null;
+  branch?: string | null;
+  cash: number;
+  check: number;
+  checkDate?: string | null;
+  checkNo?: string | null;
+  cmrrfAmnt: number;
+  custNo: number;
+  discAmnt: number;
+  envFee: number;
+  fullName: string;
+  mrrfAmnt: number;
+  onlineref?: string | null;
+  othrApply?: number | null;
+  othrIncome?: number | null;
+  othrReconn?: number | null;
+  pacyAmnt: number;
+  papYAmnt: number;
+  payArrears: boolean;
+  penAmnt: number;
+  pymtDate: string;
+  pymtMethod: number;
+  receiptNo: string;
+  receiptStatus: string;
+  receiptType: string;
+  runBalance?: number | null;
+  sysNo: number;
+  teller: string;
+  trackDt: string;
+  waterBill: number;
 }
 
 export interface CreateResidentData {
@@ -332,6 +169,14 @@ export interface DeleteBillingFromCsvData {
 }
 
 export interface DeleteBillingFromCsvVariables {
+  id: UUIDString;
+}
+
+export interface DeleteCollectionFromCsvData {
+  collectionFromCsv_delete?: CollectionFromCsv_Key | null;
+}
+
+export interface DeleteCollectionFromCsvVariables {
   id: UUIDString;
 }
 
@@ -382,6 +227,59 @@ export interface PaginatedBillingsData {
 }
 
 export interface PaginatedBillingsVariables {
+  limit?: number | null;
+  offset?: number | null;
+  orderByField?: string | null;
+  orderDirection?: string | null;
+}
+
+export interface PaginatedCollectionsData {
+  collectionFromCsvs: ({
+    accountNo: string;
+    amortize?: number | null;
+    arrearsAmt?: number | null;
+    arrearsEnv?: number | null;
+    bankGroup?: number | null;
+    bankId?: string | null;
+    bankOnline?: number | null;
+    batchNo?: string | null;
+    billNo?: string | null;
+    branch?: string | null;
+    cash: number;
+    check: number;
+    checkDate?: string | null;
+    checkNo?: string | null;
+    cmrrfAmnt: number;
+    custNo: number;
+    discAmnt: number;
+    envFee: number;
+    fullName: string;
+    mrrfAmnt: number;
+    onlineref?: string | null;
+    othrApply?: number | null;
+    othrIncome?: number | null;
+    othrReconn?: number | null;
+    pacyAmnt: number;
+    papYAmnt: number;
+    payArrears: boolean;
+    penAmnt: number;
+    pymtDate: string;
+    pymtMethod: number;
+    receiptNo: string;
+    receiptStatus: string;
+    receiptType: string;
+    runBalance?: number | null;
+    sysNo: number;
+    teller: string;
+    trackDt: string;
+    waterBill: number;
+    id: UUIDString;
+    createdAt: TimestampString;
+    updatedAt?: TimestampString | null;
+  } & CollectionFromCsv_Key)[];
+}
+
+export interface PaginatedCollectionsVariables {
   limit?: number | null;
   offset?: number | null;
   orderByField?: string | null;
@@ -443,6 +341,57 @@ export interface SearchBillingFromCsvVariables {
   limit?: number | null;
 }
 
+export interface SearchCollectionFromCsvData {
+  collectionFromCsvs_search: ({
+    accountNo: string;
+    amortize?: number | null;
+    arrearsAmt?: number | null;
+    arrearsEnv?: number | null;
+    bankGroup?: number | null;
+    bankId?: string | null;
+    bankOnline?: number | null;
+    batchNo?: string | null;
+    billNo?: string | null;
+    branch?: string | null;
+    cash: number;
+    check: number;
+    checkDate?: string | null;
+    checkNo?: string | null;
+    cmrrfAmnt: number;
+    custNo: number;
+    discAmnt: number;
+    envFee: number;
+    fullName: string;
+    mrrfAmnt: number;
+    onlineref?: string | null;
+    othrApply?: number | null;
+    othrIncome?: number | null;
+    othrReconn?: number | null;
+    pacyAmnt: number;
+    papYAmnt: number;
+    payArrears: boolean;
+    penAmnt: number;
+    pymtDate: string;
+    pymtMethod: number;
+    receiptNo: string;
+    receiptStatus: string;
+    receiptType: string;
+    runBalance?: number | null;
+    sysNo: number;
+    teller: string;
+    trackDt: string;
+    waterBill: number;
+    id: UUIDString;
+    createdAt: TimestampString;
+    updatedAt?: TimestampString | null;
+  } & CollectionFromCsv_Key)[];
+}
+
+export interface SearchCollectionFromCsvVariables {
+  query?: string | null;
+  limit?: number | null;
+}
+
 export interface UpdateBillingFromCsvData {
   billingFromCsv_update?: BillingFromCsv_Key | null;
 }
@@ -490,6 +439,52 @@ export interface UpdateBillingFromCsvVariables {
   totalBill?: number | null;
   verified?: string | null;
   waterUsage?: number | null;
+}
+
+export interface UpdateCollectionFromCsvData {
+  collectionFromCsv_update?: CollectionFromCsv_Key | null;
+}
+
+export interface UpdateCollectionFromCsvVariables {
+  id: UUIDString;
+  accountNo?: string | null;
+  amortize?: number | null;
+  arrearsAmt?: number | null;
+  arrearsEnv?: number | null;
+  bankGroup?: number | null;
+  bankId?: string | null;
+  bankOnline?: number | null;
+  batchNo?: string | null;
+  billNo?: string | null;
+  branch?: string | null;
+  cash?: number | null;
+  check?: number | null;
+  checkDate?: string | null;
+  checkNo?: string | null;
+  cmrrfAmnt?: number | null;
+  custNo?: number | null;
+  discAmnt?: number | null;
+  envFee?: number | null;
+  fullName?: string | null;
+  mrrfAmnt?: number | null;
+  onlineref?: string | null;
+  othrApply?: number | null;
+  othrIncome?: number | null;
+  othrReconn?: number | null;
+  pacyAmnt?: number | null;
+  papYAmnt?: number | null;
+  payArrears?: boolean | null;
+  penAmnt?: number | null;
+  pymtDate?: string | null;
+  pymtMethod?: number | null;
+  receiptNo?: string | null;
+  receiptStatus?: string | null;
+  receiptType?: string | null;
+  runBalance?: number | null;
+  sysNo?: number | null;
+  teller?: string | null;
+  trackDt?: string | null;
+  waterBill?: number | null;
 }
 
 interface CreateBookRef {
@@ -552,18 +547,6 @@ export const updateBillingFromCsvRef: UpdateBillingFromCsvRef;
 export function updateBillingFromCsv(vars: UpdateBillingFromCsvVariables): MutationPromise<UpdateBillingFromCsvData, UpdateBillingFromCsvVariables>;
 export function updateBillingFromCsv(dc: DataConnect, vars: UpdateBillingFromCsvVariables): MutationPromise<UpdateBillingFromCsvData, UpdateBillingFromCsvVariables>;
 
-interface CreateCollectionFromCsvRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (vars: CreateCollectionFromCsvVariables): MutationRef<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: CreateCollectionFromCsvVariables): MutationRef<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
-  operationName: string;
-}
-export const createCollectionFromCsvRef: CreateCollectionFromCsvRef;
-
-export function createCollectionFromCsv(vars: CreateCollectionFromCsvVariables): MutationPromise<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
-export function createCollectionFromCsv(dc: DataConnect, vars: CreateCollectionFromCsvVariables): MutationPromise<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
-
 interface PaginatedBillingsRef {
   /* Allow users to create refs without passing in DataConnect */
   (vars?: PaginatedBillingsVariables): QueryRef<PaginatedBillingsData, PaginatedBillingsVariables>;
@@ -599,4 +582,76 @@ export const searchBillingFromCsvRef: SearchBillingFromCsvRef;
 
 export function searchBillingFromCsv(vars?: SearchBillingFromCsvVariables): QueryPromise<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
 export function searchBillingFromCsv(dc: DataConnect, vars?: SearchBillingFromCsvVariables): QueryPromise<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
+
+interface CreateCollectionFromCsvRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreateCollectionFromCsvVariables): MutationRef<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: CreateCollectionFromCsvVariables): MutationRef<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
+  operationName: string;
+}
+export const createCollectionFromCsvRef: CreateCollectionFromCsvRef;
+
+export function createCollectionFromCsv(vars: CreateCollectionFromCsvVariables): MutationPromise<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
+export function createCollectionFromCsv(dc: DataConnect, vars: CreateCollectionFromCsvVariables): MutationPromise<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
+
+interface DeleteCollectionFromCsvRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: DeleteCollectionFromCsvVariables): MutationRef<DeleteCollectionFromCsvData, DeleteCollectionFromCsvVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: DeleteCollectionFromCsvVariables): MutationRef<DeleteCollectionFromCsvData, DeleteCollectionFromCsvVariables>;
+  operationName: string;
+}
+export const deleteCollectionFromCsvRef: DeleteCollectionFromCsvRef;
+
+export function deleteCollectionFromCsv(vars: DeleteCollectionFromCsvVariables): MutationPromise<DeleteCollectionFromCsvData, DeleteCollectionFromCsvVariables>;
+export function deleteCollectionFromCsv(dc: DataConnect, vars: DeleteCollectionFromCsvVariables): MutationPromise<DeleteCollectionFromCsvData, DeleteCollectionFromCsvVariables>;
+
+interface UpdateCollectionFromCsvRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: UpdateCollectionFromCsvVariables): MutationRef<UpdateCollectionFromCsvData, UpdateCollectionFromCsvVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: UpdateCollectionFromCsvVariables): MutationRef<UpdateCollectionFromCsvData, UpdateCollectionFromCsvVariables>;
+  operationName: string;
+}
+export const updateCollectionFromCsvRef: UpdateCollectionFromCsvRef;
+
+export function updateCollectionFromCsv(vars: UpdateCollectionFromCsvVariables): MutationPromise<UpdateCollectionFromCsvData, UpdateCollectionFromCsvVariables>;
+export function updateCollectionFromCsv(dc: DataConnect, vars: UpdateCollectionFromCsvVariables): MutationPromise<UpdateCollectionFromCsvData, UpdateCollectionFromCsvVariables>;
+
+interface PaginatedCollectionsRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars?: PaginatedCollectionsVariables): QueryRef<PaginatedCollectionsData, PaginatedCollectionsVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars?: PaginatedCollectionsVariables): QueryRef<PaginatedCollectionsData, PaginatedCollectionsVariables>;
+  operationName: string;
+}
+export const paginatedCollectionsRef: PaginatedCollectionsRef;
+
+export function paginatedCollections(vars?: PaginatedCollectionsVariables): QueryPromise<PaginatedCollectionsData, PaginatedCollectionsVariables>;
+export function paginatedCollections(dc: DataConnect, vars?: PaginatedCollectionsVariables): QueryPromise<PaginatedCollectionsData, PaginatedCollectionsVariables>;
+
+interface CountCollectionFromCsvRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<CountCollectionFromCsvData, undefined>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect): QueryRef<CountCollectionFromCsvData, undefined>;
+  operationName: string;
+}
+export const countCollectionFromCsvRef: CountCollectionFromCsvRef;
+
+export function countCollectionFromCsv(): QueryPromise<CountCollectionFromCsvData, undefined>;
+export function countCollectionFromCsv(dc: DataConnect): QueryPromise<CountCollectionFromCsvData, undefined>;
+
+interface SearchCollectionFromCsvRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars?: SearchCollectionFromCsvVariables): QueryRef<SearchCollectionFromCsvData, SearchCollectionFromCsvVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars?: SearchCollectionFromCsvVariables): QueryRef<SearchCollectionFromCsvData, SearchCollectionFromCsvVariables>;
+  operationName: string;
+}
+export const searchCollectionFromCsvRef: SearchCollectionFromCsvRef;
+
+export function searchCollectionFromCsv(vars?: SearchCollectionFromCsvVariables): QueryPromise<SearchCollectionFromCsvData, SearchCollectionFromCsvVariables>;
+export function searchCollectionFromCsv(dc: DataConnect, vars?: SearchCollectionFromCsvVariables): QueryPromise<SearchCollectionFromCsvData, SearchCollectionFromCsvVariables>;
 

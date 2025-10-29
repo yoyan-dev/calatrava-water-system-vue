@@ -1,5 +1,5 @@
 type CollectionFromCsv @table {
-	accountNo: String! # e.g 0611202177
+	accountNo: String! @searchable # e.g 0611202177
 	amortize: Float # e.g 0.00
 	arrearsAmt: Float # e.g 0.00
 	arrearsEnv: Float # e.g 0.00
@@ -17,7 +17,7 @@ type CollectionFromCsv @table {
 	custNo: Int! # e.g 2177
 	discAmnt: Float! # e.g 0.00
 	envFee: Float! # e.g 13.25
-	fullName: String! # e.g JABAYBAY, MARIVIC - II
+	fullName: String! @searchable # e.g JABAYBAY, MARIVIC - II
 	mrrfAmnt: Float! # e.g 0.00
 	onlineref: String # e.g (empty)
 	othrApply: Float # e.g 0.00
@@ -29,7 +29,7 @@ type CollectionFromCsv @table {
 	penAmnt: Float! # e.g 0.00
 	pymtDate: String! # e.g 01/03/2025
 	pymtMethod: Int! # e.g 1
-	receiptNo: String! @unique # e.g 6994384
+	receiptNo: String! @unique @searchable # e.g 6994384
 	receiptStatus: String! # e.g 01
 	receiptType: String! # e.g 04
 	runBalance: Float # e.g 0.00
@@ -37,4 +37,6 @@ type CollectionFromCsv @table {
 	teller: String! # e.g CESAR
 	trackDt: String! # e.g 01/03/2025 07:57:06
 	waterBill: Float! # e.g 699.00
+	createdAt: Timestamp! @default(expr: "request.time") # e.g 2025-10-20T12:28:03Z
+	updatedAt: Timestamp # e.g 2025-10-20T12:28:03Z
 }

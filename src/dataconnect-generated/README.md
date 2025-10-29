@@ -11,6 +11,9 @@ This README will guide you through the process of using the generated JavaScript
   - [*PaginatedBillings*](#paginatedbillings)
   - [*CountBillingFromCsv*](#countbillingfromcsv)
   - [*SearchBillingFromCsv*](#searchbillingfromcsv)
+  - [*PaginatedCollections*](#paginatedcollections)
+  - [*CountCollectionFromCsv*](#countcollectionfromcsv)
+  - [*SearchCollectionFromCsv*](#searchcollectionfromcsv)
 - [**Mutations**](#mutations)
   - [*CreateBook*](#createbook)
   - [*CreateResident*](#createresident)
@@ -18,6 +21,8 @@ This README will guide you through the process of using the generated JavaScript
   - [*DeleteBillingFromCsv*](#deletebillingfromcsv)
   - [*UpdateBillingFromCsv*](#updatebillingfromcsv)
   - [*CreateCollectionFromCsv*](#createcollectionfromcsv)
+  - [*DeleteCollectionFromCsv*](#deletecollectionfromcsv)
+  - [*UpdateCollectionFromCsv*](#updatecollectionfromcsv)
 
 # Accessing the connector
 A connector is a collection of Queries and Mutations. One SDK is generated for each connector - this SDK is generated for the connector `calatrava-water-system`. You can find more information about connectors in the [Data Connect documentation](https://firebase.google.com/docs/data-connect#how-does).
@@ -475,6 +480,421 @@ console.log(data.billingFromCsvs_search);
 executeQuery(ref).then((response) => {
   const data = response.data;
   console.log(data.billingFromCsvs_search);
+});
+```
+
+## PaginatedCollections
+You can execute the `PaginatedCollections` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+paginatedCollections(vars?: PaginatedCollectionsVariables): QueryPromise<PaginatedCollectionsData, PaginatedCollectionsVariables>;
+
+interface PaginatedCollectionsRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars?: PaginatedCollectionsVariables): QueryRef<PaginatedCollectionsData, PaginatedCollectionsVariables>;
+}
+export const paginatedCollectionsRef: PaginatedCollectionsRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
+```typescript
+paginatedCollections(dc: DataConnect, vars?: PaginatedCollectionsVariables): QueryPromise<PaginatedCollectionsData, PaginatedCollectionsVariables>;
+
+interface PaginatedCollectionsRef {
+  ...
+  (dc: DataConnect, vars?: PaginatedCollectionsVariables): QueryRef<PaginatedCollectionsData, PaginatedCollectionsVariables>;
+}
+export const paginatedCollectionsRef: PaginatedCollectionsRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the paginatedCollectionsRef:
+```typescript
+const name = paginatedCollectionsRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `PaginatedCollections` query has an optional argument of type `PaginatedCollectionsVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface PaginatedCollectionsVariables {
+  limit?: number | null;
+  offset?: number | null;
+  orderByField?: string | null;
+  orderDirection?: string | null;
+}
+```
+### Return Type
+Recall that executing the `PaginatedCollections` query returns a `QueryPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `PaginatedCollectionsData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface PaginatedCollectionsData {
+  collectionFromCsvs: ({
+    accountNo: string;
+    amortize?: number | null;
+    arrearsAmt?: number | null;
+    arrearsEnv?: number | null;
+    bankGroup?: number | null;
+    bankId?: string | null;
+    bankOnline?: number | null;
+    batchNo?: string | null;
+    billNo?: string | null;
+    branch?: string | null;
+    cash: number;
+    check: number;
+    checkDate?: string | null;
+    checkNo?: string | null;
+    cmrrfAmnt: number;
+    custNo: number;
+    discAmnt: number;
+    envFee: number;
+    fullName: string;
+    mrrfAmnt: number;
+    onlineref?: string | null;
+    othrApply?: number | null;
+    othrIncome?: number | null;
+    othrReconn?: number | null;
+    pacyAmnt: number;
+    papYAmnt: number;
+    payArrears: boolean;
+    penAmnt: number;
+    pymtDate: string;
+    pymtMethod: number;
+    receiptNo: string;
+    receiptStatus: string;
+    receiptType: string;
+    runBalance?: number | null;
+    sysNo: number;
+    teller: string;
+    trackDt: string;
+    waterBill: number;
+    id: UUIDString;
+    createdAt: TimestampString;
+    updatedAt?: TimestampString | null;
+  } & CollectionFromCsv_Key)[];
+}
+```
+### Using `PaginatedCollections`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, paginatedCollections, PaginatedCollectionsVariables } from '@dataconnect/generated';
+
+// The `PaginatedCollections` query has an optional argument of type `PaginatedCollectionsVariables`:
+const paginatedCollectionsVars: PaginatedCollectionsVariables = {
+  limit: ..., // optional
+  offset: ..., // optional
+  orderByField: ..., // optional
+  orderDirection: ..., // optional
+};
+
+// Call the `paginatedCollections()` function to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await paginatedCollections(paginatedCollectionsVars);
+// Variables can be defined inline as well.
+const { data } = await paginatedCollections({ limit: ..., offset: ..., orderByField: ..., orderDirection: ..., });
+// Since all variables are optional for this query, you can omit the `PaginatedCollectionsVariables` argument.
+const { data } = await paginatedCollections();
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await paginatedCollections(dataConnect, paginatedCollectionsVars);
+
+console.log(data.collectionFromCsvs);
+
+// Or, you can use the `Promise` API.
+paginatedCollections(paginatedCollectionsVars).then((response) => {
+  const data = response.data;
+  console.log(data.collectionFromCsvs);
+});
+```
+
+### Using `PaginatedCollections`'s `QueryRef` function
+
+```typescript
+import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { connectorConfig, paginatedCollectionsRef, PaginatedCollectionsVariables } from '@dataconnect/generated';
+
+// The `PaginatedCollections` query has an optional argument of type `PaginatedCollectionsVariables`:
+const paginatedCollectionsVars: PaginatedCollectionsVariables = {
+  limit: ..., // optional
+  offset: ..., // optional
+  orderByField: ..., // optional
+  orderDirection: ..., // optional
+};
+
+// Call the `paginatedCollectionsRef()` function to get a reference to the query.
+const ref = paginatedCollectionsRef(paginatedCollectionsVars);
+// Variables can be defined inline as well.
+const ref = paginatedCollectionsRef({ limit: ..., offset: ..., orderByField: ..., orderDirection: ..., });
+// Since all variables are optional for this query, you can omit the `PaginatedCollectionsVariables` argument.
+const ref = paginatedCollectionsRef();
+
+// You can also pass in a `DataConnect` instance to the `QueryRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = paginatedCollectionsRef(dataConnect, paginatedCollectionsVars);
+
+// Call `executeQuery()` on the reference to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeQuery(ref);
+
+console.log(data.collectionFromCsvs);
+
+// Or, you can use the `Promise` API.
+executeQuery(ref).then((response) => {
+  const data = response.data;
+  console.log(data.collectionFromCsvs);
+});
+```
+
+## CountCollectionFromCsv
+You can execute the `CountCollectionFromCsv` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+countCollectionFromCsv(): QueryPromise<CountCollectionFromCsvData, undefined>;
+
+interface CountCollectionFromCsvRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<CountCollectionFromCsvData, undefined>;
+}
+export const countCollectionFromCsvRef: CountCollectionFromCsvRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
+```typescript
+countCollectionFromCsv(dc: DataConnect): QueryPromise<CountCollectionFromCsvData, undefined>;
+
+interface CountCollectionFromCsvRef {
+  ...
+  (dc: DataConnect): QueryRef<CountCollectionFromCsvData, undefined>;
+}
+export const countCollectionFromCsvRef: CountCollectionFromCsvRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the countCollectionFromCsvRef:
+```typescript
+const name = countCollectionFromCsvRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `CountCollectionFromCsv` query has no variables.
+### Return Type
+Recall that executing the `CountCollectionFromCsv` query returns a `QueryPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `CountCollectionFromCsvData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface CountCollectionFromCsvData {
+  collectionFromCsvs: ({
+    _count: number;
+  })[];
+}
+```
+### Using `CountCollectionFromCsv`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, countCollectionFromCsv } from '@dataconnect/generated';
+
+
+// Call the `countCollectionFromCsv()` function to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await countCollectionFromCsv();
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await countCollectionFromCsv(dataConnect);
+
+console.log(data.collectionFromCsvs);
+
+// Or, you can use the `Promise` API.
+countCollectionFromCsv().then((response) => {
+  const data = response.data;
+  console.log(data.collectionFromCsvs);
+});
+```
+
+### Using `CountCollectionFromCsv`'s `QueryRef` function
+
+```typescript
+import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { connectorConfig, countCollectionFromCsvRef } from '@dataconnect/generated';
+
+
+// Call the `countCollectionFromCsvRef()` function to get a reference to the query.
+const ref = countCollectionFromCsvRef();
+
+// You can also pass in a `DataConnect` instance to the `QueryRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = countCollectionFromCsvRef(dataConnect);
+
+// Call `executeQuery()` on the reference to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeQuery(ref);
+
+console.log(data.collectionFromCsvs);
+
+// Or, you can use the `Promise` API.
+executeQuery(ref).then((response) => {
+  const data = response.data;
+  console.log(data.collectionFromCsvs);
+});
+```
+
+## SearchCollectionFromCsv
+You can execute the `SearchCollectionFromCsv` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+searchCollectionFromCsv(vars?: SearchCollectionFromCsvVariables): QueryPromise<SearchCollectionFromCsvData, SearchCollectionFromCsvVariables>;
+
+interface SearchCollectionFromCsvRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars?: SearchCollectionFromCsvVariables): QueryRef<SearchCollectionFromCsvData, SearchCollectionFromCsvVariables>;
+}
+export const searchCollectionFromCsvRef: SearchCollectionFromCsvRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
+```typescript
+searchCollectionFromCsv(dc: DataConnect, vars?: SearchCollectionFromCsvVariables): QueryPromise<SearchCollectionFromCsvData, SearchCollectionFromCsvVariables>;
+
+interface SearchCollectionFromCsvRef {
+  ...
+  (dc: DataConnect, vars?: SearchCollectionFromCsvVariables): QueryRef<SearchCollectionFromCsvData, SearchCollectionFromCsvVariables>;
+}
+export const searchCollectionFromCsvRef: SearchCollectionFromCsvRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the searchCollectionFromCsvRef:
+```typescript
+const name = searchCollectionFromCsvRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `SearchCollectionFromCsv` query has an optional argument of type `SearchCollectionFromCsvVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface SearchCollectionFromCsvVariables {
+  query?: string | null;
+  limit?: number | null;
+}
+```
+### Return Type
+Recall that executing the `SearchCollectionFromCsv` query returns a `QueryPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `SearchCollectionFromCsvData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface SearchCollectionFromCsvData {
+  collectionFromCsvs_search: ({
+    accountNo: string;
+    amortize?: number | null;
+    arrearsAmt?: number | null;
+    arrearsEnv?: number | null;
+    bankGroup?: number | null;
+    bankId?: string | null;
+    bankOnline?: number | null;
+    batchNo?: string | null;
+    billNo?: string | null;
+    branch?: string | null;
+    cash: number;
+    check: number;
+    checkDate?: string | null;
+    checkNo?: string | null;
+    cmrrfAmnt: number;
+    custNo: number;
+    discAmnt: number;
+    envFee: number;
+    fullName: string;
+    mrrfAmnt: number;
+    onlineref?: string | null;
+    othrApply?: number | null;
+    othrIncome?: number | null;
+    othrReconn?: number | null;
+    pacyAmnt: number;
+    papYAmnt: number;
+    payArrears: boolean;
+    penAmnt: number;
+    pymtDate: string;
+    pymtMethod: number;
+    receiptNo: string;
+    receiptStatus: string;
+    receiptType: string;
+    runBalance?: number | null;
+    sysNo: number;
+    teller: string;
+    trackDt: string;
+    waterBill: number;
+    id: UUIDString;
+    createdAt: TimestampString;
+    updatedAt?: TimestampString | null;
+  } & CollectionFromCsv_Key)[];
+}
+```
+### Using `SearchCollectionFromCsv`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, searchCollectionFromCsv, SearchCollectionFromCsvVariables } from '@dataconnect/generated';
+
+// The `SearchCollectionFromCsv` query has an optional argument of type `SearchCollectionFromCsvVariables`:
+const searchCollectionFromCsvVars: SearchCollectionFromCsvVariables = {
+  query: ..., // optional
+  limit: ..., // optional
+};
+
+// Call the `searchCollectionFromCsv()` function to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await searchCollectionFromCsv(searchCollectionFromCsvVars);
+// Variables can be defined inline as well.
+const { data } = await searchCollectionFromCsv({ query: ..., limit: ..., });
+// Since all variables are optional for this query, you can omit the `SearchCollectionFromCsvVariables` argument.
+const { data } = await searchCollectionFromCsv();
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await searchCollectionFromCsv(dataConnect, searchCollectionFromCsvVars);
+
+console.log(data.collectionFromCsvs_search);
+
+// Or, you can use the `Promise` API.
+searchCollectionFromCsv(searchCollectionFromCsvVars).then((response) => {
+  const data = response.data;
+  console.log(data.collectionFromCsvs_search);
+});
+```
+
+### Using `SearchCollectionFromCsv`'s `QueryRef` function
+
+```typescript
+import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { connectorConfig, searchCollectionFromCsvRef, SearchCollectionFromCsvVariables } from '@dataconnect/generated';
+
+// The `SearchCollectionFromCsv` query has an optional argument of type `SearchCollectionFromCsvVariables`:
+const searchCollectionFromCsvVars: SearchCollectionFromCsvVariables = {
+  query: ..., // optional
+  limit: ..., // optional
+};
+
+// Call the `searchCollectionFromCsvRef()` function to get a reference to the query.
+const ref = searchCollectionFromCsvRef(searchCollectionFromCsvVars);
+// Variables can be defined inline as well.
+const ref = searchCollectionFromCsvRef({ query: ..., limit: ..., });
+// Since all variables are optional for this query, you can omit the `SearchCollectionFromCsvVariables` argument.
+const ref = searchCollectionFromCsvRef();
+
+// You can also pass in a `DataConnect` instance to the `QueryRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = searchCollectionFromCsvRef(dataConnect, searchCollectionFromCsvVars);
+
+// Call `executeQuery()` on the reference to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeQuery(ref);
+
+console.log(data.collectionFromCsvs_search);
+
+// Or, you can use the `Promise` API.
+executeQuery(ref).then((response) => {
+  const data = response.data;
+  console.log(data.collectionFromCsvs_search);
 });
 ```
 
@@ -1342,213 +1762,44 @@ The `CreateCollectionFromCsv` mutation requires an argument of type `CreateColle
 
 ```typescript
 export interface CreateCollectionFromCsvVariables {
-  data: {
-    id?: UUIDString | null;
-    id_expr?: {
-    };
-      accountNo?: string | null;
-      accountNo_expr?: {
-      };
-        amortize?: number | null;
-        amortize_expr?: {
-        };
-          amortize_update?: ({
-            inc?: number | null;
-            dec?: number | null;
-          })[];
-            arrearsAmt?: number | null;
-            arrearsAmt_expr?: {
-            };
-              arrearsAmt_update?: ({
-                inc?: number | null;
-                dec?: number | null;
-              })[];
-                arrearsEnv?: number | null;
-                arrearsEnv_expr?: {
-                };
-                  arrearsEnv_update?: ({
-                    inc?: number | null;
-                    dec?: number | null;
-                  })[];
-                    bankGroup?: number | null;
-                    bankGroup_expr?: {
-                    };
-                      bankGroup_update?: ({
-                        inc?: number | null;
-                        dec?: number | null;
-                      })[];
-                        bankId?: string | null;
-                        bankId_expr?: {
-                        };
-                          bankOnline?: number | null;
-                          bankOnline_expr?: {
-                          };
-                            bankOnline_update?: ({
-                              inc?: number | null;
-                              dec?: number | null;
-                            })[];
-                              batchNo?: string | null;
-                              batchNo_expr?: {
-                              };
-                                billNo?: string | null;
-                                billNo_expr?: {
-                                };
-                                  branch?: string | null;
-                                  branch_expr?: {
-                                  };
-                                    cash?: number | null;
-                                    cash_expr?: {
-                                    };
-                                      cash_update?: ({
-                                        inc?: number | null;
-                                        dec?: number | null;
-                                      })[];
-                                        check?: number | null;
-                                        check_expr?: {
-                                        };
-                                          check_update?: ({
-                                            inc?: number | null;
-                                            dec?: number | null;
-                                          })[];
-                                            checkDate?: string | null;
-                                            checkDate_expr?: {
-                                            };
-                                              checkNo?: string | null;
-                                              checkNo_expr?: {
-                                              };
-                                                cmrrfAmnt?: number | null;
-                                                cmrrfAmnt_expr?: {
-                                                };
-                                                  cmrrfAmnt_update?: ({
-                                                    inc?: number | null;
-                                                    dec?: number | null;
-                                                  })[];
-                                                    custNo?: number | null;
-                                                    custNo_expr?: {
-                                                    };
-                                                      custNo_update?: ({
-                                                        inc?: number | null;
-                                                        dec?: number | null;
-                                                      })[];
-                                                        discAmnt?: number | null;
-                                                        discAmnt_expr?: {
-                                                        };
-                                                          discAmnt_update?: ({
-                                                            inc?: number | null;
-                                                            dec?: number | null;
-                                                          })[];
-                                                            envFee?: number | null;
-                                                            envFee_expr?: {
-                                                            };
-                                                              envFee_update?: ({
-                                                                inc?: number | null;
-                                                                dec?: number | null;
-                                                              })[];
-                                                                fullName?: string | null;
-                                                                fullName_expr?: {
-                                                                };
-                                                                  mrrfAmnt?: number | null;
-                                                                  mrrfAmnt_expr?: {
-                                                                  };
-                                                                    mrrfAmnt_update?: ({
-                                                                      inc?: number | null;
-                                                                      dec?: number | null;
-                                                                    })[];
-                                                                      onlineref?: string | null;
-                                                                      onlineref_expr?: {
-                                                                      };
-                                                                        othrApply?: number | null;
-                                                                        othrApply_expr?: {
-                                                                        };
-                                                                          othrApply_update?: ({
-                                                                            inc?: number | null;
-                                                                            dec?: number | null;
-                                                                          })[];
-                                                                            othrIncome?: number | null;
-                                                                            othrIncome_expr?: {
-                                                                            };
-                                                                              othrIncome_update?: ({
-                                                                                inc?: number | null;
-                                                                                dec?: number | null;
-                                                                              })[];
-                                                                                othrReconn?: number | null;
-                                                                                othrReconn_expr?: {
-                                                                                };
-                                                                                  othrReconn_update?: ({
-                                                                                    inc?: number | null;
-                                                                                    dec?: number | null;
-                                                                                  })[];
-                                                                                    pacyAmnt?: number | null;
-                                                                                    pacyAmnt_expr?: {
-                                                                                    };
-                                                                                      pacyAmnt_update?: ({
-                                                                                        inc?: number | null;
-                                                                                        dec?: number | null;
-                                                                                      })[];
-                                                                                        papYAmnt?: number | null;
-                                                                                        papYAmnt_expr?: {
-                                                                                        };
-                                                                                          papYAmnt_update?: ({
-                                                                                            inc?: number | null;
-                                                                                            dec?: number | null;
-                                                                                          })[];
-                                                                                            payArrears?: boolean | null;
-                                                                                            payArrears_expr?: {
-                                                                                            };
-                                                                                              penAmnt?: number | null;
-                                                                                              penAmnt_expr?: {
-                                                                                              };
-                                                                                                penAmnt_update?: ({
-                                                                                                  inc?: number | null;
-                                                                                                  dec?: number | null;
-                                                                                                })[];
-                                                                                                  pymtDate?: string | null;
-                                                                                                  pymtDate_expr?: {
-                                                                                                  };
-                                                                                                    pymtMethod?: number | null;
-                                                                                                    pymtMethod_expr?: {
-                                                                                                    };
-                                                                                                      pymtMethod_update?: ({
-                                                                                                        inc?: number | null;
-                                                                                                        dec?: number | null;
-                                                                                                      })[];
-                                                                                                        receiptNo?: string | null;
-                                                                                                        receiptNo_expr?: {
-                                                                                                        };
-                                                                                                          receiptStatus?: string | null;
-                                                                                                          receiptStatus_expr?: {
-                                                                                                          };
-                                                                                                            receiptType?: string | null;
-                                                                                                            receiptType_expr?: {
-                                                                                                            };
-                                                                                                              runBalance?: number | null;
-                                                                                                              runBalance_expr?: {
-                                                                                                              };
-                                                                                                                runBalance_update?: ({
-                                                                                                                  inc?: number | null;
-                                                                                                                  dec?: number | null;
-                                                                                                                })[];
-                                                                                                                  sysNo?: number | null;
-                                                                                                                  sysNo_expr?: {
-                                                                                                                  };
-                                                                                                                    sysNo_update?: ({
-                                                                                                                      inc?: number | null;
-                                                                                                                      dec?: number | null;
-                                                                                                                    })[];
-                                                                                                                      teller?: string | null;
-                                                                                                                      teller_expr?: {
-                                                                                                                      };
-                                                                                                                        trackDt?: string | null;
-                                                                                                                        trackDt_expr?: {
-                                                                                                                        };
-                                                                                                                          waterBill?: number | null;
-                                                                                                                          waterBill_expr?: {
-                                                                                                                          };
-                                                                                                                            waterBill_update?: ({
-                                                                                                                              inc?: number | null;
-                                                                                                                              dec?: number | null;
-                                                                                                                            })[];
-  };
+  accountNo: string;
+  amortize?: number | null;
+  arrearsAmt?: number | null;
+  arrearsEnv?: number | null;
+  bankGroup?: number | null;
+  bankId?: string | null;
+  bankOnline?: number | null;
+  batchNo?: string | null;
+  billNo?: string | null;
+  branch?: string | null;
+  cash: number;
+  check: number;
+  checkDate?: string | null;
+  checkNo?: string | null;
+  cmrrfAmnt: number;
+  custNo: number;
+  discAmnt: number;
+  envFee: number;
+  fullName: string;
+  mrrfAmnt: number;
+  onlineref?: string | null;
+  othrApply?: number | null;
+  othrIncome?: number | null;
+  othrReconn?: number | null;
+  pacyAmnt: number;
+  papYAmnt: number;
+  payArrears: boolean;
+  penAmnt: number;
+  pymtDate: string;
+  pymtMethod: number;
+  receiptNo: string;
+  receiptStatus: string;
+  receiptType: string;
+  runBalance?: number | null;
+  sysNo: number;
+  teller: string;
+  trackDt: string;
+  waterBill: number;
 }
 ```
 ### Return Type
@@ -1568,14 +1819,51 @@ import { connectorConfig, createCollectionFromCsv, CreateCollectionFromCsvVariab
 
 // The `CreateCollectionFromCsv` mutation requires an argument of type `CreateCollectionFromCsvVariables`:
 const createCollectionFromCsvVars: CreateCollectionFromCsvVariables = {
-  data: ..., 
+  accountNo: ..., 
+  amortize: ..., // optional
+  arrearsAmt: ..., // optional
+  arrearsEnv: ..., // optional
+  bankGroup: ..., // optional
+  bankId: ..., // optional
+  bankOnline: ..., // optional
+  batchNo: ..., // optional
+  billNo: ..., // optional
+  branch: ..., // optional
+  cash: ..., 
+  check: ..., 
+  checkDate: ..., // optional
+  checkNo: ..., // optional
+  cmrrfAmnt: ..., 
+  custNo: ..., 
+  discAmnt: ..., 
+  envFee: ..., 
+  fullName: ..., 
+  mrrfAmnt: ..., 
+  onlineref: ..., // optional
+  othrApply: ..., // optional
+  othrIncome: ..., // optional
+  othrReconn: ..., // optional
+  pacyAmnt: ..., 
+  papYAmnt: ..., 
+  payArrears: ..., 
+  penAmnt: ..., 
+  pymtDate: ..., 
+  pymtMethod: ..., 
+  receiptNo: ..., 
+  receiptStatus: ..., 
+  receiptType: ..., 
+  runBalance: ..., // optional
+  sysNo: ..., 
+  teller: ..., 
+  trackDt: ..., 
+  waterBill: ..., 
 };
 
 // Call the `createCollectionFromCsv()` function to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await createCollectionFromCsv(createCollectionFromCsvVars);
 // Variables can be defined inline as well.
-const { data } = await createCollectionFromCsv({ data: ..., });
+const { data } = await createCollectionFromCsv({ accountNo: ..., amortize: ..., arrearsAmt: ..., arrearsEnv: ..., bankGroup: ..., bankId: ..., bankOnline: ..., batchNo: ..., billNo: ..., branch: ..., cash: ..., check: ..., checkDate: ..., checkNo: ..., cmrrfAmnt: ..., custNo: ..., discAmnt: ..., envFee: ..., fullName: ..., mrrfAmnt: ..., onlineref: ..., othrApply: ..., othrIncome: ..., othrReconn: ..., pacyAmnt: ..., papYAmnt: ..., payArrears: ..., penAmnt: ..., pymtDate: ..., pymtMethod: ..., receiptNo: ..., receiptStatus: ..., receiptType: ..., runBalance: ..., sysNo: ..., teller: ..., trackDt: ..., waterBill: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -1598,13 +1886,50 @@ import { connectorConfig, createCollectionFromCsvRef, CreateCollectionFromCsvVar
 
 // The `CreateCollectionFromCsv` mutation requires an argument of type `CreateCollectionFromCsvVariables`:
 const createCollectionFromCsvVars: CreateCollectionFromCsvVariables = {
-  data: ..., 
+  accountNo: ..., 
+  amortize: ..., // optional
+  arrearsAmt: ..., // optional
+  arrearsEnv: ..., // optional
+  bankGroup: ..., // optional
+  bankId: ..., // optional
+  bankOnline: ..., // optional
+  batchNo: ..., // optional
+  billNo: ..., // optional
+  branch: ..., // optional
+  cash: ..., 
+  check: ..., 
+  checkDate: ..., // optional
+  checkNo: ..., // optional
+  cmrrfAmnt: ..., 
+  custNo: ..., 
+  discAmnt: ..., 
+  envFee: ..., 
+  fullName: ..., 
+  mrrfAmnt: ..., 
+  onlineref: ..., // optional
+  othrApply: ..., // optional
+  othrIncome: ..., // optional
+  othrReconn: ..., // optional
+  pacyAmnt: ..., 
+  papYAmnt: ..., 
+  payArrears: ..., 
+  penAmnt: ..., 
+  pymtDate: ..., 
+  pymtMethod: ..., 
+  receiptNo: ..., 
+  receiptStatus: ..., 
+  receiptType: ..., 
+  runBalance: ..., // optional
+  sysNo: ..., 
+  teller: ..., 
+  trackDt: ..., 
+  waterBill: ..., 
 };
 
 // Call the `createCollectionFromCsvRef()` function to get a reference to the mutation.
 const ref = createCollectionFromCsvRef(createCollectionFromCsvVars);
 // Variables can be defined inline as well.
-const ref = createCollectionFromCsvRef({ data: ..., });
+const ref = createCollectionFromCsvRef({ accountNo: ..., amortize: ..., arrearsAmt: ..., arrearsEnv: ..., bankGroup: ..., bankId: ..., bankOnline: ..., batchNo: ..., billNo: ..., branch: ..., cash: ..., check: ..., checkDate: ..., checkNo: ..., cmrrfAmnt: ..., custNo: ..., discAmnt: ..., envFee: ..., fullName: ..., mrrfAmnt: ..., onlineref: ..., othrApply: ..., othrIncome: ..., othrReconn: ..., pacyAmnt: ..., papYAmnt: ..., payArrears: ..., penAmnt: ..., pymtDate: ..., pymtMethod: ..., receiptNo: ..., receiptStatus: ..., receiptType: ..., runBalance: ..., sysNo: ..., teller: ..., trackDt: ..., waterBill: ..., });
 
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -1620,6 +1945,338 @@ console.log(data.collectionFromCsv_insert);
 executeMutation(ref).then((response) => {
   const data = response.data;
   console.log(data.collectionFromCsv_insert);
+});
+```
+
+## DeleteCollectionFromCsv
+You can execute the `DeleteCollectionFromCsv` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+deleteCollectionFromCsv(vars: DeleteCollectionFromCsvVariables): MutationPromise<DeleteCollectionFromCsvData, DeleteCollectionFromCsvVariables>;
+
+interface DeleteCollectionFromCsvRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: DeleteCollectionFromCsvVariables): MutationRef<DeleteCollectionFromCsvData, DeleteCollectionFromCsvVariables>;
+}
+export const deleteCollectionFromCsvRef: DeleteCollectionFromCsvRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+deleteCollectionFromCsv(dc: DataConnect, vars: DeleteCollectionFromCsvVariables): MutationPromise<DeleteCollectionFromCsvData, DeleteCollectionFromCsvVariables>;
+
+interface DeleteCollectionFromCsvRef {
+  ...
+  (dc: DataConnect, vars: DeleteCollectionFromCsvVariables): MutationRef<DeleteCollectionFromCsvData, DeleteCollectionFromCsvVariables>;
+}
+export const deleteCollectionFromCsvRef: DeleteCollectionFromCsvRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the deleteCollectionFromCsvRef:
+```typescript
+const name = deleteCollectionFromCsvRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `DeleteCollectionFromCsv` mutation requires an argument of type `DeleteCollectionFromCsvVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface DeleteCollectionFromCsvVariables {
+  id: UUIDString;
+}
+```
+### Return Type
+Recall that executing the `DeleteCollectionFromCsv` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `DeleteCollectionFromCsvData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface DeleteCollectionFromCsvData {
+  collectionFromCsv_delete?: CollectionFromCsv_Key | null;
+}
+```
+### Using `DeleteCollectionFromCsv`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, deleteCollectionFromCsv, DeleteCollectionFromCsvVariables } from '@dataconnect/generated';
+
+// The `DeleteCollectionFromCsv` mutation requires an argument of type `DeleteCollectionFromCsvVariables`:
+const deleteCollectionFromCsvVars: DeleteCollectionFromCsvVariables = {
+  id: ..., 
+};
+
+// Call the `deleteCollectionFromCsv()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await deleteCollectionFromCsv(deleteCollectionFromCsvVars);
+// Variables can be defined inline as well.
+const { data } = await deleteCollectionFromCsv({ id: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await deleteCollectionFromCsv(dataConnect, deleteCollectionFromCsvVars);
+
+console.log(data.collectionFromCsv_delete);
+
+// Or, you can use the `Promise` API.
+deleteCollectionFromCsv(deleteCollectionFromCsvVars).then((response) => {
+  const data = response.data;
+  console.log(data.collectionFromCsv_delete);
+});
+```
+
+### Using `DeleteCollectionFromCsv`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, deleteCollectionFromCsvRef, DeleteCollectionFromCsvVariables } from '@dataconnect/generated';
+
+// The `DeleteCollectionFromCsv` mutation requires an argument of type `DeleteCollectionFromCsvVariables`:
+const deleteCollectionFromCsvVars: DeleteCollectionFromCsvVariables = {
+  id: ..., 
+};
+
+// Call the `deleteCollectionFromCsvRef()` function to get a reference to the mutation.
+const ref = deleteCollectionFromCsvRef(deleteCollectionFromCsvVars);
+// Variables can be defined inline as well.
+const ref = deleteCollectionFromCsvRef({ id: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = deleteCollectionFromCsvRef(dataConnect, deleteCollectionFromCsvVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.collectionFromCsv_delete);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.collectionFromCsv_delete);
+});
+```
+
+## UpdateCollectionFromCsv
+You can execute the `UpdateCollectionFromCsv` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+updateCollectionFromCsv(vars: UpdateCollectionFromCsvVariables): MutationPromise<UpdateCollectionFromCsvData, UpdateCollectionFromCsvVariables>;
+
+interface UpdateCollectionFromCsvRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: UpdateCollectionFromCsvVariables): MutationRef<UpdateCollectionFromCsvData, UpdateCollectionFromCsvVariables>;
+}
+export const updateCollectionFromCsvRef: UpdateCollectionFromCsvRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+updateCollectionFromCsv(dc: DataConnect, vars: UpdateCollectionFromCsvVariables): MutationPromise<UpdateCollectionFromCsvData, UpdateCollectionFromCsvVariables>;
+
+interface UpdateCollectionFromCsvRef {
+  ...
+  (dc: DataConnect, vars: UpdateCollectionFromCsvVariables): MutationRef<UpdateCollectionFromCsvData, UpdateCollectionFromCsvVariables>;
+}
+export const updateCollectionFromCsvRef: UpdateCollectionFromCsvRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the updateCollectionFromCsvRef:
+```typescript
+const name = updateCollectionFromCsvRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `UpdateCollectionFromCsv` mutation requires an argument of type `UpdateCollectionFromCsvVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface UpdateCollectionFromCsvVariables {
+  id: UUIDString;
+  accountNo?: string | null;
+  amortize?: number | null;
+  arrearsAmt?: number | null;
+  arrearsEnv?: number | null;
+  bankGroup?: number | null;
+  bankId?: string | null;
+  bankOnline?: number | null;
+  batchNo?: string | null;
+  billNo?: string | null;
+  branch?: string | null;
+  cash?: number | null;
+  check?: number | null;
+  checkDate?: string | null;
+  checkNo?: string | null;
+  cmrrfAmnt?: number | null;
+  custNo?: number | null;
+  discAmnt?: number | null;
+  envFee?: number | null;
+  fullName?: string | null;
+  mrrfAmnt?: number | null;
+  onlineref?: string | null;
+  othrApply?: number | null;
+  othrIncome?: number | null;
+  othrReconn?: number | null;
+  pacyAmnt?: number | null;
+  papYAmnt?: number | null;
+  payArrears?: boolean | null;
+  penAmnt?: number | null;
+  pymtDate?: string | null;
+  pymtMethod?: number | null;
+  receiptNo?: string | null;
+  receiptStatus?: string | null;
+  receiptType?: string | null;
+  runBalance?: number | null;
+  sysNo?: number | null;
+  teller?: string | null;
+  trackDt?: string | null;
+  waterBill?: number | null;
+}
+```
+### Return Type
+Recall that executing the `UpdateCollectionFromCsv` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `UpdateCollectionFromCsvData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface UpdateCollectionFromCsvData {
+  collectionFromCsv_update?: CollectionFromCsv_Key | null;
+}
+```
+### Using `UpdateCollectionFromCsv`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, updateCollectionFromCsv, UpdateCollectionFromCsvVariables } from '@dataconnect/generated';
+
+// The `UpdateCollectionFromCsv` mutation requires an argument of type `UpdateCollectionFromCsvVariables`:
+const updateCollectionFromCsvVars: UpdateCollectionFromCsvVariables = {
+  id: ..., 
+  accountNo: ..., // optional
+  amortize: ..., // optional
+  arrearsAmt: ..., // optional
+  arrearsEnv: ..., // optional
+  bankGroup: ..., // optional
+  bankId: ..., // optional
+  bankOnline: ..., // optional
+  batchNo: ..., // optional
+  billNo: ..., // optional
+  branch: ..., // optional
+  cash: ..., // optional
+  check: ..., // optional
+  checkDate: ..., // optional
+  checkNo: ..., // optional
+  cmrrfAmnt: ..., // optional
+  custNo: ..., // optional
+  discAmnt: ..., // optional
+  envFee: ..., // optional
+  fullName: ..., // optional
+  mrrfAmnt: ..., // optional
+  onlineref: ..., // optional
+  othrApply: ..., // optional
+  othrIncome: ..., // optional
+  othrReconn: ..., // optional
+  pacyAmnt: ..., // optional
+  papYAmnt: ..., // optional
+  payArrears: ..., // optional
+  penAmnt: ..., // optional
+  pymtDate: ..., // optional
+  pymtMethod: ..., // optional
+  receiptNo: ..., // optional
+  receiptStatus: ..., // optional
+  receiptType: ..., // optional
+  runBalance: ..., // optional
+  sysNo: ..., // optional
+  teller: ..., // optional
+  trackDt: ..., // optional
+  waterBill: ..., // optional
+};
+
+// Call the `updateCollectionFromCsv()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await updateCollectionFromCsv(updateCollectionFromCsvVars);
+// Variables can be defined inline as well.
+const { data } = await updateCollectionFromCsv({ id: ..., accountNo: ..., amortize: ..., arrearsAmt: ..., arrearsEnv: ..., bankGroup: ..., bankId: ..., bankOnline: ..., batchNo: ..., billNo: ..., branch: ..., cash: ..., check: ..., checkDate: ..., checkNo: ..., cmrrfAmnt: ..., custNo: ..., discAmnt: ..., envFee: ..., fullName: ..., mrrfAmnt: ..., onlineref: ..., othrApply: ..., othrIncome: ..., othrReconn: ..., pacyAmnt: ..., papYAmnt: ..., payArrears: ..., penAmnt: ..., pymtDate: ..., pymtMethod: ..., receiptNo: ..., receiptStatus: ..., receiptType: ..., runBalance: ..., sysNo: ..., teller: ..., trackDt: ..., waterBill: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await updateCollectionFromCsv(dataConnect, updateCollectionFromCsvVars);
+
+console.log(data.collectionFromCsv_update);
+
+// Or, you can use the `Promise` API.
+updateCollectionFromCsv(updateCollectionFromCsvVars).then((response) => {
+  const data = response.data;
+  console.log(data.collectionFromCsv_update);
+});
+```
+
+### Using `UpdateCollectionFromCsv`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, updateCollectionFromCsvRef, UpdateCollectionFromCsvVariables } from '@dataconnect/generated';
+
+// The `UpdateCollectionFromCsv` mutation requires an argument of type `UpdateCollectionFromCsvVariables`:
+const updateCollectionFromCsvVars: UpdateCollectionFromCsvVariables = {
+  id: ..., 
+  accountNo: ..., // optional
+  amortize: ..., // optional
+  arrearsAmt: ..., // optional
+  arrearsEnv: ..., // optional
+  bankGroup: ..., // optional
+  bankId: ..., // optional
+  bankOnline: ..., // optional
+  batchNo: ..., // optional
+  billNo: ..., // optional
+  branch: ..., // optional
+  cash: ..., // optional
+  check: ..., // optional
+  checkDate: ..., // optional
+  checkNo: ..., // optional
+  cmrrfAmnt: ..., // optional
+  custNo: ..., // optional
+  discAmnt: ..., // optional
+  envFee: ..., // optional
+  fullName: ..., // optional
+  mrrfAmnt: ..., // optional
+  onlineref: ..., // optional
+  othrApply: ..., // optional
+  othrIncome: ..., // optional
+  othrReconn: ..., // optional
+  pacyAmnt: ..., // optional
+  papYAmnt: ..., // optional
+  payArrears: ..., // optional
+  penAmnt: ..., // optional
+  pymtDate: ..., // optional
+  pymtMethod: ..., // optional
+  receiptNo: ..., // optional
+  receiptStatus: ..., // optional
+  receiptType: ..., // optional
+  runBalance: ..., // optional
+  sysNo: ..., // optional
+  teller: ..., // optional
+  trackDt: ..., // optional
+  waterBill: ..., // optional
+};
+
+// Call the `updateCollectionFromCsvRef()` function to get a reference to the mutation.
+const ref = updateCollectionFromCsvRef(updateCollectionFromCsvVars);
+// Variables can be defined inline as well.
+const ref = updateCollectionFromCsvRef({ id: ..., accountNo: ..., amortize: ..., arrearsAmt: ..., arrearsEnv: ..., bankGroup: ..., bankId: ..., bankOnline: ..., batchNo: ..., billNo: ..., branch: ..., cash: ..., check: ..., checkDate: ..., checkNo: ..., cmrrfAmnt: ..., custNo: ..., discAmnt: ..., envFee: ..., fullName: ..., mrrfAmnt: ..., onlineref: ..., othrApply: ..., othrIncome: ..., othrReconn: ..., pacyAmnt: ..., papYAmnt: ..., payArrears: ..., penAmnt: ..., pymtDate: ..., pymtMethod: ..., receiptNo: ..., receiptStatus: ..., receiptType: ..., runBalance: ..., sysNo: ..., teller: ..., trackDt: ..., waterBill: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = updateCollectionFromCsvRef(dataConnect, updateCollectionFromCsvVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.collectionFromCsv_update);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.collectionFromCsv_update);
 });
 ```
 

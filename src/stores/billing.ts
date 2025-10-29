@@ -1,9 +1,7 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import type { Billing } from '@/types/billing';
 import type { StoreResponse } from '@/types/store-response';
 import { billingRepository as billGraph } from '@/repositories/graph/billingRepository';
-import type { PaginatedBillingsData } from '@/dataconnect-generated';
 import type { BillingItemFromCsv } from '@/types/billing-from-csv';
 
 interface PaginateOptions {
@@ -16,7 +14,6 @@ interface PaginateOptions {
 export const useBillingStore = defineStore('billing', () => {
 	// State
 	const billings = ref<BillingItemFromCsv[]>([]);
-	const billing = ref<Billing>();
 	const isLoading = ref(false);
 	const totalBillings = ref<number>(0);
 	const searchQuery = ref<string>('');
@@ -233,7 +230,6 @@ export const useBillingStore = defineStore('billing', () => {
 
 	return {
 		billings,
-		billing,
 		isLoading,
 		totalBillings,
 		searchQuery,

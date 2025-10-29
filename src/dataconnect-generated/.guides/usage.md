@@ -14,7 +14,7 @@ If a user is not using a supported framework, they can use the generated SDK dir
 Here's an example of how to use it with the first 5 operations:
 
 ```js
-import { createBook, createResident, createBillingFromCsv, deleteBillingFromCsv, updateBillingFromCsv, createCollectionFromCsv, paginatedBillings, countBillingFromCsv, searchBillingFromCsv } from '@dataconnect/generated';
+import { createBook, createResident, createBillingFromCsv, deleteBillingFromCsv, updateBillingFromCsv, paginatedBillings, countBillingFromCsv, searchBillingFromCsv, createCollectionFromCsv, deleteCollectionFromCsv } from '@dataconnect/generated';
 
 
 // Operation CreateBook:  For variables, look at type CreateBookVars in ../index.d.ts
@@ -32,9 +32,6 @@ const { data } = await DeleteBillingFromCsv(dataConnect, deleteBillingFromCsvVar
 // Operation UpdateBillingFromCsv:  For variables, look at type UpdateBillingFromCsvVars in ../index.d.ts
 const { data } = await UpdateBillingFromCsv(dataConnect, updateBillingFromCsvVars);
 
-// Operation CreateCollectionFromCsv:  For variables, look at type CreateCollectionFromCsvVars in ../index.d.ts
-const { data } = await CreateCollectionFromCsv(dataConnect, createCollectionFromCsvVars);
-
 // Operation PaginatedBillings:  For variables, look at type PaginatedBillingsVars in ../index.d.ts
 const { data } = await PaginatedBillings(dataConnect, paginatedBillingsVars);
 
@@ -43,6 +40,12 @@ const { data } = await CountBillingFromCsv(dataConnect);
 
 // Operation SearchBillingFromCsv:  For variables, look at type SearchBillingFromCsvVars in ../index.d.ts
 const { data } = await SearchBillingFromCsv(dataConnect, searchBillingFromCsvVars);
+
+// Operation CreateCollectionFromCsv:  For variables, look at type CreateCollectionFromCsvVars in ../index.d.ts
+const { data } = await CreateCollectionFromCsv(dataConnect, createCollectionFromCsvVars);
+
+// Operation DeleteCollectionFromCsv:  For variables, look at type DeleteCollectionFromCsvVars in ../index.d.ts
+const { data } = await DeleteCollectionFromCsv(dataConnect, deleteCollectionFromCsvVars);
 
 
 ```

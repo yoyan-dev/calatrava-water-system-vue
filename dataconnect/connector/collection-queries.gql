@@ -1,0 +1,109 @@
+query PaginatedCollections(
+	$limit: Int = 10
+	$offset: Int = 0
+	$orderByField: String
+	$orderDirection: String
+) @auth(expr: "auth.token.role == 'admin'") {
+	collectionFromCsvs(
+		limit: $limit
+		orderBy: [{ sysNo: DESC }]
+		offset: $offset
+	) {
+		accountNo
+		amortize
+		arrearsAmt
+		arrearsEnv
+		bankGroup
+		bankId
+		bankOnline
+		batchNo
+		billNo
+		branch
+		cash
+		check
+		checkDate
+		checkNo
+		cmrrfAmnt
+		custNo
+		discAmnt
+		envFee
+		fullName
+		mrrfAmnt
+		onlineref
+		othrApply
+		othrIncome
+		othrReconn
+		pacyAmnt
+		papYAmnt
+		payArrears
+		penAmnt
+		pymtDate
+		pymtMethod
+		receiptNo
+		receiptStatus
+		receiptType
+		runBalance
+		sysNo
+		teller
+		trackDt
+		waterBill
+		# Auto-generated fields
+		id
+		createdAt
+		updatedAt
+	}
+}
+
+query CountCollectionFromCsv @auth(expr: "auth.token.role == 'admin'") {
+	collectionFromCsvs {
+		_count
+	}
+}
+
+query SearchCollectionFromCsv($query: String, $limit: Int = 10)
+@auth(expr: "auth.token.role == 'admin'") {
+	collectionFromCsvs_search(query: $query, limit: $limit) {
+		accountNo
+		amortize
+		arrearsAmt
+		arrearsEnv
+		bankGroup
+		bankId
+		bankOnline
+		batchNo
+		billNo
+		branch
+		cash
+		check
+		checkDate
+		checkNo
+		cmrrfAmnt
+		custNo
+		discAmnt
+		envFee
+		fullName
+		mrrfAmnt
+		onlineref
+		othrApply
+		othrIncome
+		othrReconn
+		pacyAmnt
+		papYAmnt
+		payArrears
+		penAmnt
+		pymtDate
+		pymtMethod
+		receiptNo
+		receiptStatus
+		receiptType
+		runBalance
+		sysNo
+		teller
+		trackDt
+		waterBill
+		# Auto-generated fields
+		id
+		createdAt
+		updatedAt
+	}
+}

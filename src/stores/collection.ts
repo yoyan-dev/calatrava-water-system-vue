@@ -1,148 +1,247 @@
-import { collectionRepository } from '@/repositories/collectionRepository';
-import type { Collection } from '@/types/collection';
-import type { StoreResponse } from '@/types/store-response';
-import { format } from 'date-fns';
+import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
+import type { StoreResponse } from '@/types/store-response';
+import { collectionRepository as billGraph } from '@/repositories/graph/collectionRepository';
+import type { CollectionItemFromCsv } from '@/types/collection-from-csv';
 
-// Define the type for the grouped result
-interface GroupedCollection {
-	accountno: string;
-	fullname: string;
-	records: Collection[];
+interface PaginateOptions {
+	limit?: number;
+	offset?: number;
+	orderByField?: string;
+	orderDirection?: 'ASC' | 'DESC';
 }
 
-export const useCollectionStore = defineStore('collection', () => {
+export const useCollectionStore = defineStore('Collection', () => {
 	// State
-	const collections = ref<Collection[]>([]);
+	const Collections = ref<CollectionItemFromCsv[]>([]);
 	const isLoading = ref(false);
-	const month = ref(new Date());
-	const searchQuery = ref('');
-	const totalCollections = ref(0);
-	const page = ref(0);
-
-	// Getters
-	const offset = computed(() => page.value * 10);
-	const formattedDate = computed(() => format(month.value, 'yyyy-MM'));
-	const groupCollectionByAccount = computed(() => {
-		// Group records by accountno
-		const grouped = collections.value.reduce(
-			(acc: GroupedCollection[], collection) => {
-				// Find if an object with the same accountno already exists in the accumulator
-				let group = acc.find((item) => item.accountno === collection.accountno);
-
-				if (group) {
-					// If exists, push the collection to its records array
-					group.records.push(collection);
-				} else {
-					// If not, create a new group with the accountno and an array containing the collection
-					acc.push({
-						accountno: collection.accountno as string,
-						fullname: collection.fullname as string,
-						records: [collection],
-					});
-				}
-
-				return acc;
-			},
-			[],
-		);
-
-		// Sort records in each group by pymtdate descending (latest first)
-		const parseDate = (dateStr: string) => {
-			const parts = dateStr.split('/');
-			return new Date(
-				`${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`,
-			);
-		};
-
-		return grouped.map((group) => ({
-			...group,
-			records: group.records.sort((a, b) => {
-				const dateA = a.pymtdate ? parseDate(a.pymtdate).getTime() : 0;
-				const dateB = b.pymtdate ? parseDate(b.pymtdate).getTime() : 0;
-				return dateB - dateA;
-			}),
-		}));
-	});
+	const totalCollections = ref<number>(0);
+	const searchQuery = ref<string>('');
 
 	// Actions
-	async function fetchCollections() {
-		isLoading.value = true;
-		const response = await collectionRepository.fetchCollections({
-			q: searchQuery.value,
-			month: formattedDate.value,
-			offset: offset.value,
-		});
 
-		collections.value = response?.data || [];
-		totalCollections.value = response?.total || 0;
-		isLoading.value = false;
+	async function fetchSearchCollections(query: string) {
+		try {
+			const data = await billGraph.searchCollections(query);
+			Collections.value = data as CollectionItemFromCsv[];
+		} catch (error) {
+			console.error('Error searching Collections:', error);
+		}
 	}
 
-	async function addCollections(payload: File): Promise<StoreResponse> {
+	async function fetchCountCollections() {
+		const result = await billGraph.countCollections();
+		totalCollections.value =
+			Array.isArray(result) && result.length > 0 ? result[0]._count : 0;
+	}
+
+	async function fetchPaginateCollections({
+		limit = 10,
+		offset = 0,
+		orderByField = 'bill_no',
+		orderDirection = 'DESC',
+	}: PaginateOptions) {
+		isLoading.value = true;
+
+		try {
+			const data = await billGraph.paginateCollection(
+				limit,
+				offset,
+				orderByField,
+				orderDirection,
+			);
+			if (data) {
+				Collections.value = data;
+			}
+		} catch (error) {
+			console.error('Error fetching Collections:', error);
+		} finally {
+			isLoading.value = false;
+		}
+	}
+
+	async function addCollectionsFromCsv(payload: File): Promise<StoreResponse> {
 		try {
 			isLoading.value = true;
 			const formData = new FormData();
 			formData.append('file', payload);
-
-			const response = await collectionRepository.addCollections(formData);
-
+			const response = await billGraph.addCollectionFromCsv(formData);
 			if (response?.statusCode == 200) {
-				await fetchCollections();
+				isLoading.value = false;
+				Collections.value = [...Collections.value, ...response.data];
+
+				await fetchCountCollections();
+
+				return {
+					status: 'success',
+					message: response.message,
+				};
 			}
 			return {
-				status: 'success',
+				status: 'error',
 				message: response?.message,
-				statusMessage: response?.statusMessage ?? '',
 			};
 		} catch (error) {
 			console.error('Error uploading CSV:', error);
 			return {
 				status: 'error',
 				message: 'Failed to upload CSV',
-				statusMessage: 'error',
 			};
 		} finally {
 			isLoading.value = false;
 		}
 	}
 
-	async function deleteCollections(
-		payload: Collection[],
-	): Promise<StoreResponse> {
-		isLoading.value = true;
-		const response = await collectionRepository.deleteCollections(payload);
-		if (response?.statusCode == 200) {
-			await fetchCollections();
+	async function deleteOneCollection(id: string) {
+		try {
+			const response = await billGraph.deleteCollectionFromCsv(id);
+			if (response?.success) {
+				Collections.value = Collections.value.filter((item) => item.id !== id);
+				return {
+					status: 'success',
+					message: 'Collection deleted successfully',
+				};
+			}
+		} catch (error) {
+			console.error('Error deleting Collection:', error);
+		}
+	}
+
+	async function deleteSelectedCollections(
+		selected: Array<CollectionItemFromCsv>,
+	): Promise<{
+		status: 'success' | 'error' | 'partial';
+		message: string;
+		deleted: number;
+		failed: number;
+	}> {
+		if (!selected || selected.length === 0) {
 			return {
 				status: 'success',
-				message: response.message,
-				statusMessage: response.statusMessage ?? '',
+				message: 'No Collections selected to delete',
+				deleted: 0,
+				failed: 0,
 			};
 		}
-		return {
-			status: 'error',
-			message: response?.message,
-			statusMessage: response?.statusMessage ?? '',
-		};
+
+		isLoading.value = true;
+		const results = [];
+
+		try {
+			// Map each deletion to a promise
+			const deletionPromises = selected.map(async (item) => {
+				try {
+					const response = await billGraph.deleteCollectionFromCsv(item.id);
+					return { ...response, id: item.id };
+				} catch (err) {
+					console.error(`Failed to delete Collection ID: ${item.id}`, err);
+					return {
+						success: false,
+						message: 'Network or server error',
+						id: item.id,
+					};
+				}
+			});
+
+			// Execute all deletions concurrently
+			const responses = await Promise.all(deletionPromises);
+			results.push(...responses);
+
+			// Filter successful deletions
+			const successful = responses.filter((r) => r.success);
+			const failed = responses.filter((r) => !r.success);
+
+			// Remove only successfully deleted items from local state
+			const deletedIds = successful.map((r) => r.id);
+			Collections.value = Collections.value.filter(
+				(bill) => !deletedIds.includes(bill.id),
+			);
+
+			// Update total count (optional: only if you track it separately)
+			if (typeof totalCollections.value === 'number') {
+				totalCollections.value = Math.max(
+					0,
+					totalCollections.value - successful.length,
+				);
+			}
+
+			// Determine overall status
+			const status =
+				failed.length === 0
+					? 'success'
+					: successful.length === 0
+					? 'error'
+					: 'partial';
+
+			const message =
+				status === 'success'
+					? `Successfully deleted ${successful.length} Collection(s)`
+					: status === 'partial'
+					? `Deleted ${successful.length}, failed ${failed.length}`
+					: `Failed to delete ${failed.length} Collection(s)`;
+
+			return {
+				status,
+				message,
+				deleted: successful.length,
+				failed: failed.length,
+			};
+		} catch (error) {
+			console.error('Unexpected error in deleteSelectedCollections:', error);
+			return {
+				status: 'error',
+				message: 'An unexpected error occurred',
+				deleted: 0,
+				failed: selected.length,
+			};
+		} finally {
+			isLoading.value = false;
+		}
+	}
+
+	async function updateCollectionFromCsv(
+		id: string,
+		payload: Partial<CollectionItemFromCsv>,
+	) {
+		isLoading.value = true;
+		try {
+			const response = await billGraph.updateCollectionFromCsv({
+				id,
+				...payload,
+			});
+			if (response?.success) {
+				const timestamp = new Date().toISOString();
+				const index = Collections.value.findIndex((item) => item.id === id);
+				if (index !== -1) {
+					Collections.value[index] = {
+						...Collections.value[index],
+						updatedAt: timestamp,
+						...payload,
+					};
+				}
+				return {
+					status: 'success',
+					message: 'Collection updated successfully',
+				};
+			}
+		} catch (error) {
+			console.error('Error updating Collection:', error);
+		} finally {
+			isLoading.value = false;
+		}
 	}
 
 	return {
-		// State
+		Collections,
 		isLoading,
 		totalCollections,
-		collections,
 		searchQuery,
-		month,
-		page,
-
-		// Getters
-		groupCollectionByAccount,
-
-		// Actions
-		fetchCollections,
-		addCollections,
-		deleteCollections,
+		fetchSearchCollections,
+		fetchCountCollections,
+		fetchPaginateCollections,
+		addCollectionsFromCsv,
+		updateCollectionFromCsv,
+		deleteOneCollection,
+		deleteSelectedCollections,
 	};
 });
