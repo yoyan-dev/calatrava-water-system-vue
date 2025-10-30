@@ -15,14 +15,14 @@ This README will guide you through the process of using the generated JavaScript
   - [*CountCollectionFromCsv*](#countcollectionfromcsv)
   - [*SearchCollectionFromCsv*](#searchcollectionfromcsv)
 - [**Mutations**](#mutations)
+  - [*CreateCollectionFromCsv*](#createcollectionfromcsv)
+  - [*DeleteCollectionFromCsv*](#deletecollectionfromcsv)
+  - [*UpdateCollectionFromCsv*](#updatecollectionfromcsv)
   - [*CreateBook*](#createbook)
   - [*CreateResident*](#createresident)
   - [*CreateBillingFromCsv*](#createbillingfromcsv)
   - [*DeleteBillingFromCsv*](#deletebillingfromcsv)
   - [*UpdateBillingFromCsv*](#updatebillingfromcsv)
-  - [*CreateCollectionFromCsv*](#createcollectionfromcsv)
-  - [*DeleteCollectionFromCsv*](#deletecollectionfromcsv)
-  - [*UpdateCollectionFromCsv*](#updatecollectionfromcsv)
 
 # Accessing the connector
 A connector is a collection of Queries and Mutations. One SDK is generated for each connector - this SDK is generated for the connector `calatrava-water-system`. You can find more information about connectors in the [Data Connect documentation](https://firebase.google.com/docs/data-connect#how-does).
@@ -913,6 +913,558 @@ The following is true for both the action shortcut function and the `MutationRef
 
 Below are examples of how to use the `calatrava-water-system` connector's generated functions to execute each mutation. You can also follow the examples from the [Data Connect documentation](https://firebase.google.com/docs/data-connect/web-sdk#using-mutations).
 
+## CreateCollectionFromCsv
+You can execute the `CreateCollectionFromCsv` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+createCollectionFromCsv(vars: CreateCollectionFromCsvVariables): MutationPromise<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
+
+interface CreateCollectionFromCsvRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreateCollectionFromCsvVariables): MutationRef<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
+}
+export const createCollectionFromCsvRef: CreateCollectionFromCsvRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+createCollectionFromCsv(dc: DataConnect, vars: CreateCollectionFromCsvVariables): MutationPromise<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
+
+interface CreateCollectionFromCsvRef {
+  ...
+  (dc: DataConnect, vars: CreateCollectionFromCsvVariables): MutationRef<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
+}
+export const createCollectionFromCsvRef: CreateCollectionFromCsvRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the createCollectionFromCsvRef:
+```typescript
+const name = createCollectionFromCsvRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `CreateCollectionFromCsv` mutation requires an argument of type `CreateCollectionFromCsvVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface CreateCollectionFromCsvVariables {
+  accountNo: string;
+  amortize?: number | null;
+  arrearsAmt?: number | null;
+  arrearsEnv?: number | null;
+  bankGroup?: number | null;
+  bankId?: string | null;
+  bankOnline?: number | null;
+  batchNo?: string | null;
+  billNo?: string | null;
+  branch?: string | null;
+  cash: number;
+  check: number;
+  checkDate?: string | null;
+  checkNo?: string | null;
+  cmrrfAmnt: number;
+  custNo: number;
+  discAmnt: number;
+  envFee: number;
+  fullName: string;
+  mrrfAmnt: number;
+  onlineref?: string | null;
+  othrApply?: number | null;
+  othrIncome?: number | null;
+  othrReconn?: number | null;
+  pacyAmnt: number;
+  papYAmnt: number;
+  payArrears: boolean;
+  penAmnt: number;
+  pymtDate: string;
+  pymtMethod: number;
+  receiptNo: string;
+  receiptStatus: string;
+  receiptType: string;
+  runBalance?: number | null;
+  sysNo: number;
+  teller: string;
+  trackDt: string;
+  waterBill: number;
+}
+```
+### Return Type
+Recall that executing the `CreateCollectionFromCsv` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `CreateCollectionFromCsvData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface CreateCollectionFromCsvData {
+  collectionFromCsv_insert: CollectionFromCsv_Key;
+}
+```
+### Using `CreateCollectionFromCsv`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, createCollectionFromCsv, CreateCollectionFromCsvVariables } from '@dataconnect/generated';
+
+// The `CreateCollectionFromCsv` mutation requires an argument of type `CreateCollectionFromCsvVariables`:
+const createCollectionFromCsvVars: CreateCollectionFromCsvVariables = {
+  accountNo: ..., 
+  amortize: ..., // optional
+  arrearsAmt: ..., // optional
+  arrearsEnv: ..., // optional
+  bankGroup: ..., // optional
+  bankId: ..., // optional
+  bankOnline: ..., // optional
+  batchNo: ..., // optional
+  billNo: ..., // optional
+  branch: ..., // optional
+  cash: ..., 
+  check: ..., 
+  checkDate: ..., // optional
+  checkNo: ..., // optional
+  cmrrfAmnt: ..., 
+  custNo: ..., 
+  discAmnt: ..., 
+  envFee: ..., 
+  fullName: ..., 
+  mrrfAmnt: ..., 
+  onlineref: ..., // optional
+  othrApply: ..., // optional
+  othrIncome: ..., // optional
+  othrReconn: ..., // optional
+  pacyAmnt: ..., 
+  papYAmnt: ..., 
+  payArrears: ..., 
+  penAmnt: ..., 
+  pymtDate: ..., 
+  pymtMethod: ..., 
+  receiptNo: ..., 
+  receiptStatus: ..., 
+  receiptType: ..., 
+  runBalance: ..., // optional
+  sysNo: ..., 
+  teller: ..., 
+  trackDt: ..., 
+  waterBill: ..., 
+};
+
+// Call the `createCollectionFromCsv()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await createCollectionFromCsv(createCollectionFromCsvVars);
+// Variables can be defined inline as well.
+const { data } = await createCollectionFromCsv({ accountNo: ..., amortize: ..., arrearsAmt: ..., arrearsEnv: ..., bankGroup: ..., bankId: ..., bankOnline: ..., batchNo: ..., billNo: ..., branch: ..., cash: ..., check: ..., checkDate: ..., checkNo: ..., cmrrfAmnt: ..., custNo: ..., discAmnt: ..., envFee: ..., fullName: ..., mrrfAmnt: ..., onlineref: ..., othrApply: ..., othrIncome: ..., othrReconn: ..., pacyAmnt: ..., papYAmnt: ..., payArrears: ..., penAmnt: ..., pymtDate: ..., pymtMethod: ..., receiptNo: ..., receiptStatus: ..., receiptType: ..., runBalance: ..., sysNo: ..., teller: ..., trackDt: ..., waterBill: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await createCollectionFromCsv(dataConnect, createCollectionFromCsvVars);
+
+console.log(data.collectionFromCsv_insert);
+
+// Or, you can use the `Promise` API.
+createCollectionFromCsv(createCollectionFromCsvVars).then((response) => {
+  const data = response.data;
+  console.log(data.collectionFromCsv_insert);
+});
+```
+
+### Using `CreateCollectionFromCsv`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, createCollectionFromCsvRef, CreateCollectionFromCsvVariables } from '@dataconnect/generated';
+
+// The `CreateCollectionFromCsv` mutation requires an argument of type `CreateCollectionFromCsvVariables`:
+const createCollectionFromCsvVars: CreateCollectionFromCsvVariables = {
+  accountNo: ..., 
+  amortize: ..., // optional
+  arrearsAmt: ..., // optional
+  arrearsEnv: ..., // optional
+  bankGroup: ..., // optional
+  bankId: ..., // optional
+  bankOnline: ..., // optional
+  batchNo: ..., // optional
+  billNo: ..., // optional
+  branch: ..., // optional
+  cash: ..., 
+  check: ..., 
+  checkDate: ..., // optional
+  checkNo: ..., // optional
+  cmrrfAmnt: ..., 
+  custNo: ..., 
+  discAmnt: ..., 
+  envFee: ..., 
+  fullName: ..., 
+  mrrfAmnt: ..., 
+  onlineref: ..., // optional
+  othrApply: ..., // optional
+  othrIncome: ..., // optional
+  othrReconn: ..., // optional
+  pacyAmnt: ..., 
+  papYAmnt: ..., 
+  payArrears: ..., 
+  penAmnt: ..., 
+  pymtDate: ..., 
+  pymtMethod: ..., 
+  receiptNo: ..., 
+  receiptStatus: ..., 
+  receiptType: ..., 
+  runBalance: ..., // optional
+  sysNo: ..., 
+  teller: ..., 
+  trackDt: ..., 
+  waterBill: ..., 
+};
+
+// Call the `createCollectionFromCsvRef()` function to get a reference to the mutation.
+const ref = createCollectionFromCsvRef(createCollectionFromCsvVars);
+// Variables can be defined inline as well.
+const ref = createCollectionFromCsvRef({ accountNo: ..., amortize: ..., arrearsAmt: ..., arrearsEnv: ..., bankGroup: ..., bankId: ..., bankOnline: ..., batchNo: ..., billNo: ..., branch: ..., cash: ..., check: ..., checkDate: ..., checkNo: ..., cmrrfAmnt: ..., custNo: ..., discAmnt: ..., envFee: ..., fullName: ..., mrrfAmnt: ..., onlineref: ..., othrApply: ..., othrIncome: ..., othrReconn: ..., pacyAmnt: ..., papYAmnt: ..., payArrears: ..., penAmnt: ..., pymtDate: ..., pymtMethod: ..., receiptNo: ..., receiptStatus: ..., receiptType: ..., runBalance: ..., sysNo: ..., teller: ..., trackDt: ..., waterBill: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = createCollectionFromCsvRef(dataConnect, createCollectionFromCsvVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.collectionFromCsv_insert);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.collectionFromCsv_insert);
+});
+```
+
+## DeleteCollectionFromCsv
+You can execute the `DeleteCollectionFromCsv` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+deleteCollectionFromCsv(vars: DeleteCollectionFromCsvVariables): MutationPromise<DeleteCollectionFromCsvData, DeleteCollectionFromCsvVariables>;
+
+interface DeleteCollectionFromCsvRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: DeleteCollectionFromCsvVariables): MutationRef<DeleteCollectionFromCsvData, DeleteCollectionFromCsvVariables>;
+}
+export const deleteCollectionFromCsvRef: DeleteCollectionFromCsvRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+deleteCollectionFromCsv(dc: DataConnect, vars: DeleteCollectionFromCsvVariables): MutationPromise<DeleteCollectionFromCsvData, DeleteCollectionFromCsvVariables>;
+
+interface DeleteCollectionFromCsvRef {
+  ...
+  (dc: DataConnect, vars: DeleteCollectionFromCsvVariables): MutationRef<DeleteCollectionFromCsvData, DeleteCollectionFromCsvVariables>;
+}
+export const deleteCollectionFromCsvRef: DeleteCollectionFromCsvRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the deleteCollectionFromCsvRef:
+```typescript
+const name = deleteCollectionFromCsvRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `DeleteCollectionFromCsv` mutation requires an argument of type `DeleteCollectionFromCsvVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface DeleteCollectionFromCsvVariables {
+  id: UUIDString;
+}
+```
+### Return Type
+Recall that executing the `DeleteCollectionFromCsv` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `DeleteCollectionFromCsvData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface DeleteCollectionFromCsvData {
+  collectionFromCsv_delete?: CollectionFromCsv_Key | null;
+}
+```
+### Using `DeleteCollectionFromCsv`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, deleteCollectionFromCsv, DeleteCollectionFromCsvVariables } from '@dataconnect/generated';
+
+// The `DeleteCollectionFromCsv` mutation requires an argument of type `DeleteCollectionFromCsvVariables`:
+const deleteCollectionFromCsvVars: DeleteCollectionFromCsvVariables = {
+  id: ..., 
+};
+
+// Call the `deleteCollectionFromCsv()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await deleteCollectionFromCsv(deleteCollectionFromCsvVars);
+// Variables can be defined inline as well.
+const { data } = await deleteCollectionFromCsv({ id: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await deleteCollectionFromCsv(dataConnect, deleteCollectionFromCsvVars);
+
+console.log(data.collectionFromCsv_delete);
+
+// Or, you can use the `Promise` API.
+deleteCollectionFromCsv(deleteCollectionFromCsvVars).then((response) => {
+  const data = response.data;
+  console.log(data.collectionFromCsv_delete);
+});
+```
+
+### Using `DeleteCollectionFromCsv`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, deleteCollectionFromCsvRef, DeleteCollectionFromCsvVariables } from '@dataconnect/generated';
+
+// The `DeleteCollectionFromCsv` mutation requires an argument of type `DeleteCollectionFromCsvVariables`:
+const deleteCollectionFromCsvVars: DeleteCollectionFromCsvVariables = {
+  id: ..., 
+};
+
+// Call the `deleteCollectionFromCsvRef()` function to get a reference to the mutation.
+const ref = deleteCollectionFromCsvRef(deleteCollectionFromCsvVars);
+// Variables can be defined inline as well.
+const ref = deleteCollectionFromCsvRef({ id: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = deleteCollectionFromCsvRef(dataConnect, deleteCollectionFromCsvVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.collectionFromCsv_delete);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.collectionFromCsv_delete);
+});
+```
+
+## UpdateCollectionFromCsv
+You can execute the `UpdateCollectionFromCsv` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+updateCollectionFromCsv(vars: UpdateCollectionFromCsvVariables): MutationPromise<UpdateCollectionFromCsvData, UpdateCollectionFromCsvVariables>;
+
+interface UpdateCollectionFromCsvRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: UpdateCollectionFromCsvVariables): MutationRef<UpdateCollectionFromCsvData, UpdateCollectionFromCsvVariables>;
+}
+export const updateCollectionFromCsvRef: UpdateCollectionFromCsvRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+updateCollectionFromCsv(dc: DataConnect, vars: UpdateCollectionFromCsvVariables): MutationPromise<UpdateCollectionFromCsvData, UpdateCollectionFromCsvVariables>;
+
+interface UpdateCollectionFromCsvRef {
+  ...
+  (dc: DataConnect, vars: UpdateCollectionFromCsvVariables): MutationRef<UpdateCollectionFromCsvData, UpdateCollectionFromCsvVariables>;
+}
+export const updateCollectionFromCsvRef: UpdateCollectionFromCsvRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the updateCollectionFromCsvRef:
+```typescript
+const name = updateCollectionFromCsvRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `UpdateCollectionFromCsv` mutation requires an argument of type `UpdateCollectionFromCsvVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface UpdateCollectionFromCsvVariables {
+  id: UUIDString;
+  accountNo?: string | null;
+  amortize?: number | null;
+  arrearsAmt?: number | null;
+  arrearsEnv?: number | null;
+  bankGroup?: number | null;
+  bankId?: string | null;
+  bankOnline?: number | null;
+  batchNo?: string | null;
+  billNo?: string | null;
+  branch?: string | null;
+  cash?: number | null;
+  check?: number | null;
+  checkDate?: string | null;
+  checkNo?: string | null;
+  cmrrfAmnt?: number | null;
+  custNo?: number | null;
+  discAmnt?: number | null;
+  envFee?: number | null;
+  fullName?: string | null;
+  mrrfAmnt?: number | null;
+  onlineref?: string | null;
+  othrApply?: number | null;
+  othrIncome?: number | null;
+  othrReconn?: number | null;
+  pacyAmnt?: number | null;
+  papYAmnt?: number | null;
+  payArrears?: boolean | null;
+  penAmnt?: number | null;
+  pymtDate?: string | null;
+  pymtMethod?: number | null;
+  receiptNo?: string | null;
+  receiptStatus?: string | null;
+  receiptType?: string | null;
+  runBalance?: number | null;
+  sysNo?: number | null;
+  teller?: string | null;
+  trackDt?: string | null;
+  waterBill?: number | null;
+}
+```
+### Return Type
+Recall that executing the `UpdateCollectionFromCsv` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `UpdateCollectionFromCsvData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface UpdateCollectionFromCsvData {
+  collectionFromCsv_update?: CollectionFromCsv_Key | null;
+}
+```
+### Using `UpdateCollectionFromCsv`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, updateCollectionFromCsv, UpdateCollectionFromCsvVariables } from '@dataconnect/generated';
+
+// The `UpdateCollectionFromCsv` mutation requires an argument of type `UpdateCollectionFromCsvVariables`:
+const updateCollectionFromCsvVars: UpdateCollectionFromCsvVariables = {
+  id: ..., 
+  accountNo: ..., // optional
+  amortize: ..., // optional
+  arrearsAmt: ..., // optional
+  arrearsEnv: ..., // optional
+  bankGroup: ..., // optional
+  bankId: ..., // optional
+  bankOnline: ..., // optional
+  batchNo: ..., // optional
+  billNo: ..., // optional
+  branch: ..., // optional
+  cash: ..., // optional
+  check: ..., // optional
+  checkDate: ..., // optional
+  checkNo: ..., // optional
+  cmrrfAmnt: ..., // optional
+  custNo: ..., // optional
+  discAmnt: ..., // optional
+  envFee: ..., // optional
+  fullName: ..., // optional
+  mrrfAmnt: ..., // optional
+  onlineref: ..., // optional
+  othrApply: ..., // optional
+  othrIncome: ..., // optional
+  othrReconn: ..., // optional
+  pacyAmnt: ..., // optional
+  papYAmnt: ..., // optional
+  payArrears: ..., // optional
+  penAmnt: ..., // optional
+  pymtDate: ..., // optional
+  pymtMethod: ..., // optional
+  receiptNo: ..., // optional
+  receiptStatus: ..., // optional
+  receiptType: ..., // optional
+  runBalance: ..., // optional
+  sysNo: ..., // optional
+  teller: ..., // optional
+  trackDt: ..., // optional
+  waterBill: ..., // optional
+};
+
+// Call the `updateCollectionFromCsv()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await updateCollectionFromCsv(updateCollectionFromCsvVars);
+// Variables can be defined inline as well.
+const { data } = await updateCollectionFromCsv({ id: ..., accountNo: ..., amortize: ..., arrearsAmt: ..., arrearsEnv: ..., bankGroup: ..., bankId: ..., bankOnline: ..., batchNo: ..., billNo: ..., branch: ..., cash: ..., check: ..., checkDate: ..., checkNo: ..., cmrrfAmnt: ..., custNo: ..., discAmnt: ..., envFee: ..., fullName: ..., mrrfAmnt: ..., onlineref: ..., othrApply: ..., othrIncome: ..., othrReconn: ..., pacyAmnt: ..., papYAmnt: ..., payArrears: ..., penAmnt: ..., pymtDate: ..., pymtMethod: ..., receiptNo: ..., receiptStatus: ..., receiptType: ..., runBalance: ..., sysNo: ..., teller: ..., trackDt: ..., waterBill: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await updateCollectionFromCsv(dataConnect, updateCollectionFromCsvVars);
+
+console.log(data.collectionFromCsv_update);
+
+// Or, you can use the `Promise` API.
+updateCollectionFromCsv(updateCollectionFromCsvVars).then((response) => {
+  const data = response.data;
+  console.log(data.collectionFromCsv_update);
+});
+```
+
+### Using `UpdateCollectionFromCsv`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, updateCollectionFromCsvRef, UpdateCollectionFromCsvVariables } from '@dataconnect/generated';
+
+// The `UpdateCollectionFromCsv` mutation requires an argument of type `UpdateCollectionFromCsvVariables`:
+const updateCollectionFromCsvVars: UpdateCollectionFromCsvVariables = {
+  id: ..., 
+  accountNo: ..., // optional
+  amortize: ..., // optional
+  arrearsAmt: ..., // optional
+  arrearsEnv: ..., // optional
+  bankGroup: ..., // optional
+  bankId: ..., // optional
+  bankOnline: ..., // optional
+  batchNo: ..., // optional
+  billNo: ..., // optional
+  branch: ..., // optional
+  cash: ..., // optional
+  check: ..., // optional
+  checkDate: ..., // optional
+  checkNo: ..., // optional
+  cmrrfAmnt: ..., // optional
+  custNo: ..., // optional
+  discAmnt: ..., // optional
+  envFee: ..., // optional
+  fullName: ..., // optional
+  mrrfAmnt: ..., // optional
+  onlineref: ..., // optional
+  othrApply: ..., // optional
+  othrIncome: ..., // optional
+  othrReconn: ..., // optional
+  pacyAmnt: ..., // optional
+  papYAmnt: ..., // optional
+  payArrears: ..., // optional
+  penAmnt: ..., // optional
+  pymtDate: ..., // optional
+  pymtMethod: ..., // optional
+  receiptNo: ..., // optional
+  receiptStatus: ..., // optional
+  receiptType: ..., // optional
+  runBalance: ..., // optional
+  sysNo: ..., // optional
+  teller: ..., // optional
+  trackDt: ..., // optional
+  waterBill: ..., // optional
+};
+
+// Call the `updateCollectionFromCsvRef()` function to get a reference to the mutation.
+const ref = updateCollectionFromCsvRef(updateCollectionFromCsvVars);
+// Variables can be defined inline as well.
+const ref = updateCollectionFromCsvRef({ id: ..., accountNo: ..., amortize: ..., arrearsAmt: ..., arrearsEnv: ..., bankGroup: ..., bankId: ..., bankOnline: ..., batchNo: ..., billNo: ..., branch: ..., cash: ..., check: ..., checkDate: ..., checkNo: ..., cmrrfAmnt: ..., custNo: ..., discAmnt: ..., envFee: ..., fullName: ..., mrrfAmnt: ..., onlineref: ..., othrApply: ..., othrIncome: ..., othrReconn: ..., pacyAmnt: ..., papYAmnt: ..., payArrears: ..., penAmnt: ..., pymtDate: ..., pymtMethod: ..., receiptNo: ..., receiptStatus: ..., receiptType: ..., runBalance: ..., sysNo: ..., teller: ..., trackDt: ..., waterBill: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = updateCollectionFromCsvRef(dataConnect, updateCollectionFromCsvVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.collectionFromCsv_update);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.collectionFromCsv_update);
+});
+```
+
 ## CreateBook
 You can execute the `CreateBook` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
 ```typescript
@@ -1725,558 +2277,6 @@ console.log(data.billingFromCsv_update);
 executeMutation(ref).then((response) => {
   const data = response.data;
   console.log(data.billingFromCsv_update);
-});
-```
-
-## CreateCollectionFromCsv
-You can execute the `CreateCollectionFromCsv` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
-```typescript
-createCollectionFromCsv(vars: CreateCollectionFromCsvVariables): MutationPromise<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
-
-interface CreateCollectionFromCsvRef {
-  ...
-  /* Allow users to create refs without passing in DataConnect */
-  (vars: CreateCollectionFromCsvVariables): MutationRef<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
-}
-export const createCollectionFromCsvRef: CreateCollectionFromCsvRef;
-```
-You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
-```typescript
-createCollectionFromCsv(dc: DataConnect, vars: CreateCollectionFromCsvVariables): MutationPromise<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
-
-interface CreateCollectionFromCsvRef {
-  ...
-  (dc: DataConnect, vars: CreateCollectionFromCsvVariables): MutationRef<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
-}
-export const createCollectionFromCsvRef: CreateCollectionFromCsvRef;
-```
-
-If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the createCollectionFromCsvRef:
-```typescript
-const name = createCollectionFromCsvRef.operationName;
-console.log(name);
-```
-
-### Variables
-The `CreateCollectionFromCsv` mutation requires an argument of type `CreateCollectionFromCsvVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
-
-```typescript
-export interface CreateCollectionFromCsvVariables {
-  accountNo: string;
-  amortize?: number | null;
-  arrearsAmt?: number | null;
-  arrearsEnv?: number | null;
-  bankGroup?: number | null;
-  bankId?: string | null;
-  bankOnline?: number | null;
-  batchNo?: string | null;
-  billNo?: string | null;
-  branch?: string | null;
-  cash: number;
-  check: number;
-  checkDate?: string | null;
-  checkNo?: string | null;
-  cmrrfAmnt: number;
-  custNo: number;
-  discAmnt: number;
-  envFee: number;
-  fullName: string;
-  mrrfAmnt: number;
-  onlineref?: string | null;
-  othrApply?: number | null;
-  othrIncome?: number | null;
-  othrReconn?: number | null;
-  pacyAmnt: number;
-  papYAmnt: number;
-  payArrears: boolean;
-  penAmnt: number;
-  pymtDate: string;
-  pymtMethod: number;
-  receiptNo: string;
-  receiptStatus: string;
-  receiptType: string;
-  runBalance?: number | null;
-  sysNo: number;
-  teller: string;
-  trackDt: string;
-  waterBill: number;
-}
-```
-### Return Type
-Recall that executing the `CreateCollectionFromCsv` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
-
-The `data` property is an object of type `CreateCollectionFromCsvData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
-```typescript
-export interface CreateCollectionFromCsvData {
-  collectionFromCsv_insert: CollectionFromCsv_Key;
-}
-```
-### Using `CreateCollectionFromCsv`'s action shortcut function
-
-```typescript
-import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, createCollectionFromCsv, CreateCollectionFromCsvVariables } from '@dataconnect/generated';
-
-// The `CreateCollectionFromCsv` mutation requires an argument of type `CreateCollectionFromCsvVariables`:
-const createCollectionFromCsvVars: CreateCollectionFromCsvVariables = {
-  accountNo: ..., 
-  amortize: ..., // optional
-  arrearsAmt: ..., // optional
-  arrearsEnv: ..., // optional
-  bankGroup: ..., // optional
-  bankId: ..., // optional
-  bankOnline: ..., // optional
-  batchNo: ..., // optional
-  billNo: ..., // optional
-  branch: ..., // optional
-  cash: ..., 
-  check: ..., 
-  checkDate: ..., // optional
-  checkNo: ..., // optional
-  cmrrfAmnt: ..., 
-  custNo: ..., 
-  discAmnt: ..., 
-  envFee: ..., 
-  fullName: ..., 
-  mrrfAmnt: ..., 
-  onlineref: ..., // optional
-  othrApply: ..., // optional
-  othrIncome: ..., // optional
-  othrReconn: ..., // optional
-  pacyAmnt: ..., 
-  papYAmnt: ..., 
-  payArrears: ..., 
-  penAmnt: ..., 
-  pymtDate: ..., 
-  pymtMethod: ..., 
-  receiptNo: ..., 
-  receiptStatus: ..., 
-  receiptType: ..., 
-  runBalance: ..., // optional
-  sysNo: ..., 
-  teller: ..., 
-  trackDt: ..., 
-  waterBill: ..., 
-};
-
-// Call the `createCollectionFromCsv()` function to execute the mutation.
-// You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await createCollectionFromCsv(createCollectionFromCsvVars);
-// Variables can be defined inline as well.
-const { data } = await createCollectionFromCsv({ accountNo: ..., amortize: ..., arrearsAmt: ..., arrearsEnv: ..., bankGroup: ..., bankId: ..., bankOnline: ..., batchNo: ..., billNo: ..., branch: ..., cash: ..., check: ..., checkDate: ..., checkNo: ..., cmrrfAmnt: ..., custNo: ..., discAmnt: ..., envFee: ..., fullName: ..., mrrfAmnt: ..., onlineref: ..., othrApply: ..., othrIncome: ..., othrReconn: ..., pacyAmnt: ..., papYAmnt: ..., payArrears: ..., penAmnt: ..., pymtDate: ..., pymtMethod: ..., receiptNo: ..., receiptStatus: ..., receiptType: ..., runBalance: ..., sysNo: ..., teller: ..., trackDt: ..., waterBill: ..., });
-
-// You can also pass in a `DataConnect` instance to the action shortcut function.
-const dataConnect = getDataConnect(connectorConfig);
-const { data } = await createCollectionFromCsv(dataConnect, createCollectionFromCsvVars);
-
-console.log(data.collectionFromCsv_insert);
-
-// Or, you can use the `Promise` API.
-createCollectionFromCsv(createCollectionFromCsvVars).then((response) => {
-  const data = response.data;
-  console.log(data.collectionFromCsv_insert);
-});
-```
-
-### Using `CreateCollectionFromCsv`'s `MutationRef` function
-
-```typescript
-import { getDataConnect, executeMutation } from 'firebase/data-connect';
-import { connectorConfig, createCollectionFromCsvRef, CreateCollectionFromCsvVariables } from '@dataconnect/generated';
-
-// The `CreateCollectionFromCsv` mutation requires an argument of type `CreateCollectionFromCsvVariables`:
-const createCollectionFromCsvVars: CreateCollectionFromCsvVariables = {
-  accountNo: ..., 
-  amortize: ..., // optional
-  arrearsAmt: ..., // optional
-  arrearsEnv: ..., // optional
-  bankGroup: ..., // optional
-  bankId: ..., // optional
-  bankOnline: ..., // optional
-  batchNo: ..., // optional
-  billNo: ..., // optional
-  branch: ..., // optional
-  cash: ..., 
-  check: ..., 
-  checkDate: ..., // optional
-  checkNo: ..., // optional
-  cmrrfAmnt: ..., 
-  custNo: ..., 
-  discAmnt: ..., 
-  envFee: ..., 
-  fullName: ..., 
-  mrrfAmnt: ..., 
-  onlineref: ..., // optional
-  othrApply: ..., // optional
-  othrIncome: ..., // optional
-  othrReconn: ..., // optional
-  pacyAmnt: ..., 
-  papYAmnt: ..., 
-  payArrears: ..., 
-  penAmnt: ..., 
-  pymtDate: ..., 
-  pymtMethod: ..., 
-  receiptNo: ..., 
-  receiptStatus: ..., 
-  receiptType: ..., 
-  runBalance: ..., // optional
-  sysNo: ..., 
-  teller: ..., 
-  trackDt: ..., 
-  waterBill: ..., 
-};
-
-// Call the `createCollectionFromCsvRef()` function to get a reference to the mutation.
-const ref = createCollectionFromCsvRef(createCollectionFromCsvVars);
-// Variables can be defined inline as well.
-const ref = createCollectionFromCsvRef({ accountNo: ..., amortize: ..., arrearsAmt: ..., arrearsEnv: ..., bankGroup: ..., bankId: ..., bankOnline: ..., batchNo: ..., billNo: ..., branch: ..., cash: ..., check: ..., checkDate: ..., checkNo: ..., cmrrfAmnt: ..., custNo: ..., discAmnt: ..., envFee: ..., fullName: ..., mrrfAmnt: ..., onlineref: ..., othrApply: ..., othrIncome: ..., othrReconn: ..., pacyAmnt: ..., papYAmnt: ..., payArrears: ..., penAmnt: ..., pymtDate: ..., pymtMethod: ..., receiptNo: ..., receiptStatus: ..., receiptType: ..., runBalance: ..., sysNo: ..., teller: ..., trackDt: ..., waterBill: ..., });
-
-// You can also pass in a `DataConnect` instance to the `MutationRef` function.
-const dataConnect = getDataConnect(connectorConfig);
-const ref = createCollectionFromCsvRef(dataConnect, createCollectionFromCsvVars);
-
-// Call `executeMutation()` on the reference to execute the mutation.
-// You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await executeMutation(ref);
-
-console.log(data.collectionFromCsv_insert);
-
-// Or, you can use the `Promise` API.
-executeMutation(ref).then((response) => {
-  const data = response.data;
-  console.log(data.collectionFromCsv_insert);
-});
-```
-
-## DeleteCollectionFromCsv
-You can execute the `DeleteCollectionFromCsv` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
-```typescript
-deleteCollectionFromCsv(vars: DeleteCollectionFromCsvVariables): MutationPromise<DeleteCollectionFromCsvData, DeleteCollectionFromCsvVariables>;
-
-interface DeleteCollectionFromCsvRef {
-  ...
-  /* Allow users to create refs without passing in DataConnect */
-  (vars: DeleteCollectionFromCsvVariables): MutationRef<DeleteCollectionFromCsvData, DeleteCollectionFromCsvVariables>;
-}
-export const deleteCollectionFromCsvRef: DeleteCollectionFromCsvRef;
-```
-You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
-```typescript
-deleteCollectionFromCsv(dc: DataConnect, vars: DeleteCollectionFromCsvVariables): MutationPromise<DeleteCollectionFromCsvData, DeleteCollectionFromCsvVariables>;
-
-interface DeleteCollectionFromCsvRef {
-  ...
-  (dc: DataConnect, vars: DeleteCollectionFromCsvVariables): MutationRef<DeleteCollectionFromCsvData, DeleteCollectionFromCsvVariables>;
-}
-export const deleteCollectionFromCsvRef: DeleteCollectionFromCsvRef;
-```
-
-If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the deleteCollectionFromCsvRef:
-```typescript
-const name = deleteCollectionFromCsvRef.operationName;
-console.log(name);
-```
-
-### Variables
-The `DeleteCollectionFromCsv` mutation requires an argument of type `DeleteCollectionFromCsvVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
-
-```typescript
-export interface DeleteCollectionFromCsvVariables {
-  id: UUIDString;
-}
-```
-### Return Type
-Recall that executing the `DeleteCollectionFromCsv` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
-
-The `data` property is an object of type `DeleteCollectionFromCsvData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
-```typescript
-export interface DeleteCollectionFromCsvData {
-  collectionFromCsv_delete?: CollectionFromCsv_Key | null;
-}
-```
-### Using `DeleteCollectionFromCsv`'s action shortcut function
-
-```typescript
-import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, deleteCollectionFromCsv, DeleteCollectionFromCsvVariables } from '@dataconnect/generated';
-
-// The `DeleteCollectionFromCsv` mutation requires an argument of type `DeleteCollectionFromCsvVariables`:
-const deleteCollectionFromCsvVars: DeleteCollectionFromCsvVariables = {
-  id: ..., 
-};
-
-// Call the `deleteCollectionFromCsv()` function to execute the mutation.
-// You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await deleteCollectionFromCsv(deleteCollectionFromCsvVars);
-// Variables can be defined inline as well.
-const { data } = await deleteCollectionFromCsv({ id: ..., });
-
-// You can also pass in a `DataConnect` instance to the action shortcut function.
-const dataConnect = getDataConnect(connectorConfig);
-const { data } = await deleteCollectionFromCsv(dataConnect, deleteCollectionFromCsvVars);
-
-console.log(data.collectionFromCsv_delete);
-
-// Or, you can use the `Promise` API.
-deleteCollectionFromCsv(deleteCollectionFromCsvVars).then((response) => {
-  const data = response.data;
-  console.log(data.collectionFromCsv_delete);
-});
-```
-
-### Using `DeleteCollectionFromCsv`'s `MutationRef` function
-
-```typescript
-import { getDataConnect, executeMutation } from 'firebase/data-connect';
-import { connectorConfig, deleteCollectionFromCsvRef, DeleteCollectionFromCsvVariables } from '@dataconnect/generated';
-
-// The `DeleteCollectionFromCsv` mutation requires an argument of type `DeleteCollectionFromCsvVariables`:
-const deleteCollectionFromCsvVars: DeleteCollectionFromCsvVariables = {
-  id: ..., 
-};
-
-// Call the `deleteCollectionFromCsvRef()` function to get a reference to the mutation.
-const ref = deleteCollectionFromCsvRef(deleteCollectionFromCsvVars);
-// Variables can be defined inline as well.
-const ref = deleteCollectionFromCsvRef({ id: ..., });
-
-// You can also pass in a `DataConnect` instance to the `MutationRef` function.
-const dataConnect = getDataConnect(connectorConfig);
-const ref = deleteCollectionFromCsvRef(dataConnect, deleteCollectionFromCsvVars);
-
-// Call `executeMutation()` on the reference to execute the mutation.
-// You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await executeMutation(ref);
-
-console.log(data.collectionFromCsv_delete);
-
-// Or, you can use the `Promise` API.
-executeMutation(ref).then((response) => {
-  const data = response.data;
-  console.log(data.collectionFromCsv_delete);
-});
-```
-
-## UpdateCollectionFromCsv
-You can execute the `UpdateCollectionFromCsv` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
-```typescript
-updateCollectionFromCsv(vars: UpdateCollectionFromCsvVariables): MutationPromise<UpdateCollectionFromCsvData, UpdateCollectionFromCsvVariables>;
-
-interface UpdateCollectionFromCsvRef {
-  ...
-  /* Allow users to create refs without passing in DataConnect */
-  (vars: UpdateCollectionFromCsvVariables): MutationRef<UpdateCollectionFromCsvData, UpdateCollectionFromCsvVariables>;
-}
-export const updateCollectionFromCsvRef: UpdateCollectionFromCsvRef;
-```
-You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
-```typescript
-updateCollectionFromCsv(dc: DataConnect, vars: UpdateCollectionFromCsvVariables): MutationPromise<UpdateCollectionFromCsvData, UpdateCollectionFromCsvVariables>;
-
-interface UpdateCollectionFromCsvRef {
-  ...
-  (dc: DataConnect, vars: UpdateCollectionFromCsvVariables): MutationRef<UpdateCollectionFromCsvData, UpdateCollectionFromCsvVariables>;
-}
-export const updateCollectionFromCsvRef: UpdateCollectionFromCsvRef;
-```
-
-If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the updateCollectionFromCsvRef:
-```typescript
-const name = updateCollectionFromCsvRef.operationName;
-console.log(name);
-```
-
-### Variables
-The `UpdateCollectionFromCsv` mutation requires an argument of type `UpdateCollectionFromCsvVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
-
-```typescript
-export interface UpdateCollectionFromCsvVariables {
-  id: UUIDString;
-  accountNo?: string | null;
-  amortize?: number | null;
-  arrearsAmt?: number | null;
-  arrearsEnv?: number | null;
-  bankGroup?: number | null;
-  bankId?: string | null;
-  bankOnline?: number | null;
-  batchNo?: string | null;
-  billNo?: string | null;
-  branch?: string | null;
-  cash?: number | null;
-  check?: number | null;
-  checkDate?: string | null;
-  checkNo?: string | null;
-  cmrrfAmnt?: number | null;
-  custNo?: number | null;
-  discAmnt?: number | null;
-  envFee?: number | null;
-  fullName?: string | null;
-  mrrfAmnt?: number | null;
-  onlineref?: string | null;
-  othrApply?: number | null;
-  othrIncome?: number | null;
-  othrReconn?: number | null;
-  pacyAmnt?: number | null;
-  papYAmnt?: number | null;
-  payArrears?: boolean | null;
-  penAmnt?: number | null;
-  pymtDate?: string | null;
-  pymtMethod?: number | null;
-  receiptNo?: string | null;
-  receiptStatus?: string | null;
-  receiptType?: string | null;
-  runBalance?: number | null;
-  sysNo?: number | null;
-  teller?: string | null;
-  trackDt?: string | null;
-  waterBill?: number | null;
-}
-```
-### Return Type
-Recall that executing the `UpdateCollectionFromCsv` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
-
-The `data` property is an object of type `UpdateCollectionFromCsvData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
-```typescript
-export interface UpdateCollectionFromCsvData {
-  collectionFromCsv_update?: CollectionFromCsv_Key | null;
-}
-```
-### Using `UpdateCollectionFromCsv`'s action shortcut function
-
-```typescript
-import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, updateCollectionFromCsv, UpdateCollectionFromCsvVariables } from '@dataconnect/generated';
-
-// The `UpdateCollectionFromCsv` mutation requires an argument of type `UpdateCollectionFromCsvVariables`:
-const updateCollectionFromCsvVars: UpdateCollectionFromCsvVariables = {
-  id: ..., 
-  accountNo: ..., // optional
-  amortize: ..., // optional
-  arrearsAmt: ..., // optional
-  arrearsEnv: ..., // optional
-  bankGroup: ..., // optional
-  bankId: ..., // optional
-  bankOnline: ..., // optional
-  batchNo: ..., // optional
-  billNo: ..., // optional
-  branch: ..., // optional
-  cash: ..., // optional
-  check: ..., // optional
-  checkDate: ..., // optional
-  checkNo: ..., // optional
-  cmrrfAmnt: ..., // optional
-  custNo: ..., // optional
-  discAmnt: ..., // optional
-  envFee: ..., // optional
-  fullName: ..., // optional
-  mrrfAmnt: ..., // optional
-  onlineref: ..., // optional
-  othrApply: ..., // optional
-  othrIncome: ..., // optional
-  othrReconn: ..., // optional
-  pacyAmnt: ..., // optional
-  papYAmnt: ..., // optional
-  payArrears: ..., // optional
-  penAmnt: ..., // optional
-  pymtDate: ..., // optional
-  pymtMethod: ..., // optional
-  receiptNo: ..., // optional
-  receiptStatus: ..., // optional
-  receiptType: ..., // optional
-  runBalance: ..., // optional
-  sysNo: ..., // optional
-  teller: ..., // optional
-  trackDt: ..., // optional
-  waterBill: ..., // optional
-};
-
-// Call the `updateCollectionFromCsv()` function to execute the mutation.
-// You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await updateCollectionFromCsv(updateCollectionFromCsvVars);
-// Variables can be defined inline as well.
-const { data } = await updateCollectionFromCsv({ id: ..., accountNo: ..., amortize: ..., arrearsAmt: ..., arrearsEnv: ..., bankGroup: ..., bankId: ..., bankOnline: ..., batchNo: ..., billNo: ..., branch: ..., cash: ..., check: ..., checkDate: ..., checkNo: ..., cmrrfAmnt: ..., custNo: ..., discAmnt: ..., envFee: ..., fullName: ..., mrrfAmnt: ..., onlineref: ..., othrApply: ..., othrIncome: ..., othrReconn: ..., pacyAmnt: ..., papYAmnt: ..., payArrears: ..., penAmnt: ..., pymtDate: ..., pymtMethod: ..., receiptNo: ..., receiptStatus: ..., receiptType: ..., runBalance: ..., sysNo: ..., teller: ..., trackDt: ..., waterBill: ..., });
-
-// You can also pass in a `DataConnect` instance to the action shortcut function.
-const dataConnect = getDataConnect(connectorConfig);
-const { data } = await updateCollectionFromCsv(dataConnect, updateCollectionFromCsvVars);
-
-console.log(data.collectionFromCsv_update);
-
-// Or, you can use the `Promise` API.
-updateCollectionFromCsv(updateCollectionFromCsvVars).then((response) => {
-  const data = response.data;
-  console.log(data.collectionFromCsv_update);
-});
-```
-
-### Using `UpdateCollectionFromCsv`'s `MutationRef` function
-
-```typescript
-import { getDataConnect, executeMutation } from 'firebase/data-connect';
-import { connectorConfig, updateCollectionFromCsvRef, UpdateCollectionFromCsvVariables } from '@dataconnect/generated';
-
-// The `UpdateCollectionFromCsv` mutation requires an argument of type `UpdateCollectionFromCsvVariables`:
-const updateCollectionFromCsvVars: UpdateCollectionFromCsvVariables = {
-  id: ..., 
-  accountNo: ..., // optional
-  amortize: ..., // optional
-  arrearsAmt: ..., // optional
-  arrearsEnv: ..., // optional
-  bankGroup: ..., // optional
-  bankId: ..., // optional
-  bankOnline: ..., // optional
-  batchNo: ..., // optional
-  billNo: ..., // optional
-  branch: ..., // optional
-  cash: ..., // optional
-  check: ..., // optional
-  checkDate: ..., // optional
-  checkNo: ..., // optional
-  cmrrfAmnt: ..., // optional
-  custNo: ..., // optional
-  discAmnt: ..., // optional
-  envFee: ..., // optional
-  fullName: ..., // optional
-  mrrfAmnt: ..., // optional
-  onlineref: ..., // optional
-  othrApply: ..., // optional
-  othrIncome: ..., // optional
-  othrReconn: ..., // optional
-  pacyAmnt: ..., // optional
-  papYAmnt: ..., // optional
-  payArrears: ..., // optional
-  penAmnt: ..., // optional
-  pymtDate: ..., // optional
-  pymtMethod: ..., // optional
-  receiptNo: ..., // optional
-  receiptStatus: ..., // optional
-  receiptType: ..., // optional
-  runBalance: ..., // optional
-  sysNo: ..., // optional
-  teller: ..., // optional
-  trackDt: ..., // optional
-  waterBill: ..., // optional
-};
-
-// Call the `updateCollectionFromCsvRef()` function to get a reference to the mutation.
-const ref = updateCollectionFromCsvRef(updateCollectionFromCsvVars);
-// Variables can be defined inline as well.
-const ref = updateCollectionFromCsvRef({ id: ..., accountNo: ..., amortize: ..., arrearsAmt: ..., arrearsEnv: ..., bankGroup: ..., bankId: ..., bankOnline: ..., batchNo: ..., billNo: ..., branch: ..., cash: ..., check: ..., checkDate: ..., checkNo: ..., cmrrfAmnt: ..., custNo: ..., discAmnt: ..., envFee: ..., fullName: ..., mrrfAmnt: ..., onlineref: ..., othrApply: ..., othrIncome: ..., othrReconn: ..., pacyAmnt: ..., papYAmnt: ..., payArrears: ..., penAmnt: ..., pymtDate: ..., pymtMethod: ..., receiptNo: ..., receiptStatus: ..., receiptType: ..., runBalance: ..., sysNo: ..., teller: ..., trackDt: ..., waterBill: ..., });
-
-// You can also pass in a `DataConnect` instance to the `MutationRef` function.
-const dataConnect = getDataConnect(connectorConfig);
-const ref = updateCollectionFromCsvRef(dataConnect, updateCollectionFromCsvVars);
-
-// Call `executeMutation()` on the reference to execute the mutation.
-// You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await executeMutation(ref);
-
-console.log(data.collectionFromCsv_update);
-
-// Or, you can use the `Promise` API.
-executeMutation(ref).then((response) => {
-  const data = response.data;
-  console.log(data.collectionFromCsv_update);
 });
 ```
 

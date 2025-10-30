@@ -14,23 +14,8 @@ If a user is not using a supported framework, they can use the generated SDK dir
 Here's an example of how to use it with the first 5 operations:
 
 ```js
-import { createBook, createResident, createBillingFromCsv, deleteBillingFromCsv, updateBillingFromCsv, paginatedBillings, countBillingFromCsv, searchBillingFromCsv, createCollectionFromCsv, deleteCollectionFromCsv } from '@dataconnect/generated';
+import { paginatedBillings, countBillingFromCsv, searchBillingFromCsv, createCollectionFromCsv, deleteCollectionFromCsv, updateCollectionFromCsv, paginatedCollections, countCollectionFromCsv, searchCollectionFromCsv, createBook } from '@dataconnect/generated';
 
-
-// Operation CreateBook:  For variables, look at type CreateBookVars in ../index.d.ts
-const { data } = await CreateBook(dataConnect, createBookVars);
-
-// Operation CreateResident:  For variables, look at type CreateResidentVars in ../index.d.ts
-const { data } = await CreateResident(dataConnect, createResidentVars);
-
-// Operation CreateBillingFromCsv:  For variables, look at type CreateBillingFromCsvVars in ../index.d.ts
-const { data } = await CreateBillingFromCsv(dataConnect, createBillingFromCsvVars);
-
-// Operation DeleteBillingFromCsv:  For variables, look at type DeleteBillingFromCsvVars in ../index.d.ts
-const { data } = await DeleteBillingFromCsv(dataConnect, deleteBillingFromCsvVars);
-
-// Operation UpdateBillingFromCsv:  For variables, look at type UpdateBillingFromCsvVars in ../index.d.ts
-const { data } = await UpdateBillingFromCsv(dataConnect, updateBillingFromCsvVars);
 
 // Operation PaginatedBillings:  For variables, look at type PaginatedBillingsVars in ../index.d.ts
 const { data } = await PaginatedBillings(dataConnect, paginatedBillingsVars);
@@ -46,6 +31,21 @@ const { data } = await CreateCollectionFromCsv(dataConnect, createCollectionFrom
 
 // Operation DeleteCollectionFromCsv:  For variables, look at type DeleteCollectionFromCsvVars in ../index.d.ts
 const { data } = await DeleteCollectionFromCsv(dataConnect, deleteCollectionFromCsvVars);
+
+// Operation UpdateCollectionFromCsv:  For variables, look at type UpdateCollectionFromCsvVars in ../index.d.ts
+const { data } = await UpdateCollectionFromCsv(dataConnect, updateCollectionFromCsvVars);
+
+// Operation PaginatedCollections:  For variables, look at type PaginatedCollectionsVars in ../index.d.ts
+const { data } = await PaginatedCollections(dataConnect, paginatedCollectionsVars);
+
+// Operation CountCollectionFromCsv: 
+const { data } = await CountCollectionFromCsv(dataConnect);
+
+// Operation SearchCollectionFromCsv:  For variables, look at type SearchCollectionFromCsvVars in ../index.d.ts
+const { data } = await SearchCollectionFromCsv(dataConnect, searchCollectionFromCsvVars);
+
+// Operation CreateBook:  For variables, look at type CreateBookVars in ../index.d.ts
+const { data } = await CreateBook(dataConnect, createBookVars);
 
 
 ```
