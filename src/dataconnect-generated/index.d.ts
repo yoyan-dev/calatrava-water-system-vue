@@ -42,6 +42,12 @@ export interface CountCollectionFromCsvData {
   })[];
 }
 
+export interface CountLedgerFromCsvData {
+  ledgerFromCsvs: ({
+    _count: number;
+  })[];
+}
+
 export interface CreateBillingFromCsvData {
   billingFromCsv_insert: BillingFromCsv_Key;
 }
@@ -148,6 +154,24 @@ export interface CreateCollectionFromCsvVariables {
   waterBill: number;
 }
 
+export interface CreateLedgerFromCsvData {
+  ledgerFromCsv_insert: LedgerFromCsv_Key;
+}
+
+export interface CreateLedgerFromCsvVariables {
+  accountNo: string;
+  transDate: string;
+  refCode: string;
+  refNo: string;
+  amount: number;
+  timestamp?: string | null;
+  tag: string;
+  reading: number;
+  consumption: number;
+  sequence: number;
+  custNo: string;
+}
+
 export interface CreateResidentData {
   query?: {
     residents: ({
@@ -178,6 +202,19 @@ export interface DeleteCollectionFromCsvData {
 
 export interface DeleteCollectionFromCsvVariables {
   id: UUIDString;
+}
+
+export interface DeleteLedgerFromCsvData {
+  ledgerFromCsv_delete?: LedgerFromCsv_Key | null;
+}
+
+export interface DeleteLedgerFromCsvVariables {
+  id: UUIDString;
+}
+
+export interface LedgerFromCsv_Key {
+  id: UUIDString;
+  __typename?: 'LedgerFromCsv_Key';
 }
 
 export interface PaginatedBillingsData {
@@ -280,6 +317,32 @@ export interface PaginatedCollectionsData {
 }
 
 export interface PaginatedCollectionsVariables {
+  limit?: number | null;
+  offset?: number | null;
+  orderByField?: string | null;
+  orderDirection?: string | null;
+}
+
+export interface PaginatedLedgersData {
+  ledgerFromCsvs: ({
+    id: UUIDString;
+    accountNo: string;
+    transDate: string;
+    refCode: string;
+    refNo: string;
+    amount: number;
+    timestamp?: string | null;
+    tag: string;
+    reading: number;
+    consumption: number;
+    sequence: number;
+    custNo: string;
+    createdAt: TimestampString;
+    updatedAt?: TimestampString | null;
+  } & LedgerFromCsv_Key)[];
+}
+
+export interface PaginatedLedgersVariables {
   limit?: number | null;
   offset?: number | null;
   orderByField?: string | null;
@@ -392,6 +455,30 @@ export interface SearchCollectionFromCsvVariables {
   limit?: number | null;
 }
 
+export interface SearchLedgerFromCsvData {
+  ledgerFromCsvs_search: ({
+    accountNo: string;
+    transDate: string;
+    refCode: string;
+    refNo: string;
+    amount: number;
+    timestamp?: string | null;
+    tag: string;
+    reading: number;
+    consumption: number;
+    sequence: number;
+    custNo: string;
+    id: UUIDString;
+    createdAt: TimestampString;
+    updatedAt?: TimestampString | null;
+  } & LedgerFromCsv_Key)[];
+}
+
+export interface SearchLedgerFromCsvVariables {
+  query?: string | null;
+  limit?: number | null;
+}
+
 export interface UpdateBillingFromCsvData {
   billingFromCsv_update?: BillingFromCsv_Key | null;
 }
@@ -487,41 +574,24 @@ export interface UpdateCollectionFromCsvVariables {
   waterBill?: number | null;
 }
 
-interface PaginatedCollectionsRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (vars?: PaginatedCollectionsVariables): QueryRef<PaginatedCollectionsData, PaginatedCollectionsVariables>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars?: PaginatedCollectionsVariables): QueryRef<PaginatedCollectionsData, PaginatedCollectionsVariables>;
-  operationName: string;
+export interface UpdateLedgerFromCsvData {
+  ledgerFromCsv_update?: LedgerFromCsv_Key | null;
 }
-export const paginatedCollectionsRef: PaginatedCollectionsRef;
 
-export function paginatedCollections(vars?: PaginatedCollectionsVariables): QueryPromise<PaginatedCollectionsData, PaginatedCollectionsVariables>;
-export function paginatedCollections(dc: DataConnect, vars?: PaginatedCollectionsVariables): QueryPromise<PaginatedCollectionsData, PaginatedCollectionsVariables>;
-
-interface CountCollectionFromCsvRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (): QueryRef<CountCollectionFromCsvData, undefined>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect): QueryRef<CountCollectionFromCsvData, undefined>;
-  operationName: string;
+export interface UpdateLedgerFromCsvVariables {
+  id: UUIDString;
+  accountNo?: string | null;
+  transDate?: string | null;
+  refCode?: string | null;
+  refNo?: string | null;
+  amount?: number | null;
+  timestamp?: string | null;
+  tag?: string | null;
+  reading?: number | null;
+  consumption?: number | null;
+  sequence?: number | null;
+  custNo?: string | null;
 }
-export const countCollectionFromCsvRef: CountCollectionFromCsvRef;
-
-export function countCollectionFromCsv(): QueryPromise<CountCollectionFromCsvData, undefined>;
-export function countCollectionFromCsv(dc: DataConnect): QueryPromise<CountCollectionFromCsvData, undefined>;
-
-interface SearchCollectionFromCsvRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (vars?: SearchCollectionFromCsvVariables): QueryRef<SearchCollectionFromCsvData, SearchCollectionFromCsvVariables>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars?: SearchCollectionFromCsvVariables): QueryRef<SearchCollectionFromCsvData, SearchCollectionFromCsvVariables>;
-  operationName: string;
-}
-export const searchCollectionFromCsvRef: SearchCollectionFromCsvRef;
-
-export function searchCollectionFromCsv(vars?: SearchCollectionFromCsvVariables): QueryPromise<SearchCollectionFromCsvData, SearchCollectionFromCsvVariables>;
-export function searchCollectionFromCsv(dc: DataConnect, vars?: SearchCollectionFromCsvVariables): QueryPromise<SearchCollectionFromCsvData, SearchCollectionFromCsvVariables>;
 
 interface CreateBookRef {
   /* Allow users to create refs without passing in DataConnect */
@@ -654,4 +724,112 @@ export const updateCollectionFromCsvRef: UpdateCollectionFromCsvRef;
 
 export function updateCollectionFromCsv(vars: UpdateCollectionFromCsvVariables): MutationPromise<UpdateCollectionFromCsvData, UpdateCollectionFromCsvVariables>;
 export function updateCollectionFromCsv(dc: DataConnect, vars: UpdateCollectionFromCsvVariables): MutationPromise<UpdateCollectionFromCsvData, UpdateCollectionFromCsvVariables>;
+
+interface PaginatedCollectionsRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars?: PaginatedCollectionsVariables): QueryRef<PaginatedCollectionsData, PaginatedCollectionsVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars?: PaginatedCollectionsVariables): QueryRef<PaginatedCollectionsData, PaginatedCollectionsVariables>;
+  operationName: string;
+}
+export const paginatedCollectionsRef: PaginatedCollectionsRef;
+
+export function paginatedCollections(vars?: PaginatedCollectionsVariables): QueryPromise<PaginatedCollectionsData, PaginatedCollectionsVariables>;
+export function paginatedCollections(dc: DataConnect, vars?: PaginatedCollectionsVariables): QueryPromise<PaginatedCollectionsData, PaginatedCollectionsVariables>;
+
+interface CountCollectionFromCsvRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<CountCollectionFromCsvData, undefined>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect): QueryRef<CountCollectionFromCsvData, undefined>;
+  operationName: string;
+}
+export const countCollectionFromCsvRef: CountCollectionFromCsvRef;
+
+export function countCollectionFromCsv(): QueryPromise<CountCollectionFromCsvData, undefined>;
+export function countCollectionFromCsv(dc: DataConnect): QueryPromise<CountCollectionFromCsvData, undefined>;
+
+interface SearchCollectionFromCsvRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars?: SearchCollectionFromCsvVariables): QueryRef<SearchCollectionFromCsvData, SearchCollectionFromCsvVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars?: SearchCollectionFromCsvVariables): QueryRef<SearchCollectionFromCsvData, SearchCollectionFromCsvVariables>;
+  operationName: string;
+}
+export const searchCollectionFromCsvRef: SearchCollectionFromCsvRef;
+
+export function searchCollectionFromCsv(vars?: SearchCollectionFromCsvVariables): QueryPromise<SearchCollectionFromCsvData, SearchCollectionFromCsvVariables>;
+export function searchCollectionFromCsv(dc: DataConnect, vars?: SearchCollectionFromCsvVariables): QueryPromise<SearchCollectionFromCsvData, SearchCollectionFromCsvVariables>;
+
+interface CreateLedgerFromCsvRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreateLedgerFromCsvVariables): MutationRef<CreateLedgerFromCsvData, CreateLedgerFromCsvVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: CreateLedgerFromCsvVariables): MutationRef<CreateLedgerFromCsvData, CreateLedgerFromCsvVariables>;
+  operationName: string;
+}
+export const createLedgerFromCsvRef: CreateLedgerFromCsvRef;
+
+export function createLedgerFromCsv(vars: CreateLedgerFromCsvVariables): MutationPromise<CreateLedgerFromCsvData, CreateLedgerFromCsvVariables>;
+export function createLedgerFromCsv(dc: DataConnect, vars: CreateLedgerFromCsvVariables): MutationPromise<CreateLedgerFromCsvData, CreateLedgerFromCsvVariables>;
+
+interface UpdateLedgerFromCsvRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: UpdateLedgerFromCsvVariables): MutationRef<UpdateLedgerFromCsvData, UpdateLedgerFromCsvVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: UpdateLedgerFromCsvVariables): MutationRef<UpdateLedgerFromCsvData, UpdateLedgerFromCsvVariables>;
+  operationName: string;
+}
+export const updateLedgerFromCsvRef: UpdateLedgerFromCsvRef;
+
+export function updateLedgerFromCsv(vars: UpdateLedgerFromCsvVariables): MutationPromise<UpdateLedgerFromCsvData, UpdateLedgerFromCsvVariables>;
+export function updateLedgerFromCsv(dc: DataConnect, vars: UpdateLedgerFromCsvVariables): MutationPromise<UpdateLedgerFromCsvData, UpdateLedgerFromCsvVariables>;
+
+interface DeleteLedgerFromCsvRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: DeleteLedgerFromCsvVariables): MutationRef<DeleteLedgerFromCsvData, DeleteLedgerFromCsvVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: DeleteLedgerFromCsvVariables): MutationRef<DeleteLedgerFromCsvData, DeleteLedgerFromCsvVariables>;
+  operationName: string;
+}
+export const deleteLedgerFromCsvRef: DeleteLedgerFromCsvRef;
+
+export function deleteLedgerFromCsv(vars: DeleteLedgerFromCsvVariables): MutationPromise<DeleteLedgerFromCsvData, DeleteLedgerFromCsvVariables>;
+export function deleteLedgerFromCsv(dc: DataConnect, vars: DeleteLedgerFromCsvVariables): MutationPromise<DeleteLedgerFromCsvData, DeleteLedgerFromCsvVariables>;
+
+interface PaginatedLedgersRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars?: PaginatedLedgersVariables): QueryRef<PaginatedLedgersData, PaginatedLedgersVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars?: PaginatedLedgersVariables): QueryRef<PaginatedLedgersData, PaginatedLedgersVariables>;
+  operationName: string;
+}
+export const paginatedLedgersRef: PaginatedLedgersRef;
+
+export function paginatedLedgers(vars?: PaginatedLedgersVariables): QueryPromise<PaginatedLedgersData, PaginatedLedgersVariables>;
+export function paginatedLedgers(dc: DataConnect, vars?: PaginatedLedgersVariables): QueryPromise<PaginatedLedgersData, PaginatedLedgersVariables>;
+
+interface CountLedgerFromCsvRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<CountLedgerFromCsvData, undefined>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect): QueryRef<CountLedgerFromCsvData, undefined>;
+  operationName: string;
+}
+export const countLedgerFromCsvRef: CountLedgerFromCsvRef;
+
+export function countLedgerFromCsv(): QueryPromise<CountLedgerFromCsvData, undefined>;
+export function countLedgerFromCsv(dc: DataConnect): QueryPromise<CountLedgerFromCsvData, undefined>;
+
+interface SearchLedgerFromCsvRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars?: SearchLedgerFromCsvVariables): QueryRef<SearchLedgerFromCsvData, SearchLedgerFromCsvVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars?: SearchLedgerFromCsvVariables): QueryRef<SearchLedgerFromCsvData, SearchLedgerFromCsvVariables>;
+  operationName: string;
+}
+export const searchLedgerFromCsvRef: SearchLedgerFromCsvRef;
+
+export function searchLedgerFromCsv(vars?: SearchLedgerFromCsvVariables): QueryPromise<SearchLedgerFromCsvData, SearchLedgerFromCsvVariables>;
+export function searchLedgerFromCsv(dc: DataConnect, vars?: SearchLedgerFromCsvVariables): QueryPromise<SearchLedgerFromCsvData, SearchLedgerFromCsvVariables>;
 

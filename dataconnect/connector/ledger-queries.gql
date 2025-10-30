@@ -1,4 +1,4 @@
-query PaginatedLedger(
+query PaginatedLedgers(
 	$limit: Int = 10
 	$offset: Int = 0
 	$orderByField: String
@@ -21,6 +21,33 @@ query PaginatedLedger(
 		consumption
 		sequence
 		custNo
+		createdAt
+		updatedAt
+	}
+}
+
+query CountLedgerFromCsv @auth(expr: "auth.token.role == 'admin'") {
+	ledgerFromCsvs {
+		_count
+	}
+}
+
+query SearchLedgerFromCsv($query: String, $limit: Int = 10)
+@auth(expr: "auth.token.role == 'admin'") {
+	ledgerFromCsvs_search(query: $query, limit: $limit) {
+		accountNo
+		transDate
+		refCode
+		refNo
+		amount
+		timestamp
+		tag
+		reading
+		consumption
+		sequence
+		custNo
+		# Auto-generated fields
+		id
 		createdAt
 		updatedAt
 	}

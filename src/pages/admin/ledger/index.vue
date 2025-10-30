@@ -1,155 +1,77 @@
 <script setup lang="ts">
-import { ref, onMounted, watchEffect } from "vue";
-import Header from "@/pages/admin/ledger/_components/header.vue";
-import { useLedgerStore } from "@/stores/ledger";
-import ImportModal from "./_components/modals/import-modal.vue";
-import DeleteSelected from "./_components/modals/delete-selected-modal.vue";
+	import Header from './_components/header.vue';
+	import LedgerTable from './_components/tables/ledgers-table.vue';
+	import ImportModal from './_components/modals/import-modal.vue';
+	import SearchInput from './_components/search-input.vue';
+	import { ref } from 'vue';
+	import { useLedgerStore } from '@/stores/ledger';
+	import { useConfirm } from 'primevue/useconfirm';
+	import { useToast } from 'primevue/usetoast';
 
-const store = useLedgerStore();
-const selectedLedgers = ref([]);
-const menu = ref<any[]>([]);
+	const confirm = useConfirm();
+	const toast = useToast();
+	const store = useLedgerStore();
+	const ledgerTable = ref<any>();
+	const selectedLedgers = ref<Array<any>>([]);
+	const onUpdateSelection = (data: Array<any>) => {
+		selectedLedgers.value = data;
+	};
 
-function onToggled(event: Event, index: number) {
-  menu.value[index].toggle(event);
-}
+	const deleteSelectedLedgers = async () => {
+		const result = await store.deleteSelectedLedgers(selectedLedgers.value);
+		if (result?.status === 'success') {
+			toast.add({
+				severity: 'success',
+				summary: 'Success',
+				detail: 'Ledgers deleted successfully',
+			});
+			selectedLedgers.value = [];
+			ledgerTable.value.clearSelection();
+		}
+	};
 
-onMounted(() => {
-  store.fetchLedgers();
-});
+	const confirmDelete = () => {
+		confirm.require({
+			message: `Are you sure you want to delete ${selectedLedgers.value.length} Ledger records?`,
+			header: 'Confirmation',
+			icon: 'pi pi-exclamation-triangle',
+			rejectProps: {
+				label: 'Cancel',
+				severity: 'secondary',
+				outlined: true,
+			},
+			acceptProps: {
+				severity: 'danger',
+				label: 'Yes, Delete',
+			},
+			accept: () => {
+				deleteSelectedLedgers();
+			},
+		});
+	};
 </script>
-
 <template>
-  <div class="p-4 md:p-6">
-    <Header :totalLedgers="store.totalLedgers" />
-    <div class="flex flex-col gap-4">
-      <div>
-        <div class="flex gap-5 flex-wrap items-start">
-          <div class="flex-1">
-            <IconField>
-              <InputIcon>
-                <i class="pi pi-search" />
-              </InputIcon>
-              <InputText v-model="store.searchQuery" placeholder="Search..." />
-            </IconField>
-          </div>
-          <div class="flex gap-3 justify-start md:justify-end w-full flex-1">
-            <FloatLabel variant="on">
-              <DatePicker
-                v-model:modelValue="store.month"
-                inputId="on_label"
-                view="month"
-                dateFormat="MM yy"
-                showIcon
-                iconDisplay="input"
-              />
-              <label for="on_label">Select month</label>
-            </FloatLabel>
-            <ImportModal />
-            <DeleteSelected
-              :selectedLedgers="selectedLedgers"
-              v-if="selectedLedgers.length"
-            />
-          </div>
-        </div>
-      </div>
-      <div>
-        <DataTable
-          :value="store.ledgers"
-          :loading="store.isLoading"
-          v-model:selection="selectedLedgers"
-          dataKey="uid"
-          size="small"
-          class="text-sm"
-          :rows="10"
-        >
-          <template #empty>
-            <div class="flex items-center justify-center p-4">
-              No ledger found.
-            </div>
-          </template>
-          <Column
-            class="whitespace-nowrap text-ellipsis"
-            selectionMode="multiple"
-            style="width: 3rem"
-            :exportable="false"
-          ></Column>
-          <Column
-            class="whitespace-nowrap text-ellipsis"
-            header="Account No."
-            field="accountno"
-          >
-          </Column>
-          <Column
-            class="whitespace-nowrap text-ellipsis"
-            header="Transaction Date"
-            field="transDate"
-          >
-          </Column>
-          <Column
-            class="whitespace-nowrap text-ellipsis"
-            field="refCode"
-            header="Ref Code"
-          ></Column>
-          <Column
-            class="whitespace-nowrap text-ellipsis"
-            field="refNo"
-            header="Ref No."
-          >
-          </Column>
-          <Column
-            class="whitespace-nowrap text-ellipsis"
-            field="amount"
-            header="Amount"
-          >
-            <template #body="slotProps">
-              <span class="rounded-md text-primary">
-                <i name="pi pi-money-bill"></i
-                >{{ `₱ ${slotProps.data.amount}` }}
-              </span>
-            </template>
-          </Column>
-          <Column
-            class="whitespace-nowrap text-ellipsis"
-            field="tag"
-            header="Tag"
-          ></Column>
-          <Column
-            class="whitespace-nowrap text-ellipsis"
-            field="reading"
-            header="Reading"
-          ></Column>
-          <Column
-            class="whitespace-nowrap text-ellipsis"
-            field="consumption"
-            header="Consumption"
-          ></Column>
-          <Column
-            class="whitespace-nowrap text-ellipsis"
-            field="sequence"
-            header="Sequence"
-          ></Column>
-          <Column
-            class="whitespace-nowrap text-ellipsis"
-            field="custno"
-            header="Custno"
-          ></Column>
-        </DataTable>
-        <Paginator
-          :template="{
-            '640px': 'PrevPageLink CurrentPageReport NextPageLink',
-            '960px':
-              'FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink',
-            '1300px':
-              'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
-            default:
-              'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink ',
-          }"
-          :rows="10"
-          @page="(e) => (store.page = e.page + 1)"
-          :totalRecords="store.totalLedgers"
-        >
-        </Paginator>
-      </div>
-    </div>
-  </div>
+	<div class="p-4 md:p-6">
+		<Header :totalLedgers="store.totalLedgers" />
+		<div class="flex flex-col gap-4">
+			<div class="flex flex-wrap items-center gap-4">
+				<SearchInput class="mr-auto" />
+				<ConfirmDialog></ConfirmDialog>
+				<Button
+					v-if="selectedLedgers.length > 0"
+					@click="confirmDelete"
+					type="button"
+					:label="`Delete (${selectedLedgers.length})`"
+					severity="danger"
+					icon="pi pi-trash" />
+				<ImportModal />
+			</div>
+
+			<div>
+				<LedgerTable
+					ref="ledgerTable"
+					@updateSelection="onUpdateSelection" />
+			</div>
+		</div>
+	</div>
 </template>

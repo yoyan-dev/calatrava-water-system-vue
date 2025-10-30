@@ -6,39 +6,6 @@ export const connectorConfig = {
   location: 'asia-southeast1'
 };
 
-export const paginatedCollectionsRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'PaginatedCollections', inputVars);
-}
-paginatedCollectionsRef.operationName = 'PaginatedCollections';
-
-export function paginatedCollections(dcOrVars, vars) {
-  return executeQuery(paginatedCollectionsRef(dcOrVars, vars));
-}
-
-export const countCollectionFromCsvRef = (dc) => {
-  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'CountCollectionFromCsv');
-}
-countCollectionFromCsvRef.operationName = 'CountCollectionFromCsv';
-
-export function countCollectionFromCsv(dc) {
-  return executeQuery(countCollectionFromCsvRef(dc));
-}
-
-export const searchCollectionFromCsvRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'SearchCollectionFromCsv', inputVars);
-}
-searchCollectionFromCsvRef.operationName = 'SearchCollectionFromCsv';
-
-export function searchCollectionFromCsv(dcOrVars, vars) {
-  return executeQuery(searchCollectionFromCsvRef(dcOrVars, vars));
-}
-
 export const createBookRef = (dcOrVars, vars) => {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
@@ -158,5 +125,104 @@ updateCollectionFromCsvRef.operationName = 'UpdateCollectionFromCsv';
 
 export function updateCollectionFromCsv(dcOrVars, vars) {
   return executeMutation(updateCollectionFromCsvRef(dcOrVars, vars));
+}
+
+export const paginatedCollectionsRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'PaginatedCollections', inputVars);
+}
+paginatedCollectionsRef.operationName = 'PaginatedCollections';
+
+export function paginatedCollections(dcOrVars, vars) {
+  return executeQuery(paginatedCollectionsRef(dcOrVars, vars));
+}
+
+export const countCollectionFromCsvRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'CountCollectionFromCsv');
+}
+countCollectionFromCsvRef.operationName = 'CountCollectionFromCsv';
+
+export function countCollectionFromCsv(dc) {
+  return executeQuery(countCollectionFromCsvRef(dc));
+}
+
+export const searchCollectionFromCsvRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'SearchCollectionFromCsv', inputVars);
+}
+searchCollectionFromCsvRef.operationName = 'SearchCollectionFromCsv';
+
+export function searchCollectionFromCsv(dcOrVars, vars) {
+  return executeQuery(searchCollectionFromCsvRef(dcOrVars, vars));
+}
+
+export const createLedgerFromCsvRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'CreateLedgerFromCsv', inputVars);
+}
+createLedgerFromCsvRef.operationName = 'CreateLedgerFromCsv';
+
+export function createLedgerFromCsv(dcOrVars, vars) {
+  return executeMutation(createLedgerFromCsvRef(dcOrVars, vars));
+}
+
+export const updateLedgerFromCsvRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'UpdateLedgerFromCsv', inputVars);
+}
+updateLedgerFromCsvRef.operationName = 'UpdateLedgerFromCsv';
+
+export function updateLedgerFromCsv(dcOrVars, vars) {
+  return executeMutation(updateLedgerFromCsvRef(dcOrVars, vars));
+}
+
+export const deleteLedgerFromCsvRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'DeleteLedgerFromCsv', inputVars);
+}
+deleteLedgerFromCsvRef.operationName = 'DeleteLedgerFromCsv';
+
+export function deleteLedgerFromCsv(dcOrVars, vars) {
+  return executeMutation(deleteLedgerFromCsvRef(dcOrVars, vars));
+}
+
+export const paginatedLedgersRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'PaginatedLedgers', inputVars);
+}
+paginatedLedgersRef.operationName = 'PaginatedLedgers';
+
+export function paginatedLedgers(dcOrVars, vars) {
+  return executeQuery(paginatedLedgersRef(dcOrVars, vars));
+}
+
+export const countLedgerFromCsvRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'CountLedgerFromCsv');
+}
+countLedgerFromCsvRef.operationName = 'CountLedgerFromCsv';
+
+export function countLedgerFromCsv(dc) {
+  return executeQuery(countLedgerFromCsvRef(dc));
+}
+
+export const searchLedgerFromCsvRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'SearchLedgerFromCsv', inputVars);
+}
+searchLedgerFromCsvRef.operationName = 'SearchLedgerFromCsv';
+
+export function searchLedgerFromCsv(dcOrVars, vars) {
+  return executeQuery(searchLedgerFromCsvRef(dcOrVars, vars));
 }
 

@@ -14,17 +14,8 @@ If a user is not using a supported framework, they can use the generated SDK dir
 Here's an example of how to use it with the first 5 operations:
 
 ```js
-import { paginatedCollections, countCollectionFromCsv, searchCollectionFromCsv, createBook, createResident, createBillingFromCsv, deleteBillingFromCsv, updateBillingFromCsv, paginatedBillings, countBillingFromCsv } from '@dataconnect/generated';
+import { createBook, createResident, createBillingFromCsv, deleteBillingFromCsv, updateBillingFromCsv, paginatedBillings, countBillingFromCsv, searchBillingFromCsv, createCollectionFromCsv, deleteCollectionFromCsv } from '@dataconnect/generated';
 
-
-// Operation PaginatedCollections:  For variables, look at type PaginatedCollectionsVars in ../index.d.ts
-const { data } = await PaginatedCollections(dataConnect, paginatedCollectionsVars);
-
-// Operation CountCollectionFromCsv: 
-const { data } = await CountCollectionFromCsv(dataConnect);
-
-// Operation SearchCollectionFromCsv:  For variables, look at type SearchCollectionFromCsvVars in ../index.d.ts
-const { data } = await SearchCollectionFromCsv(dataConnect, searchCollectionFromCsvVars);
 
 // Operation CreateBook:  For variables, look at type CreateBookVars in ../index.d.ts
 const { data } = await CreateBook(dataConnect, createBookVars);
@@ -46,6 +37,15 @@ const { data } = await PaginatedBillings(dataConnect, paginatedBillingsVars);
 
 // Operation CountBillingFromCsv: 
 const { data } = await CountBillingFromCsv(dataConnect);
+
+// Operation SearchBillingFromCsv:  For variables, look at type SearchBillingFromCsvVars in ../index.d.ts
+const { data } = await SearchBillingFromCsv(dataConnect, searchBillingFromCsvVars);
+
+// Operation CreateCollectionFromCsv:  For variables, look at type CreateCollectionFromCsvVars in ../index.d.ts
+const { data } = await CreateCollectionFromCsv(dataConnect, createCollectionFromCsvVars);
+
+// Operation DeleteCollectionFromCsv:  For variables, look at type DeleteCollectionFromCsvVars in ../index.d.ts
+const { data } = await DeleteCollectionFromCsv(dataConnect, deleteCollectionFromCsvVars);
 
 
 ```

@@ -70,7 +70,7 @@
 			</div>
 
 			<div>
-				<collectionTable
+				<CollectionTable
 					ref="collectionTable"
 					@updateSelection="onUpdateSelection" />
 			</div>

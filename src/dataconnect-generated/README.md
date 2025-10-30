@@ -8,12 +8,15 @@ This README will guide you through the process of using the generated JavaScript
 - [**Accessing the connector**](#accessing-the-connector)
   - [*Connecting to the local Emulator*](#connecting-to-the-local-emulator)
 - [**Queries**](#queries)
-  - [*PaginatedCollections*](#paginatedcollections)
-  - [*CountCollectionFromCsv*](#countcollectionfromcsv)
-  - [*SearchCollectionFromCsv*](#searchcollectionfromcsv)
   - [*PaginatedBillings*](#paginatedbillings)
   - [*CountBillingFromCsv*](#countbillingfromcsv)
   - [*SearchBillingFromCsv*](#searchbillingfromcsv)
+  - [*PaginatedCollections*](#paginatedcollections)
+  - [*CountCollectionFromCsv*](#countcollectionfromcsv)
+  - [*SearchCollectionFromCsv*](#searchcollectionfromcsv)
+  - [*PaginatedLedgers*](#paginatedledgers)
+  - [*CountLedgerFromCsv*](#countledgerfromcsv)
+  - [*SearchLedgerFromCsv*](#searchledgerfromcsv)
 - [**Mutations**](#mutations)
   - [*CreateBook*](#createbook)
   - [*CreateResident*](#createresident)
@@ -23,6 +26,9 @@ This README will guide you through the process of using the generated JavaScript
   - [*CreateCollectionFromCsv*](#createcollectionfromcsv)
   - [*DeleteCollectionFromCsv*](#deletecollectionfromcsv)
   - [*UpdateCollectionFromCsv*](#updatecollectionfromcsv)
+  - [*CreateLedgerFromCsv*](#createledgerfromcsv)
+  - [*UpdateLedgerFromCsv*](#updateledgerfromcsv)
+  - [*DeleteLedgerFromCsv*](#deleteledgerfromcsv)
 
 # Accessing the connector
 A connector is a collection of Queries and Mutations. One SDK is generated for each connector - this SDK is generated for the connector `calatrava-water-system`. You can find more information about connectors in the [Data Connect documentation](https://firebase.google.com/docs/data-connect#how-does).
@@ -68,6 +74,420 @@ The following is true for both the action shortcut function and the `QueryRef` f
 - Both functions can be called with or without passing in a `DataConnect` instance as an argument. If no `DataConnect` argument is passed in, then the generated SDK will call `getDataConnect(connectorConfig)` behind the scenes for you.
 
 Below are examples of how to use the `calatrava-water-system` connector's generated functions to execute each query. You can also follow the examples from the [Data Connect documentation](https://firebase.google.com/docs/data-connect/web-sdk#using-queries).
+
+## PaginatedBillings
+You can execute the `PaginatedBillings` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+paginatedBillings(vars?: PaginatedBillingsVariables): QueryPromise<PaginatedBillingsData, PaginatedBillingsVariables>;
+
+interface PaginatedBillingsRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars?: PaginatedBillingsVariables): QueryRef<PaginatedBillingsData, PaginatedBillingsVariables>;
+}
+export const paginatedBillingsRef: PaginatedBillingsRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
+```typescript
+paginatedBillings(dc: DataConnect, vars?: PaginatedBillingsVariables): QueryPromise<PaginatedBillingsData, PaginatedBillingsVariables>;
+
+interface PaginatedBillingsRef {
+  ...
+  (dc: DataConnect, vars?: PaginatedBillingsVariables): QueryRef<PaginatedBillingsData, PaginatedBillingsVariables>;
+}
+export const paginatedBillingsRef: PaginatedBillingsRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the paginatedBillingsRef:
+```typescript
+const name = paginatedBillingsRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `PaginatedBillings` query has an optional argument of type `PaginatedBillingsVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface PaginatedBillingsVariables {
+  limit?: number | null;
+  offset?: number | null;
+  orderByField?: string | null;
+  orderDirection?: string | null;
+}
+```
+### Return Type
+Recall that executing the `PaginatedBillings` query returns a `QueryPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `PaginatedBillingsData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface PaginatedBillingsData {
+  billingFromCsvs: ({
+    id: UUIDString;
+    accountNo: string;
+    amortAmnt: number;
+    arrearsAmnt: number;
+    arrearsEnv: number;
+    bStatus: string;
+    billAmnt: number;
+    billBrgy?: string | null;
+    billDate: string;
+    billNo: string;
+    billPurok?: string | null;
+    book: string;
+    classType: string;
+    curReading: number;
+    discount: number;
+    disconDate: string;
+    dueDate: string;
+    duePenalty: number;
+    environmentFee: number;
+    fullName: string;
+    mPenalty: number;
+    mrSysNo: number;
+    mtrNo: string;
+    nrWater: number;
+    paid: string;
+    paymentDate?: string | null;
+    paymentReceipt?: string | null;
+    paymentStatus?: string | null;
+    preReading: number;
+    prevUsed: number;
+    prevUsed2: number;
+    prvBillDate: string;
+    prvDiscon: string;
+    prvDueDate: string;
+    purokCode?: string | null;
+    stubOut?: string | null;
+    totalBill: number;
+    verified: string;
+    waterUsage: number;
+    createdAt: TimestampString;
+    updatedAt?: TimestampString | null;
+  } & BillingFromCsv_Key)[];
+}
+```
+### Using `PaginatedBillings`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, paginatedBillings, PaginatedBillingsVariables } from '@dataconnect/generated';
+
+// The `PaginatedBillings` query has an optional argument of type `PaginatedBillingsVariables`:
+const paginatedBillingsVars: PaginatedBillingsVariables = {
+  limit: ..., // optional
+  offset: ..., // optional
+  orderByField: ..., // optional
+  orderDirection: ..., // optional
+};
+
+// Call the `paginatedBillings()` function to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await paginatedBillings(paginatedBillingsVars);
+// Variables can be defined inline as well.
+const { data } = await paginatedBillings({ limit: ..., offset: ..., orderByField: ..., orderDirection: ..., });
+// Since all variables are optional for this query, you can omit the `PaginatedBillingsVariables` argument.
+const { data } = await paginatedBillings();
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await paginatedBillings(dataConnect, paginatedBillingsVars);
+
+console.log(data.billingFromCsvs);
+
+// Or, you can use the `Promise` API.
+paginatedBillings(paginatedBillingsVars).then((response) => {
+  const data = response.data;
+  console.log(data.billingFromCsvs);
+});
+```
+
+### Using `PaginatedBillings`'s `QueryRef` function
+
+```typescript
+import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { connectorConfig, paginatedBillingsRef, PaginatedBillingsVariables } from '@dataconnect/generated';
+
+// The `PaginatedBillings` query has an optional argument of type `PaginatedBillingsVariables`:
+const paginatedBillingsVars: PaginatedBillingsVariables = {
+  limit: ..., // optional
+  offset: ..., // optional
+  orderByField: ..., // optional
+  orderDirection: ..., // optional
+};
+
+// Call the `paginatedBillingsRef()` function to get a reference to the query.
+const ref = paginatedBillingsRef(paginatedBillingsVars);
+// Variables can be defined inline as well.
+const ref = paginatedBillingsRef({ limit: ..., offset: ..., orderByField: ..., orderDirection: ..., });
+// Since all variables are optional for this query, you can omit the `PaginatedBillingsVariables` argument.
+const ref = paginatedBillingsRef();
+
+// You can also pass in a `DataConnect` instance to the `QueryRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = paginatedBillingsRef(dataConnect, paginatedBillingsVars);
+
+// Call `executeQuery()` on the reference to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeQuery(ref);
+
+console.log(data.billingFromCsvs);
+
+// Or, you can use the `Promise` API.
+executeQuery(ref).then((response) => {
+  const data = response.data;
+  console.log(data.billingFromCsvs);
+});
+```
+
+## CountBillingFromCsv
+You can execute the `CountBillingFromCsv` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+countBillingFromCsv(): QueryPromise<CountBillingFromCsvData, undefined>;
+
+interface CountBillingFromCsvRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<CountBillingFromCsvData, undefined>;
+}
+export const countBillingFromCsvRef: CountBillingFromCsvRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
+```typescript
+countBillingFromCsv(dc: DataConnect): QueryPromise<CountBillingFromCsvData, undefined>;
+
+interface CountBillingFromCsvRef {
+  ...
+  (dc: DataConnect): QueryRef<CountBillingFromCsvData, undefined>;
+}
+export const countBillingFromCsvRef: CountBillingFromCsvRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the countBillingFromCsvRef:
+```typescript
+const name = countBillingFromCsvRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `CountBillingFromCsv` query has no variables.
+### Return Type
+Recall that executing the `CountBillingFromCsv` query returns a `QueryPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `CountBillingFromCsvData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface CountBillingFromCsvData {
+  billingFromCsvs: ({
+    _count: number;
+  })[];
+}
+```
+### Using `CountBillingFromCsv`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, countBillingFromCsv } from '@dataconnect/generated';
+
+
+// Call the `countBillingFromCsv()` function to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await countBillingFromCsv();
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await countBillingFromCsv(dataConnect);
+
+console.log(data.billingFromCsvs);
+
+// Or, you can use the `Promise` API.
+countBillingFromCsv().then((response) => {
+  const data = response.data;
+  console.log(data.billingFromCsvs);
+});
+```
+
+### Using `CountBillingFromCsv`'s `QueryRef` function
+
+```typescript
+import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { connectorConfig, countBillingFromCsvRef } from '@dataconnect/generated';
+
+
+// Call the `countBillingFromCsvRef()` function to get a reference to the query.
+const ref = countBillingFromCsvRef();
+
+// You can also pass in a `DataConnect` instance to the `QueryRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = countBillingFromCsvRef(dataConnect);
+
+// Call `executeQuery()` on the reference to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeQuery(ref);
+
+console.log(data.billingFromCsvs);
+
+// Or, you can use the `Promise` API.
+executeQuery(ref).then((response) => {
+  const data = response.data;
+  console.log(data.billingFromCsvs);
+});
+```
+
+## SearchBillingFromCsv
+You can execute the `SearchBillingFromCsv` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+searchBillingFromCsv(vars?: SearchBillingFromCsvVariables): QueryPromise<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
+
+interface SearchBillingFromCsvRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars?: SearchBillingFromCsvVariables): QueryRef<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
+}
+export const searchBillingFromCsvRef: SearchBillingFromCsvRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
+```typescript
+searchBillingFromCsv(dc: DataConnect, vars?: SearchBillingFromCsvVariables): QueryPromise<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
+
+interface SearchBillingFromCsvRef {
+  ...
+  (dc: DataConnect, vars?: SearchBillingFromCsvVariables): QueryRef<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
+}
+export const searchBillingFromCsvRef: SearchBillingFromCsvRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the searchBillingFromCsvRef:
+```typescript
+const name = searchBillingFromCsvRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `SearchBillingFromCsv` query has an optional argument of type `SearchBillingFromCsvVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface SearchBillingFromCsvVariables {
+  query?: string | null;
+  limit?: number | null;
+}
+```
+### Return Type
+Recall that executing the `SearchBillingFromCsv` query returns a `QueryPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `SearchBillingFromCsvData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface SearchBillingFromCsvData {
+  billingFromCsvs_search: ({
+    accountNo: string;
+    amortAmnt: number;
+    arrearsAmnt: number;
+    arrearsEnv: number;
+    bStatus: string;
+    billAmnt: number;
+    billBrgy?: string | null;
+    billDate: string;
+    billNo: string;
+    billPurok?: string | null;
+    book: string;
+    classType: string;
+    curReading: number;
+    discount: number;
+    disconDate: string;
+    dueDate: string;
+    duePenalty: number;
+    environmentFee: number;
+    fullName: string;
+    mPenalty: number;
+    mrSysNo: number;
+    mtrNo: string;
+    nrWater: number;
+    paid: string;
+    paymentDate?: string | null;
+    paymentReceipt?: string | null;
+    paymentStatus?: string | null;
+    preReading: number;
+    prevUsed: number;
+    prevUsed2: number;
+    prvBillDate: string;
+    prvDiscon: string;
+    prvDueDate: string;
+    purokCode?: string | null;
+    stubOut?: string | null;
+    totalBill: number;
+    verified: string;
+    waterUsage: number;
+    createdAt: TimestampString;
+    updatedAt?: TimestampString | null;
+  })[];
+}
+```
+### Using `SearchBillingFromCsv`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, searchBillingFromCsv, SearchBillingFromCsvVariables } from '@dataconnect/generated';
+
+// The `SearchBillingFromCsv` query has an optional argument of type `SearchBillingFromCsvVariables`:
+const searchBillingFromCsvVars: SearchBillingFromCsvVariables = {
+  query: ..., // optional
+  limit: ..., // optional
+};
+
+// Call the `searchBillingFromCsv()` function to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await searchBillingFromCsv(searchBillingFromCsvVars);
+// Variables can be defined inline as well.
+const { data } = await searchBillingFromCsv({ query: ..., limit: ..., });
+// Since all variables are optional for this query, you can omit the `SearchBillingFromCsvVariables` argument.
+const { data } = await searchBillingFromCsv();
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await searchBillingFromCsv(dataConnect, searchBillingFromCsvVars);
+
+console.log(data.billingFromCsvs_search);
+
+// Or, you can use the `Promise` API.
+searchBillingFromCsv(searchBillingFromCsvVars).then((response) => {
+  const data = response.data;
+  console.log(data.billingFromCsvs_search);
+});
+```
+
+### Using `SearchBillingFromCsv`'s `QueryRef` function
+
+```typescript
+import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { connectorConfig, searchBillingFromCsvRef, SearchBillingFromCsvVariables } from '@dataconnect/generated';
+
+// The `SearchBillingFromCsv` query has an optional argument of type `SearchBillingFromCsvVariables`:
+const searchBillingFromCsvVars: SearchBillingFromCsvVariables = {
+  query: ..., // optional
+  limit: ..., // optional
+};
+
+// Call the `searchBillingFromCsvRef()` function to get a reference to the query.
+const ref = searchBillingFromCsvRef(searchBillingFromCsvVars);
+// Variables can be defined inline as well.
+const ref = searchBillingFromCsvRef({ query: ..., limit: ..., });
+// Since all variables are optional for this query, you can omit the `SearchBillingFromCsvVariables` argument.
+const ref = searchBillingFromCsvRef();
+
+// You can also pass in a `DataConnect` instance to the `QueryRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = searchBillingFromCsvRef(dataConnect, searchBillingFromCsvVars);
+
+// Call `executeQuery()` on the reference to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeQuery(ref);
+
+console.log(data.billingFromCsvs_search);
+
+// Or, you can use the `Promise` API.
+executeQuery(ref).then((response) => {
+  const data = response.data;
+  console.log(data.billingFromCsvs_search);
+});
+```
 
 ## PaginatedCollections
 You can execute the `PaginatedCollections` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
@@ -484,40 +904,40 @@ executeQuery(ref).then((response) => {
 });
 ```
 
-## PaginatedBillings
-You can execute the `PaginatedBillings` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+## PaginatedLedgers
+You can execute the `PaginatedLedgers` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
 ```typescript
-paginatedBillings(vars?: PaginatedBillingsVariables): QueryPromise<PaginatedBillingsData, PaginatedBillingsVariables>;
+paginatedLedgers(vars?: PaginatedLedgersVariables): QueryPromise<PaginatedLedgersData, PaginatedLedgersVariables>;
 
-interface PaginatedBillingsRef {
+interface PaginatedLedgersRef {
   ...
   /* Allow users to create refs without passing in DataConnect */
-  (vars?: PaginatedBillingsVariables): QueryRef<PaginatedBillingsData, PaginatedBillingsVariables>;
+  (vars?: PaginatedLedgersVariables): QueryRef<PaginatedLedgersData, PaginatedLedgersVariables>;
 }
-export const paginatedBillingsRef: PaginatedBillingsRef;
+export const paginatedLedgersRef: PaginatedLedgersRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
 ```typescript
-paginatedBillings(dc: DataConnect, vars?: PaginatedBillingsVariables): QueryPromise<PaginatedBillingsData, PaginatedBillingsVariables>;
+paginatedLedgers(dc: DataConnect, vars?: PaginatedLedgersVariables): QueryPromise<PaginatedLedgersData, PaginatedLedgersVariables>;
 
-interface PaginatedBillingsRef {
+interface PaginatedLedgersRef {
   ...
-  (dc: DataConnect, vars?: PaginatedBillingsVariables): QueryRef<PaginatedBillingsData, PaginatedBillingsVariables>;
+  (dc: DataConnect, vars?: PaginatedLedgersVariables): QueryRef<PaginatedLedgersData, PaginatedLedgersVariables>;
 }
-export const paginatedBillingsRef: PaginatedBillingsRef;
+export const paginatedLedgersRef: PaginatedLedgersRef;
 ```
 
-If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the paginatedBillingsRef:
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the paginatedLedgersRef:
 ```typescript
-const name = paginatedBillingsRef.operationName;
+const name = paginatedLedgersRef.operationName;
 console.log(name);
 ```
 
 ### Variables
-The `PaginatedBillings` query has an optional argument of type `PaginatedBillingsVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+The `PaginatedLedgers` query has an optional argument of type `PaginatedLedgersVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
 
 ```typescript
-export interface PaginatedBillingsVariables {
+export interface PaginatedLedgersVariables {
   limit?: number | null;
   offset?: number | null;
   orderByField?: string | null;
@@ -525,376 +945,323 @@ export interface PaginatedBillingsVariables {
 }
 ```
 ### Return Type
-Recall that executing the `PaginatedBillings` query returns a `QueryPromise` that resolves to an object with a `data` property.
+Recall that executing the `PaginatedLedgers` query returns a `QueryPromise` that resolves to an object with a `data` property.
 
-The `data` property is an object of type `PaginatedBillingsData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+The `data` property is an object of type `PaginatedLedgersData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
 ```typescript
-export interface PaginatedBillingsData {
-  billingFromCsvs: ({
+export interface PaginatedLedgersData {
+  ledgerFromCsvs: ({
     id: UUIDString;
     accountNo: string;
-    amortAmnt: number;
-    arrearsAmnt: number;
-    arrearsEnv: number;
-    bStatus: string;
-    billAmnt: number;
-    billBrgy?: string | null;
-    billDate: string;
-    billNo: string;
-    billPurok?: string | null;
-    book: string;
-    classType: string;
-    curReading: number;
-    discount: number;
-    disconDate: string;
-    dueDate: string;
-    duePenalty: number;
-    environmentFee: number;
-    fullName: string;
-    mPenalty: number;
-    mrSysNo: number;
-    mtrNo: string;
-    nrWater: number;
-    paid: string;
-    paymentDate?: string | null;
-    paymentReceipt?: string | null;
-    paymentStatus?: string | null;
-    preReading: number;
-    prevUsed: number;
-    prevUsed2: number;
-    prvBillDate: string;
-    prvDiscon: string;
-    prvDueDate: string;
-    purokCode?: string | null;
-    stubOut?: string | null;
-    totalBill: number;
-    verified: string;
-    waterUsage: number;
+    transDate: string;
+    refCode: string;
+    refNo: string;
+    amount: number;
+    timestamp?: string | null;
+    tag: string;
+    reading: number;
+    consumption: number;
+    sequence: number;
+    custNo: string;
     createdAt: TimestampString;
     updatedAt?: TimestampString | null;
-  } & BillingFromCsv_Key)[];
+  } & LedgerFromCsv_Key)[];
 }
 ```
-### Using `PaginatedBillings`'s action shortcut function
+### Using `PaginatedLedgers`'s action shortcut function
 
 ```typescript
 import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, paginatedBillings, PaginatedBillingsVariables } from '@dataconnect/generated';
+import { connectorConfig, paginatedLedgers, PaginatedLedgersVariables } from '@dataconnect/generated';
 
-// The `PaginatedBillings` query has an optional argument of type `PaginatedBillingsVariables`:
-const paginatedBillingsVars: PaginatedBillingsVariables = {
+// The `PaginatedLedgers` query has an optional argument of type `PaginatedLedgersVariables`:
+const paginatedLedgersVars: PaginatedLedgersVariables = {
   limit: ..., // optional
   offset: ..., // optional
   orderByField: ..., // optional
   orderDirection: ..., // optional
 };
 
-// Call the `paginatedBillings()` function to execute the query.
+// Call the `paginatedLedgers()` function to execute the query.
 // You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await paginatedBillings(paginatedBillingsVars);
+const { data } = await paginatedLedgers(paginatedLedgersVars);
 // Variables can be defined inline as well.
-const { data } = await paginatedBillings({ limit: ..., offset: ..., orderByField: ..., orderDirection: ..., });
-// Since all variables are optional for this query, you can omit the `PaginatedBillingsVariables` argument.
-const { data } = await paginatedBillings();
+const { data } = await paginatedLedgers({ limit: ..., offset: ..., orderByField: ..., orderDirection: ..., });
+// Since all variables are optional for this query, you can omit the `PaginatedLedgersVariables` argument.
+const { data } = await paginatedLedgers();
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
-const { data } = await paginatedBillings(dataConnect, paginatedBillingsVars);
+const { data } = await paginatedLedgers(dataConnect, paginatedLedgersVars);
 
-console.log(data.billingFromCsvs);
+console.log(data.ledgerFromCsvs);
 
 // Or, you can use the `Promise` API.
-paginatedBillings(paginatedBillingsVars).then((response) => {
+paginatedLedgers(paginatedLedgersVars).then((response) => {
   const data = response.data;
-  console.log(data.billingFromCsvs);
+  console.log(data.ledgerFromCsvs);
 });
 ```
 
-### Using `PaginatedBillings`'s `QueryRef` function
+### Using `PaginatedLedgers`'s `QueryRef` function
 
 ```typescript
 import { getDataConnect, executeQuery } from 'firebase/data-connect';
-import { connectorConfig, paginatedBillingsRef, PaginatedBillingsVariables } from '@dataconnect/generated';
+import { connectorConfig, paginatedLedgersRef, PaginatedLedgersVariables } from '@dataconnect/generated';
 
-// The `PaginatedBillings` query has an optional argument of type `PaginatedBillingsVariables`:
-const paginatedBillingsVars: PaginatedBillingsVariables = {
+// The `PaginatedLedgers` query has an optional argument of type `PaginatedLedgersVariables`:
+const paginatedLedgersVars: PaginatedLedgersVariables = {
   limit: ..., // optional
   offset: ..., // optional
   orderByField: ..., // optional
   orderDirection: ..., // optional
 };
 
-// Call the `paginatedBillingsRef()` function to get a reference to the query.
-const ref = paginatedBillingsRef(paginatedBillingsVars);
+// Call the `paginatedLedgersRef()` function to get a reference to the query.
+const ref = paginatedLedgersRef(paginatedLedgersVars);
 // Variables can be defined inline as well.
-const ref = paginatedBillingsRef({ limit: ..., offset: ..., orderByField: ..., orderDirection: ..., });
-// Since all variables are optional for this query, you can omit the `PaginatedBillingsVariables` argument.
-const ref = paginatedBillingsRef();
+const ref = paginatedLedgersRef({ limit: ..., offset: ..., orderByField: ..., orderDirection: ..., });
+// Since all variables are optional for this query, you can omit the `PaginatedLedgersVariables` argument.
+const ref = paginatedLedgersRef();
 
 // You can also pass in a `DataConnect` instance to the `QueryRef` function.
 const dataConnect = getDataConnect(connectorConfig);
-const ref = paginatedBillingsRef(dataConnect, paginatedBillingsVars);
+const ref = paginatedLedgersRef(dataConnect, paginatedLedgersVars);
 
 // Call `executeQuery()` on the reference to execute the query.
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await executeQuery(ref);
 
-console.log(data.billingFromCsvs);
+console.log(data.ledgerFromCsvs);
 
 // Or, you can use the `Promise` API.
 executeQuery(ref).then((response) => {
   const data = response.data;
-  console.log(data.billingFromCsvs);
+  console.log(data.ledgerFromCsvs);
 });
 ```
 
-## CountBillingFromCsv
-You can execute the `CountBillingFromCsv` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+## CountLedgerFromCsv
+You can execute the `CountLedgerFromCsv` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
 ```typescript
-countBillingFromCsv(): QueryPromise<CountBillingFromCsvData, undefined>;
+countLedgerFromCsv(): QueryPromise<CountLedgerFromCsvData, undefined>;
 
-interface CountBillingFromCsvRef {
+interface CountLedgerFromCsvRef {
   ...
   /* Allow users to create refs without passing in DataConnect */
-  (): QueryRef<CountBillingFromCsvData, undefined>;
+  (): QueryRef<CountLedgerFromCsvData, undefined>;
 }
-export const countBillingFromCsvRef: CountBillingFromCsvRef;
+export const countLedgerFromCsvRef: CountLedgerFromCsvRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
 ```typescript
-countBillingFromCsv(dc: DataConnect): QueryPromise<CountBillingFromCsvData, undefined>;
+countLedgerFromCsv(dc: DataConnect): QueryPromise<CountLedgerFromCsvData, undefined>;
 
-interface CountBillingFromCsvRef {
+interface CountLedgerFromCsvRef {
   ...
-  (dc: DataConnect): QueryRef<CountBillingFromCsvData, undefined>;
+  (dc: DataConnect): QueryRef<CountLedgerFromCsvData, undefined>;
 }
-export const countBillingFromCsvRef: CountBillingFromCsvRef;
+export const countLedgerFromCsvRef: CountLedgerFromCsvRef;
 ```
 
-If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the countBillingFromCsvRef:
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the countLedgerFromCsvRef:
 ```typescript
-const name = countBillingFromCsvRef.operationName;
+const name = countLedgerFromCsvRef.operationName;
 console.log(name);
 ```
 
 ### Variables
-The `CountBillingFromCsv` query has no variables.
+The `CountLedgerFromCsv` query has no variables.
 ### Return Type
-Recall that executing the `CountBillingFromCsv` query returns a `QueryPromise` that resolves to an object with a `data` property.
+Recall that executing the `CountLedgerFromCsv` query returns a `QueryPromise` that resolves to an object with a `data` property.
 
-The `data` property is an object of type `CountBillingFromCsvData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+The `data` property is an object of type `CountLedgerFromCsvData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
 ```typescript
-export interface CountBillingFromCsvData {
-  billingFromCsvs: ({
+export interface CountLedgerFromCsvData {
+  ledgerFromCsvs: ({
     _count: number;
   })[];
 }
 ```
-### Using `CountBillingFromCsv`'s action shortcut function
+### Using `CountLedgerFromCsv`'s action shortcut function
 
 ```typescript
 import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, countBillingFromCsv } from '@dataconnect/generated';
+import { connectorConfig, countLedgerFromCsv } from '@dataconnect/generated';
 
 
-// Call the `countBillingFromCsv()` function to execute the query.
+// Call the `countLedgerFromCsv()` function to execute the query.
 // You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await countBillingFromCsv();
+const { data } = await countLedgerFromCsv();
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
-const { data } = await countBillingFromCsv(dataConnect);
+const { data } = await countLedgerFromCsv(dataConnect);
 
-console.log(data.billingFromCsvs);
+console.log(data.ledgerFromCsvs);
 
 // Or, you can use the `Promise` API.
-countBillingFromCsv().then((response) => {
+countLedgerFromCsv().then((response) => {
   const data = response.data;
-  console.log(data.billingFromCsvs);
+  console.log(data.ledgerFromCsvs);
 });
 ```
 
-### Using `CountBillingFromCsv`'s `QueryRef` function
+### Using `CountLedgerFromCsv`'s `QueryRef` function
 
 ```typescript
 import { getDataConnect, executeQuery } from 'firebase/data-connect';
-import { connectorConfig, countBillingFromCsvRef } from '@dataconnect/generated';
+import { connectorConfig, countLedgerFromCsvRef } from '@dataconnect/generated';
 
 
-// Call the `countBillingFromCsvRef()` function to get a reference to the query.
-const ref = countBillingFromCsvRef();
+// Call the `countLedgerFromCsvRef()` function to get a reference to the query.
+const ref = countLedgerFromCsvRef();
 
 // You can also pass in a `DataConnect` instance to the `QueryRef` function.
 const dataConnect = getDataConnect(connectorConfig);
-const ref = countBillingFromCsvRef(dataConnect);
+const ref = countLedgerFromCsvRef(dataConnect);
 
 // Call `executeQuery()` on the reference to execute the query.
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await executeQuery(ref);
 
-console.log(data.billingFromCsvs);
+console.log(data.ledgerFromCsvs);
 
 // Or, you can use the `Promise` API.
 executeQuery(ref).then((response) => {
   const data = response.data;
-  console.log(data.billingFromCsvs);
+  console.log(data.ledgerFromCsvs);
 });
 ```
 
-## SearchBillingFromCsv
-You can execute the `SearchBillingFromCsv` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+## SearchLedgerFromCsv
+You can execute the `SearchLedgerFromCsv` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
 ```typescript
-searchBillingFromCsv(vars?: SearchBillingFromCsvVariables): QueryPromise<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
+searchLedgerFromCsv(vars?: SearchLedgerFromCsvVariables): QueryPromise<SearchLedgerFromCsvData, SearchLedgerFromCsvVariables>;
 
-interface SearchBillingFromCsvRef {
+interface SearchLedgerFromCsvRef {
   ...
   /* Allow users to create refs without passing in DataConnect */
-  (vars?: SearchBillingFromCsvVariables): QueryRef<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
+  (vars?: SearchLedgerFromCsvVariables): QueryRef<SearchLedgerFromCsvData, SearchLedgerFromCsvVariables>;
 }
-export const searchBillingFromCsvRef: SearchBillingFromCsvRef;
+export const searchLedgerFromCsvRef: SearchLedgerFromCsvRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
 ```typescript
-searchBillingFromCsv(dc: DataConnect, vars?: SearchBillingFromCsvVariables): QueryPromise<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
+searchLedgerFromCsv(dc: DataConnect, vars?: SearchLedgerFromCsvVariables): QueryPromise<SearchLedgerFromCsvData, SearchLedgerFromCsvVariables>;
 
-interface SearchBillingFromCsvRef {
+interface SearchLedgerFromCsvRef {
   ...
-  (dc: DataConnect, vars?: SearchBillingFromCsvVariables): QueryRef<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
+  (dc: DataConnect, vars?: SearchLedgerFromCsvVariables): QueryRef<SearchLedgerFromCsvData, SearchLedgerFromCsvVariables>;
 }
-export const searchBillingFromCsvRef: SearchBillingFromCsvRef;
+export const searchLedgerFromCsvRef: SearchLedgerFromCsvRef;
 ```
 
-If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the searchBillingFromCsvRef:
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the searchLedgerFromCsvRef:
 ```typescript
-const name = searchBillingFromCsvRef.operationName;
+const name = searchLedgerFromCsvRef.operationName;
 console.log(name);
 ```
 
 ### Variables
-The `SearchBillingFromCsv` query has an optional argument of type `SearchBillingFromCsvVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+The `SearchLedgerFromCsv` query has an optional argument of type `SearchLedgerFromCsvVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
 
 ```typescript
-export interface SearchBillingFromCsvVariables {
+export interface SearchLedgerFromCsvVariables {
   query?: string | null;
   limit?: number | null;
 }
 ```
 ### Return Type
-Recall that executing the `SearchBillingFromCsv` query returns a `QueryPromise` that resolves to an object with a `data` property.
+Recall that executing the `SearchLedgerFromCsv` query returns a `QueryPromise` that resolves to an object with a `data` property.
 
-The `data` property is an object of type `SearchBillingFromCsvData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+The `data` property is an object of type `SearchLedgerFromCsvData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
 ```typescript
-export interface SearchBillingFromCsvData {
-  billingFromCsvs_search: ({
+export interface SearchLedgerFromCsvData {
+  ledgerFromCsvs_search: ({
     accountNo: string;
-    amortAmnt: number;
-    arrearsAmnt: number;
-    arrearsEnv: number;
-    bStatus: string;
-    billAmnt: number;
-    billBrgy?: string | null;
-    billDate: string;
-    billNo: string;
-    billPurok?: string | null;
-    book: string;
-    classType: string;
-    curReading: number;
-    discount: number;
-    disconDate: string;
-    dueDate: string;
-    duePenalty: number;
-    environmentFee: number;
-    fullName: string;
-    mPenalty: number;
-    mrSysNo: number;
-    mtrNo: string;
-    nrWater: number;
-    paid: string;
-    paymentDate?: string | null;
-    paymentReceipt?: string | null;
-    paymentStatus?: string | null;
-    preReading: number;
-    prevUsed: number;
-    prevUsed2: number;
-    prvBillDate: string;
-    prvDiscon: string;
-    prvDueDate: string;
-    purokCode?: string | null;
-    stubOut?: string | null;
-    totalBill: number;
-    verified: string;
-    waterUsage: number;
+    transDate: string;
+    refCode: string;
+    refNo: string;
+    amount: number;
+    timestamp?: string | null;
+    tag: string;
+    reading: number;
+    consumption: number;
+    sequence: number;
+    custNo: string;
+    id: UUIDString;
     createdAt: TimestampString;
     updatedAt?: TimestampString | null;
-  })[];
+  } & LedgerFromCsv_Key)[];
 }
 ```
-### Using `SearchBillingFromCsv`'s action shortcut function
+### Using `SearchLedgerFromCsv`'s action shortcut function
 
 ```typescript
 import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, searchBillingFromCsv, SearchBillingFromCsvVariables } from '@dataconnect/generated';
+import { connectorConfig, searchLedgerFromCsv, SearchLedgerFromCsvVariables } from '@dataconnect/generated';
 
-// The `SearchBillingFromCsv` query has an optional argument of type `SearchBillingFromCsvVariables`:
-const searchBillingFromCsvVars: SearchBillingFromCsvVariables = {
+// The `SearchLedgerFromCsv` query has an optional argument of type `SearchLedgerFromCsvVariables`:
+const searchLedgerFromCsvVars: SearchLedgerFromCsvVariables = {
   query: ..., // optional
   limit: ..., // optional
 };
 
-// Call the `searchBillingFromCsv()` function to execute the query.
+// Call the `searchLedgerFromCsv()` function to execute the query.
 // You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await searchBillingFromCsv(searchBillingFromCsvVars);
+const { data } = await searchLedgerFromCsv(searchLedgerFromCsvVars);
 // Variables can be defined inline as well.
-const { data } = await searchBillingFromCsv({ query: ..., limit: ..., });
-// Since all variables are optional for this query, you can omit the `SearchBillingFromCsvVariables` argument.
-const { data } = await searchBillingFromCsv();
+const { data } = await searchLedgerFromCsv({ query: ..., limit: ..., });
+// Since all variables are optional for this query, you can omit the `SearchLedgerFromCsvVariables` argument.
+const { data } = await searchLedgerFromCsv();
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
-const { data } = await searchBillingFromCsv(dataConnect, searchBillingFromCsvVars);
+const { data } = await searchLedgerFromCsv(dataConnect, searchLedgerFromCsvVars);
 
-console.log(data.billingFromCsvs_search);
+console.log(data.ledgerFromCsvs_search);
 
 // Or, you can use the `Promise` API.
-searchBillingFromCsv(searchBillingFromCsvVars).then((response) => {
+searchLedgerFromCsv(searchLedgerFromCsvVars).then((response) => {
   const data = response.data;
-  console.log(data.billingFromCsvs_search);
+  console.log(data.ledgerFromCsvs_search);
 });
 ```
 
-### Using `SearchBillingFromCsv`'s `QueryRef` function
+### Using `SearchLedgerFromCsv`'s `QueryRef` function
 
 ```typescript
 import { getDataConnect, executeQuery } from 'firebase/data-connect';
-import { connectorConfig, searchBillingFromCsvRef, SearchBillingFromCsvVariables } from '@dataconnect/generated';
+import { connectorConfig, searchLedgerFromCsvRef, SearchLedgerFromCsvVariables } from '@dataconnect/generated';
 
-// The `SearchBillingFromCsv` query has an optional argument of type `SearchBillingFromCsvVariables`:
-const searchBillingFromCsvVars: SearchBillingFromCsvVariables = {
+// The `SearchLedgerFromCsv` query has an optional argument of type `SearchLedgerFromCsvVariables`:
+const searchLedgerFromCsvVars: SearchLedgerFromCsvVariables = {
   query: ..., // optional
   limit: ..., // optional
 };
 
-// Call the `searchBillingFromCsvRef()` function to get a reference to the query.
-const ref = searchBillingFromCsvRef(searchBillingFromCsvVars);
+// Call the `searchLedgerFromCsvRef()` function to get a reference to the query.
+const ref = searchLedgerFromCsvRef(searchLedgerFromCsvVars);
 // Variables can be defined inline as well.
-const ref = searchBillingFromCsvRef({ query: ..., limit: ..., });
-// Since all variables are optional for this query, you can omit the `SearchBillingFromCsvVariables` argument.
-const ref = searchBillingFromCsvRef();
+const ref = searchLedgerFromCsvRef({ query: ..., limit: ..., });
+// Since all variables are optional for this query, you can omit the `SearchLedgerFromCsvVariables` argument.
+const ref = searchLedgerFromCsvRef();
 
 // You can also pass in a `DataConnect` instance to the `QueryRef` function.
 const dataConnect = getDataConnect(connectorConfig);
-const ref = searchBillingFromCsvRef(dataConnect, searchBillingFromCsvVars);
+const ref = searchLedgerFromCsvRef(dataConnect, searchLedgerFromCsvVars);
 
 // Call `executeQuery()` on the reference to execute the query.
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await executeQuery(ref);
 
-console.log(data.billingFromCsvs_search);
+console.log(data.ledgerFromCsvs_search);
 
 // Or, you can use the `Promise` API.
 executeQuery(ref).then((response) => {
   const data = response.data;
-  console.log(data.billingFromCsvs_search);
+  console.log(data.ledgerFromCsvs_search);
 });
 ```
 
@@ -2277,6 +2644,396 @@ console.log(data.collectionFromCsv_update);
 executeMutation(ref).then((response) => {
   const data = response.data;
   console.log(data.collectionFromCsv_update);
+});
+```
+
+## CreateLedgerFromCsv
+You can execute the `CreateLedgerFromCsv` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+createLedgerFromCsv(vars: CreateLedgerFromCsvVariables): MutationPromise<CreateLedgerFromCsvData, CreateLedgerFromCsvVariables>;
+
+interface CreateLedgerFromCsvRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreateLedgerFromCsvVariables): MutationRef<CreateLedgerFromCsvData, CreateLedgerFromCsvVariables>;
+}
+export const createLedgerFromCsvRef: CreateLedgerFromCsvRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+createLedgerFromCsv(dc: DataConnect, vars: CreateLedgerFromCsvVariables): MutationPromise<CreateLedgerFromCsvData, CreateLedgerFromCsvVariables>;
+
+interface CreateLedgerFromCsvRef {
+  ...
+  (dc: DataConnect, vars: CreateLedgerFromCsvVariables): MutationRef<CreateLedgerFromCsvData, CreateLedgerFromCsvVariables>;
+}
+export const createLedgerFromCsvRef: CreateLedgerFromCsvRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the createLedgerFromCsvRef:
+```typescript
+const name = createLedgerFromCsvRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `CreateLedgerFromCsv` mutation requires an argument of type `CreateLedgerFromCsvVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface CreateLedgerFromCsvVariables {
+  accountNo: string;
+  transDate: string;
+  refCode: string;
+  refNo: string;
+  amount: number;
+  timestamp?: string | null;
+  tag: string;
+  reading: number;
+  consumption: number;
+  sequence: number;
+  custNo: string;
+}
+```
+### Return Type
+Recall that executing the `CreateLedgerFromCsv` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `CreateLedgerFromCsvData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface CreateLedgerFromCsvData {
+  ledgerFromCsv_insert: LedgerFromCsv_Key;
+}
+```
+### Using `CreateLedgerFromCsv`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, createLedgerFromCsv, CreateLedgerFromCsvVariables } from '@dataconnect/generated';
+
+// The `CreateLedgerFromCsv` mutation requires an argument of type `CreateLedgerFromCsvVariables`:
+const createLedgerFromCsvVars: CreateLedgerFromCsvVariables = {
+  accountNo: ..., 
+  transDate: ..., 
+  refCode: ..., 
+  refNo: ..., 
+  amount: ..., 
+  timestamp: ..., // optional
+  tag: ..., 
+  reading: ..., 
+  consumption: ..., 
+  sequence: ..., 
+  custNo: ..., 
+};
+
+// Call the `createLedgerFromCsv()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await createLedgerFromCsv(createLedgerFromCsvVars);
+// Variables can be defined inline as well.
+const { data } = await createLedgerFromCsv({ accountNo: ..., transDate: ..., refCode: ..., refNo: ..., amount: ..., timestamp: ..., tag: ..., reading: ..., consumption: ..., sequence: ..., custNo: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await createLedgerFromCsv(dataConnect, createLedgerFromCsvVars);
+
+console.log(data.ledgerFromCsv_insert);
+
+// Or, you can use the `Promise` API.
+createLedgerFromCsv(createLedgerFromCsvVars).then((response) => {
+  const data = response.data;
+  console.log(data.ledgerFromCsv_insert);
+});
+```
+
+### Using `CreateLedgerFromCsv`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, createLedgerFromCsvRef, CreateLedgerFromCsvVariables } from '@dataconnect/generated';
+
+// The `CreateLedgerFromCsv` mutation requires an argument of type `CreateLedgerFromCsvVariables`:
+const createLedgerFromCsvVars: CreateLedgerFromCsvVariables = {
+  accountNo: ..., 
+  transDate: ..., 
+  refCode: ..., 
+  refNo: ..., 
+  amount: ..., 
+  timestamp: ..., // optional
+  tag: ..., 
+  reading: ..., 
+  consumption: ..., 
+  sequence: ..., 
+  custNo: ..., 
+};
+
+// Call the `createLedgerFromCsvRef()` function to get a reference to the mutation.
+const ref = createLedgerFromCsvRef(createLedgerFromCsvVars);
+// Variables can be defined inline as well.
+const ref = createLedgerFromCsvRef({ accountNo: ..., transDate: ..., refCode: ..., refNo: ..., amount: ..., timestamp: ..., tag: ..., reading: ..., consumption: ..., sequence: ..., custNo: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = createLedgerFromCsvRef(dataConnect, createLedgerFromCsvVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.ledgerFromCsv_insert);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.ledgerFromCsv_insert);
+});
+```
+
+## UpdateLedgerFromCsv
+You can execute the `UpdateLedgerFromCsv` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+updateLedgerFromCsv(vars: UpdateLedgerFromCsvVariables): MutationPromise<UpdateLedgerFromCsvData, UpdateLedgerFromCsvVariables>;
+
+interface UpdateLedgerFromCsvRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: UpdateLedgerFromCsvVariables): MutationRef<UpdateLedgerFromCsvData, UpdateLedgerFromCsvVariables>;
+}
+export const updateLedgerFromCsvRef: UpdateLedgerFromCsvRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+updateLedgerFromCsv(dc: DataConnect, vars: UpdateLedgerFromCsvVariables): MutationPromise<UpdateLedgerFromCsvData, UpdateLedgerFromCsvVariables>;
+
+interface UpdateLedgerFromCsvRef {
+  ...
+  (dc: DataConnect, vars: UpdateLedgerFromCsvVariables): MutationRef<UpdateLedgerFromCsvData, UpdateLedgerFromCsvVariables>;
+}
+export const updateLedgerFromCsvRef: UpdateLedgerFromCsvRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the updateLedgerFromCsvRef:
+```typescript
+const name = updateLedgerFromCsvRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `UpdateLedgerFromCsv` mutation requires an argument of type `UpdateLedgerFromCsvVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface UpdateLedgerFromCsvVariables {
+  id: UUIDString;
+  accountNo?: string | null;
+  transDate?: string | null;
+  refCode?: string | null;
+  refNo?: string | null;
+  amount?: number | null;
+  timestamp?: string | null;
+  tag?: string | null;
+  reading?: number | null;
+  consumption?: number | null;
+  sequence?: number | null;
+  custNo?: string | null;
+}
+```
+### Return Type
+Recall that executing the `UpdateLedgerFromCsv` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `UpdateLedgerFromCsvData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface UpdateLedgerFromCsvData {
+  ledgerFromCsv_update?: LedgerFromCsv_Key | null;
+}
+```
+### Using `UpdateLedgerFromCsv`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, updateLedgerFromCsv, UpdateLedgerFromCsvVariables } from '@dataconnect/generated';
+
+// The `UpdateLedgerFromCsv` mutation requires an argument of type `UpdateLedgerFromCsvVariables`:
+const updateLedgerFromCsvVars: UpdateLedgerFromCsvVariables = {
+  id: ..., 
+  accountNo: ..., // optional
+  transDate: ..., // optional
+  refCode: ..., // optional
+  refNo: ..., // optional
+  amount: ..., // optional
+  timestamp: ..., // optional
+  tag: ..., // optional
+  reading: ..., // optional
+  consumption: ..., // optional
+  sequence: ..., // optional
+  custNo: ..., // optional
+};
+
+// Call the `updateLedgerFromCsv()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await updateLedgerFromCsv(updateLedgerFromCsvVars);
+// Variables can be defined inline as well.
+const { data } = await updateLedgerFromCsv({ id: ..., accountNo: ..., transDate: ..., refCode: ..., refNo: ..., amount: ..., timestamp: ..., tag: ..., reading: ..., consumption: ..., sequence: ..., custNo: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await updateLedgerFromCsv(dataConnect, updateLedgerFromCsvVars);
+
+console.log(data.ledgerFromCsv_update);
+
+// Or, you can use the `Promise` API.
+updateLedgerFromCsv(updateLedgerFromCsvVars).then((response) => {
+  const data = response.data;
+  console.log(data.ledgerFromCsv_update);
+});
+```
+
+### Using `UpdateLedgerFromCsv`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, updateLedgerFromCsvRef, UpdateLedgerFromCsvVariables } from '@dataconnect/generated';
+
+// The `UpdateLedgerFromCsv` mutation requires an argument of type `UpdateLedgerFromCsvVariables`:
+const updateLedgerFromCsvVars: UpdateLedgerFromCsvVariables = {
+  id: ..., 
+  accountNo: ..., // optional
+  transDate: ..., // optional
+  refCode: ..., // optional
+  refNo: ..., // optional
+  amount: ..., // optional
+  timestamp: ..., // optional
+  tag: ..., // optional
+  reading: ..., // optional
+  consumption: ..., // optional
+  sequence: ..., // optional
+  custNo: ..., // optional
+};
+
+// Call the `updateLedgerFromCsvRef()` function to get a reference to the mutation.
+const ref = updateLedgerFromCsvRef(updateLedgerFromCsvVars);
+// Variables can be defined inline as well.
+const ref = updateLedgerFromCsvRef({ id: ..., accountNo: ..., transDate: ..., refCode: ..., refNo: ..., amount: ..., timestamp: ..., tag: ..., reading: ..., consumption: ..., sequence: ..., custNo: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = updateLedgerFromCsvRef(dataConnect, updateLedgerFromCsvVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.ledgerFromCsv_update);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.ledgerFromCsv_update);
+});
+```
+
+## DeleteLedgerFromCsv
+You can execute the `DeleteLedgerFromCsv` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+deleteLedgerFromCsv(vars: DeleteLedgerFromCsvVariables): MutationPromise<DeleteLedgerFromCsvData, DeleteLedgerFromCsvVariables>;
+
+interface DeleteLedgerFromCsvRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: DeleteLedgerFromCsvVariables): MutationRef<DeleteLedgerFromCsvData, DeleteLedgerFromCsvVariables>;
+}
+export const deleteLedgerFromCsvRef: DeleteLedgerFromCsvRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+deleteLedgerFromCsv(dc: DataConnect, vars: DeleteLedgerFromCsvVariables): MutationPromise<DeleteLedgerFromCsvData, DeleteLedgerFromCsvVariables>;
+
+interface DeleteLedgerFromCsvRef {
+  ...
+  (dc: DataConnect, vars: DeleteLedgerFromCsvVariables): MutationRef<DeleteLedgerFromCsvData, DeleteLedgerFromCsvVariables>;
+}
+export const deleteLedgerFromCsvRef: DeleteLedgerFromCsvRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the deleteLedgerFromCsvRef:
+```typescript
+const name = deleteLedgerFromCsvRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `DeleteLedgerFromCsv` mutation requires an argument of type `DeleteLedgerFromCsvVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface DeleteLedgerFromCsvVariables {
+  id: UUIDString;
+}
+```
+### Return Type
+Recall that executing the `DeleteLedgerFromCsv` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `DeleteLedgerFromCsvData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface DeleteLedgerFromCsvData {
+  ledgerFromCsv_delete?: LedgerFromCsv_Key | null;
+}
+```
+### Using `DeleteLedgerFromCsv`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, deleteLedgerFromCsv, DeleteLedgerFromCsvVariables } from '@dataconnect/generated';
+
+// The `DeleteLedgerFromCsv` mutation requires an argument of type `DeleteLedgerFromCsvVariables`:
+const deleteLedgerFromCsvVars: DeleteLedgerFromCsvVariables = {
+  id: ..., 
+};
+
+// Call the `deleteLedgerFromCsv()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await deleteLedgerFromCsv(deleteLedgerFromCsvVars);
+// Variables can be defined inline as well.
+const { data } = await deleteLedgerFromCsv({ id: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await deleteLedgerFromCsv(dataConnect, deleteLedgerFromCsvVars);
+
+console.log(data.ledgerFromCsv_delete);
+
+// Or, you can use the `Promise` API.
+deleteLedgerFromCsv(deleteLedgerFromCsvVars).then((response) => {
+  const data = response.data;
+  console.log(data.ledgerFromCsv_delete);
+});
+```
+
+### Using `DeleteLedgerFromCsv`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, deleteLedgerFromCsvRef, DeleteLedgerFromCsvVariables } from '@dataconnect/generated';
+
+// The `DeleteLedgerFromCsv` mutation requires an argument of type `DeleteLedgerFromCsvVariables`:
+const deleteLedgerFromCsvVars: DeleteLedgerFromCsvVariables = {
+  id: ..., 
+};
+
+// Call the `deleteLedgerFromCsvRef()` function to get a reference to the mutation.
+const ref = deleteLedgerFromCsvRef(deleteLedgerFromCsvVars);
+// Variables can be defined inline as well.
+const ref = deleteLedgerFromCsvRef({ id: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = deleteLedgerFromCsvRef(dataConnect, deleteLedgerFromCsvVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.ledgerFromCsv_delete);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.ledgerFromCsv_delete);
 });
 ```
 
