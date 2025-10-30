@@ -11,7 +11,7 @@ interface PaginateOptions {
 	orderDirection?: 'ASC' | 'DESC';
 }
 
-export const useCollectionStore = defineStore('Collection', () => {
+export const useCollectionStore = defineStore('collection', () => {
 	// State
 	const collections = ref<CollectionItemFromCsv[]>([]);
 	const isLoading = ref(false);
