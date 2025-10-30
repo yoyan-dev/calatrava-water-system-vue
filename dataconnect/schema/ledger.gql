@@ -1,0 +1,15 @@
+type LedgerFromCsv {
+	accountNo: String! # e.g. 0611202177
+	transDate: String! # e.g. 01/03/2025
+	refCode: String! # e.g. 04
+	refNo: String! # e.g. 6994384
+	amount: Float! # e.g. -699.00
+	timestamp: String # e.g. /  / (empty or placeholder)
+	tag: String! # e.g. W
+	reading: Int! # e.g. 0
+	consumption: Int! # e.g. 0
+	sequence: Int! @unique # e.g. 184692
+	custNo: String! # e.g. 2177
+	createdAt: Timestamp! @default(expr: "request.time") # e.g. 2025-10-20T12:28:03Z
+	updatedAt: Timestamp
+}

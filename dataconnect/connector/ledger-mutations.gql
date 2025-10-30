@@ -1,0 +1,66 @@
+mutation CreateLedgerFromCsv(
+	$accountNo: String!
+	$transDate: String!
+	$refCode: String!
+	$refNo: String!
+	$amount: Float!
+	$timestamp: String
+	$tag: String!
+	$reading: Int!
+	$consumption: Int!
+	$sequence: Int!
+	$custNo: String!
+) @auth(expr: "auth.token.role == 'admin'") {
+	ledgerFromCsv_insert(
+		data: {
+			accountNo: $accountNo
+			transDate: $transDate
+			refCode: $refCode
+			refNo: $refNo
+			amount: $amount
+			timestamp: $timestamp
+			tag: $tag
+			reading: $reading
+			consumption: $consumption
+			sequence: $sequence
+			custNo: $custNo
+		}
+	)
+}
+
+mutation UpdateLedgerFromCsv(
+	$id: UUID!
+	$accountNo: String
+	$transDate: String
+	$refCode: String
+	$refNo: String
+	$amount: Float
+	$timestamp: String
+	$tag: String
+	$reading: Int
+	$consumption: Int
+	$sequence: Int
+	$custNo: String
+) @auth(expr: "auth.token.role == 'admin'") {
+	ledgerFromCsv_update(
+		id: $id
+		data: {
+			accountNo: $accountNo
+			transDate: $transDate
+			refCode: $refCode
+			refNo: $refNo
+			amount: $amount
+			timestamp: $timestamp
+			tag: $tag
+			reading: $reading
+			consumption: $consumption
+			sequence: $sequence
+			custNo: $custNo
+		}
+	)
+}
+
+mutation DeleteLedgerFromCsv($id: UUID!)
+@auth(expr: "auth.token.role == 'admin'") {
+	ledgerFromCsv_delete(id: $id)
+}

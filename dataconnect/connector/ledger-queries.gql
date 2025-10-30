@@ -1,0 +1,27 @@
+query PaginatedLedger(
+	$limit: Int = 10
+	$offset: Int = 0
+	$orderByField: String
+	$orderDirection: String
+) @auth(expr: "auth.token.role == 'admin'") {
+	ledgerFromCsvs(
+		limit: $limit
+		orderBy: [{ sequence: DESC }]
+		offset: $offset
+	) {
+		id
+		accountNo
+		transDate
+		refCode
+		refNo
+		amount
+		timestamp
+		tag
+		reading
+		consumption
+		sequence
+		custNo
+		createdAt
+		updatedAt
+	}
+}
