@@ -32,6 +32,9 @@ coverage
 dev-dist/*
 dev-dist
 
+#Gemini Ai related VS Code
+.gemini
+
 #Firebase Related files
 .firebase
 dataconnect/.dataconnect
