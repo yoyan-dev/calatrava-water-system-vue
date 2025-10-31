@@ -15,19 +15,14 @@ export interface BillingFromCsv_Key {
   __typename?: 'BillingFromCsv_Key';
 }
 
-export interface Billing_Key {
-  id: UUIDString;
-  __typename?: 'Billing_Key';
-}
-
-export interface Book_Key {
-  id: UUIDString;
-  __typename?: 'Book_Key';
-}
-
 export interface CollectionFromCsv_Key {
   id: UUIDString;
   __typename?: 'CollectionFromCsv_Key';
+}
+
+export interface Consumer_Key {
+  id: UUIDString;
+  __typename?: 'Consumer_Key';
 }
 
 export interface CountBillingFromCsvData {
@@ -38,6 +33,12 @@ export interface CountBillingFromCsvData {
 
 export interface CountCollectionFromCsvData {
   collectionFromCsvs: ({
+    _count: number;
+  })[];
+}
+
+export interface CountConsumersData {
+  consumers: ({
     _count: number;
   })[];
 }
@@ -96,19 +97,6 @@ export interface CreateBillingFromCsvVariables {
   waterUsage: number;
 }
 
-export interface CreateBookData {
-  query?: {
-    books: ({
-      id: UUIDString;
-    } & Book_Key)[];
-  };
-    book_insert: Book_Key;
-}
-
-export interface CreateBookVariables {
-  name: string;
-}
-
 export interface CreateCollectionFromCsvData {
   collectionFromCsv_insert: CollectionFromCsv_Key;
 }
@@ -154,6 +142,17 @@ export interface CreateCollectionFromCsvVariables {
   waterBill: number;
 }
 
+export interface CreateConsumerData {
+  consumer_insert: Consumer_Key;
+}
+
+export interface CreateConsumerVariables {
+  accountNo: string;
+  fullName: string;
+  book: string;
+  classType: string;
+}
+
 export interface CreateLedgerFromCsvData {
   ledgerFromCsv_insert: LedgerFromCsv_Key;
 }
@@ -172,22 +171,6 @@ export interface CreateLedgerFromCsvVariables {
   custNo: string;
 }
 
-export interface CreateResidentData {
-  query?: {
-    residents: ({
-      id: UUIDString;
-    } & Resident_Key)[];
-  };
-    resident_insert: Resident_Key;
-}
-
-export interface CreateResidentVariables {
-  accountNo: number;
-  fullName: string;
-  classType: string;
-  bookId: UUIDString;
-}
-
 export interface DeleteBillingFromCsvData {
   billingFromCsv_delete?: BillingFromCsv_Key | null;
 }
@@ -204,11 +187,35 @@ export interface DeleteCollectionFromCsvVariables {
   id: UUIDString;
 }
 
+export interface DeleteConsumerData {
+  consumer_delete?: Consumer_Key | null;
+}
+
+export interface DeleteConsumerVariables {
+  id: UUIDString;
+}
+
 export interface DeleteLedgerFromCsvData {
   ledgerFromCsv_delete?: LedgerFromCsv_Key | null;
 }
 
 export interface DeleteLedgerFromCsvVariables {
+  id: UUIDString;
+}
+
+export interface GetConsumerData {
+  consumer?: {
+    id: UUIDString;
+    accountNo: string;
+    fullName: string;
+    book: string;
+    classType: string;
+    createdAt: TimestampString;
+    updatedAt?: TimestampString | null;
+  } & Consumer_Key;
+}
+
+export interface GetConsumerVariables {
   id: UUIDString;
 }
 
@@ -323,6 +330,25 @@ export interface PaginatedCollectionsVariables {
   orderDirection?: string | null;
 }
 
+export interface PaginatedConsumersData {
+  consumers: ({
+    id: UUIDString;
+    accountNo: string;
+    fullName: string;
+    book: string;
+    classType: string;
+    createdAt: TimestampString;
+    updatedAt?: TimestampString | null;
+  } & Consumer_Key)[];
+}
+
+export interface PaginatedConsumersVariables {
+  limit?: number | null;
+  offset?: number | null;
+  orderByField?: string | null;
+  orderDirection?: string | null;
+}
+
 export interface PaginatedLedgersData {
   ledgerFromCsvs: ({
     id: UUIDString;
@@ -347,11 +373,6 @@ export interface PaginatedLedgersVariables {
   offset?: number | null;
   orderByField?: string | null;
   orderDirection?: string | null;
-}
-
-export interface Resident_Key {
-  id: UUIDString;
-  __typename?: 'Resident_Key';
 }
 
 export interface SearchBillingFromCsvData {
@@ -453,6 +474,20 @@ export interface SearchCollectionFromCsvData {
 export interface SearchCollectionFromCsvVariables {
   query?: string | null;
   limit?: number | null;
+}
+
+export interface SearchConsumersData {
+  consumers_search: ({
+    id: UUIDString;
+    accountNo: string;
+    fullName: string;
+    book: string;
+    classType: string;
+  } & Consumer_Key)[];
+}
+
+export interface SearchConsumersVariables {
+  query: string;
 }
 
 export interface SearchLedgerFromCsvData {
@@ -574,6 +609,18 @@ export interface UpdateCollectionFromCsvVariables {
   waterBill?: number | null;
 }
 
+export interface UpdateConsumerData {
+  consumer_update?: Consumer_Key | null;
+}
+
+export interface UpdateConsumerVariables {
+  id: UUIDString;
+  accountNo?: string | null;
+  fullName?: string | null;
+  book?: string | null;
+  classType?: string | null;
+}
+
 export interface UpdateLedgerFromCsvData {
   ledgerFromCsv_update?: LedgerFromCsv_Key | null;
 }
@@ -592,30 +639,6 @@ export interface UpdateLedgerFromCsvVariables {
   sequence?: number | null;
   custNo?: string | null;
 }
-
-interface CreateBookRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (vars: CreateBookVariables): MutationRef<CreateBookData, CreateBookVariables>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: CreateBookVariables): MutationRef<CreateBookData, CreateBookVariables>;
-  operationName: string;
-}
-export const createBookRef: CreateBookRef;
-
-export function createBook(vars: CreateBookVariables): MutationPromise<CreateBookData, CreateBookVariables>;
-export function createBook(dc: DataConnect, vars: CreateBookVariables): MutationPromise<CreateBookData, CreateBookVariables>;
-
-interface CreateResidentRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (vars: CreateResidentVariables): MutationRef<CreateResidentData, CreateResidentVariables>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: CreateResidentVariables): MutationRef<CreateResidentData, CreateResidentVariables>;
-  operationName: string;
-}
-export const createResidentRef: CreateResidentRef;
-
-export function createResident(vars: CreateResidentVariables): MutationPromise<CreateResidentData, CreateResidentVariables>;
-export function createResident(dc: DataConnect, vars: CreateResidentVariables): MutationPromise<CreateResidentData, CreateResidentVariables>;
 
 interface CreateBillingFromCsvRef {
   /* Allow users to create refs without passing in DataConnect */
@@ -760,6 +783,90 @@ export const searchCollectionFromCsvRef: SearchCollectionFromCsvRef;
 
 export function searchCollectionFromCsv(vars?: SearchCollectionFromCsvVariables): QueryPromise<SearchCollectionFromCsvData, SearchCollectionFromCsvVariables>;
 export function searchCollectionFromCsv(dc: DataConnect, vars?: SearchCollectionFromCsvVariables): QueryPromise<SearchCollectionFromCsvData, SearchCollectionFromCsvVariables>;
+
+interface CreateConsumerRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreateConsumerVariables): MutationRef<CreateConsumerData, CreateConsumerVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: CreateConsumerVariables): MutationRef<CreateConsumerData, CreateConsumerVariables>;
+  operationName: string;
+}
+export const createConsumerRef: CreateConsumerRef;
+
+export function createConsumer(vars: CreateConsumerVariables): MutationPromise<CreateConsumerData, CreateConsumerVariables>;
+export function createConsumer(dc: DataConnect, vars: CreateConsumerVariables): MutationPromise<CreateConsumerData, CreateConsumerVariables>;
+
+interface UpdateConsumerRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: UpdateConsumerVariables): MutationRef<UpdateConsumerData, UpdateConsumerVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: UpdateConsumerVariables): MutationRef<UpdateConsumerData, UpdateConsumerVariables>;
+  operationName: string;
+}
+export const updateConsumerRef: UpdateConsumerRef;
+
+export function updateConsumer(vars: UpdateConsumerVariables): MutationPromise<UpdateConsumerData, UpdateConsumerVariables>;
+export function updateConsumer(dc: DataConnect, vars: UpdateConsumerVariables): MutationPromise<UpdateConsumerData, UpdateConsumerVariables>;
+
+interface DeleteConsumerRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: DeleteConsumerVariables): MutationRef<DeleteConsumerData, DeleteConsumerVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: DeleteConsumerVariables): MutationRef<DeleteConsumerData, DeleteConsumerVariables>;
+  operationName: string;
+}
+export const deleteConsumerRef: DeleteConsumerRef;
+
+export function deleteConsumer(vars: DeleteConsumerVariables): MutationPromise<DeleteConsumerData, DeleteConsumerVariables>;
+export function deleteConsumer(dc: DataConnect, vars: DeleteConsumerVariables): MutationPromise<DeleteConsumerData, DeleteConsumerVariables>;
+
+interface GetConsumerRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: GetConsumerVariables): QueryRef<GetConsumerData, GetConsumerVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: GetConsumerVariables): QueryRef<GetConsumerData, GetConsumerVariables>;
+  operationName: string;
+}
+export const getConsumerRef: GetConsumerRef;
+
+export function getConsumer(vars: GetConsumerVariables): QueryPromise<GetConsumerData, GetConsumerVariables>;
+export function getConsumer(dc: DataConnect, vars: GetConsumerVariables): QueryPromise<GetConsumerData, GetConsumerVariables>;
+
+interface PaginatedConsumersRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars?: PaginatedConsumersVariables): QueryRef<PaginatedConsumersData, PaginatedConsumersVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars?: PaginatedConsumersVariables): QueryRef<PaginatedConsumersData, PaginatedConsumersVariables>;
+  operationName: string;
+}
+export const paginatedConsumersRef: PaginatedConsumersRef;
+
+export function paginatedConsumers(vars?: PaginatedConsumersVariables): QueryPromise<PaginatedConsumersData, PaginatedConsumersVariables>;
+export function paginatedConsumers(dc: DataConnect, vars?: PaginatedConsumersVariables): QueryPromise<PaginatedConsumersData, PaginatedConsumersVariables>;
+
+interface SearchConsumersRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: SearchConsumersVariables): QueryRef<SearchConsumersData, SearchConsumersVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: SearchConsumersVariables): QueryRef<SearchConsumersData, SearchConsumersVariables>;
+  operationName: string;
+}
+export const searchConsumersRef: SearchConsumersRef;
+
+export function searchConsumers(vars: SearchConsumersVariables): QueryPromise<SearchConsumersData, SearchConsumersVariables>;
+export function searchConsumers(dc: DataConnect, vars: SearchConsumersVariables): QueryPromise<SearchConsumersData, SearchConsumersVariables>;
+
+interface CountConsumersRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<CountConsumersData, undefined>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect): QueryRef<CountConsumersData, undefined>;
+  operationName: string;
+}
+export const countConsumersRef: CountConsumersRef;
+
+export function countConsumers(): QueryPromise<CountConsumersData, undefined>;
+export function countConsumers(dc: DataConnect): QueryPromise<CountConsumersData, undefined>;
 
 interface CreateLedgerFromCsvRef {
   /* Allow users to create refs without passing in DataConnect */

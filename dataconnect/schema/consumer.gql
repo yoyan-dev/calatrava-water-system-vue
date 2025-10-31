@@ -1,0 +1,8 @@
+type Consumer @table {
+	accountNo: String! @unique @searchable
+	fullName: String! @searchable
+	book: String! @searchable
+	classType: String!
+	createdAt: Timestamp! @default(expr: "request.time")
+	updatedAt: Timestamp
+}

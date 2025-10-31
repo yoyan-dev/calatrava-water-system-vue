@@ -1,0 +1,38 @@
+mutation CreateConsumer(
+	$accountNo: String!
+	$fullName: String!
+	$book: String!
+	$classType: String!
+) @auth(expr: "auth.token.role == 'admin'") {
+	consumer_insert(
+		data: {
+			accountNo: $accountNo
+			fullName: $fullName
+			book: $book
+			classType: $classType
+		}
+	)
+}
+
+mutation UpdateConsumer(
+	$id: UUID!
+	$accountNo: String
+	$fullName: String
+	$book: String
+	$classType: String
+) @auth(expr: "auth.token.role == 'admin'") {
+	consumer_update(
+		id: $id
+		data: {
+			accountNo: $accountNo
+			fullName: $fullName
+			book: $book
+			classType: $classType
+			updatedAt_expr: "request.time"
+		}
+	)
+}
+
+mutation DeleteConsumer($id: UUID!) @auth(expr: "auth.token.role == 'admin'") {
+	consumer_delete(id: $id)
+}

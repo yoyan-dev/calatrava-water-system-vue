@@ -6,28 +6,6 @@ export const connectorConfig = {
   location: 'asia-southeast1'
 };
 
-export const createBookRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return mutationRef(dcInstance, 'CreateBook', inputVars);
-}
-createBookRef.operationName = 'CreateBook';
-
-export function createBook(dcOrVars, vars) {
-  return executeMutation(createBookRef(dcOrVars, vars));
-}
-
-export const createResidentRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return mutationRef(dcInstance, 'CreateResident', inputVars);
-}
-createResidentRef.operationName = 'CreateResident';
-
-export function createResident(dcOrVars, vars) {
-  return executeMutation(createResidentRef(dcOrVars, vars));
-}
-
 export const createBillingFromCsvRef = (dcOrVars, vars) => {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
@@ -158,6 +136,83 @@ searchCollectionFromCsvRef.operationName = 'SearchCollectionFromCsv';
 
 export function searchCollectionFromCsv(dcOrVars, vars) {
   return executeQuery(searchCollectionFromCsvRef(dcOrVars, vars));
+}
+
+export const createConsumerRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'CreateConsumer', inputVars);
+}
+createConsumerRef.operationName = 'CreateConsumer';
+
+export function createConsumer(dcOrVars, vars) {
+  return executeMutation(createConsumerRef(dcOrVars, vars));
+}
+
+export const updateConsumerRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'UpdateConsumer', inputVars);
+}
+updateConsumerRef.operationName = 'UpdateConsumer';
+
+export function updateConsumer(dcOrVars, vars) {
+  return executeMutation(updateConsumerRef(dcOrVars, vars));
+}
+
+export const deleteConsumerRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'DeleteConsumer', inputVars);
+}
+deleteConsumerRef.operationName = 'DeleteConsumer';
+
+export function deleteConsumer(dcOrVars, vars) {
+  return executeMutation(deleteConsumerRef(dcOrVars, vars));
+}
+
+export const getConsumerRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetConsumer', inputVars);
+}
+getConsumerRef.operationName = 'GetConsumer';
+
+export function getConsumer(dcOrVars, vars) {
+  return executeQuery(getConsumerRef(dcOrVars, vars));
+}
+
+export const paginatedConsumersRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'PaginatedConsumers', inputVars);
+}
+paginatedConsumersRef.operationName = 'PaginatedConsumers';
+
+export function paginatedConsumers(dcOrVars, vars) {
+  return executeQuery(paginatedConsumersRef(dcOrVars, vars));
+}
+
+export const searchConsumersRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'SearchConsumers', inputVars);
+}
+searchConsumersRef.operationName = 'SearchConsumers';
+
+export function searchConsumers(dcOrVars, vars) {
+  return executeQuery(searchConsumersRef(dcOrVars, vars));
+}
+
+export const countConsumersRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'CountConsumers');
+}
+countConsumersRef.operationName = 'CountConsumers';
+
+export function countConsumers(dc) {
+  return executeQuery(countConsumersRef(dc));
 }
 
 export const createLedgerFromCsvRef = (dcOrVars, vars) => {

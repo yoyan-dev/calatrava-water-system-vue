@@ -1,0 +1,180 @@
+import {
+	countConsumers,
+	createConsumer,
+	deleteConsumer,
+	paginatedConsumers,
+	searchConsumers,
+	updateConsumer,
+	type CreateConsumerVariables,
+	type UpdateConsumerVariables,
+} from '@/dataconnect-generated';
+import type { ConsumerItem } from '@/types/consumer';
+import Papa from 'papaparse';
+
+class ConsumerRepository {
+	async countConsumers() {
+		try {
+			const response = await countConsumers();
+			return response.data.consumers;
+		} catch (error) {
+			console.error('Error counting consumers:', error);
+			return 0;
+		}
+	}
+
+	async searchConsumers(keyword: any) {
+		if (!keyword || typeof keyword !== 'string') {
+			console.error('Invalid keyword:', keyword);
+			return [];
+		}
+		try {
+			const response = await searchConsumers({ query: keyword });
+			return response.data.consumers_search || [];
+		} catch (error) {
+			console.error('Error searching consumers:', error);
+			return [];
+		}
+	}
+
+	async deleteConsumer(id: string) {
+		try {
+			const response = await deleteConsumer({ id });
+			if (response?.data?.consumer_delete?.id) return { success: true };
+		} catch (error) {
+			console.error('Error deleting consumer:', error);
+		}
+	}
+
+	async updateConsumer(payload: UpdateConsumerVariables) {
+		try {
+			const response = await updateConsumer(payload);
+			if (response?.data?.consumer_update?.id) return { success: true };
+		} catch (error) {
+			console.error('Error updating consumer:', error);
+		}
+	}
+
+	async addConsumer(payload: CreateConsumerVariables) {
+		try {
+			console.log('ayay repo');
+
+			const response = await createConsumer(payload);
+			if (response?.data?.consumer_insert?.id) return { success: true };
+		} catch (error) {
+			console.error('Error creating consumer:', error);
+		}
+	}
+
+	async addConsumerFromCsv(payload: FormData) {
+		try {
+			const file = payload.get('file') as File;
+			if (!file) throw new Error('No file uploaded');
+
+			const text = await file.text();
+
+			const parseResult = Papa.parse(text, {
+				header: false,
+				skipEmptyLines: true,
+				dynamicTyping: false,
+				transform: (value) => value.trim(), // clean whitespace
+			});
+
+			if (parseResult.errors.length > 0) {
+				console.warn('CSV parse warnings:', parseResult.errors);
+			}
+
+			const rawRows = parseResult.data as string[][];
+			if (rawRows.length < 1) throw new Error('CSV is empty');
+
+			const header = rawRows[0].map((h) => h.toLowerCase().trim());
+			const rows = rawRows.slice(1);
+
+			const consumerData: any[] = [];
+
+			for (const rawValues of rows) {
+				const data: CreateConsumerVariables = {
+					accountNo: '',
+					fullName: '',
+					book: '',
+					classType: '',
+				};
+
+				header.forEach((key, idx) => {
+					const value = rawValues[idx] ?? '';
+
+					switch (key) {
+						case 'accountno':
+							data.accountNo = value.replace(/^"|"$/g, '').trim();
+							break;
+						case 'fullname':
+							data.fullName = value;
+							break;
+						case 'book':
+							data.book = value;
+							break;
+						case 'classtype':
+							data.classType = value;
+							break;
+					}
+				});
+
+				// Validate required fields
+				if (
+					!data.accountNo ||
+					!data.fullName ||
+					!data.book ||
+					!data.classType
+				) {
+					console.warn('Skipping invalid row:', rawValues);
+					continue;
+				}
+
+				const res = await createConsumer(data);
+				const id = res.data.consumer_insert.id;
+				const createdAt = new Date().toISOString();
+
+				consumerData.push({ id, createdAt, ...data });
+			}
+
+			return {
+				success: true,
+				message: `${consumerData.length} consumer records created successfully`,
+				statusCode: 200,
+				data: consumerData,
+			};
+		} catch (error) {
+			console.error('Error processing CSV:', error);
+			throw new Error(
+				`Failed to process CSV: ${
+					error instanceof Error ? error.message : String(error)
+				}`,
+			);
+		}
+	}
+
+	async paginateConsumers(
+		limit = 10,
+		offset = 0,
+		orderByField = 'accountNo',
+		orderDirection = 'DESC',
+	) {
+		try {
+			const response = await paginatedConsumers({
+				limit,
+				offset,
+				orderByField,
+				orderDirection,
+			});
+			if (response.data.consumers.length > 0) {
+				return response.data.consumers;
+			} else {
+				return [];
+			}
+		} catch (error) {
+			console.error('Error fetching consumers:', error);
+			return [];
+		}
+	}
+}
+
+export const consumerRepository = new ConsumerRepository();

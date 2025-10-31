@@ -25,10 +25,10 @@
 			route: '/admin/dashboard',
 		},
 		{
-			label: 'Resident Accounts',
-			name: 'admin-residents',
+			label: 'Consumers',
+			name: 'admin-consumers',
 			icon: 'pi pi-users',
-			route: '/admin/residents',
+			route: '/admin/consumers',
 		},
 		{
 			label: 'Billings',

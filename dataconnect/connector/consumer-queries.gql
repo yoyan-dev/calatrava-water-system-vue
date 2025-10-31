@@ -1,0 +1,45 @@
+query GetConsumer($id: UUID!) @auth(expr: "auth.token.role == 'admin'") {
+	consumer(id: $id) {
+		id
+		accountNo
+		fullName
+		book
+		classType
+		createdAt
+		updatedAt
+	}
+}
+
+query PaginatedConsumers(
+	$limit: Int = 10
+	$offset: Int = 0
+	$orderByField: String = "accountNo"
+	$orderDirection: String = "DESC"
+) @auth(expr: "auth.token.role == 'admin'") {
+	consumers(limit: $limit, offset: $offset, orderBy: [{ accountNo: ASC }]) {
+		id
+		accountNo
+		fullName
+		book
+		classType
+		createdAt
+		updatedAt
+	}
+}
+
+query SearchConsumers($query: String!)
+@auth(expr: "auth.token.role == 'admin'") {
+	consumers_search(query: $query) {
+		id
+		accountNo
+		fullName
+		book
+		classType
+	}
+}
+
+query CountConsumers @auth(expr: "auth.token.role == 'admin'") {
+	consumers {
+		_count
+	}
+}

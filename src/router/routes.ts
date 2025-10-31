@@ -62,9 +62,9 @@ const routes = [
 				component: () => import('@/pages/admin/dashboard/index.vue'),
 			},
 			{
-				path: 'residents',
-				name: 'admin-residents',
-				component: () => import('@/pages/admin/residents/index.vue'),
+				path: 'consumers',
+				name: 'admin-consumers',
+				component: () => import('@/pages/admin/consumers/index.vue'),
 			},
 			{
 				path: 'users',
