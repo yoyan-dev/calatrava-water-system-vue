@@ -640,42 +640,6 @@ export interface UpdateLedgerFromCsvVariables {
   custNo?: string | null;
 }
 
-interface CreateBillingFromCsvRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (vars: CreateBillingFromCsvVariables): MutationRef<CreateBillingFromCsvData, CreateBillingFromCsvVariables>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: CreateBillingFromCsvVariables): MutationRef<CreateBillingFromCsvData, CreateBillingFromCsvVariables>;
-  operationName: string;
-}
-export const createBillingFromCsvRef: CreateBillingFromCsvRef;
-
-export function createBillingFromCsv(vars: CreateBillingFromCsvVariables): MutationPromise<CreateBillingFromCsvData, CreateBillingFromCsvVariables>;
-export function createBillingFromCsv(dc: DataConnect, vars: CreateBillingFromCsvVariables): MutationPromise<CreateBillingFromCsvData, CreateBillingFromCsvVariables>;
-
-interface DeleteBillingFromCsvRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (vars: DeleteBillingFromCsvVariables): MutationRef<DeleteBillingFromCsvData, DeleteBillingFromCsvVariables>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: DeleteBillingFromCsvVariables): MutationRef<DeleteBillingFromCsvData, DeleteBillingFromCsvVariables>;
-  operationName: string;
-}
-export const deleteBillingFromCsvRef: DeleteBillingFromCsvRef;
-
-export function deleteBillingFromCsv(vars: DeleteBillingFromCsvVariables): MutationPromise<DeleteBillingFromCsvData, DeleteBillingFromCsvVariables>;
-export function deleteBillingFromCsv(dc: DataConnect, vars: DeleteBillingFromCsvVariables): MutationPromise<DeleteBillingFromCsvData, DeleteBillingFromCsvVariables>;
-
-interface UpdateBillingFromCsvRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (vars: UpdateBillingFromCsvVariables): MutationRef<UpdateBillingFromCsvData, UpdateBillingFromCsvVariables>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: UpdateBillingFromCsvVariables): MutationRef<UpdateBillingFromCsvData, UpdateBillingFromCsvVariables>;
-  operationName: string;
-}
-export const updateBillingFromCsvRef: UpdateBillingFromCsvRef;
-
-export function updateBillingFromCsv(vars: UpdateBillingFromCsvVariables): MutationPromise<UpdateBillingFromCsvData, UpdateBillingFromCsvVariables>;
-export function updateBillingFromCsv(dc: DataConnect, vars: UpdateBillingFromCsvVariables): MutationPromise<UpdateBillingFromCsvData, UpdateBillingFromCsvVariables>;
-
 interface PaginatedBillingsRef {
   /* Allow users to create refs without passing in DataConnect */
   (vars?: PaginatedBillingsVariables): QueryRef<PaginatedBillingsData, PaginatedBillingsVariables>;
@@ -939,4 +903,40 @@ export const searchLedgerFromCsvRef: SearchLedgerFromCsvRef;
 
 export function searchLedgerFromCsv(vars?: SearchLedgerFromCsvVariables): QueryPromise<SearchLedgerFromCsvData, SearchLedgerFromCsvVariables>;
 export function searchLedgerFromCsv(dc: DataConnect, vars?: SearchLedgerFromCsvVariables): QueryPromise<SearchLedgerFromCsvData, SearchLedgerFromCsvVariables>;
+
+interface CreateBillingFromCsvRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreateBillingFromCsvVariables): MutationRef<CreateBillingFromCsvData, CreateBillingFromCsvVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: CreateBillingFromCsvVariables): MutationRef<CreateBillingFromCsvData, CreateBillingFromCsvVariables>;
+  operationName: string;
+}
+export const createBillingFromCsvRef: CreateBillingFromCsvRef;
+
+export function createBillingFromCsv(vars: CreateBillingFromCsvVariables): MutationPromise<CreateBillingFromCsvData, CreateBillingFromCsvVariables>;
+export function createBillingFromCsv(dc: DataConnect, vars: CreateBillingFromCsvVariables): MutationPromise<CreateBillingFromCsvData, CreateBillingFromCsvVariables>;
+
+interface DeleteBillingFromCsvRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: DeleteBillingFromCsvVariables): MutationRef<DeleteBillingFromCsvData, DeleteBillingFromCsvVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: DeleteBillingFromCsvVariables): MutationRef<DeleteBillingFromCsvData, DeleteBillingFromCsvVariables>;
+  operationName: string;
+}
+export const deleteBillingFromCsvRef: DeleteBillingFromCsvRef;
+
+export function deleteBillingFromCsv(vars: DeleteBillingFromCsvVariables): MutationPromise<DeleteBillingFromCsvData, DeleteBillingFromCsvVariables>;
+export function deleteBillingFromCsv(dc: DataConnect, vars: DeleteBillingFromCsvVariables): MutationPromise<DeleteBillingFromCsvData, DeleteBillingFromCsvVariables>;
+
+interface UpdateBillingFromCsvRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: UpdateBillingFromCsvVariables): MutationRef<UpdateBillingFromCsvData, UpdateBillingFromCsvVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: UpdateBillingFromCsvVariables): MutationRef<UpdateBillingFromCsvData, UpdateBillingFromCsvVariables>;
+  operationName: string;
+}
+export const updateBillingFromCsvRef: UpdateBillingFromCsvRef;
+
+export function updateBillingFromCsv(vars: UpdateBillingFromCsvVariables): MutationPromise<UpdateBillingFromCsvData, UpdateBillingFromCsvVariables>;
+export function updateBillingFromCsv(dc: DataConnect, vars: UpdateBillingFromCsvVariables): MutationPromise<UpdateBillingFromCsvData, UpdateBillingFromCsvVariables>;
 

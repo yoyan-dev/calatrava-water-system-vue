@@ -7,42 +7,6 @@ const connectorConfig = {
 };
 exports.connectorConfig = connectorConfig;
 
-const createBillingFromCsvRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return mutationRef(dcInstance, 'CreateBillingFromCsv', inputVars);
-}
-createBillingFromCsvRef.operationName = 'CreateBillingFromCsv';
-exports.createBillingFromCsvRef = createBillingFromCsvRef;
-
-exports.createBillingFromCsv = function createBillingFromCsv(dcOrVars, vars) {
-  return executeMutation(createBillingFromCsvRef(dcOrVars, vars));
-};
-
-const deleteBillingFromCsvRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return mutationRef(dcInstance, 'DeleteBillingFromCsv', inputVars);
-}
-deleteBillingFromCsvRef.operationName = 'DeleteBillingFromCsv';
-exports.deleteBillingFromCsvRef = deleteBillingFromCsvRef;
-
-exports.deleteBillingFromCsv = function deleteBillingFromCsv(dcOrVars, vars) {
-  return executeMutation(deleteBillingFromCsvRef(dcOrVars, vars));
-};
-
-const updateBillingFromCsvRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return mutationRef(dcInstance, 'UpdateBillingFromCsv', inputVars);
-}
-updateBillingFromCsvRef.operationName = 'UpdateBillingFromCsv';
-exports.updateBillingFromCsvRef = updateBillingFromCsvRef;
-
-exports.updateBillingFromCsv = function updateBillingFromCsv(dcOrVars, vars) {
-  return executeMutation(updateBillingFromCsvRef(dcOrVars, vars));
-};
-
 const paginatedBillingsRef = (dcOrVars, vars) => {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars);
   dcInstance._useGeneratedSdk();
@@ -305,4 +269,40 @@ exports.searchLedgerFromCsvRef = searchLedgerFromCsvRef;
 
 exports.searchLedgerFromCsv = function searchLedgerFromCsv(dcOrVars, vars) {
   return executeQuery(searchLedgerFromCsvRef(dcOrVars, vars));
+};
+
+const createBillingFromCsvRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'CreateBillingFromCsv', inputVars);
+}
+createBillingFromCsvRef.operationName = 'CreateBillingFromCsv';
+exports.createBillingFromCsvRef = createBillingFromCsvRef;
+
+exports.createBillingFromCsv = function createBillingFromCsv(dcOrVars, vars) {
+  return executeMutation(createBillingFromCsvRef(dcOrVars, vars));
+};
+
+const deleteBillingFromCsvRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'DeleteBillingFromCsv', inputVars);
+}
+deleteBillingFromCsvRef.operationName = 'DeleteBillingFromCsv';
+exports.deleteBillingFromCsvRef = deleteBillingFromCsvRef;
+
+exports.deleteBillingFromCsv = function deleteBillingFromCsv(dcOrVars, vars) {
+  return executeMutation(deleteBillingFromCsvRef(dcOrVars, vars));
+};
+
+const updateBillingFromCsvRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'UpdateBillingFromCsv', inputVars);
+}
+updateBillingFromCsvRef.operationName = 'UpdateBillingFromCsv';
+exports.updateBillingFromCsvRef = updateBillingFromCsvRef;
+
+exports.updateBillingFromCsv = function updateBillingFromCsv(dcOrVars, vars) {
+  return executeMutation(updateBillingFromCsvRef(dcOrVars, vars));
 };

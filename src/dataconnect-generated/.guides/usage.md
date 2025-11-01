@@ -14,17 +14,8 @@ If a user is not using a supported framework, they can use the generated SDK dir
 Here's an example of how to use it with the first 5 operations:
 
 ```js
-import { createBillingFromCsv, deleteBillingFromCsv, updateBillingFromCsv, paginatedBillings, countBillingFromCsv, searchBillingFromCsv, createCollectionFromCsv, deleteCollectionFromCsv, updateCollectionFromCsv, paginatedCollections } from '@dataconnect/generated';
+import { paginatedBillings, countBillingFromCsv, searchBillingFromCsv, createCollectionFromCsv, deleteCollectionFromCsv, updateCollectionFromCsv, paginatedCollections, countCollectionFromCsv, searchCollectionFromCsv, createConsumer } from '@dataconnect/generated';
 
-
-// Operation CreateBillingFromCsv:  For variables, look at type CreateBillingFromCsvVars in ../index.d.ts
-const { data } = await CreateBillingFromCsv(dataConnect, createBillingFromCsvVars);
-
-// Operation DeleteBillingFromCsv:  For variables, look at type DeleteBillingFromCsvVars in ../index.d.ts
-const { data } = await DeleteBillingFromCsv(dataConnect, deleteBillingFromCsvVars);
-
-// Operation UpdateBillingFromCsv:  For variables, look at type UpdateBillingFromCsvVars in ../index.d.ts
-const { data } = await UpdateBillingFromCsv(dataConnect, updateBillingFromCsvVars);
 
 // Operation PaginatedBillings:  For variables, look at type PaginatedBillingsVars in ../index.d.ts
 const { data } = await PaginatedBillings(dataConnect, paginatedBillingsVars);
@@ -46,6 +37,15 @@ const { data } = await UpdateCollectionFromCsv(dataConnect, updateCollectionFrom
 
 // Operation PaginatedCollections:  For variables, look at type PaginatedCollectionsVars in ../index.d.ts
 const { data } = await PaginatedCollections(dataConnect, paginatedCollectionsVars);
+
+// Operation CountCollectionFromCsv: 
+const { data } = await CountCollectionFromCsv(dataConnect);
+
+// Operation SearchCollectionFromCsv:  For variables, look at type SearchCollectionFromCsvVars in ../index.d.ts
+const { data } = await SearchCollectionFromCsv(dataConnect, searchCollectionFromCsvVars);
+
+// Operation CreateConsumer:  For variables, look at type CreateConsumerVars in ../index.d.ts
+const { data } = await CreateConsumer(dataConnect, createConsumerVars);
 
 
 ```
