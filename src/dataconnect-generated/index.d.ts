@@ -640,78 +640,6 @@ export interface UpdateLedgerFromCsvVariables {
   custNo?: string | null;
 }
 
-interface PaginatedBillingsRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (vars?: PaginatedBillingsVariables): QueryRef<PaginatedBillingsData, PaginatedBillingsVariables>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars?: PaginatedBillingsVariables): QueryRef<PaginatedBillingsData, PaginatedBillingsVariables>;
-  operationName: string;
-}
-export const paginatedBillingsRef: PaginatedBillingsRef;
-
-export function paginatedBillings(vars?: PaginatedBillingsVariables): QueryPromise<PaginatedBillingsData, PaginatedBillingsVariables>;
-export function paginatedBillings(dc: DataConnect, vars?: PaginatedBillingsVariables): QueryPromise<PaginatedBillingsData, PaginatedBillingsVariables>;
-
-interface CountBillingFromCsvRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (): QueryRef<CountBillingFromCsvData, undefined>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect): QueryRef<CountBillingFromCsvData, undefined>;
-  operationName: string;
-}
-export const countBillingFromCsvRef: CountBillingFromCsvRef;
-
-export function countBillingFromCsv(): QueryPromise<CountBillingFromCsvData, undefined>;
-export function countBillingFromCsv(dc: DataConnect): QueryPromise<CountBillingFromCsvData, undefined>;
-
-interface SearchBillingFromCsvRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (vars?: SearchBillingFromCsvVariables): QueryRef<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars?: SearchBillingFromCsvVariables): QueryRef<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
-  operationName: string;
-}
-export const searchBillingFromCsvRef: SearchBillingFromCsvRef;
-
-export function searchBillingFromCsv(vars?: SearchBillingFromCsvVariables): QueryPromise<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
-export function searchBillingFromCsv(dc: DataConnect, vars?: SearchBillingFromCsvVariables): QueryPromise<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
-
-interface CreateCollectionFromCsvRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (vars: CreateCollectionFromCsvVariables): MutationRef<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: CreateCollectionFromCsvVariables): MutationRef<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
-  operationName: string;
-}
-export const createCollectionFromCsvRef: CreateCollectionFromCsvRef;
-
-export function createCollectionFromCsv(vars: CreateCollectionFromCsvVariables): MutationPromise<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
-export function createCollectionFromCsv(dc: DataConnect, vars: CreateCollectionFromCsvVariables): MutationPromise<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
-
-interface DeleteCollectionFromCsvRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (vars: DeleteCollectionFromCsvVariables): MutationRef<DeleteCollectionFromCsvData, DeleteCollectionFromCsvVariables>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: DeleteCollectionFromCsvVariables): MutationRef<DeleteCollectionFromCsvData, DeleteCollectionFromCsvVariables>;
-  operationName: string;
-}
-export const deleteCollectionFromCsvRef: DeleteCollectionFromCsvRef;
-
-export function deleteCollectionFromCsv(vars: DeleteCollectionFromCsvVariables): MutationPromise<DeleteCollectionFromCsvData, DeleteCollectionFromCsvVariables>;
-export function deleteCollectionFromCsv(dc: DataConnect, vars: DeleteCollectionFromCsvVariables): MutationPromise<DeleteCollectionFromCsvData, DeleteCollectionFromCsvVariables>;
-
-interface UpdateCollectionFromCsvRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (vars: UpdateCollectionFromCsvVariables): MutationRef<UpdateCollectionFromCsvData, UpdateCollectionFromCsvVariables>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: UpdateCollectionFromCsvVariables): MutationRef<UpdateCollectionFromCsvData, UpdateCollectionFromCsvVariables>;
-  operationName: string;
-}
-export const updateCollectionFromCsvRef: UpdateCollectionFromCsvRef;
-
-export function updateCollectionFromCsv(vars: UpdateCollectionFromCsvVariables): MutationPromise<UpdateCollectionFromCsvData, UpdateCollectionFromCsvVariables>;
-export function updateCollectionFromCsv(dc: DataConnect, vars: UpdateCollectionFromCsvVariables): MutationPromise<UpdateCollectionFromCsvData, UpdateCollectionFromCsvVariables>;
-
 interface PaginatedCollectionsRef {
   /* Allow users to create refs without passing in DataConnect */
   (vars?: PaginatedCollectionsVariables): QueryRef<PaginatedCollectionsData, PaginatedCollectionsVariables>;
@@ -939,4 +867,76 @@ export const updateBillingFromCsvRef: UpdateBillingFromCsvRef;
 
 export function updateBillingFromCsv(vars: UpdateBillingFromCsvVariables): MutationPromise<UpdateBillingFromCsvData, UpdateBillingFromCsvVariables>;
 export function updateBillingFromCsv(dc: DataConnect, vars: UpdateBillingFromCsvVariables): MutationPromise<UpdateBillingFromCsvData, UpdateBillingFromCsvVariables>;
+
+interface PaginatedBillingsRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars?: PaginatedBillingsVariables): QueryRef<PaginatedBillingsData, PaginatedBillingsVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars?: PaginatedBillingsVariables): QueryRef<PaginatedBillingsData, PaginatedBillingsVariables>;
+  operationName: string;
+}
+export const paginatedBillingsRef: PaginatedBillingsRef;
+
+export function paginatedBillings(vars?: PaginatedBillingsVariables): QueryPromise<PaginatedBillingsData, PaginatedBillingsVariables>;
+export function paginatedBillings(dc: DataConnect, vars?: PaginatedBillingsVariables): QueryPromise<PaginatedBillingsData, PaginatedBillingsVariables>;
+
+interface CountBillingFromCsvRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<CountBillingFromCsvData, undefined>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect): QueryRef<CountBillingFromCsvData, undefined>;
+  operationName: string;
+}
+export const countBillingFromCsvRef: CountBillingFromCsvRef;
+
+export function countBillingFromCsv(): QueryPromise<CountBillingFromCsvData, undefined>;
+export function countBillingFromCsv(dc: DataConnect): QueryPromise<CountBillingFromCsvData, undefined>;
+
+interface SearchBillingFromCsvRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars?: SearchBillingFromCsvVariables): QueryRef<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars?: SearchBillingFromCsvVariables): QueryRef<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
+  operationName: string;
+}
+export const searchBillingFromCsvRef: SearchBillingFromCsvRef;
+
+export function searchBillingFromCsv(vars?: SearchBillingFromCsvVariables): QueryPromise<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
+export function searchBillingFromCsv(dc: DataConnect, vars?: SearchBillingFromCsvVariables): QueryPromise<SearchBillingFromCsvData, SearchBillingFromCsvVariables>;
+
+interface CreateCollectionFromCsvRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreateCollectionFromCsvVariables): MutationRef<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: CreateCollectionFromCsvVariables): MutationRef<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
+  operationName: string;
+}
+export const createCollectionFromCsvRef: CreateCollectionFromCsvRef;
+
+export function createCollectionFromCsv(vars: CreateCollectionFromCsvVariables): MutationPromise<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
+export function createCollectionFromCsv(dc: DataConnect, vars: CreateCollectionFromCsvVariables): MutationPromise<CreateCollectionFromCsvData, CreateCollectionFromCsvVariables>;
+
+interface DeleteCollectionFromCsvRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: DeleteCollectionFromCsvVariables): MutationRef<DeleteCollectionFromCsvData, DeleteCollectionFromCsvVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: DeleteCollectionFromCsvVariables): MutationRef<DeleteCollectionFromCsvData, DeleteCollectionFromCsvVariables>;
+  operationName: string;
+}
+export const deleteCollectionFromCsvRef: DeleteCollectionFromCsvRef;
+
+export function deleteCollectionFromCsv(vars: DeleteCollectionFromCsvVariables): MutationPromise<DeleteCollectionFromCsvData, DeleteCollectionFromCsvVariables>;
+export function deleteCollectionFromCsv(dc: DataConnect, vars: DeleteCollectionFromCsvVariables): MutationPromise<DeleteCollectionFromCsvData, DeleteCollectionFromCsvVariables>;
+
+interface UpdateCollectionFromCsvRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: UpdateCollectionFromCsvVariables): MutationRef<UpdateCollectionFromCsvData, UpdateCollectionFromCsvVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: UpdateCollectionFromCsvVariables): MutationRef<UpdateCollectionFromCsvData, UpdateCollectionFromCsvVariables>;
+  operationName: string;
+}
+export const updateCollectionFromCsvRef: UpdateCollectionFromCsvRef;
+
+export function updateCollectionFromCsv(vars: UpdateCollectionFromCsvVariables): MutationPromise<UpdateCollectionFromCsvData, UpdateCollectionFromCsvVariables>;
+export function updateCollectionFromCsv(dc: DataConnect, vars: UpdateCollectionFromCsvVariables): MutationPromise<UpdateCollectionFromCsvData, UpdateCollectionFromCsvVariables>;
 

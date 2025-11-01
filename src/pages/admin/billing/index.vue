@@ -56,7 +56,6 @@
 		<div class="flex flex-col gap-4">
 			<div class="flex flex-wrap items-center gap-4">
 				<SearchInput class="mr-auto" />
-				<ConfirmDialog></ConfirmDialog>
 				<Button
 					v-if="selectedBillings.length > 0"
 					@click="confirmDelete"

@@ -14,26 +14,8 @@ If a user is not using a supported framework, they can use the generated SDK dir
 Here's an example of how to use it with the first 5 operations:
 
 ```js
-import { paginatedBillings, countBillingFromCsv, searchBillingFromCsv, createCollectionFromCsv, deleteCollectionFromCsv, updateCollectionFromCsv, paginatedCollections, countCollectionFromCsv, searchCollectionFromCsv, createConsumer } from '@dataconnect/generated';
+import { paginatedCollections, countCollectionFromCsv, searchCollectionFromCsv, createConsumer, updateConsumer, deleteConsumer, getConsumer, paginatedConsumers, searchConsumers, countConsumers } from '@dataconnect/generated';
 
-
-// Operation PaginatedBillings:  For variables, look at type PaginatedBillingsVars in ../index.d.ts
-const { data } = await PaginatedBillings(dataConnect, paginatedBillingsVars);
-
-// Operation CountBillingFromCsv: 
-const { data } = await CountBillingFromCsv(dataConnect);
-
-// Operation SearchBillingFromCsv:  For variables, look at type SearchBillingFromCsvVars in ../index.d.ts
-const { data } = await SearchBillingFromCsv(dataConnect, searchBillingFromCsvVars);
-
-// Operation CreateCollectionFromCsv:  For variables, look at type CreateCollectionFromCsvVars in ../index.d.ts
-const { data } = await CreateCollectionFromCsv(dataConnect, createCollectionFromCsvVars);
-
-// Operation DeleteCollectionFromCsv:  For variables, look at type DeleteCollectionFromCsvVars in ../index.d.ts
-const { data } = await DeleteCollectionFromCsv(dataConnect, deleteCollectionFromCsvVars);
-
-// Operation UpdateCollectionFromCsv:  For variables, look at type UpdateCollectionFromCsvVars in ../index.d.ts
-const { data } = await UpdateCollectionFromCsv(dataConnect, updateCollectionFromCsvVars);
 
 // Operation PaginatedCollections:  For variables, look at type PaginatedCollectionsVars in ../index.d.ts
 const { data } = await PaginatedCollections(dataConnect, paginatedCollectionsVars);
@@ -46,6 +28,24 @@ const { data } = await SearchCollectionFromCsv(dataConnect, searchCollectionFrom
 
 // Operation CreateConsumer:  For variables, look at type CreateConsumerVars in ../index.d.ts
 const { data } = await CreateConsumer(dataConnect, createConsumerVars);
+
+// Operation UpdateConsumer:  For variables, look at type UpdateConsumerVars in ../index.d.ts
+const { data } = await UpdateConsumer(dataConnect, updateConsumerVars);
+
+// Operation DeleteConsumer:  For variables, look at type DeleteConsumerVars in ../index.d.ts
+const { data } = await DeleteConsumer(dataConnect, deleteConsumerVars);
+
+// Operation GetConsumer:  For variables, look at type GetConsumerVars in ../index.d.ts
+const { data } = await GetConsumer(dataConnect, getConsumerVars);
+
+// Operation PaginatedConsumers:  For variables, look at type PaginatedConsumersVars in ../index.d.ts
+const { data } = await PaginatedConsumers(dataConnect, paginatedConsumersVars);
+
+// Operation SearchConsumers:  For variables, look at type SearchConsumersVars in ../index.d.ts
+const { data } = await SearchConsumers(dataConnect, searchConsumersVars);
+
+// Operation CountConsumers: 
+const { data } = await CountConsumers(dataConnect);
 
 
 ```

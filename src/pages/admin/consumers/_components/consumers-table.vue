@@ -4,6 +4,7 @@
 			<SearchInput class="mr-auto" />
 			<Button
 				v-if="selectedConsumers.length > 0"
+				@click="deleteSelectedConsumers"
 				type="button"
 				:label="`Delete (${selectedConsumers.length})`"
 				severity="danger"
@@ -105,32 +106,7 @@
 				headerStyle="width: 6rem"
 				bodyStyle="text-align: right">
 				<template #body="slotProps">
-					<div class="flex justify-end space-x-1">
-						<Button
-							icon="pi pi-eye"
-							size="small"
-							text
-							rounded
-							severity="secondary"
-							@click="viewConsumer(slotProps.data)"
-							v-tooltip.left="'View Details'" />
-						<Button
-							icon="pi pi-pencil"
-							size="small"
-							text
-							rounded
-							severity="info"
-							@click="editConsumer(slotProps.data)"
-							v-tooltip.left="'Edit'" />
-						<Button
-							icon="pi pi-trash"
-							size="small"
-							text
-							rounded
-							severity="danger"
-							@click="confirmDelete(slotProps.data)"
-							v-tooltip.left="'Delete'" />
-					</div>
+					<TableRowActions :rowData="slotProps.data" />
 				</template>
 			</Column>
 		</DataTable>
@@ -139,14 +115,13 @@
 
 <script setup lang="ts">
 	import { onMounted, ref } from 'vue';
-	import { useRouter } from 'vue-router';
-	import { useToast } from 'primevue/usetoast';
-	import { useConfirm } from 'primevue/useconfirm';
 	import { useConsumerStore } from '@/stores/consumer';
 	import { format } from 'date-fns';
 
 	import AddConsumerActions from './add-consumer-actions.vue';
 	import SearchInput from './search-input.vue';
+	import TableRowActions from './table-row-actions.vue';
+	import { useToast } from 'primevue';
 
 	// Props & Emits
 	defineProps<{
@@ -154,11 +129,9 @@
 	}>();
 	const emit = defineEmits(['selection-change']);
 
-	// Store
+	// import composables
 	const store = useConsumerStore();
-	const router = useRouter();
 	const toast = useToast();
-	const confirm = useConfirm();
 
 	// Pagination & Selection
 	const first = ref(0);
@@ -182,17 +155,20 @@
 		});
 	};
 
-	const onSelectionUpdate = () => {
-		emit('selection-change', selectedConsumers.value);
+	const deleteSelectedConsumers = async () => {
+		const result = await store.deleteSelectedConsumers(selectedConsumers.value);
+		if (result?.status === 'success') {
+			toast.add({
+				severity: 'success',
+				summary: 'Success',
+				detail: 'Billings deleted successfully',
+			});
+			selectedConsumers.value = [];
+		}
 	};
 
-	const getInitials = (name: string) => {
-		return name
-			.split(' ')
-			.map((n) => n[0])
-			.slice(0, 2)
-			.join('')
-			.toUpperCase();
+	const onSelectionUpdate = () => {
+		emit('selection-change', selectedConsumers.value);
 	};
 
 	const getClassSeverity = (classType: string) => {
@@ -208,35 +184,6 @@
 
 	const formatDateTime = (iso: string) => {
 		return iso ? format(new Date(iso), 'dd MMM yyyy HH:mm') : '—';
-	};
-
-	// Actions
-	const viewConsumer = (consumer: any) => {
-		router.push({ name: 'consumer-detail', params: { id: consumer.id } });
-	};
-
-	const editConsumer = (consumer: any) => {
-		// Emit or open modal
-		// emit('edit', consumer);
-	};
-
-	const confirmDelete = (consumer: any) => {
-		confirm.require({
-			message: `Delete consumer "${consumer.fullName}" (${consumer.accountNo})?`,
-			header: 'Confirm Delete',
-			icon: 'pi pi-exclamation-triangle',
-			accept: async () => {
-				const success = await store.deleteOneConsumer(consumer.id);
-				if (success) {
-					toast.add({
-						severity: 'success',
-						summary: 'Deleted',
-						detail: 'Consumer removed successfully',
-						life: 3000,
-					});
-				}
-			},
-		});
 	};
 
 	const fetchConsumersData = () => {

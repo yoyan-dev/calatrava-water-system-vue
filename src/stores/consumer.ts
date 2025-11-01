@@ -61,20 +61,29 @@ export const useConsumerStore = defineStore('consumer', () => {
 		}
 	}
 
-	async function addConsumer(payload: CreateConsumerVariables) {
+	async function addConsumer(
+		payload: CreateConsumerVariables,
+	): Promise<StoreResponse> {
 		try {
-			console.log(payload);
 			const response = await consumerGraph.addConsumer(payload);
 
-			return {
-				status: 'success',
-				message: 'Consumer added successfully',
-			};
+			if (response?.status == 'success' && response?.data) {
+				consumers.value.unshift({ ...payload, ...response.data });
+
+				return {
+					status: 'success',
+					message: 'Consumer added successfully',
+				};
+			} else {
+				return {
+					status: 'error',
+					message: response?.message,
+				};
+			}
 		} catch (error) {
-			console.error('Error adding consumer:', error);
 			return {
 				status: 'error',
-				message: 'Failed to add consumer',
+				message: `Error adding consumer: ${error}`,
 			};
 		}
 	}
@@ -85,7 +94,7 @@ export const useConsumerStore = defineStore('consumer', () => {
 			const formData = new FormData();
 			formData.append('file', payload);
 			const response = await consumerGraph.addConsumerFromCsv(formData);
-			if (response?.statusCode == 200) {
+			if (response?.status == 'success' && response.data?.length) {
 				isLoading.value = false;
 				consumers.value = [...consumers.value, ...response.data];
 
@@ -95,11 +104,12 @@ export const useConsumerStore = defineStore('consumer', () => {
 					status: 'success',
 					message: response.message,
 				};
+			} else {
+				return {
+					status: 'error',
+					message: response.message,
+				};
 			}
-			return {
-				status: 'error',
-				message: response?.message,
-			};
 		} catch (error) {
 			console.error('Error uploading CSV:', error);
 			return {

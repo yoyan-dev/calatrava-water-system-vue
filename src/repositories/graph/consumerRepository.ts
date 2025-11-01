@@ -1,3 +1,5 @@
+import type { RepositoryResponse } from '@/types/repository-response.d';
+import { formatDataConnectError } from '@/composables/dataConnectError';
 import {
 	countConsumers,
 	createConsumer,
@@ -8,7 +10,6 @@ import {
 	type CreateConsumerVariables,
 	type UpdateConsumerVariables,
 } from '@/dataconnect-generated';
-import type { ConsumerItem } from '@/types/consumer';
 import Papa from 'papaparse';
 
 class ConsumerRepository {
@@ -41,7 +42,7 @@ class ConsumerRepository {
 			const response = await deleteConsumer({ id });
 			if (response?.data?.consumer_delete?.id) return { success: true };
 		} catch (error) {
-			console.error('Error deleting consumer:', error);
+			return { status: 'error', message: error };
 		}
 	}
 
@@ -50,18 +51,31 @@ class ConsumerRepository {
 			const response = await updateConsumer(payload);
 			if (response?.data?.consumer_update?.id) return { success: true };
 		} catch (error) {
-			console.error('Error updating consumer:', error);
+			return { status: 'error', message: error };
 		}
 	}
 
-	async addConsumer(payload: CreateConsumerVariables) {
+	async addConsumer(
+		payload: CreateConsumerVariables,
+	): Promise<RepositoryResponse> {
 		try {
-			console.log('ayay repo');
-
 			const response = await createConsumer(payload);
-			if (response?.data?.consumer_insert?.id) return { success: true };
-		} catch (error) {
-			console.error('Error creating consumer:', error);
+			if (response?.data?.consumer_insert?.id) {
+				const createdAt = new Date().toISOString();
+				const id = response.data.consumer_insert.id;
+				return {
+					status: 'success',
+					message: 'Consumer added successfully',
+					data: { id, createdAt },
+				};
+			} else {
+				return {
+					status: 'error',
+					message: 'Error Data-connect SQL query.',
+				};
+			}
+		} catch (error: any) {
+			return formatDataConnectError(error.response.errors);
 		}
 	}
 
@@ -129,26 +143,30 @@ class ConsumerRepository {
 					continue;
 				}
 
-				const res = await createConsumer(data);
-				const id = res.data.consumer_insert.id;
-				const createdAt = new Date().toISOString();
+				try {
+					const res = await createConsumer(data);
 
-				consumerData.push({ id, createdAt, ...data });
+					if (res.data.consumer_insert) {
+						const id = res.data.consumer_insert.id;
+						const createdAt = new Date().toISOString();
+						consumerData.push({ id, createdAt, ...data });
+					} else {
+						return { status: 'error', message: res.data };
+					}
+				} catch (error) {
+					return { status: 'error', message: error };
+				}
 			}
 
 			return {
+				status: 'success',
 				success: true,
 				message: `${consumerData.length} consumer records created successfully`,
 				statusCode: 200,
 				data: consumerData,
 			};
 		} catch (error) {
-			console.error('Error processing CSV:', error);
-			throw new Error(
-				`Failed to process CSV: ${
-					error instanceof Error ? error.message : String(error)
-				}`,
-			);
+			return { status: 'error', message: error };
 		}
 	}
 

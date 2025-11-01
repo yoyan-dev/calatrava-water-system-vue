@@ -1,13 +1,9 @@
 <template>
 	<div class="p-4">
-		<h3 class="text-xl font-bold mb-4 text-surface-900 dark:text-surface-0">
-			{{ consumer ? 'Update Consumer' : 'Create New Consumer' }}
-		</h3>
-
 		<Form
 			@submit="onSubmit"
 			:validation-schema="schema"
-			:initial-values="initialValues"
+			:initial-values="form"
 			v-slot="{ errors, isSubmitting }">
 			<div class="space-y-5">
 				<!-- Account No -->
@@ -116,6 +112,12 @@
 				</div>
 			</div>
 
+			<div
+				v-if="errorMessage"
+				class="my-4">
+				<Message severity="error">{{ errorMessage }}</Message>
+			</div>
+
 			<!-- Action Buttons -->
 			<div class="flex justify-end gap-3 mt-6">
 				<Button
@@ -137,7 +139,7 @@
 </template>
 
 <script setup lang="ts">
-	import { ref, computed, watch, inject } from 'vue';
+	import { ref, computed, inject, onMounted, reactive } from 'vue';
 	import { Form, Field } from 'vee-validate';
 	import * as yup from 'yup';
 	import { useToast } from 'primevue/usetoast';
@@ -147,34 +149,19 @@
 	const store = useConsumerStore();
 	const toast = useToast();
 	const dialogRef: any = inject('dialogRef');
+	const errorMessage = ref(null);
 
 	const consumer = computed<ConsumerItem | null>(
-		() => dialogRef.value?.data?.collection || null,
+		() => dialogRef.value?.data?.consumer || null,
 	);
 
 	// Local form state
-	const form = ref({
+	const form = reactive({
 		accountNo: '',
 		fullName: '',
 		book: '',
 		classType: '',
 	});
-
-	// Sync form with initialValues
-	const initialValues = computed(() => ({
-		accountNo: consumer.value?.accountNo || '',
-		fullName: consumer.value?.fullName || '',
-		book: consumer.value?.book || '',
-		classType: consumer.value?.classType || '',
-	}));
-
-	watch(
-		initialValues,
-		(newVal) => {
-			form.value = { ...newVal };
-		},
-		{ immediate: true },
-	);
 
 	// Class Type Options
 	const classTypes = [
@@ -209,13 +196,10 @@
 	// Submit Handler
 	const onSubmit = async (values: any) => {
 		try {
-			console.log(values);
-
 			let result;
 			if (consumer.value) {
 				// Remove any server-generated fields that might have slipped in
-				const { id, createdAt, updatedAt, ...updates } = values;
-				result = await store.updateConsumer(id, updates);
+				result = await store.updateConsumer(consumer.value.id, values);
 			} else {
 				result = await store.addConsumer(values);
 			}
@@ -231,16 +215,17 @@
 				});
 				closeModal();
 			} else {
-				throw new Error(result?.message || 'Operation failed');
+				throw new Error(result?.message);
 			}
 		} catch (error: any) {
-			console.error('Save failed:', error);
 			toast.add({
 				severity: 'error',
 				summary: 'Error',
-				detail: error.message || 'Failed to save consumer',
+				detail: error.message || 'Failed to save consumer details',
 				life: 5000,
 			});
+
+			errorMessage.value = error.message || 'Failed to save consumer details';
 		}
 	};
 
@@ -248,4 +233,12 @@
 	const closeModal = () => {
 		dialogRef.value?.close();
 	};
+
+	onMounted(() => {
+		if (consumer.value) {
+			// Pick only the fields that exist on the form
+			const { accountNo, fullName, book, classType } = consumer.value;
+			Object.assign(form, { accountNo, fullName, book, classType });
+		}
+	});
 </script>

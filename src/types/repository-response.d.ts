@@ -1,9 +1,7 @@
-export interface StoreResponse<T = any> {
+export interface RepositoryResponse<T = any> {
 	status?: severity;
-	statusMessage?: string;
 	message: string;
 	data?: T;
-	success?: boolean;
 }
 
 type severity =

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { RouterView } from "vue-router";
-import DynamicDialog from "primevue/dynamicdialog";
+	import { RouterView } from 'vue-router';
 </script>
 
 <template>
-  <RouterView />
-  <DynamicDialog />
+	<RouterView />
+	<DynamicDialog />
+	<ConfirmDialog />
 </template>
