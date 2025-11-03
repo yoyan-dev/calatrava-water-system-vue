@@ -61,7 +61,7 @@ query CountBillingFromCsv @auth(expr: "auth.token.role == 'admin'") {
 
 query SearchBillingFromCsv($query: String, $limit: Int = 10)
 @auth(expr: "auth.token.role == 'admin'") {
-	billingFromCsvs_search(query: $query, limit: $limit) {
+	billingFromCsvs_search(query: $query, limit: $limit, queryFormat: PLAIN) {
 		accountNo
 		amortAmnt
 		arrearsAmnt
