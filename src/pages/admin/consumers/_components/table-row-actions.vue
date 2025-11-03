@@ -56,8 +56,6 @@
 
 	const confirmDelete = () => {
 		const { rowData } = props;
-		console.log('heeey');
-
 		confirm.require({
 			message: `Delete consumer "${rowData.fullName}" with Account No. ${rowData.accountNo}?`,
 			header: 'Confirm Delete',

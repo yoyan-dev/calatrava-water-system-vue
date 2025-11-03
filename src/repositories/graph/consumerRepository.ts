@@ -151,7 +151,7 @@ class ConsumerRepository {
 						const createdAt = new Date().toISOString();
 						consumerData.push({ id, createdAt, ...data });
 					} else {
-						return { status: 'error', message: res.data };
+						return { status: 'error', message: res.data || 'Unknown error' };
 					}
 				} catch (error) {
 					return { status: 'error', message: error };

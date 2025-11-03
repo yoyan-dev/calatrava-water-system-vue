@@ -107,7 +107,7 @@ export const useConsumerStore = defineStore('consumer', () => {
 			} else {
 				return {
 					status: 'error',
-					message: response.message,
+					message: 'Failed to upload CSV',
 				};
 			}
 		} catch (error) {

@@ -18,23 +18,23 @@
 	</div>
 </template>
 <script setup lang="ts">
-	import { useCollectionStore } from '@/stores/collection';
+	import { useConsumerStore } from '@/stores/consumer';
 	import { debounceFilter, watchWithFilter } from '@vueuse/core';
 
-	const store = useCollectionStore();
+	const store = useConsumerStore();
 
 	watchWithFilter(
 		() => store.searchQuery,
 		() => {
 			if (!store.searchQuery) {
-				store.fetchPaginateCollections({
+				store.fetchPaginateConsumers({
 					limit: 10,
 					offset: 0,
 				});
 				return;
 			}
 
-			store.fetchSearchCollections(store.searchQuery);
+			store.fetchSearchConsumers(store.searchQuery);
 		},
 		{
 			eventFilter: debounceFilter(500, { maxWait: 1000 }),

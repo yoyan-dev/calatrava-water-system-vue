@@ -31,6 +31,13 @@
 			</p>
 			<template #footer>
 				<Button
+					@click="downloadCsvTemplate"
+					class="mr-auto"
+					label="Download CSV Template"
+					severity="secondary"
+					variant="outlined"
+					size="small" />
+				<Button
 					label="Cancel"
 					severity="danger"
 					variant="outlined"
@@ -85,6 +92,36 @@
 
 	function onFileSelect(event: any) {
 		selectedFile.value = event.files?.[0] || null;
+	}
+
+	function downloadCsvTemplate() {
+		const csvTemplateData = [
+			// Row 1: Headers
+			['accountNo', 'fullName', 'book', 'classType'],
+			// Row 2: Example (optional – remove if you want empty template)
+			['99999999', 'John Doe', 'Calampisawan', 'RESIDENTIAL'],
+			// Row 3: Another example (optional)
+			['', '', '', ''], // Empty row for user to fill
+		];
+
+		const csvContent = csvTemplateData
+			.map((row) => row.map((field) => `"${field}"`).join(',')) // Quote fields to handle commas
+			.join('\n');
+
+		// Create Blob for download
+		const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+		const url = URL.createObjectURL(blob);
+
+		// Create temporary link and trigger download
+		const link = document.createElement('a');
+		link.href = url;
+		link.download = 'consumers-template.csv';
+		document.body.appendChild(link);
+		link.click();
+
+		// Cleanup
+		document.body.removeChild(link);
+		URL.revokeObjectURL(url);
 	}
 
 	const openConsumerDialog = (consumer?: any) => {
