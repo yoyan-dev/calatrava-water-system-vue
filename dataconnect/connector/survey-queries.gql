@@ -1,0 +1,10 @@
+query GetSurveys @auth(expr: "auth.token.role == 'admin'") {
+	surveys {
+		id
+		title
+		description
+		status
+		responsesCount
+		createdAt
+	}
+}

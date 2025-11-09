@@ -7,6 +7,7 @@ import {
 	DynamicDialog,
 	ToastService,
 	DataTable,
+	Card,
 	Column,
 	ColumnGroup,
 	Row,
@@ -80,6 +81,7 @@ export default {
 
 		// Primevue Components
 		app.component('Button', Button);
+		app.component('Card', Card);
 		app.component('Dialog', Dialog);
 		app.component('Toolbar', Toolbar);
 		app.component('Splitter', Splitter);

@@ -1,6 +1,17 @@
-mutation CreateSurvey($title: String!, $description: String)
-@auth(expr: "auth.token.role == 'admin'") {
-	survey_insert(data: { title: $title, description: $description })
+mutation CreateSurvey(
+	$title: String!
+	$description: String
+	$status: SurveyStatus!
+	$responsesCount: Int!
+) @auth(expr: "auth.token.role == 'admin'") {
+	survey_insert(
+		data: {
+			title: $title
+			description: $description
+			status: $status
+			responsesCount: $responsesCount
+		}
+	)
 }
 
 mutation UpdateSurvey($id: UUID!, $title: String!, $description: String!)

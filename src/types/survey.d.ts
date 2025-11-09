@@ -1,3 +1,7 @@
+import { GetSurveysData } from '@/dataconnect-generated';
+
+export type SurveyItem = GetSurveysData['surveys'][number];
+
 export type QuestionType =
 	| 'TEXT'
 	| 'RADIO'
@@ -20,7 +24,6 @@ export interface Survey {
 	title: string;
 	description?: string;
 	status: 'DRAFT' | 'PUBLISHED' | 'CLOSED';
-	questions: Question[];
 	responsesCount: number;
 	createdAt?: Date;
 	publishedAt?: Date;

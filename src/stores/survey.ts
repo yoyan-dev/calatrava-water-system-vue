@@ -2,7 +2,7 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import type { StoreResponse } from '@/types/store-response';
 import { surveyRepository as surveyGraph } from '@/repositories/graph/surveyRepository';
-import type { Survey, Question } from '@/types/survey';
+import type { Survey, Question, SurveyItem } from '@/types/survey';
 import type {
 	CreateQuestionVariables,
 	CreateSurveyVariables,
@@ -12,17 +12,28 @@ import type {
 
 export const useSurveyStore = defineStore('Survey', () => {
 	// State
-	const surveys = ref<Survey[]>([]);
+	const surveys = ref<SurveyItem[]>([]);
 	const questions = ref<Question[]>([]);
 	const isLoading = ref(false);
 
 	// Actions
 
-	async function addSurvey(
-		payload: CreateSurveyVariables,
-	): Promise<StoreResponse> {
+	async function fetchSurveys() {
 		try {
-			const response = await surveyGraph.addSurvey(payload);
+			const response = await surveyGraph.fetchSurveys();
+			if (response?.status == 'success') {
+				surveys.value = response.data || [];
+			}
+		} catch (error) {
+			console.error('Error fetching Surveys:', error);
+		}
+	}
+
+	async function addSurvey(payload: Survey): Promise<StoreResponse> {
+		try {
+			const response = await surveyGraph.addSurvey(
+				payload as CreateSurveyVariables,
+			);
 
 			if (response?.status == 'success' && response?.data) {
 				surveys.value.unshift({ ...payload, ...response.data });
@@ -34,7 +45,7 @@ export const useSurveyStore = defineStore('Survey', () => {
 			} else {
 				return {
 					status: 'error',
-					message: response?.message,
+					message: response?.message || 'Error adding Survey',
 				};
 			}
 		} catch (error) {
@@ -149,17 +160,16 @@ export const useSurveyStore = defineStore('Survey', () => {
 		}
 	}
 
-	async function updateSurvey(id: string, payload: UpdateSurveyVariables) {
+	async function updateSurvey(id: string, payload: Partial<SurveyItem>) {
 		isLoading.value = true;
 		try {
-			const response = await surveyGraph.updateSurvey(payload);
+			const response = await surveyGraph.updateSurvey({ id, ...payload });
 			if (response?.success) {
-				const timestamp = new Date().toISOString();
 				const index = surveys.value.findIndex((item) => item.id === id);
 				if (index !== -1) {
 					surveys.value[index] = {
 						...surveys.value[index],
-						...payload,
+						...(payload as SurveyItem),
 					};
 				}
 				return {
@@ -334,6 +344,13 @@ export const useSurveyStore = defineStore('Survey', () => {
 	return {
 		surveys,
 		isLoading,
+
+		addQuestion,
+		updateQuestion,
+		deleteOneQuestion,
+		deleteSelectedQuestions,
+
+		fetchSurveys,
 		addSurvey,
 		updateSurvey,
 		deleteOneSurvey,

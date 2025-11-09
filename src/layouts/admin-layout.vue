@@ -49,6 +49,12 @@
 			route: '/admin/ledger',
 		},
 		{
+			label: 'Survey Manager',
+			name: 'admin-survey',
+			icon: 'pi pi-list-check',
+			route: '/admin/surveys',
+		},
+		{
 			label: 'Concerns',
 			name: 'admin-concerns',
 			icon: 'pi pi-inbox',
