@@ -1,0 +1,31 @@
+enum SurveyStatus {
+	DRAFT
+	PUBLISHED
+	CLOSED
+}
+enum QuestionType {
+	TEXT
+	RADIO
+	CHECKBOX
+	RATING
+	NPS
+	YESNO
+}
+
+type Survey @table {
+	title: String!
+	description: String
+	status: SurveyStatus! @default(value: "DRAFT") # DRAFT, PUBLISHED, CLOSED
+	createdAt: Timestamp! @default(expr: "request.time")
+	publishedAt: Timestamp
+	responsesCount: Int! @default(value: 0)
+}
+
+type Question @table {
+	survey: Survey!
+	type: QuestionType!
+	label: String!
+	options: [String!]
+	required: Boolean! @default(value: false)
+	order: Int!
+}

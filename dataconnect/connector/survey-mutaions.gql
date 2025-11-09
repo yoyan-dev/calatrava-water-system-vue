@@ -1,0 +1,57 @@
+mutation CreateSurvey($title: String!, $description: String)
+@auth(expr: "auth.token.role == 'admin'") {
+	survey_insert(data: { title: $title, description: $description })
+}
+
+mutation UpdateSurvey($id: UUID!, $title: String!, $description: String!)
+@auth(expr: "auth.token.role == 'admin'") {
+	survey_update(id: $id, data: { title: $title, description: $description })
+}
+
+mutation DeleteSurvey($id: UUID!) @auth(expr: "auth.token.role == 'admin'") {
+	survey_delete(id: $id)
+}
+
+mutation CreateQuestion(
+	$surveyId: UUID!
+	$type: QuestionType!
+	$label: String!
+	$options: [String!]
+	$required: Boolean!
+	$order: Int!
+) @auth(expr: "auth.token.role == 'admin'") {
+	question_insert(
+		data: {
+			surveyId: $surveyId
+			type: $type
+			label: $label
+			options: $options
+			required: $required
+			order: $order
+		}
+	)
+}
+
+mutation UpdateQuestion(
+	$id: UUID!
+	$type: QuestionType!
+	$label: String!
+	$options: [String!]
+	$required: Boolean!
+	$order: Int!
+) @auth(expr: "auth.token.role == 'admin'") {
+	question_update(
+		id: $id
+		data: {
+			type: $type
+			label: $label
+			options: $options
+			required: $required
+			order: $order
+		}
+	)
+}
+
+mutation DeleteQuestion($id: UUID!) @auth(expr: "auth.token.role == 'admin'") {
+	question_delete(id: $id)
+}

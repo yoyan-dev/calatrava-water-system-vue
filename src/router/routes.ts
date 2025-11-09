@@ -92,6 +92,11 @@ const routes = [
 				component: () => import('@/pages/admin/ledger/index.vue'),
 			},
 			{
+				path: 'surveys',
+				name: 'admin-surveys',
+				component: () => import('@/pages/admin/survey/index.vue'),
+			},
+			{
 				path: 'collection',
 				name: 'admin-collection',
 				component: () => import('@/pages/admin/collection/index.vue'),
