@@ -97,6 +97,11 @@ const routes = [
 				component: () => import('@/pages/admin/survey/index.vue'),
 			},
 			{
+				path: 'surveys/:id',
+				name: 'admin-view-survey',
+				component: () => import('@/pages/admin/survey/view-survey.vue'),
+			},
+			{
 				path: 'collection',
 				name: 'admin-collection',
 				component: () => import('@/pages/admin/collection/index.vue'),

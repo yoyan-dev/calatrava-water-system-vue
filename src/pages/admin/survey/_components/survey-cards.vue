@@ -3,7 +3,7 @@
 		<Card
 			v-for="survey in surveys"
 			:key="survey.id"
-			class="shadow-lg hover:shadow-xl transition-shadow cursor-pointer bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+			class="shadow-lg hover:shadow-xl transition-shadow bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
 			<template #header>
 				<div class="relative">
 					<!-- Optional: add subtle gradient overlay for dark mode -->
@@ -56,6 +56,15 @@
 			<template #footer>
 				<div
 					class="flex justify-between items-center pt-3 border-t border-gray-200 dark:border-gray-700">
+					<Button
+						type="button"
+						icon="pi pi-eye"
+						label="View"
+						severity="primary"
+						text
+						size="small"
+						class="text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+						@click="$router.push(`/admin/surveys/${survey.id}`)" />
 					<Button
 						type="button"
 						icon="pi pi-pencil"

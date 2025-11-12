@@ -5,16 +5,28 @@ import {
 	createSurvey,
 	deleteQuestion,
 	deleteSurvey,
+	getSurveyById,
 	getSurveys,
 	updateQuestion,
 	updateSurvey,
 	type CreateQuestionVariables,
 	type CreateSurveyVariables,
 	type UpdateQuestionVariables,
-	type UpdateSurveyVariables,
 } from '@/dataconnect-generated';
 
 class SurveyRepository {
+	async fetchSurvey(id: string) {
+		try {
+			const response = await getSurveyById({ id });
+			if (response?.data?.survey) {
+				return {
+					status: 'success',
+					data: response.data.survey,
+				};
+			}
+		} catch (error) {}
+	}
+
 	async fetchSurveys() {
 		try {
 			const response = await getSurveys();

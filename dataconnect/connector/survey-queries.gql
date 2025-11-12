@@ -8,3 +8,14 @@ query GetSurveys @auth(expr: "auth.token.role == 'admin'") {
 		createdAt
 	}
 }
+
+query GetSurveyById($id: UUID!) @auth(level: USER) {
+	survey(id: $id) {
+		id
+		title
+		description
+		status
+		responsesCount
+		createdAt
+	}
+}

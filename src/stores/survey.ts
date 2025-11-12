@@ -7,16 +7,28 @@ import type {
 	CreateQuestionVariables,
 	CreateSurveyVariables,
 	UpdateQuestionVariables,
-	UpdateSurveyVariables,
 } from '@/dataconnect-generated';
 
 export const useSurveyStore = defineStore('Survey', () => {
 	// State
 	const surveys = ref<SurveyItem[]>([]);
+	const survey = ref<Survey | null>(null);
 	const questions = ref<Question[]>([]);
 	const isLoading = ref(false);
+	const error = ref<string | null>(null);
 
 	// Actions
+
+	async function fetchSurvey(id: string) {
+		try {
+			const response = await surveyGraph.fetchSurvey(id);
+			if (response?.status == 'success') {
+				return response.data;
+			}
+		} catch (error) {
+			console.error('Error fetching Survey:', error);
+		}
+	}
 
 	async function fetchSurveys() {
 		try {
@@ -342,14 +354,17 @@ export const useSurveyStore = defineStore('Survey', () => {
 	}
 
 	return {
+		survey,
 		surveys,
 		isLoading,
+		error,
 
 		addQuestion,
 		updateQuestion,
 		deleteOneQuestion,
 		deleteSelectedQuestions,
 
+		fetchSurvey,
 		fetchSurveys,
 		addSurvey,
 		updateSurvey,
