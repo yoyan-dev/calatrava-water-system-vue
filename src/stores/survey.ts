@@ -9,10 +9,10 @@ import type {
 	UpdateQuestionVariables,
 } from '@/dataconnect-generated';
 
-export const useSurveyStore = defineStore('Survey', () => {
+export const useSurveyStore = defineStore('survey', () => {
 	// State
 	const surveys = ref<SurveyItem[]>([]);
-	const survey = ref<Survey | null>(null);
+	const survey = ref<SurveyItem | null>(null);
 	const questions = ref<Question[]>([]);
 	const isLoading = ref(false);
 	const error = ref<string | null>(null);
@@ -21,12 +21,15 @@ export const useSurveyStore = defineStore('Survey', () => {
 
 	async function fetchSurvey(id: string) {
 		try {
+			isLoading.value = true;
 			const response = await surveyGraph.fetchSurvey(id);
 			if (response?.status == 'success') {
-				return response.data;
+				survey.value = response.data;
 			}
 		} catch (error) {
 			console.error('Error fetching Survey:', error);
+		} finally {
+			isLoading.value = false;
 		}
 	}
 

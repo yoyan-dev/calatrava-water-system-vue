@@ -38,3 +38,7 @@
     transition: color 0.2s, background-color 0.2s, border-color 0.2s;
   }
 }
+
+.p-error {
+  @apply text-red-600 text-xs mt-1;
+}

@@ -4,7 +4,7 @@
 			@submit="onSubmit"
 			:validation-schema="schema"
 			:initial-values="form"
-			v-slot="{ errors, isSubmitting }">
+			v-slot="{ errors }">
 			<div class="space-y-6">
 				<!-- Question Type -->
 				<div>
@@ -14,19 +14,20 @@
 					</label>
 					<Field
 						name="type"
-						v-slot="{ field }">
-						<Dropdown
-							v-bind="field"
+						v-model="form.type"
+						v-slot="{ field, errorMessage }">
+						<Select
+							v-model="field.value"
 							:options="questionTypes"
 							option-label="label"
 							option-value="value"
-							:invalid="!!errors.type"
+							:class="{ 'p-invalid': errorMessage }"
 							class="w-full"
 							placeholder="Select type" />
 						<small
-							v-if="errors.type"
+							v-if="errorMessage"
 							class="p-error"
-							>{{ errors.type }}</small
+							>{{ errorMessage }}</small
 						>
 					</Field>
 				</div>
@@ -39,16 +40,17 @@
 					</label>
 					<Field
 						name="label"
-						v-slot="{ field, errorMessage }">
+						v-model="form.label"
+						v-slot="{ errorMessage }">
 						<Textarea
-							v-bind="field"
+							v-model="form.label"
 							rows="2"
-							:invalid="!!errorMessage"
+							:class="{ 'p-invalid': errorMessage }"
 							class="w-full"
 							placeholder="e.g., How satisfied are you with our water pressure?" />
 						<small
 							v-if="errorMessage"
-							class="text-red-600 text-xs mt-1"
+							class="p-error"
 							>{{ errorMessage }}</small
 						>
 					</Field>
@@ -85,22 +87,22 @@
 					</div>
 				</div>
 
-				<!-- Rating Scale (for RATING) -->
+				<!-- Rating Scale Preview -->
 				<div v-if="form.type === 'RATING'">
 					<label
 						class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
 						Scale
 					</label>
-					<div class="flex items-center gap-4">
-						<span class="text-sm">1</span>
+					<div class="flex items-center gap-4 text-sm">
+						<span>1</span>
 						<i class="pi pi-star text-yellow-500"></i>
-						<span class="text-sm font-medium">to</span>
+						<span class="font-medium">to</span>
 						<i class="pi pi-star text-yellow-500"></i>
-						<span class="text-sm">5</span>
+						<span>5</span>
 					</div>
 				</div>
 
-				<!-- NPS Scale -->
+				<!-- NPS Scale Preview -->
 				<div v-if="form.type === 'NPS'">
 					<label
 						class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -125,9 +127,9 @@
 				<div class="flex items-center gap-3">
 					<Field
 						name="required"
-						v-slot="{ field }">
+						v-model="form.required">
 						<Checkbox
-							v-bind="field"
+							v-model="form.required"
 							:binary="true"
 							input-id="required" />
 					</Field>
@@ -138,7 +140,7 @@
 					</label>
 				</div>
 
-				<!-- Error from Store -->
+				<!-- Store Error -->
 				<Message
 					v-if="store.error"
 					severity="error"
@@ -167,25 +169,22 @@
 </template>
 
 <script setup lang="ts">
-	import { ref, computed, inject, onMounted, reactive } from 'vue';
+	import { computed, inject, onMounted, reactive } from 'vue';
 	import { Form, Field } from 'vee-validate';
 	import { useSurveyStore } from '@/stores/survey';
 	import * as yup from 'yup';
-	import Dropdown from 'primevue/dropdown';
-	import Textarea from 'primevue/textarea';
-	import InputText from 'primevue/inputtext';
-	import Button from 'primevue/button';
-	import Checkbox from 'primevue/checkbox';
-	import Tag from 'primevue/tag';
-	import Message from 'primevue/message';
 
 	const store = useSurveyStore();
 	const dialogRef: any = inject('dialogRef');
 
-	const props = defineProps<{
-		question?: any;
-		surveyId: string;
-	}>();
+	// Extract props from dialog data
+	const props = computed(() => {
+		const data = (dialogRef.value as any)?.data || {};
+		return {
+			surveyId: data.surveyId,
+			question: data.question,
+		};
+	}).value;
 
 	const isEdit = computed(() => !!props.question?.id);
 
@@ -199,34 +198,33 @@
 	];
 
 	const form = reactive({
-		type: 'TEXT',
+		type: 'TEXT' as string,
 		label: '',
 		options: [''] as string[],
 		required: false,
 	});
 
-	const showOptions = computed(() => {
-		return ['RADIO', 'CHECKBOX'].includes(form.type);
-	});
+	const showOptions = computed(() => ['RADIO', 'CHECKBOX'].includes(form.type));
 
 	const schema = yup.object({
-		type: yup.string().required(),
-		label: yup.string().required('Question is required').max(500),
+		type: yup.string().required('Question type is required'),
+		label: yup.string().required('Question is required').max(500, 'Too long'),
 		options: yup.array().when('type', {
 			is: (val: string) => ['RADIO', 'CHECKBOX'].includes(val),
 			then: (schema) =>
 				schema
-					.of(yup.string().required('Option required'))
-					.min(2, 'At least 2 options'),
-			otherwise: (schema) => schema.notRequired(),
+					.of(yup.string().required('Option cannot be empty'))
+					.min(2, 'At least 2 options required'),
+			otherwise: () => yup.array().notRequired(),
 		}),
 	});
 
+	// Sync form on edit
 	onMounted(() => {
 		if (isEdit.value && props.question) {
 			form.type = props.question.type;
-			form.label = props.question.label;
-			form.required = props.question.required || false;
+			form.label = props.question.label || '';
+			form.required = !!props.question.required;
 			form.options = props.question.options
 				? [...props.question.options]
 				: [''];
@@ -241,17 +239,15 @@
 		form.options.splice(index, 1);
 	}
 
-	async function onSubmit(values: any) {
+	async function onSubmit() {
 		store.error = null;
 
 		const questionData = {
 			id: isEdit.value ? props.question.id : undefined,
-			type: values.type,
-			label: values.label,
-			options: showOptions.value
-				? values.options.filter((o: string) => o.trim())
-				: null,
-			required: values.required,
+			type: form.type,
+			label: form.label,
+			options: showOptions.value ? form.options.filter((o) => o.trim()) : null,
+			required: form.required,
 			order: isEdit.value
 				? props.question.order
 				: (store.survey?.questions?.length || 0) + 1,

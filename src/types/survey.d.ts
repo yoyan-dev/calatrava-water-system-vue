@@ -24,7 +24,7 @@ export interface Survey {
 	title: string;
 	description?: string;
 	status: 'DRAFT' | 'PUBLISHED' | 'CLOSED';
-	questions: Question[];
+	questions?: Question[];
 	responsesCount: number;
 	createdAt?: Date;
 	publishedAt?: Date;

@@ -8,6 +8,7 @@ import {
 	ToastService,
 	DataTable,
 	Card,
+	Checkbox,
 	Column,
 	ColumnGroup,
 	Row,
@@ -87,6 +88,7 @@ export default {
 		app.component('Splitter', Splitter);
 		app.component('SplitterPanel', SplitterPanel);
 		app.component('DataTable', DataTable);
+		app.component('Checkbox', Checkbox);
 		app.component('Chip', Chip);
 		app.component('Column', Column);
 		app.component('ColumnGroup', ColumnGroup);
