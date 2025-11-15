@@ -12,8 +12,7 @@ import type {
 export const useSurveyStore = defineStore('survey', () => {
 	// State
 	const surveys = ref<SurveyItem[]>([]);
-	const survey = ref<SurveyItem | null>(null);
-	const questions = ref<Question[]>([]);
+	const survey = ref<Survey | null>(null);
 	const isLoading = ref(false);
 	const error = ref<string | null>(null);
 
@@ -205,8 +204,8 @@ export const useSurveyStore = defineStore('survey', () => {
 		try {
 			const response = await surveyGraph.addQuestion(payload);
 
-			if (response?.status == 'success' && response?.data) {
-				questions.value.unshift({ ...payload, ...response.data });
+			if (response?.status == 'success' && response?.data && survey.value) {
+				survey.value?.questions.unshift({ ...payload, ...response.data });
 
 				return {
 					status: 'success',
@@ -226,131 +225,101 @@ export const useSurveyStore = defineStore('survey', () => {
 		}
 	}
 
-	async function deleteOneQuestion(id: string) {
+	async function deleteOneQuestion(id: string): Promise<{
+		status: 'success' | 'error';
+		message: string;
+	}> {
 		try {
 			const response = await surveyGraph.deleteQuestion(id);
-			if (response?.success) {
-				questions.value = questions.value.filter((item) => item.id !== id);
+
+			if (response?.success && survey.value) {
+				// Safely filter out the question by id
+				survey.value.questions = survey.value.questions.filter(
+					(item) => item.id !== id,
+				);
+
 				return {
 					status: 'success',
 					message: 'Question deleted successfully',
 				};
+			} else {
+				// Handle case where API call succeeded but response indicates failure
+				return {
+					status: 'error',
+					message: 'Failed to delete question',
+				};
 			}
 		} catch (error) {
 			console.error('Error deleting Question:', error);
-		}
-	}
 
-	async function deleteSelectedQuestions(selected: Array<Question>): Promise<{
-		status: 'success' | 'error' | 'partial';
-		message: string;
-		deleted: number;
-		failed: number;
-	}> {
-		if (!selected || selected.length === 0) {
-			return {
-				status: 'success',
-				message: 'No Questions selected to delete',
-				deleted: 0,
-				failed: 0,
-			};
-		}
+			// Optionally extract error message if available
+			const errorMessage =
+				error instanceof Error ? error.message : 'An unexpected error occurred';
 
-		isLoading.value = true;
-		const results = [];
-
-		try {
-			// Map each deletion to a promise
-			const deletionPromises = selected.map(async (item) => {
-				try {
-					if (!item.id) {
-						return {
-							success: false,
-							message: 'Invalid Question ID',
-							id: item.id,
-						};
-					}
-					const response = await surveyGraph.deleteQuestion(item.id);
-					return { ...response, id: item.id };
-				} catch (err) {
-					console.error(`Failed to delete Question ID: ${item.id}`, err);
-					return {
-						success: false,
-						message: 'Network or server error',
-						id: item.id,
-					};
-				}
-			});
-
-			// Execute all deletions concurrently
-			const responses = await Promise.all(deletionPromises);
-			results.push(...responses);
-
-			// Filter successful deletions
-			const successful = responses.filter((r) => r.success);
-			const failed = responses.filter((r) => !r.success);
-
-			// Remove only successfully deleted items from local state
-			const deletedIds = successful.map((r) => r.id);
-			questions.value = questions.value.filter(
-				(item) => !deletedIds.includes(item.id),
-			);
-
-			// Determine overall status
-			const status =
-				failed.length === 0
-					? 'success'
-					: successful.length === 0
-					? 'error'
-					: 'partial';
-
-			const message =
-				status === 'success'
-					? `Successfully deleted ${successful.length} Question(s)`
-					: status === 'partial'
-					? `Deleted ${successful.length}, failed ${failed.length}`
-					: `Failed to delete ${failed.length} Question(s)`;
-
-			return {
-				status,
-				message,
-				deleted: successful.length,
-				failed: failed.length,
-			};
-		} catch (error) {
-			console.error('Unexpected error in deleteSelectedQuestions:', error);
 			return {
 				status: 'error',
-				message: 'An unexpected error occurred',
-				deleted: 0,
-				failed: selected.length,
+				message: errorMessage,
 			};
-		} finally {
-			isLoading.value = false;
 		}
 	}
 
-	async function updateQuestion(id: string, payload: Partial<Question>) {
+	async function updateQuestion(
+		id: string,
+		payload: Partial<Question>,
+	): Promise<{
+		status: 'success' | 'error';
+		message: string;
+	}> {
+		// Optional: validate input
+		if (!id?.trim()) {
+			isLoading.value = false;
+			return { status: 'error', message: 'Invalid question ID' };
+		}
+
 		isLoading.value = true;
+
 		try {
-			const response = await surveyGraph.updateQuestion(
-				payload as UpdateQuestionVariables,
-			);
-			if (response?.success) {
-				const index = questions.value.findIndex((item) => item.id === id);
-				if (index !== -1) {
-					questions.value[index] = {
-						...questions.value[index],
+			const response = await surveyGraph.updateQuestion({
+				id,
+				...payload,
+			} as UpdateQuestionVariables);
+
+			if (response?.success && survey.value) {
+				const questionIndex = survey.value.questions.findIndex(
+					(q) => q.id === id,
+				);
+
+				if (questionIndex !== -1) {
+					// Update the question in survey state
+					survey.value.questions[questionIndex] = {
+						...survey.value.questions[questionIndex],
 						...payload,
 					};
+
+					// Optional: Trigger reactivity if needed (Vue 3 handles this)
+					// survey.value = { ...survey.value }; // only if shallow ref
 				}
+
 				return {
 					status: 'success',
 					message: 'Question updated successfully',
 				};
+			} else {
+				return {
+					status: 'error',
+					message: 'Failed to update question',
+				};
 			}
 		} catch (error) {
 			console.error('Error updating Question:', error);
+
+			const errorMessage =
+				error instanceof Error ? error.message : 'An unexpected error occurred';
+
+			return {
+				status: 'error',
+				message: errorMessage,
+			};
 		} finally {
 			isLoading.value = false;
 		}
@@ -365,7 +334,6 @@ export const useSurveyStore = defineStore('survey', () => {
 		addQuestion,
 		updateQuestion,
 		deleteOneQuestion,
-		deleteSelectedQuestions,
 
 		fetchSurvey,
 		fetchSurveys,

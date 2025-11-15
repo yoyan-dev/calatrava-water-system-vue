@@ -21,7 +21,7 @@ class SurveyRepository {
 			if (response?.data?.survey) {
 				return {
 					status: 'success',
-					data: response.data.survey,
+					data: response.data.survey as any,
 				};
 			}
 		} catch (error) {}

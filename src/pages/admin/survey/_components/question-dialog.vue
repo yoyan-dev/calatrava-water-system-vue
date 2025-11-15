@@ -4,7 +4,7 @@
 			@submit="onSubmit"
 			:validation-schema="schema"
 			:initial-values="form"
-			v-slot="{ errors }">
+			v-slot="{ errors, isSubmitting }">
 			<div class="space-y-6">
 				<!-- Question Type -->
 				<div>
@@ -17,7 +17,7 @@
 						v-model="form.type"
 						v-slot="{ field, errorMessage }">
 						<Select
-							v-model="field.value"
+							v-model="form.type"
 							:options="questionTypes"
 							option-label="label"
 							option-value="value"
@@ -56,7 +56,7 @@
 					</Field>
 				</div>
 
-				<!-- Options (for RADIO, CHECKBOX) -->
+				<!-- Options -->
 				<div v-if="showOptions">
 					<label
 						class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -67,11 +67,23 @@
 							v-for="(opt, i) in form.options"
 							:key="i"
 							class="flex items-center gap-2">
-							<InputText
+							<Field
+								:name="`options[${i}]`"
 								v-model="form.options[i]"
-								:placeholder="`Option ${i + 1}`"
-								class="flex-1" />
+								v-slot="{ errorMessage }">
+								<InputText
+									v-model="form.options[i]"
+									:placeholder="`Option ${i + 1}`"
+									:class="{ 'p-invalid': errorMessage }"
+									class="flex-1" />
+								<small
+									v-if="errorMessage"
+									class="p-error text-xs">
+									{{ errorMessage }}
+								</small>
+							</Field>
 							<Button
+								type="button"
 								icon="pi pi-trash"
 								severity="danger"
 								text
@@ -79,6 +91,7 @@
 								@click="removeOption(i)" />
 						</div>
 						<Button
+							type="button"
 							label="Add Option"
 							icon="pi pi-plus"
 							text
@@ -87,27 +100,24 @@
 					</div>
 				</div>
 
-				<!-- Rating Scale Preview -->
+				<!-- Previews -->
 				<div v-if="form.type === 'RATING'">
 					<label
-						class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-						Scale
-					</label>
+						class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+						>Scale</label
+					>
 					<div class="flex items-center gap-4 text-sm">
-						<span>1</span>
-						<i class="pi pi-star text-yellow-500"></i>
+						<span>1</span> <i class="pi pi-star text-yellow-500"></i>
 						<span class="font-medium">to</span>
-						<i class="pi pi-star text-yellow-500"></i>
-						<span>5</span>
+						<i class="pi pi-star text-yellow-500"></i> <span>5</span>
 					</div>
 				</div>
 
-				<!-- NPS Scale Preview -->
 				<div v-if="form.type === 'NPS'">
 					<label
-						class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-						Scale (0–10)
-					</label>
+						class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+						>Scale (0–10)</label
+					>
 					<div class="flex items-center gap-2 text-sm">
 						<span>Not at all likely</span>
 						<div class="flex gap-1">
@@ -123,7 +133,7 @@
 					</div>
 				</div>
 
-				<!-- Required Toggle -->
+				<!-- Required -->
 				<div class="flex items-center gap-3">
 					<Field
 						name="required"
@@ -140,7 +150,7 @@
 					</label>
 				</div>
 
-				<!-- Store Error -->
+				<!-- Error -->
 				<Message
 					v-if="store.error"
 					severity="error"
@@ -155,12 +165,12 @@
 						type="button"
 						label="Cancel"
 						severity="secondary"
-						@click="dialogRef.value.close()" />
+						@click="closeDialog" />
 					<Button
 						type="submit"
 						:label="isEdit ? 'Update Question' : 'Add Question'"
-						:loading="store.isLoading"
-						:disabled="store.isLoading"
+						:loading="isSubmitting || store.isLoading"
+						:disabled="isSubmitting || store.isLoading"
 						icon="pi pi-check" />
 				</div>
 			</div>
@@ -169,7 +179,7 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, inject, onMounted, reactive } from 'vue';
+	import { computed, inject, onMounted, reactive, watch } from 'vue';
 	import { Form, Field } from 'vee-validate';
 	import { useSurveyStore } from '@/stores/survey';
 	import * as yup from 'yup';
@@ -219,25 +229,43 @@
 		}),
 	});
 
-	// Sync form on edit
+	// Edit mode sync
 	onMounted(() => {
 		if (isEdit.value && props.question) {
 			form.type = props.question.type;
 			form.label = props.question.label || '';
 			form.required = !!props.question.required;
-			form.options = props.question.options
+			form.options = props.question.options?.length
 				? [...props.question.options]
-				: [''];
+				: ['Option 1', 'Option 2'];
 		}
 	});
 
+	function closeDialog() {
+		dialogRef.value.close();
+	}
+
 	function addOption() {
-		form.options.push('');
+		form.options.push('New Option'); // ← NOT empty!
 	}
 
 	function removeOption(index: number) {
-		form.options.splice(index, 1);
+		if (form.options.length > 2) {
+			form.options.splice(index, 1);
+		}
 	}
+
+	// Reset options when type changes
+	watch(
+		() => form.type,
+		(newType) => {
+			if (!['RADIO', 'CHECKBOX'].includes(newType)) {
+				form.options = [];
+			} else if (form.options.length < 2) {
+				form.options = ['Option 1', 'Option 2']; // ← Never empty
+			}
+		},
+	);
 
 	async function onSubmit() {
 		store.error = null;
@@ -255,7 +283,7 @@
 
 		try {
 			if (isEdit.value) {
-				await store.updateQuestion(props.surveyId, questionData);
+				await store.updateQuestion(props.question.id, questionData);
 			} else {
 				await store.addQuestion({ ...questionData, surveyId: props.surveyId });
 			}

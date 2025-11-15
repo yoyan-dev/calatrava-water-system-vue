@@ -2,14 +2,18 @@
 	<div class="p-4 md:p-6">
 		<div v-if="survey">
 			<!-- Survey Info -->
-			<Card class="mb-6 shadow-md">
+			<Card class="mb-6 shadow-sm border border-gray-200 dark:border-gray-700">
 				<template #title>
 					<div class="flex items-center justify-between">
-						<span class="text-xl font-semibold">{{ survey?.title }}</span>
+						<span
+							class="text-xl font-semibold text-gray-900 dark:text-gray-100">
+							{{ survey?.title }}
+						</span>
 						<Tag
 							:value="survey?.status"
 							:severity="statusSeverity(survey?.status || '')"
-							rounded />
+							rounded
+							class="text-xs" />
 					</div>
 				</template>
 				<template #subtitle>
@@ -20,26 +24,32 @@
 				<template #content>
 					<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 text-sm">
 						<div>
-							<span class="font-medium text-gray-700 dark:text-gray-300"
-								>Responses:</span
-							>
-							<p class="font-semibold">{{ survey?.responsesCount || 0 }}</p>
+							<span class="font-medium text-gray-700 dark:text-gray-300">
+								Responses:
+							</span>
+							<p class="font-semibold text-gray-900 dark:text-gray-100">
+								{{ survey?.responsesCount || 0 }}
+							</p>
 						</div>
 						<div>
-							<span class="font-medium text-gray-700 dark:text-gray-300"
-								>Status:</span
-							>
-							<p>{{ survey?.status }}</p>
+							<span class="font-medium text-gray-700 dark:text-gray-300">
+								Status:
+							</span>
+							<p class="capitalize text-gray-900 dark:text-gray-100">
+								{{ survey?.status }}
+							</p>
 						</div>
 					</div>
 				</template>
 			</Card>
 
 			<!-- Questions Section -->
-			<Card class="shadow-md">
-				<template #header>
+			<Card class="shadow-sm border border-gray-200 dark:border-gray-700">
+				<template #title>
 					<div class="flex items-center justify-between">
-						<h3 class="text-lg font-semibold">Questions</h3>
+						<h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
+							Questions
+						</h3>
 						<Button
 							label="Add Question"
 							icon="pi pi-plus"
@@ -49,8 +59,9 @@
 				</template>
 
 				<template #content>
+					<!-- Empty State -->
 					<div
-						v-if="survey && !survey.questions?.length"
+						v-if="!survey.questions?.length"
 						class="text-center py-8">
 						<i
 							class="pi pi-question-circle text-5xl text-gray-300 dark:text-gray-600 mb-3"></i>
@@ -62,84 +73,129 @@
 							@click="openQuestionDialog()" />
 					</div>
 
-					<div v-else>
-						<draggable
-							v-model="localQuestions"
-							item-key="id"
-							handle=".drag-handle"
-							@end="onDragEnd"
-							class="space-y-3">
-							<template #item="{ element: q }">
-								<div
-									class="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-									<i
-										class="pi pi-grip-vertical drag-handle text-gray-400 cursor-move"></i>
-									<div class="flex-1">
-										<div class="flex items-center gap-2">
-											<i
-												:class="questionIcon(q.type)"
-												class="text-primary"></i>
-											<span class="font-medium">{{ q.label }}</span>
-											<Tag
-												v-if="q.required"
-												value="Required"
-												severity="warn"
-												rounded
-												class="text-xs" />
-										</div>
-										<p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-											{{ q.type }} •
-											{{
-												q.options?.length
-													? `${q.options.length} options`
-													: 'Open text'
-											}}
-										</p>
+					<!-- Questions List -->
+					<div
+						v-else
+						class="space-y-3">
+						<div
+							v-for="q in survey.questions"
+							:key="q.id">
+							<div
+								class="flex items-center gap-3 p-4 bg-blue-50 dark:bg-blue-900/10 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary/30 dark:hover:border-primary/40 transition-colors">
+								<Badge>{{ q.order }}</Badge>
+								<i
+									class="pi pi-grip-vertical drag-handle text-gray-400 dark:text-gray-500 cursor-move"></i>
+								<div class="flex-1">
+									<div class="flex items-center gap-2">
+										<i
+											:class="questionIcon(q.type)"
+											class="text-primary"></i>
+										<span class="font-medium text-gray-900 dark:text-gray-100">
+											{{ q.label }}
+										</span>
+										<Tag
+											v-if="q.required"
+											value="Required"
+											severity="warn"
+											rounded
+											class="text-xs" />
 									</div>
-									<div class="flex gap-1">
-										<Button
-											icon="pi pi-pencil"
-											text
-											size="small"
-											@click.stop="openQuestionDialog(q)" />
-										<Button
-											icon="pi pi-trash"
-											text
-											severity="danger"
-											size="small"
-											@click.stop="deleteQuestion(q.id)" />
+									<p class="text-xs text-gray-600 dark:text-gray-400 mt-1">
+										{{ q.type }} •
+										{{
+											q.options?.length
+												? `${q.options.length} option${
+														q.options.length > 1 ? 's' : ''
+												  }`
+												: 'Open text'
+										}}
+									</p>
+									<div class="mt-2">
+										<!-- Previews -->
+										<div
+											v-if="q.options?.length"
+											class="space-y-1">
+											<div
+												v-for="(opt, i) in q.options"
+												:key="i"
+												class="text-xs">
+												<div class="flex items-center gap-2">
+													<i
+														class="pi pi-circle-off text-gray-400 dark:text-gray-500"></i>
+													<span class="text-gray-700 dark:text-gray-300">
+														{{ opt }}
+													</span>
+												</div>
+											</div>
+										</div>
+
+										<!-- Previews -->
+										<div v-if="q.type === 'RATING'">
+											<label
+												class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+												>Scale</label
+											>
+											<div class="flex items-center gap-4 text-sm">
+												<span>1</span>
+												<i class="pi pi-star text-yellow-500"></i>
+												<span class="font-medium">to</span>
+												<i class="pi pi-star text-yellow-500"></i>
+												<span>5</span>
+											</div>
+										</div>
+
+										<div v-if="q.type === 'NPS'">
+											<label
+												class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+												>Scale (0–10)</label
+											>
+											<div class="flex items-center gap-2 text-sm">
+												<span>Not at all likely</span>
+												<div class="flex gap-1">
+													<Tag
+														v-for="n in 11"
+														:key="n"
+														:value="n - 1"
+														severity="info"
+														rounded
+														class="text-xs" />
+												</div>
+												<span>Extremely likely</span>
+											</div>
+										</div>
 									</div>
 								</div>
-							</template>
-						</draggable>
+								<div class="flex gap-1">
+									<Button
+										icon="pi pi-pencil"
+										text
+										size="small"
+										@click.stop="openQuestionDialog(q)" />
+									<Button
+										icon="pi pi-trash"
+										text
+										severity="danger"
+										size="small"
+										@click.stop="deleteQuestion(q.id)" />
+								</div>
+							</div>
+						</div>
 					</div>
 				</template>
 			</Card>
-
-			<!-- Save Button -->
-			<div class="flex justify-end mt-6 gap-3">
-				<Button
-					label="Save Changes"
-					:loading="store.isLoading"
-					:disabled="store.isLoading || !questionsChanged"
-					@click="saveQuestions" />
-			</div>
 		</div>
 
-		<!-- 404 Survey Not Found – Enhanced UX -->
+		<!-- Survey Not Found -->
 		<div
 			v-else
 			class="min-h-[60vh] flex flex-col items-center justify-center p-6 text-center">
-			<!-- Animated Water Drop Icon -->
 			<div class="relative mb-8">
-				<i
-					class="pi pi-exclamation-triangle text-8xl text-primary-200 animate-pulse"></i>
+				<i class="pi pi-exclamation-triangle text-8xl text-primary-200"></i>
 				<div class="absolute inset-0 flex items-center justify-center">
 					<i class="pi pi-search text-4xl text-primary-500 animate-ping"></i>
 				</div>
 			</div>
 
-			<!-- Main Message -->
 			<h1
 				class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-3">
 				Survey Not Found
@@ -151,7 +207,6 @@
 				deleted, moved, or the link is incorrect.
 			</p>
 
-			<!-- Action Buttons -->
 			<div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
 				<Button
 					label="Back to Surveys"
@@ -169,10 +224,7 @@
 	import { useRoute } from 'vue-router';
 	import { useSurveyStore } from '@/stores/survey';
 	import { useConfirm, useDialog } from 'primevue';
-	import Header from '@/components/globals/header.vue';
-	import { format } from 'date-fns';
 	import QuestionDialog from './_components/question-dialog.vue';
-	import { VueDraggableNext as draggable } from 'vue-draggable-next';
 
 	const route = useRoute();
 	const store = useSurveyStore();
@@ -201,10 +253,6 @@
 		originalQuestions.value = JSON.stringify(localQuestions.value);
 	}
 
-	const questionsChanged = computed(() => {
-		return JSON.stringify(localQuestions.value) !== originalQuestions.value;
-	});
-
 	// UI Helpers
 	const statusSeverity = (status: string) => {
 		return status === 'PUBLISHED'
@@ -212,10 +260,6 @@
 			: status === 'CLOSED'
 			? 'danger'
 			: 'info';
-	};
-
-	const formatDate = (date: string) => {
-		return date ? format(new Date(date), 'MMM d, yyyy h:mm a') : '—';
 	};
 
 	const questionIcon = (type: string) => {
@@ -253,37 +297,4 @@
 			},
 		});
 	};
-
-	const onDragEnd = () => {
-		// Reorder locally
-		localQuestions.value = localQuestions.value.map((q, i) => ({
-			...q,
-			order: i + 1,
-		}));
-	};
-
-	const saveQuestions = async () => {
-		// await store.addQuestion(localQuestions.value);
-		// originalQuestions.value = JSON.stringify(localQuestions.value);
-	};
 </script>
-
-<style scoped>
-	.drag-container {
-		min-height: 200px;
-		padding: 20px;
-	}
-
-	.drag-item {
-		padding: 10px;
-		margin: 5px 0;
-		background: #f0f0f0;
-		border-radius: 4px;
-		cursor: move;
-		transition: background 0.2s;
-	}
-
-	.drag-item:hover {
-		background: #e0e0e0;
-	}
-</style>

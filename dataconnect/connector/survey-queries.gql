@@ -14,6 +14,14 @@ query GetSurveyById($id: UUID!) @auth(level: USER) {
 		id
 		title
 		description
+		questions: questions_on_survey {
+			id
+			type
+			label
+			options
+			required
+			order
+		}
 		status
 		responsesCount
 		createdAt
