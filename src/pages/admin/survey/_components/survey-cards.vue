@@ -4,28 +4,17 @@
 			v-for="survey in surveys"
 			:key="survey.id"
 			class="shadow-lg hover:shadow-xl transition-shadow bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-			<template #header>
-				<div class="relative">
-					<!-- Optional: add subtle gradient overlay for dark mode -->
-					<div
-						class="absolute inset-0 bg-linear-to-t from-black/20 to-transparent rounded-t-lg pointer-events-none"></div>
-
-					<div class="absolute top-3 right-3">
-						<Tag
-							:value="survey.status"
-							:severity="statusSeverity(survey.status)"
-							rounded
-							class="text-xs font-medium" />
-					</div>
-				</div>
-			</template>
-
 			<template #title>
 				<div class="flex justify-between items-start">
 					<h3
 						class="text-lg font-semibold text-gray-900 dark:text-gray-100 line-clamp-2">
 						{{ survey.title }}
 					</h3>
+					<Tag
+						:value="survey.status"
+						:severity="statusSeverity(survey.status)"
+						rounded
+						class="font-medium" />
 				</div>
 			</template>
 
@@ -40,14 +29,14 @@
 					<div class="flex items-center gap-1">
 						<i class="pi pi-clock text-gray-500 dark:text-gray-400"></i>
 						<span class="text-gray-700 dark:text-gray-300">{{
-							formatDate(survey.created_at)
+							formatDate(survey.createdAt)
 						}}</span>
 					</div>
 					<div class="flex items-center gap-1">
 						<i
 							class="pi pi-check-circle text-primary-600 dark:text-primary-400"></i>
 						<span class="font-medium text-gray-800 dark:text-gray-200">
-							{{ survey.responses_count || 0 }} responses
+							{{ survey.responsesCount || 0 }} responses
 						</span>
 					</div>
 				</div>

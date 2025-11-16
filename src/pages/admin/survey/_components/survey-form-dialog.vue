@@ -6,6 +6,26 @@
 			:initial-values="form"
 			v-slot="{ errors, isSubmitting }">
 			<div class="space-y-6">
+				<!-- Status -->
+				<div>
+					<label
+						for="status"
+						class="block text-sm font-medium text-gray-700 mb-1">
+						Survey Status
+					</label>
+					<Field
+						name="status"
+						v-model="form.status"
+						v-slot="{ field }">
+						<Select
+							v-model="form.status"
+							id="status"
+							:options="statusOptions"
+							option-label="label"
+							option-value="value"
+							class="w-full" />
+					</Field>
+				</div>
 				<!-- Title -->
 				<div>
 					<label
@@ -85,6 +105,7 @@
 	import { ref, computed, inject, onMounted, reactive } from 'vue';
 	import { Form, Field } from 'vee-validate';
 	import * as yup from 'yup';
+	import { stat } from 'fs';
 
 	const store = useSurveyStore();
 	const toast = useToast();
@@ -101,7 +122,14 @@
 	const form = reactive({
 		title: '',
 		description: '',
+		status: 'DRAFT',
 	});
+
+	const statusOptions = [
+		{ label: 'Draft', value: 'DRAFT' },
+		{ label: 'Published', value: 'PUBLISHED' },
+		{ label: 'Archived', value: 'ARCHIVED' },
+	];
 
 	// Validation schema
 	const schema = yup.object({
@@ -117,6 +145,7 @@
 		if (survey.value) {
 			form.title = survey.value.title || '';
 			form.description = survey.value.description || '';
+			form.status = survey.value.status || 'DRAFT';
 		}
 	});
 
@@ -126,9 +155,12 @@
 			let result;
 			if (survey.value) {
 				// Update existing survey
+				console.log(values);
+
 				result = await store.updateSurvey(survey.value!.id!, {
 					title: values.title,
 					description: values.description || null,
+					status: values.status,
 				});
 
 				toast.add({
