@@ -1,7 +1,23 @@
+query GetConsumerByAccountNo($accountNo: String!) @auth(level: USER) {
+	consumers(where: { accountNo: { eq: $accountNo } }) {
+		id
+		userId
+		accountNo
+		email
+		fullName
+		book
+		classType
+		createdAt
+		updatedAt
+	}
+}
+
 query GetConsumer($id: UUID!) @auth(expr: "auth.token.role == 'admin'") {
 	consumer(id: $id) {
 		id
+		userId
 		accountNo
+		email
 		fullName
 		book
 		classType

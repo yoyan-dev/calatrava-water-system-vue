@@ -16,7 +16,9 @@ mutation CreateConsumer(
 
 mutation UpdateConsumer(
 	$id: UUID!
+	$userId: String
 	$accountNo: String
+	$email: String
 	$fullName: String
 	$book: String
 	$classType: String

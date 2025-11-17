@@ -6,6 +6,7 @@ import {
 	deleteConsumer,
 	paginatedConsumers,
 	searchConsumers,
+	getConsumerByAccountNo,
 	updateConsumer,
 	type CreateConsumerVariables,
 	type UpdateConsumerVariables,
@@ -13,6 +14,19 @@ import {
 import Papa from 'papaparse';
 
 class ConsumerRepository {
+	async getConsumerByAccountNo(accountNo: string) {
+		try {
+			const response = await this.getConsumerByAccountNo({ query: accountNo });
+			const consumers = response.data.consumers_search || [];
+			return consumers.find(
+				(consumer: any) => consumer.accountNo === accountNo,
+			);
+		} catch (error) {
+			console.error('Error fetching consumer by account number:', error);
+			return null;
+		}
+	}
+
 	async countConsumers() {
 		try {
 			const response = await countConsumers();

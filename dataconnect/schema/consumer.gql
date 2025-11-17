@@ -1,5 +1,7 @@
 type Consumer @table {
+	userId: String
 	accountNo: String! @unique @searchable
+	email: String @searchable
 	fullName: String! @searchable
 	book: String! @searchable
 	classType: String!
