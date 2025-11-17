@@ -67,69 +67,102 @@
 
 <template>
 	<div class="p-4 md:p-6">
-		<h1 class="text-xl font-semibold text-surface-900 dark:text-surface-50">Settings</h1>
+		<h1 class="text-xl font-semibold text-surface-900 dark:text-surface-50">
+			Settings
+		</h1>
 		<div class="flex flex-col gap-4 mt-4">
 			<!-- Account Section -->
 			<div>
-				<h2 class="text-lg font-medium text-surface-800 dark:text-surface-100">Account</h2>
-				<div class="flex flex-col gap-4 mt-4 p-4 border border-surface-200 dark:border-surface-700 rounded-lg bg-surface-50 dark:bg-surface-900">
-					<div class="flex items-end gap-4">
-						<Avatar
-							:image="image || store.admin.photoURL || '/default.jpg'"
-							size="xlarge"
-							class="border-2 border-surface-200 dark:border-surface-700 rounded-full"
-						/>
-						<div v-if="!isUpdate">
+				<h2 class="text-lg font-medium text-surface-800 dark:text-surface-100">
+					Account
+				</h2>
+				<div
+					class="flex flex-col gap-4 mt-4 p-4 border border-surface-200 dark:border-surface-700 rounded-lg bg-surface-50 dark:bg-surface-900">
+					<div class="flex flex-col gap-4">
+						<div
+							class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-surface-200 dark:border-surface-700">
+							<!-- Avatar with consistent sizing and accessibility -->
+							<div class="flex items-center gap-4">
+								<Avatar
+									:image="image || store.admin.photoURL || '/default.jpg'"
+									size="xlarge"
+									shape="circle"
+									class="border-2 border-surface-200 dark:border-surface-700 shadow-sm"
+									:aria-label="`${
+										store.admin.displayName || 'User'
+									} profile picture`" />
+								<div class="hidden sm:block">
+									<p
+										class="text-sm font-medium text-surface-700 dark:text-surface-200">
+										{{ store.admin.displayName || 'Admin User' }}
+									</p>
+									<p class="text-xs text-surface-500 dark:text-surface-400">
+										{{ store.admin.email }}
+									</p>
+								</div>
+							</div>
+
+							<!-- Edit Button (only in view mode) -->
 							<Button
+								v-if="!isUpdate"
 								icon="pi pi-pen-to-square"
+								label="Edit Profile"
 								severity="secondary"
 								outlined
 								size="small"
 								@click="isUpdate = !isUpdate"
-							>
-								Edit
-							</Button>
+								class="mt-2 sm:mt-0" />
 						</div>
 						<FileUpload
-							v-else
+							v-if="isUpdate"
 							mode="basic"
 							@select="onFileSelect($event)"
 							customUpload
 							auto
 							severity="secondary"
 							chooseLabel="Upload Photo"
-							class="p-button-outlined p-button-sm"
-						/>
+							class="p-button-outlined p-button-sm" />
 					</div>
 					<div class="flex flex-col gap-4">
-						<span class="text-base font-semibold text-surface-800 dark:text-surface-100">Personal Details</span>
+						<span
+							class="text-base font-semibold text-surface-800 dark:text-surface-100"
+							>Personal Details</span
+						>
 						<div class="flex flex-wrap gap-4">
 							<div class="flex-1 min-w-[200px]">
-								<label for="name" class="text-sm font-medium text-surface-700 dark:text-surface-200">Full Name</label>
+								<label
+									for="name"
+									class="text-sm font-medium text-surface-700 dark:text-surface-200"
+									>Full Name</label
+								>
 								<InputGroup>
 									<InputGroupAddon class="bg-surface-100 dark:bg-surface-800">
-										<i class="pi pi-user text-surface-600 dark:text-surface-300"></i>
+										<i
+											class="pi pi-user text-surface-600 dark:text-surface-300"></i>
 									</InputGroupAddon>
 									<InputText
 										:disabled="!isUpdate"
 										v-model="store.admin.displayName"
 										placeholder="Enter your full name"
-										class="w-full"
-									/>
+										class="w-full" />
 								</InputGroup>
 							</div>
 							<div class="flex-1 min-w-[200px]">
-								<label for="email" class="text-sm font-medium text-surface-700 dark:text-surface-200">Email</label>
+								<label
+									for="email"
+									class="text-sm font-medium text-surface-700 dark:text-surface-200"
+									>Email</label
+								>
 								<InputGroup>
 									<InputGroupAddon class="bg-surface-100 dark:bg-surface-800">
-										<i class="pi pi-envelope text-surface-600 dark:text-surface-300"></i>
+										<i
+											class="pi pi-envelope text-surface-600 dark:text-surface-300"></i>
 									</InputGroupAddon>
 									<InputText
 										:disabled="!isUpdate"
 										v-model="store.admin.email"
 										placeholder="Email"
-										class="w-full"
-									/>
+										class="w-full" />
 								</InputGroup>
 							</div>
 						</div>
@@ -138,51 +171,65 @@
 			</div>
 
 			<!-- Password Section -->
-			<div v-if="isUpdate" class="p-4 border border-surface-200 dark:border-surface-700 rounded-lg bg-surface-50 dark:bg-surface-900">
-				<span class="text-base font-semibold text-surface-800 dark:text-surface-100">Change Password</span>
+			<div
+				v-if="isUpdate"
+				class="p-4 border border-surface-200 dark:border-surface-700 rounded-lg bg-surface-50 dark:bg-surface-900">
+				<span
+					class="text-base font-semibold text-surface-800 dark:text-surface-100"
+					>Change Password</span
+				>
 				<div class="flex flex-wrap gap-4 mt-4">
 					<div class="flex-1 min-w-[200px]">
-						<label for="password" class="text-sm font-medium text-surface-700 dark:text-surface-200">New Password</label>
+						<label
+							for="password"
+							class="text-sm font-medium text-surface-700 dark:text-surface-200"
+							>New Password</label
+						>
 						<InputGroup>
 							<InputGroupAddon class="bg-surface-100 dark:bg-surface-800">
-								<i class="pi pi-lock text-surface-600 dark:text-surface-300"></i>
+								<i
+									class="pi pi-lock text-surface-600 dark:text-surface-300"></i>
 							</InputGroupAddon>
 							<Password
 								v-model="newPassword"
 								placeholder="New password"
 								:feedback="false"
 								toggleMask
-								class="w-full"
-							/>
+								class="w-full" />
 						</InputGroup>
 					</div>
 					<div class="flex-1 min-w-[200px]">
-						<label for="confirmPassword" class="text-sm font-medium text-surface-700 dark:text-surface-200">Confirm Password</label>
+						<label
+							for="confirmPassword"
+							class="text-sm font-medium text-surface-700 dark:text-surface-200"
+							>Confirm Password</label
+						>
 						<InputGroup>
 							<InputGroupAddon class="bg-surface-100 dark:bg-surface-800">
-								<i class="pi pi-lock text-surface-600 dark:text-surface-300"></i>
+								<i
+									class="pi pi-lock text-surface-600 dark:text-surface-300"></i>
 							</InputGroupAddon>
 							<Password
 								v-model="confirmPassword"
 								placeholder="Confirm password"
 								:feedback="false"
 								toggleMask
-								class="w-full"
-							/>
+								class="w-full" />
 						</InputGroup>
 					</div>
 				</div>
 			</div>
 
 			<!-- Action Buttons -->
-			<div v-if="isUpdate" class="flex justify-end">
+			<div
+				v-if="isUpdate"
+				class="flex justify-end">
 				<Button
 					label="Update"
 					severity="primary"
 					:loading="store.isLoading"
 					@click="updateProfile(store.admin)"
-					class="p-button-sm"
-				/>
+					class="p-button-sm" />
 			</div>
 		</div>
 	</div>
