@@ -261,7 +261,11 @@
 			<!-- Content Area -->
 			<div
 				class="flex-1 overflow-y-auto bg-gradient-to-br from-surface-50 to-surface-0 dark:from-surface-900 dark:to-surface-900 lg:rounded-2xl shadow-2xl">
-				<slot />
+				<router-view v-slot="{ Component }">
+					<keep-alive>
+						<component :is="Component" />
+					</keep-alive>
+				</router-view>
 			</div>
 		</div>
 	</main>

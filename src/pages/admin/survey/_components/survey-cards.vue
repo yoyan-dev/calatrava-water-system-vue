@@ -88,7 +88,6 @@
 </template>
 
 <script setup lang="ts">
-	import { defineProps } from 'vue';
 	import { useSurveyStore } from '@/stores/survey';
 	import SurveyFormDialog from './survey-form-dialog.vue';
 	import { format } from 'date-fns';

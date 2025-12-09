@@ -9,11 +9,15 @@
 							class="text-xl font-semibold text-gray-900 dark:text-gray-100">
 							{{ survey?.title }}
 						</span>
-						<Tag
-							:value="survey?.status"
-							:severity="statusSeverity(survey?.status || '')"
-							rounded
-							class="text-xs" />
+						<Button
+							type="button"
+							icon="pi pi-pencil"
+							label="Edit"
+							severity="secondary"
+							text
+							size="small"
+							class="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+							@click="openEditDialog(survey)" />
 					</div>
 				</template>
 				<template #subtitle>
@@ -32,12 +36,14 @@
 							</p>
 						</div>
 						<div>
-							<span class="font-medium text-gray-700 dark:text-gray-300">
+							<div class="font-medium text-gray-700 dark:text-gray-300">
 								Status:
-							</span>
-							<p class="capitalize text-gray-900 dark:text-gray-100">
-								{{ survey?.status }}
-							</p>
+							</div>
+
+							<Tag
+								:value="survey?.status"
+								:severity="statusSeverity(survey?.status || '')"
+								rounded />
 						</div>
 					</div>
 				</template>
@@ -225,6 +231,7 @@
 	import { useSurveyStore } from '@/stores/survey';
 	import { useConfirm, useDialog } from 'primevue';
 	import QuestionDialog from './_components/question-dialog.vue';
+	import SurveyFormDialog from './_components/survey-form-dialog.vue';
 
 	const route = useRoute();
 	const store = useSurveyStore();
@@ -294,6 +301,17 @@
 			accept: async () => {
 				await store.deleteOneQuestion(questionId);
 				syncLocalQuestions();
+			},
+		});
+	};
+
+	const openEditDialog = (survey: any) => {
+		$dialog.open(SurveyFormDialog, {
+			data: { survey },
+			props: {
+				header: 'Edit Survey',
+				modal: true,
+				style: { width: '90vw', maxWidth: '600px' },
 			},
 		});
 	};
