@@ -27,3 +27,14 @@ query GetSurveyById($id: UUID!) @auth(level: USER) {
 		createdAt
 	}
 }
+
+query GetPublishedSurveys @auth(level: USER) {
+	surveys(where: { status: { eq: PUBLISHED } }) {
+		id
+		title
+		description
+		status
+		responsesCount
+		createdAt
+	}
+}

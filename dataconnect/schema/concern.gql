@@ -1,0 +1,53 @@
+type Concern @table {
+  # Consumer
+  accountNo: String!
+  fullName: String!
+
+  # Concern
+
+  ticketNo: Int!
+  title: String!
+  category: ConcernCategory!
+  description: String!
+
+  # Full address (for display & search)
+  address: String!
+
+  # Geolocation — separate fields (PostgreSQL compatible)
+  latitude: Float!
+  longitude: Float!
+
+  # Optional: Geohash for proximity search (highly recommended)
+  geohash: String
+
+  # Media
+  images: [String!]
+
+  # Status & Timeline
+  status: ConcernStatus! @default(value: "PENDING")
+  createdAt: Timestamp! @default(expr: "request.time")
+  updatedAt: Timestamp
+  resolvedAt: Timestamp
+
+  # Admin fields
+  adminNotes: String
+  assignedTo: String
+}
+
+enum ConcernCategory {
+  LOW_PRESSURE
+  NO_WATER
+  LEAK_REPORT
+  DIRTY_WATER
+  METER_ISSUE
+  BILLING_INQUIRY
+  NEW_CONNECTION
+  OTHERS
+}
+
+enum ConcernStatus {
+  PENDING
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}

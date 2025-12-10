@@ -1,0 +1,46 @@
+query GetConcernsByAccountNo($accountNo: String!, $limit: Int = 5, $offset: Int = 0)
+@auth(level: USER) {
+  concerns(
+    where: { accountNo: { eq: $accountNo } }
+    limit: $limit
+    offset: $offset
+    orderBy: [{ createdAt: DESC }]
+  ) {
+    _count
+    id
+    accountNo
+    fullName
+    title
+    category
+    description
+    address
+    latitude
+    longitude
+    geohash
+    images
+    ticketNo
+    status
+    createdAt
+    updatedAt
+  }
+}
+
+query GetConcern($id: UUID!) @auth(level: USER) {
+  concern(id: $id) {
+    id
+    accountNo
+    fullName
+    title
+    category
+    description
+    address
+    latitude
+    longitude
+    geohash
+    images
+    ticketNo
+    status
+    createdAt
+    updatedAt
+  }
+}

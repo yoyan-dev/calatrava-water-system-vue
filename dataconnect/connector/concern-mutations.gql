@@ -1,0 +1,30 @@
+mutation CreateConcern(
+  $accountNo: String!
+  $fullName: String!
+  $title: String!
+  $category: ConcernCategory!
+  $description: String!
+  $address: String!
+  $latitude: Float!
+  $longitude: Float!
+  $geohash: String
+  $images: [String!]
+  $ticketNo: Int!
+) {
+  concern_insert(
+    data: {
+      accountNo: $accountNo
+      fullName: $fullName
+      title: $title
+      category: $category
+      description: $description
+      address: $address
+      latitude: $latitude
+      longitude: $longitude
+      geohash: $geohash
+      images: $images
+      ticketNo: $ticketNo
+      status: PENDING
+    }
+  )
+}

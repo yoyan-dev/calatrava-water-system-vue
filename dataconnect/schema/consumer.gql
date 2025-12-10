@@ -1,5 +1,5 @@
 type Consumer @table {
-	userId: String
+	userId: String @unique
 	accountNo: String! @unique @searchable
 	email: String @searchable
 	fullName: String! @searchable

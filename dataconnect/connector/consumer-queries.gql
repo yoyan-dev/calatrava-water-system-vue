@@ -1,5 +1,5 @@
-query GetConsumerByAccountNo($accountNo: String!) @auth(level: USER) {
-	consumers(where: { accountNo: { eq: $accountNo } }) {
+query GetConsumerByAccountNo($accountNo: String!) @auth(level: PUBLIC) {
+	consumer(first: { where: { accountNo: { eq: $accountNo } } }) {
 		id
 		userId
 		accountNo
@@ -18,6 +18,19 @@ query GetConsumer($id: UUID!) @auth(expr: "auth.token.role == 'admin'") {
 		userId
 		accountNo
 		email
+		fullName
+		book
+		classType
+		createdAt
+		updatedAt
+	}
+}
+
+query GetConsumerByUserId($userId: String!) @auth(level: USER) {
+	consumer(first: { where: { userId: { eq: $userId } } }) {
+		id
+		userId
+		accountNo
 		fullName
 		book
 		classType

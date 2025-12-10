@@ -1,0 +1,219 @@
+mutation SeedFiveConsumers {
+  consumer_insertMany(
+    data: [
+      {
+        userId: null
+        accountNo: "10001"
+        fullName: "Ahmad bin Salleh"
+        book: "calampisawan"
+        classType: "RESIDENTIAL"
+      }
+      {
+        userId: null
+        accountNo: "10002"
+        fullName: "Siti Nurhaliza"
+        book: "calampisawan"
+        classType: "CORPORATE"
+      }
+      {
+        userId: null
+        accountNo: "10003"
+        fullName: "Rajesh a/l Kumar"
+        book: "calampisawan"
+        classType: "RESIDENTIAL"
+      }
+      {
+        userId: null
+        accountNo: "10004"
+        fullName: "Lim Wei Jie"
+        book: "calampisawan"
+        classType: "CORPORATE"
+      }
+      {
+        userId: null
+        accountNo: "10005"
+        fullName: "Nurul Izzah binti Rahman"
+        book: "calampisawan"
+        classType: "RESIDENTIAL"
+      }
+    ]
+  )
+}
+
+mutation SeedThreeBillsFor10001 {
+  billingFromCsv_insertMany(
+    data: [
+      # Bill 1 — Current month (unpaid)
+      {
+        accountNo: "10001"
+        fullName: "Ahmad bin Salleh"
+        book: "calampisawan"
+        classType: "RESIDENTIAL"
+        billNo: "BILL-2025-10-001"
+        billDate: "2025-10-06"
+        dueDate: "2025-10-20"
+        disconDate: "2025-10-25"
+        preReading: 3526
+        curReading: 3535
+        waterUsage: 9
+        prevUsed: 8
+        prevUsed2: 7
+        billAmnt: 675.0
+        totalBill: 685.0
+        environmentFee: 10.0
+        amortAmnt: 0.0
+        arrearsAmnt: 0.0
+        arrearsEnv: 0.0
+        discount: 0.0
+        duePenalty: 0.0
+        mPenalty: 0.0
+        nrWater: 0.0
+        bStatus: "1"
+        paid: "F"
+        verified: "T"
+        mtrNo: "9402982"
+        mrSysNo: 54565
+        billBrgy: "Calampisawan"
+        billPurok: "Purok 3"
+        purokCode: "P3"
+        prvBillDate: "2025-09-05"
+        prvDueDate: "2025-09-19"
+        prvDiscon: "2025-09-24"
+        stubOut: "Regular"
+        paymentDate: null
+        paymentReceipt: null
+        paymentStatus: null
+      }
+      # Bill 2 — Previous month (paid)
+      {
+        accountNo: "10001"
+        fullName: "Ahmad bin Salleh"
+        book: "calampisawan"
+        classType: "RESIDENTIAL"
+        billNo: "BILL-2025-09-001"
+        billDate: "2025-09-05"
+        dueDate: "2025-09-19"
+        disconDate: "2025-09-24"
+        preReading: 3518
+        curReading: 3526
+        waterUsage: 8
+        prevUsed: 10
+        prevUsed2: 9
+        billAmnt: 600.0
+        totalBill: 610.0
+        environmentFee: 10.0
+        amortAmnt: 0.0
+        arrearsAmnt: 0.0
+        arrearsEnv: 0.0
+        discount: 0.0
+        duePenalty: 0.0
+        mPenalty: 0.0
+        nrWater: 0.0
+        bStatus: "2"
+        paid: "T"
+        verified: "T"
+        mtrNo: "9402982"
+        mrSysNo: 54565
+        billBrgy: "Calampisawan"
+        billPurok: "Purok 3"
+        purokCode: "P3"
+        prvBillDate: "2025-08-03"
+        prvDueDate: "2025-08-17"
+        prvDiscon: "2025-08-22"
+        stubOut: "Regular"
+        paymentDate: "2025-09-18"
+        paymentReceipt: "REC-2025-09-0188"
+        paymentStatus: "PAID_CASH"
+      }
+      # Bill 3 — Two months ago (with arrears)
+      {
+        accountNo: "10001"
+        fullName: "Ahmad bin Salleh"
+        book: "calampisawan"
+        classType: "RESIDENTIAL"
+        billNo: "BILL-2025-08-001"
+        billDate: "2025-08-03"
+        dueDate: "2025-08-17"
+        disconDate: "2025-08-22"
+        preReading: 3508
+        curReading: 3518
+        waterUsage: 10
+        prevUsed: 12
+        prevUsed2: 11
+        billAmnt: 750.0
+        totalBill: 885.0
+        environmentFee: 10.0
+        arrearsAmnt: 75.0
+        arrearsEnv: 10.0
+        mPenalty: 50.0
+        duePenalty: 25.0
+        amortAmnt: 0.0
+        discount: 0.0
+        nrWater: 0.0
+        bStatus: "3"
+        paid: "F"
+        verified: "T"
+        mtrNo: "9402982"
+        mrSysNo: 54565
+        billBrgy: "Calampisawan"
+        billPurok: "Purok 3"
+        purokCode: "P3"
+        prvBillDate: "2025-07-01"
+        prvDueDate: "2025-07-15"
+        prvDiscon: "2025-07-20"
+        stubOut: "Regular"
+        paymentDate: null
+        paymentReceipt: null
+        paymentStatus: null
+      }
+    ]
+  )
+}
+
+mutation Seed3Surveys {
+  survey_insertMany(
+    data: [
+      {
+        title: "Survey 1 title"
+        description: "Survey 1 description"
+        status: PUBLISHED
+        # createdAt will use default if omitted
+        # publishedAt can be omitted or set
+        # responsesCount will default to 0 if omitted
+      }
+      { title: "Survey 2 title", description: "Survey 2 description", status: DRAFT }
+      { title: "Survey 3 title", description: "Survey 3 description", status: CLOSED }
+    ]
+  )
+}
+
+mutation SeedQuestions {
+  question_insertMany(
+    data: [
+      {
+        survey: { id: "c5589105ebac46a1bcfcb53fcc96e567" }
+        type: TEXT
+        label: "Question 1 text"
+        options: []
+        required: true
+        order: 1
+      }
+      {
+        survey: { id: "c5589105ebac46a1bcfcb53fcc96e567" }
+        type: RADIO
+        label: "Question 2 text"
+        options: ["Option A", "Option B"]
+        required: false
+        order: 2
+      }
+      {
+        survey: { id: "c5589105ebac46a1bcfcb53fcc96e567" }
+        type: CHECKBOX
+        label: "Question 1 for survey 2"
+        options: ["Choice 1", "Choice 2"]
+        required: true
+        order: 1
+      }
+    ]
+  )
+}

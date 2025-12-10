@@ -104,3 +104,54 @@ query SearchBillingFromCsv($query: String, $limit: Int = 10)
 		updatedAt
 	}
 }
+
+query GetCurrentBill($accountNo: String!) @auth(level: USER) {
+	billingFromCsv(
+		first: {
+			where: { accountNo: { eq: $accountNo } }
+			orderBy: [{ billDate: DESC }]
+		}
+	) {
+		id
+		accountNo
+		fullName
+		book
+		classType
+		billNo
+		billDate
+		dueDate
+		disconDate
+		preReading
+		curReading
+		waterUsage
+		prevUsed
+		prevUsed2
+		billAmnt
+		totalBill
+		environmentFee
+		amortAmnt
+		arrearsAmnt
+		arrearsEnv
+		discount
+		duePenalty
+		mPenalty
+		nrWater
+		bStatus
+		paid
+		verified
+		mtrNo
+		mrSysNo
+		billBrgy
+		billPurok
+		purokCode
+		stubOut
+		prvBillDate
+		prvDueDate
+		prvDiscon
+		paymentDate
+		paymentReceipt
+		paymentStatus
+		createdAt
+		updatedAt
+	}
+}

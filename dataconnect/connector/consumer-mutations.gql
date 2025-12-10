@@ -35,6 +35,14 @@ mutation UpdateConsumer(
 	)
 }
 
+mutation UserUpdateConsumer($id: UUID!, $userId: String, $email: String)
+@auth(level: USER) {
+	consumer_update(
+		id: $id
+		data: { userId: $userId, email: $email, updatedAt_expr: "request.time" }
+	)
+}
+
 mutation DeleteConsumer($id: UUID!) @auth(expr: "auth.token.role == 'admin'") {
 	consumer_delete(id: $id)
 }
