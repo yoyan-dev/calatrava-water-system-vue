@@ -1,86 +1,92 @@
 mutation CreateSurvey(
-	$title: String!
-	$description: String
-	$status: SurveyStatus!
-	$responsesCount: Int!
+  $title: String!
+  $description: String
+  $status: SurveyStatus!
+  $responsesCount: Int!
 ) @auth(expr: "auth.token.role == 'admin'") {
-	survey_insert(
-		data: {
-			title: $title
-			description: $description
-			status: $status
-			responsesCount: $responsesCount
-		}
-	)
+  survey_insert(
+    data: {
+      title: $title
+      description: $description
+      status: $status
+      responsesCount: $responsesCount
+    }
+  )
 }
 
 mutation UpdateSurvey(
-	$id: UUID!
-	$title: String!
-	$description: String!
-	$status: SurveyStatus!
+  $id: UUID!
+  $title: String!
+  $description: String!
+  $status: SurveyStatus!
 ) @auth(expr: "auth.token.role == 'admin'") {
-	survey_update(
-		id: $id
-		data: { title: $title, description: $description, status: $status }
-	)
+  survey_update(
+    id: $id
+    data: { title: $title, description: $description, status: $status }
+  )
 }
 
 mutation DeleteSurvey($id: UUID!) @auth(expr: "auth.token.role == 'admin'") {
-	survey_delete(id: $id)
+  survey_delete(id: $id)
 }
 
 mutation CreateQuestion(
-	$surveyId: UUID!
-	$type: QuestionType!
-	$label: String!
-	$options: [String!]
-	$required: Boolean!
-	$order: Int!
+  $surveyId: UUID!
+  $type: QuestionType!
+  $label: String!
+  $options: [String!]
+  $required: Boolean!
+  $order: Int!
 ) @auth(expr: "auth.token.role == 'admin'") {
-	question_insert(
-		data: {
-			surveyId: $surveyId
-			type: $type
-			label: $label
-			options: $options
-			required: $required
-			order: $order
-		}
-	)
+  question_insert(
+    data: {
+      surveyId: $surveyId
+      type: $type
+      label: $label
+      options: $options
+      required: $required
+      order: $order
+    }
+  )
 }
 
 mutation UpdateQuestion(
-	$id: UUID!
-	$type: QuestionType!
-	$label: String!
-	$options: [String!]
-	$required: Boolean!
-	$order: Int!
+  $id: UUID!
+  $type: QuestionType!
+  $label: String!
+  $options: [String!]
+  $required: Boolean!
+  $order: Int!
 ) @auth(expr: "auth.token.role == 'admin'") {
-	question_update(
-		id: $id
-		data: {
-			type: $type
-			label: $label
-			options: $options
-			required: $required
-			order: $order
-		}
-	)
+  question_update(
+    id: $id
+    data: {
+      type: $type
+      label: $label
+      options: $options
+      required: $required
+      order: $order
+    }
+  )
 }
 
 mutation DeleteQuestion($id: UUID!) @auth(expr: "auth.token.role == 'admin'") {
-	question_delete(id: $id)
+  question_delete(id: $id)
 }
 
 mutation SubmitSurveyResponse(
-	$surveyId: UUID!
-	$accountNo: String!
-	$answers: Any!
+  $surveyId: UUID!
+  $userId: String!
+  $accountNo: String!
+  $answers: Any!
 ) @auth(level: USER) @transaction {
-	surveyResponse_insert(
-		data: { surveyId: $surveyId, accountNo: $accountNo, answers: $answers }
-	)
-	survey_update(id: $surveyId, data: { responsesCount_update: { inc: 1 } })
+  surveyResponse_insert(
+    data: {
+      surveyId: $surveyId
+      userId: $userId
+      accountNo: $accountNo
+      answers: $answers
+    }
+  )
+  survey_update(id: $surveyId, data: { responsesCount_update: { inc: 1 } })
 }
