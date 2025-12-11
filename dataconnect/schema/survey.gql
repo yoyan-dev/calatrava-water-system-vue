@@ -29,3 +29,11 @@ type Question @table {
 	required: Boolean! @default(value: false)
 	order: Int!
 }
+
+type SurveyResponse @table {
+	survey: Survey!
+	userId: String @default(expr: "auth.uid")
+	accountNo: String!
+	answers: Any!
+	submittedAt: Timestamp! @default(expr: "request.time")
+}

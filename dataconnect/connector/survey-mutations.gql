@@ -73,3 +73,14 @@ mutation UpdateQuestion(
 mutation DeleteQuestion($id: UUID!) @auth(expr: "auth.token.role == 'admin'") {
 	question_delete(id: $id)
 }
+
+mutation SubmitSurveyResponse(
+	$surveyId: UUID!
+	$accountNo: String!
+	$answers: Any!
+) @auth(level: USER) @transaction {
+	surveyResponse_insert(
+		data: { surveyId: $surveyId, accountNo: $accountNo, answers: $answers }
+	)
+	survey_update(id: $surveyId, data: { responsesCount_update: { inc: 1 } })
+}
