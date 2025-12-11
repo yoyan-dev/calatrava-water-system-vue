@@ -1,40 +1,48 @@
 query GetSurveys @auth(expr: "auth.token.role == 'admin'") {
-	surveys {
-		id
-		title
-		description
-		status
-		responsesCount
-		createdAt
-	}
+  surveys {
+    id
+    title
+    description
+    status
+    responsesCount
+    createdAt
+  }
 }
 
 query GetSurveyById($id: UUID!) @auth(level: USER) {
-	survey(id: $id) {
-		id
-		title
-		description
-		questions: questions_on_survey {
-			id
-			type
-			label
-			options
-			required
-			order
-		}
-		status
-		responsesCount
-		createdAt
-	}
+  survey(id: $id) {
+    id
+    title
+    description
+    questions: questions_on_survey {
+      id
+      type
+      label
+      options
+      required
+      order
+    }
+    status
+    responsesCount
+    createdAt
+  }
 }
 
 query GetPublishedSurveys @auth(level: USER) {
-	surveys(where: { status: { eq: PUBLISHED } }) {
-		id
-		title
-		description
-		status
-		responsesCount
-		createdAt
-	}
+  surveys(where: { status: { eq: PUBLISHED } }) {
+    id
+    title
+    description
+    questions: questions_on_survey {
+      id
+      type
+      label
+      options
+      required
+      order
+    }
+    status
+    responsesCount
+    createdAt
+  }
 }
