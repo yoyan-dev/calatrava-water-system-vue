@@ -14,7 +14,7 @@ mutation CreateConsumer(
 	)
 }
 
-mutation UpdateConsumer(
+mutation AdminUpdateConsumer(
 	$id: UUID!
 	$userId: String
 	$accountNo: String

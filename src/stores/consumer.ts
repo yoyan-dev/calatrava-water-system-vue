@@ -2,7 +2,7 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import type { StoreResponse } from '@/types/store-response';
 import { consumerRepository as consumerGraph } from '@/repositories/graph/consumerRepository';
-import type { ConsumerItem } from '@/types/consumer';
+import type { Consumer } from '@/types/consumer';
 import type { CreateConsumerVariables } from '@/dataconnect-generated';
 
 interface PaginateOptions {
@@ -14,7 +14,7 @@ interface PaginateOptions {
 
 export const useConsumerStore = defineStore('consumer', () => {
 	// State
-	const consumers = ref<ConsumerItem[]>([]);
+	const consumers = ref<Consumer[]>([]);
 	const isLoading = ref(false);
 	const totalConsumers = ref<number>(0);
 	const searchQuery = ref<string>('');
@@ -24,7 +24,7 @@ export const useConsumerStore = defineStore('consumer', () => {
 	async function fetchSearchConsumers(query: string) {
 		try {
 			const data = await consumerGraph.searchConsumers(query);
-			consumers.value = data as ConsumerItem[];
+			consumers.value = data;
 		} catch (error) {
 			console.error('Error searching Consumers:', error);
 		}
@@ -136,9 +136,7 @@ export const useConsumerStore = defineStore('consumer', () => {
 		}
 	}
 
-	async function deleteSelectedConsumers(
-		selected: Array<ConsumerItem>,
-	): Promise<{
+	async function deleteSelectedConsumers(selected: Array<Consumer>): Promise<{
 		status: 'success' | 'error' | 'partial';
 		message: string;
 		deleted: number;
@@ -228,7 +226,7 @@ export const useConsumerStore = defineStore('consumer', () => {
 		}
 	}
 
-	async function updateConsumer(id: string, payload: Partial<ConsumerItem>) {
+	async function updateConsumer(id: string, payload: Partial<Consumer>) {
 		isLoading.value = true;
 		try {
 			const response = await consumerGraph.updateConsumer({

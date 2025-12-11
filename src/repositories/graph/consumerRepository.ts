@@ -6,21 +6,19 @@ import {
 	deleteConsumer,
 	paginatedConsumers,
 	searchConsumers,
+	adminUpdateConsumer,
 	getConsumerByAccountNo,
-	updateConsumer,
-	type CreateConsumerVariables,
-	type UpdateConsumerVariables,
 } from '@/dataconnect-generated';
 import Papa from 'papaparse';
+import type { Consumer } from '@/types/consumer';
 
 class ConsumerRepository {
 	async getConsumerByAccountNo(accountNo: string) {
 		try {
-			const response = await this.getConsumerByAccountNo({ query: accountNo });
-			const consumers = response.data.consumers_search || [];
-			return consumers.find(
-				(consumer: any) => consumer.accountNo === accountNo,
-			);
+			const response = await getConsumerByAccountNo({ accountNo });
+			if (response.data.consumer) {
+				return response.data.consumer;
+			}
 		} catch (error) {
 			console.error('Error fetching consumer by account number:', error);
 			return null;
@@ -44,7 +42,14 @@ class ConsumerRepository {
 		}
 		try {
 			const response = await searchConsumers({ query: keyword });
-			return response.data.consumers_search || [];
+			if (response.data.consumers_search) {
+				const consumers: Consumer[] = response.data.consumers_search.map(
+					(item: any) => ({
+						...item,
+					}),
+				);
+				return consumers;
+			} else return [];
 		} catch (error) {
 			console.error('Error searching consumers:', error);
 			return [];
@@ -60,18 +65,16 @@ class ConsumerRepository {
 		}
 	}
 
-	async updateConsumer(payload: UpdateConsumerVariables) {
+	async updateConsumer(payload: any) {
 		try {
-			const response = await updateConsumer(payload);
+			const response = await adminUpdateConsumer(payload);
 			if (response?.data?.consumer_update?.id) return { success: true };
 		} catch (error) {
 			return { status: 'error', message: error };
 		}
 	}
 
-	async addConsumer(
-		payload: CreateConsumerVariables,
-	): Promise<RepositoryResponse> {
+	async addConsumer(payload: any): Promise<RepositoryResponse> {
 		try {
 			const response = await createConsumer(payload);
 			if (response?.data?.consumer_insert?.id) {
@@ -120,7 +123,7 @@ class ConsumerRepository {
 			const consumerData: any[] = [];
 
 			for (const rawValues of rows) {
-				const data: CreateConsumerVariables = {
+				const data: any = {
 					accountNo: '',
 					fullName: '',
 					book: '',
@@ -198,7 +201,12 @@ class ConsumerRepository {
 				orderDirection,
 			});
 			if (response.data.consumers.length > 0) {
-				return response.data.consumers;
+				const consumers: Consumer[] = response.data.consumers.map(
+					(item: any) => ({
+						...item,
+					}),
+				);
+				return consumers;
 			} else {
 				return [];
 			}
