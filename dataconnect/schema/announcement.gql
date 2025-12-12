@@ -1,0 +1,41 @@
+enum AnnouncementStatus {
+	DRAFT
+	PUBLISHED
+	ARCHIVED
+}
+
+enum AnnouncementPriority {
+	NORMAL
+	IMPORTANT
+	CRITICAL # e.g., water interruption, emergency
+}
+
+type Announcement @table {
+	title: String!
+	content: String!
+
+	status: AnnouncementStatus! @default(value: "DRAFT")
+	priority: AnnouncementPriority! @default(value: "NORMAL")
+
+	# Optional: show only to specific areas/books
+	targetBooks: [String!]
+	targetZones: [String!]
+
+	# Media
+	imageUrl: String
+	attachmentUrls: [String!]
+
+	# Publishing
+	publishedAt: Timestamp
+	expiresAt: Timestamp # auto-hide after this date
+	# Metadata
+	createdAt: Timestamp! @default(expr: "request.time")
+	updatedAt: Timestamp
+	createdBy: String # admin UID or name
+	# For analytics
+	viewCount: Int64 @default(value: "0")
+	acknowledgedCount: Int64
+		@default(value: "0")
+		@index(fields: ["status", "publishedAt"])
+		@index(fields: ["priority"])
+}

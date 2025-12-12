@@ -1,0 +1,74 @@
+# ==================== ADMIN ONLY (role: admin) ====================
+mutation CreateAnouncement(
+	$title: String!
+	$content: String!
+	$priority: AnnouncementPriority!
+	$status: AnnouncementStatus
+	$targetBooks: [String!]
+	$targetZones: [String!]
+	$imageUrl: String
+	$attachmentUrls: [String!]
+	$publishedAt: Timestamp
+	$expiresAt: Timestamp
+) @auth(expr: "auth.token.role == 'admin'") {
+	announcement_insert(
+		data: {
+			title: $title
+			content: $content
+			priority: $priority
+			status: $status
+			targetBooks: $targetBooks
+			targetZones: $targetZones
+			imageUrl: $imageUrl
+			attachmentUrls: $attachmentUrls
+			publishedAt: $publishedAt
+			expiresAt: $expiresAt
+		}
+	)
+}
+
+mutation UpdateAnouncement(
+	$id: UUID!
+	$title: String
+	$content: String
+	$priority: AnnouncementPriority
+	$status: AnnouncementStatus
+	$targetBooks: [String!]
+	$targetZones: [String!]
+	$imageUrl: String
+	$attachmentUrls: [String!]
+	$publishedAt: Timestamp
+	$expiresAt: Timestamp
+) @auth(expr: "auth.token.role == 'admin'") {
+	announcement_update(
+		id: $id
+		data: {
+			title: $title
+			content: $content
+			priority: $priority
+			status: $status
+			targetBooks: $targetBooks
+			targetZones: $targetZones
+			imageUrl: $imageUrl
+			attachmentUrls: $attachmentUrls
+			publishedAt: $publishedAt
+			expiresAt: $expiresAt
+		}
+	)
+}
+
+mutation DeleteAnouncement($id: UUID!)
+@auth(expr: "auth.token.role == 'admin'") {
+	announcement_delete(id: $id)
+}
+
+# ==================== AUTHENTICATED USERS (view count) ====================
+# Optional: Track when a consumer views a notice
+mutation MarkeViewedAnouncement($id: UUID!) @auth(level: USER) {
+	announcement_update(id: $id, data: { viewCount_update: { inc: 1 } })
+}
+
+# Optional: Let consumer acknowledge critical notices
+mutation AcknowledgeAnouncement($id: UUID!) @auth(level: USER) {
+	announcement_update(id: $id, data: { acknowledgedCount_update: { inc: 1 } })
+}
