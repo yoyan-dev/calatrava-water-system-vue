@@ -1,0 +1,55 @@
+query PaginatedAnnouncements(
+	$limit: Int = 10
+	$offset: Int = 0
+	$orderByField: String
+	$orderDirection: String
+) {
+	announcements(
+		limit: $limit
+		offset: $offset
+		orderBy: [{ createdAt: DESC }]
+	) {
+		id
+		title
+		content
+		status
+		priority
+		targetBooks
+		targetZones
+		imageUrl
+		attachmentUrls
+		publishedAt
+		expiresAt
+		createdAt
+		updatedAt
+		createdBy
+		viewCount
+		acknowledgedCount
+	}
+}
+
+query GetPublishedAnnouncementsByBook($book: String) {
+	announcements(
+		orderBy: [{ createdAt: DESC }]
+		where: {
+			_and: [
+				{ status: { eq: PUBLISHED } }
+				{ targetBooks: { includes: "calampisawan" } }
+				# {
+				# 	_or: [{ expiresAt: { gt: "now()" } }, { expiresAt: { isNull: true } }]
+				# }
+			]
+		}
+	) {
+		id
+		title
+		content
+		priority
+		imageUrl
+		attachmentUrls
+		publishedAt
+		expiresAt
+		viewCount
+		acknowledgedCount
+	}
+}

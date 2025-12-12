@@ -33,9 +33,6 @@ type Announcement @table {
 	updatedAt: Timestamp
 	createdBy: String # admin UID or name
 	# For analytics
-	viewCount: Int64 @default(value: "0")
-	acknowledgedCount: Int64
-		@default(value: "0")
-		@index(fields: ["status", "publishedAt"])
-		@index(fields: ["priority"])
+	viewCount: Int @default(value: 0)
+	acknowledgedCount: Int @default(value: 0)
 }
