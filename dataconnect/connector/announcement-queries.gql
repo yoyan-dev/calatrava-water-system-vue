@@ -3,7 +3,7 @@ query PaginatedAnnouncements(
 	$offset: Int = 0
 	$orderByField: String
 	$orderDirection: String
-) {
+) @auth(expr: "auth.token.role == 'admin'") {
 	announcements(
 		limit: $limit
 		offset: $offset
@@ -28,7 +28,7 @@ query PaginatedAnnouncements(
 	}
 }
 
-query GetPublishedAnnouncementsByBook($book: String) {
+query GetPublishedAnnouncementsByBook($book: String) @auth(level: PUBLIC) {
 	announcements(
 		orderBy: [{ createdAt: DESC }]
 		where: {
