@@ -66,7 +66,7 @@
 
 <template>
 	<div
-		class="min-h-screen bg-gradient-to-br from-primary-50 via-primary-100 to-primary-200 px-4 py-12 md:px-8 lg:px-16 flex items-center justify-center relative overflow-hidden">
+		class="min-h-screen bg-linear-to-br from-primary-50 via-primary-100 to-primary-200 px-4 py-12 md:px-8 lg:px-16 flex items-center justify-center relative overflow-hidden">
 		<!-- Animated background elements for depth and motion -->
 		<div class="absolute inset-0 pointer-events-none">
 			<div

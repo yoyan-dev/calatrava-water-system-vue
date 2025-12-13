@@ -1,9 +1,8 @@
 const routes = [
-	{ path: '/', redirect: '/auth' },
 	{
-		path: '/auth',
-		name: 'auth',
-		component: () => import('@/pages/auth/index.vue'),
+		path: '/',
+		name: 'home',
+		component: () => import('@/pages/public/index.vue'),
 		meta: { requiresGuest: true },
 	},
 	{
