@@ -102,7 +102,7 @@
 				<div class="flex h-14 items-center justify-between">
 					<div class="flex items-center gap-4">
 						<Button
-							class="hidden lg:!hidden"
+							class="hidden lg:hidden!"
 							icon="pi pi-bars"
 							severity="secondary"
 							text
@@ -161,13 +161,13 @@
 					</div>
 
 					<!-- Menu -->
-					<ul class="flex-grow space-y-2">
+					<ul class="grow space-y-2">
 						<li
 							v-for="item in items"
 							:key="item.name">
 							<RouterLink
 								:to="item.route"
-								class="flex items-center px-3 py-2.5 text-sm font-medium text-surface-50 hover:bg-primary-700/50 dark:hover:bg-primary-900/50 rounded-md transition-colors"
+								class="flex items-center px-3 py-1 text-sm font-medium text-surface-50 hover:bg-primary-700/50 dark:hover:bg-primary-900/50 rounded-md transition-colors"
 								:class="{
 									'bg-primary-700 dark:bg-primary-900 text-primary-50':
 										route.name === item.name,
@@ -221,7 +221,7 @@
 								@click="closeCallback()" />
 						</div>
 						<div class="overflow-y-auto">
-							<ul class="flex-grow space-y-2">
+							<ul class="grow space-y-2">
 								<li
 									v-for="item in items"
 									:key="item.name">
@@ -260,7 +260,7 @@
 
 			<!-- Content Area -->
 			<div
-				class="flex-1 overflow-y-auto bg-gradient-to-br from-surface-50 to-surface-0 dark:from-surface-900 dark:to-surface-900 lg:rounded-2xl shadow-2xl">
+				class="flex-1 overflow-y-auto bg-linear-to-br from-surface-50 to-surface-0 dark:from-surface-900 dark:to-surface-900 lg:rounded-2xl shadow-2xl">
 				<router-view v-slot="{ Component }">
 					<keep-alive>
 						<component :is="Component" />
