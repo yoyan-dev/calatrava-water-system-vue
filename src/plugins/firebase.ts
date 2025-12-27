@@ -7,6 +7,7 @@ import {
 	browserLocalPersistence,
 } from 'firebase/auth';
 import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
+import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { getMessaging } from 'firebase/messaging';
 import {
 	connectDataConnectEmulator,
@@ -28,6 +29,7 @@ const messaging = getMessaging(firebaseApp);
 const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
 const dc = getDataConnect(connectorConfig);
+const functions = getFunctions(firebaseApp);
 
 // Connect to emulators in development mode
 if (process.env.NODE_ENV === 'development') {
@@ -36,6 +38,7 @@ if (process.env.NODE_ENV === 'development') {
 	});
 	connectFirestoreEmulator(db, '127.0.0.1', 8080);
 	connectDataConnectEmulator(dc, 'localhost', 9399);
+	connectFunctionsEmulator(functions, '127.0.0.1', 5001);
 }
 
 setPersistence(auth, indexedDBLocalPersistence).catch(() =>
