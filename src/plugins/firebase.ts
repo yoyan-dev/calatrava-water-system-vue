@@ -45,4 +45,4 @@ setPersistence(auth, indexedDBLocalPersistence).catch(() =>
 	setPersistence(auth, browserLocalPersistence),
 );
 
-export { firebaseApp, messaging, auth, db, dc };
+export { firebaseApp, messaging, auth, db, dc, functions };
