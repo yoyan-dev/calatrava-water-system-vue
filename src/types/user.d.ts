@@ -5,3 +5,10 @@ export interface User {
 	displayName?: string;
 	customClaims?: { [key: string]: any };
 }
+
+export interface InserUser {
+	email: string;
+	password: string;
+	displayName: string;
+	customClaims: { [key: string]: any };
+}
