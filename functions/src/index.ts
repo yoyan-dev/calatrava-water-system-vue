@@ -1,32 +1,127 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * import {onCall} from "firebase-functions/v2/https";
- * import {onDocumentWritten} from "firebase-functions/v2/firestore";
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+import { setGlobalOptions } from 'firebase-functions';
+import { HttpsError, onCall } from 'firebase-functions/v2/https';
+import * as logger from 'firebase-functions/logger';
+import * as admin from 'firebase-admin';
 
-import {setGlobalOptions} from "firebase-functions";
-import {onRequest} from "firebase-functions/https";
-import * as logger from "firebase-functions/logger";
-
-// Start writing functions
-// https://firebase.google.com/docs/functions/typescript
-
-// For cost control, you can set the maximum number of containers that can be
-// running at the same time. This helps mitigate the impact of unexpected
-// traffic spikes by instead downgrading performance. This limit is a
-// per-function limit. You can override the limit for each function using the
-// `maxInstances` option in the function's options, e.g.
-// `onRequest({ maxInstances: 5 }, (req, res) => { ... })`.
-// NOTE: setGlobalOptions does not apply to functions using the v1 API. V1
-// functions should each use functions.runWith({ maxInstances: 10 }) instead.
-// In the v1 API, each function can only serve one request per container, so
-// this will be the maximum concurrent request count.
+if (!admin.apps.length) {
+	admin.initializeApp();
+}
 setGlobalOptions({ maxInstances: 10 });
 
-// export const helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+// User Management: Create User
+export const createUser = onCall({ enforceAppCheck: true }, async (request) => {
+	// 1. Check if caller is authenticated
+	if (!request.auth) {
+		throw new HttpsError(
+			'unauthenticated',
+			'You must be logged in to create a user.',
+		);
+	}
+
+	// 2. Check if caller has admin privileges (via custom claims)
+	if (!request.auth.token.admin) {
+		throw new HttpsError('permission-denied', 'Only admins can create users.');
+	}
+
+	// 3. Extract and validate data from client
+	const { email, password, displayName, customClaims } = request.data;
+	if (!email || !password) {
+		throw new HttpsError(
+			'invalid-argument',
+			'Email and password are required to create a user.',
+		);
+	}
+
+	if (password.length < 6) {
+		throw new HttpsError(
+			'invalid-argument',
+			'Password must be at least 6 characters long.',
+		);
+	}
+
+	// 4. Create the user using Admin SDK
+	try {
+		const userRecord = await admin.auth().createUser({
+			email,
+			password,
+			displayName,
+		});
+
+		// 5. Set custom claims if provided
+		if (customClaims && typeof customClaims === 'object') {
+			await admin.auth().setCustomUserClaims(userRecord.uid, customClaims);
+		}
+
+		logger.info(`User ${userRecord.uid} created successfully.`);
+
+		// 6. Return success response
+		return {
+			uid: userRecord.uid,
+			email: userRecord.email,
+			displayName: userRecord.displayName,
+			customClaims: customClaims || {},
+		};
+	} catch (error: any) {
+		logger.error('Error creating user:', error);
+		throw new HttpsError('internal', 'Error creating user: ' + error.message);
+	}
+});
+
+// User Management: List Users
+export const listUsers = onCall({ enforceAppCheck: true }, async (request) => {
+	// 1. Check if caller is authenticated
+	if (!request.auth) {
+		throw new HttpsError(
+			'unauthenticated',
+			'You must be logged in to list users.',
+		);
+	}
+
+	// 2. Check if caller has admin privileges (via custom claims)
+	if (!request.auth.token.admin) {
+		throw new HttpsError('permission-denied', 'Only admins can list users.');
+	}
+
+	// 3. Extract pagination parameters
+	const pageSize = Math.min(request.data.pageSize || 10, 100); // Max 100
+	const pageToken = request.data.pageToken || null;
+
+	// 4. List users using Admin SDK
+	try {
+		const listUsersResult = await admin.auth().listUsers(pageSize, pageToken);
+
+		const users = listUsersResult.users.map((userRecord) => ({
+			uid: userRecord.uid,
+			email: userRecord.email,
+			emailVerified: userRecord.emailVerified,
+			displayName: userRecord.displayName,
+			photoURL: userRecord.photoURL,
+			disabled: userRecord.disabled,
+			metadata: {
+				creationTime: userRecord.metadata.creationTime,
+				lastSignInTime: userRecord.metadata.lastSignInTime,
+				lastRefreshTime: userRecord.metadata.lastRefreshTime,
+			},
+			providerData: userRecord.providerData.map((provider) => ({
+				providerId: provider.providerId,
+				email: provider.email,
+				displayName: provider.displayName,
+				photoURL: provider.photoURL,
+			})),
+			customClaims: userRecord.customClaims || {},
+		}));
+
+		logger.info(`Fetched ${users.length} users (pageSize: ${pageSize})`);
+
+		// 5. Return users and next page token
+		return {
+			users,
+			nextPageToken: listUsersResult.pageToken || null,
+			pageSize: users.length,
+			hasMore: !!listUsersResult.pageToken,
+		};
+	} catch (error: any) {
+		logger.error('Error listing users:', error);
+		throw new HttpsError('internal', 'Error listing users: ' + error.message);
+	}
+});
