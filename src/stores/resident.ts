@@ -17,7 +17,7 @@ import {
 import type { StoreResponse } from '@/types/store-response';
 import type { H3Response } from '@/types/h3response';
 import { useFetch, watchDebounced } from '@vueuse/core';
-import { residentRepository } from '@/repositories/residentRepository';
+import { residentRepository } from '@/repositories/v1/residentRepository';
 import type { Ledger } from '@/types/ledger';
 import type { Collection } from '@/types/collection';
 

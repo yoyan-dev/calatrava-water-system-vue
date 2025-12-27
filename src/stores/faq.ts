@@ -2,7 +2,7 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import type { Faq } from '@/types/faq';
 import type { StoreResponse } from '@/types/store-response';
-import { faqRepository } from '@/repositories/faqRepository';
+import { faqRepository } from '@/repositories/v1/faqRepository';
 
 export const useFaqStore = defineStore('faq', () => {
 	const faqs = ref<Faq[]>([]);

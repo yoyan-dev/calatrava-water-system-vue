@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import { reminderRepository } from '@/repositories/reminderRepository';
+import { reminderRepository } from '@/repositories/v1/reminderRepository';
 import type { StoreResponse } from '@/types/store-response';
 import type { Reminder } from '@/types/reminder';
 

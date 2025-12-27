@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import type { StoreResponse } from '@/types/store-response';
-import { ledgerRepository as ledgerGraph } from '@/repositories/graph/ledgerRepository';
+import { ledgerRepository as ledgerGraph } from '@/repositories/v2/ledgerRepository';
 import type { LedgerItemFromCsv } from '@/types/ledger-from-csv';
 
 interface PaginateOptions {

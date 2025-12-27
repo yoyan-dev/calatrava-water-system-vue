@@ -1,229 +1,274 @@
-import { auth, db } from '@/plugins/firebase';
 import {
-	collection,
-	query,
-	getDocs,
-	doc,
-	getDoc,
-	orderBy,
-	limit,
-	startAfter,
-	endBefore,
-	type DocumentData,
-	QueryDocumentSnapshot,
-	CollectionReference,
-	Query,
-	getCountFromServer,
-	setDoc,
-	serverTimestamp,
-	writeBatch,
-} from 'firebase/firestore';
-
-export interface PaginateOptions {
-	limit: number;
-	forward?: boolean;
-	cursorDoc?: QueryDocumentSnapshot<DocumentData> | null;
-	orderByField?: string;
-	orderDirection?: 'asc' | 'desc';
-}
-
-interface ResidentData {
-	book: string;
-	fullname: string;
-	accountno: string;
-	waterusage: string;
-	billamnt: number;
-	[key: string]: any;
-}
+	countBillingFromCsv,
+	createBillingFromCsv,
+	deleteBillingFromCsv,
+	paginatedBillings,
+	searchBillingFromCsv,
+	updateBillingFromCsv,
+	type CreateBillingFromCsvVariables,
+} from '@/dataconnect-generated';
 
 class BillingRepository {
-	private collectionName = 'billings';
-
-	private parseCsvBilling(csv: string): ResidentData[] {
-		const lines = csv.trim().split('\n');
-		const headers = lines[0].split(',').map((h) => h.trim());
-		return lines.slice(1).map((line) => {
-			const values = line.split(',').map((v) => v.trim());
-			const obj: any = {};
-			headers.forEach((h, i) => {
-				obj[h] = values[i] || '';
-			});
-			return obj as ResidentData;
-		});
-	}
-
-	/** Public, typed method */
-	async addBillings(payload: FormData) {
+	async countBillings() {
 		try {
-			const file = payload.get('file') as File;
-			if (!file) throw new Error('No file uploaded');
-
-			const csvText = await file.text();
-			const data: ResidentData[] = this.parseCsvBilling(csvText);
-			if (!data.length) throw new Error('Empty CSV file');
-
-			const BATCH_SIZE = 500;
-			const batches: Promise<void>[] = [];
-
-			for (let i = 0; i < data.length; i += BATCH_SIZE) {
-				const batch = writeBatch(db);
-				const chunk = data.slice(i, i + BATCH_SIZE);
-
-				for (const item of chunk) {
-					const {
-						book,
-						fullname,
-						accountno,
-						waterusage,
-						arrearsenv,
-						due_penalty,
-						classtype,
-						billamnt,
-						...billingData
-					} = item;
-
-					if (!accountno || !fullname || !book) continue;
-
-					const residentRef = doc(db, 'residents', accountno);
-					const residentData = {
-						book: book.toLowerCase(),
-						fullname: fullname.toLowerCase(),
-						createdAt: serverTimestamp(),
-						classtype,
-						notificationToken: null,
-					};
-
-					batch.set(residentRef, residentData, { merge: true });
-
-					const billingId = doc(collection(db, 'temp')).id; // generate ID
-					const subBillingRef = doc(residentRef, 'billings', billingId);
-					const globalBillingRef = doc(db, 'billings', billingId);
-
-					const environmentFee =
-						Number(waterusage) > 10 ? Number(waterusage) * 0.25 : 0;
-
-					const billingPayload = {
-						...billingData,
-						bill_no: Number(item.bill_no),
-						accountno: Number(item.accountno),
-						mr_sys_no: Number(item.mr_sys_no),
-						custno: Number(item.custno),
-						book: book.toLowerCase(),
-						fullname: fullname.toLowerCase(),
-						billamnt: Number(billamnt),
-						due_penalty: '0',
-						arrearsenv,
-						environmentFee,
-						totalBill: Number(billamnt) + environmentFee,
-						waterusage,
-						paymentReceipt: null,
-						paymentStatus: null,
-						paymentDate: null,
-						classtype,
-						createdAt: serverTimestamp(),
-					};
-
-					batch.set(subBillingRef, billingPayload);
-					batch.set(globalBillingRef, {
-						...billingPayload,
-						residentId: accountno,
-					});
-				}
-
-				batches.push(batch.commit());
-			}
-
-			await Promise.all(batches);
-			return {
-				success: true,
-				statusCode: 200,
-				message: 'Billings uploaded successfully',
-			};
+			const response = await countBillingFromCsv();
+			return response.data.billingFromCsvs;
 		} catch (error) {
-			console.error('Error uploading billings:', error);
-			return {
-				success: false,
-				statusCode: 500,
-				message: 'Failed to upload billings',
-			};
-		}
-	}
-
-	async getCountBillings() {
-		try {
-			const colRef = collection(db, this.collectionName);
-			const snapshot = await getCountFromServer(colRef);
-			return snapshot.data().count;
-		} catch (error) {
-			console.error('Error getting billing count:', error);
+			console.error('Error counting billings:', error);
 			return 0;
 		}
 	}
 
-	async paginateBillings(options: PaginateOptions) {
-		const {
-			limit: limitCount,
-			forward = true,
-			cursorDoc = null,
-			orderByField = 'bill_no',
-			orderDirection = 'desc',
-		} = options;
-
+	async searchBillings(keyword: any) {
+		if (!keyword || typeof keyword !== 'string') {
+			console.error('Invalid keyword:', keyword);
+			return [];
+		}
 		try {
-			const colRef = collection(
-				db,
-				this.collectionName,
-			) as CollectionReference<DocumentData>;
-			let q: Query<DocumentData> = query(
-				colRef,
-				orderBy(orderByField, orderDirection),
-				limit(limitCount),
-			);
-
-			// Pagination with direction
-			if (forward && cursorDoc) {
-				// Move forward
-				q = query(q, startAfter(cursorDoc));
-			} else if (!forward && cursorDoc) {
-				q = query(q, endBefore(cursorDoc));
-			}
-			const querySnapshot = await getDocs(q);
-			const billings: DocumentData[] = [];
-			querySnapshot.forEach((doc) => {
-				billings.push({ id: doc.id, ...doc.data() });
-			});
-
-			const newStartDoc = querySnapshot.docs[0] || null;
-			const newLastDoc =
-				querySnapshot.docs[querySnapshot.docs.length - 1] || null;
-
-			return {
-				data: billings,
-				startDoc: newStartDoc,
-				lastDoc: newLastDoc,
-				totalBillings: await this.getCountBillings(),
-			};
+			const response = await searchBillingFromCsv({ query: keyword });
+			return response.data.billingFromCsvs_search || [];
 		} catch (error) {
-			console.error('Error paginating billings:', error);
+			console.error('Error searching billings:', error);
+			return [];
 		}
 	}
 
-	async getBillingById(billingId: string) {
-		const user = auth.currentUser;
-		if (!user) throw new Error('User not authenticated');
-
-		const docRef = doc(db, this.collectionName, billingId);
-		const docSnap = await getDoc(docRef);
-
-		if (!docSnap.exists()) throw new Error('Billing not found');
-		const data = docSnap.data();
-
-		// Security: double-check ownership
-		if (data.userId !== user.uid) {
-			throw new Error('Unauthorized');
+	async deleteBillingFromCsv(id: string) {
+		try {
+			const response = await deleteBillingFromCsv({ id });
+			if (response?.data?.billingFromCsv_delete?.id) return { success: true };
+		} catch (error) {
+			console.error('Error deleting billing:', error);
 		}
+	}
 
-		return { id: docSnap.id, ...data };
+	async updateBillingFromCsv(payload: any) {
+		try {
+			const response = await updateBillingFromCsv(payload);
+			if (response?.data?.billingFromCsv_update?.id) return { success: true };
+		} catch (error) {
+			console.error('Error updating billing:', error);
+		}
+	}
+
+	async addBillingFromCsv(payload: FormData) {
+		try {
+			const file = payload.get('file') as File;
+			if (!file) throw new Error('No file uploaded');
+
+			// Read the CSV file content
+			const text = await file.text();
+			const rows = text.trim().split('\n').slice(1); // Skip header row
+			const header = text.trim().split('\n')[0].split(',');
+
+			const billingData = [];
+			// Process each row
+			for (const row of rows) {
+				const values = row.split(',');
+
+				// Map CSV headers to mutation variables (snake_case to camelCase)
+				const data: CreateBillingFromCsvVariables = {
+					accountNo: '',
+					amortAmnt: 0,
+					arrearsAmnt: 0,
+					arrearsEnv: 0,
+					bStatus: '',
+					billAmnt: 0,
+					billBrgy: '',
+					billDate: '',
+					billNo: '',
+					billPurok: '',
+					book: '',
+					classType: '',
+					curReading: 0,
+					custNo: 0,
+					discount: 0,
+					disconDate: '',
+					dueDate: '',
+					duePenalty: 0,
+					environmentFee: 0,
+					fullName: '',
+					mPenalty: 0,
+					mrrfDue: 0,
+					mrSysNo: 0,
+					mtrNo: '',
+					nrWater: 0,
+					paid: '',
+					paymentDate: null,
+					paymentReceipt: null,
+					paymentStatus: null,
+					penalized: 0,
+					preReading: 0,
+					prevUsed: 0,
+					prevUsed2: 0,
+					prvBillDate: '',
+					prvDiscon: '',
+					prvDueDate: '',
+					purokCode: '',
+					stubOut: '',
+					totalBill: 0,
+					verified: '',
+					waterUsage: 0,
+				};
+
+				header.forEach((key, index) => {
+					const value = values[index]?.trim() || '';
+
+					switch (key) {
+						case 'bill_no':
+							data.billNo = value || '';
+							break;
+						case 'accountno':
+							data.accountNo = value || '';
+							break;
+						case 'bill_date':
+							data.billDate = value;
+							break;
+						case 'due_date':
+							data.dueDate = value;
+							break;
+						case 'b_status':
+							data.bStatus = value;
+							break;
+						case 'mr_sys_no':
+							data.mrSysNo = parseInt(value) || 0;
+							break;
+						case 'due_penalty':
+							data.duePenalty = parseFloat(value) || 0;
+							break;
+						case 'penalized':
+							data.penalized = parseInt(value) || 0;
+							break;
+						case 'm_penalty':
+							data.mPenalty = parseFloat(value) || 0;
+							break;
+						case 'discount':
+							data.discount = parseFloat(value) || 0;
+							break;
+						case 'paid':
+							data.paid = value;
+							break;
+						case 'verified':
+							data.verified = value;
+							break;
+						case 'billamnt':
+							data.billAmnt = parseFloat(value) || 0;
+							break;
+						case 'arrearsamt':
+							data.arrearsAmnt = parseFloat(value) || 0;
+							break;
+						case 'mrrfdue':
+							data.mrrfDue = parseFloat(value) || 0;
+							break;
+						case 'waterusage':
+							data.waterUsage = parseFloat(value) || 0;
+							break;
+						case 'curreading':
+							data.curReading = parseInt(value) || 0;
+							break;
+						case 'discon_date':
+							data.disconDate = value;
+							break;
+						case 'mtr_no':
+							data.mtrNo = value;
+							break;
+						case 'book':
+							data.book = value;
+							break;
+						case 'classtype':
+							data.classType = value;
+							break;
+						case 'fullname':
+							data.fullName = value;
+							break;
+						case 'prereading':
+							data.preReading = parseInt(value) || 0;
+							break;
+						case 'purokcode':
+							data.purokCode = value || '';
+							break;
+						case 'billpurok':
+							data.billPurok = value || '';
+							break;
+						case 'billbrgy':
+							data.billBrgy = value || '';
+							break;
+						case 'custno':
+							data.custNo = parseInt(value) || 0;
+							break;
+						case 'prevused':
+							data.prevUsed = parseFloat(value) || 0;
+							break;
+						case 'prevused2':
+							data.prevUsed2 = parseFloat(value) || 0;
+							break;
+						case 'prvbilldate':
+							data.prvBillDate = value;
+							break;
+						case 'prvduedate':
+							data.prvDueDate = value;
+							break;
+						case 'prvdiscon':
+							data.prvDiscon = value;
+							break;
+						case 'stubout':
+							data.stubOut = value || '';
+							break;
+						case 'amortamnt':
+							data.amortAmnt = parseFloat(value) || 0;
+							break;
+						case 'nrwater':
+							data.nrWater = parseFloat(value) || 0;
+							break;
+						case 'arrearsenv':
+							data.arrearsEnv = parseFloat(value) || 0;
+							break;
+					}
+				});
+
+				const res = await createBillingFromCsv(data);
+				const timestamp = new Date().toISOString();
+				const id = res.data.billingFromCsv_insert.id;
+				billingData.push({ id, createdAt: timestamp, ...data });
+			}
+
+			return {
+				success: true,
+				message: 'Billing records created successfully',
+				statusCode: 200,
+				data: billingData,
+			};
+		} catch (error) {
+			console.error(
+				'Error processing CSV and creating billing records:',
+				error,
+			);
+			throw new Error(`Failed to process CSV: ${error}`);
+		}
+	}
+
+	async paginateBilling(
+		limit = 10,
+		offset = 0,
+		orderByField = 'billNo',
+		orderDirection = 'DESC',
+	) {
+		try {
+			const response = await paginatedBillings({
+				limit,
+				offset,
+				orderByField,
+				orderDirection,
+			});
+			if (response.data.billingFromCsvs.length > 0) {
+				return response.data.billingFromCsvs;
+			} else {
+				return [];
+			}
+		} catch (error) {
+			console.error('Error fetching billings:', error);
+			return [];
+		}
 	}
 }
 

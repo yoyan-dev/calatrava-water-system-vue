@@ -2,7 +2,7 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import type { Coordinate } from '@/types/coordinate';
 import type { StoreResponse } from '@/types/store-response';
-import { coordinateRepository } from '@/repositories/coordinateRepository';
+import { coordinateRepository } from '@/repositories/v1/coordinateRepository';
 
 export const useCoordinateStore = defineStore('coordinate', () => {
 	const coordinates = ref<Coordinate[]>([]);

@@ -14,7 +14,7 @@ import {
 } from 'firebase/firestore';
 import { useFirestore } from 'vuefire';
 import type { StoreResponse } from '@/types/store-response';
-import { concernRepository } from '@/repositories/concernRepository';
+import { concernRepository } from '@/repositories/v1/concernRepository';
 
 export const useConcernStore = defineStore('concern', () => {
 	const db = useFirestore();

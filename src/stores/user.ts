@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 import type { User } from '@/types/user';
 import type { StoreResponse } from '@/types/store-response';
 import { watchDebounced } from '@vueuse/core';
-import { userRepository } from '@/repositories/userRepository';
+import { userRepository } from '@/repositories/v1/userRepository';
 import { useFetch } from '@vueuse/core';
 
 const API_URL = import.meta.env.VITE_API_URL;

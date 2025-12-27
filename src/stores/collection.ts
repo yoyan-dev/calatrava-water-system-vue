@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import type { StoreResponse } from '@/types/store-response';
-import { collectionRepository as collectionGraph } from '@/repositories/graph/collectionRepository';
+import { collectionRepository as collectionGraph } from '@/repositories/v2/collectionRepository';
 import type { CollectionItemFromCsv } from '@/types/collection-from-csv';
 
 interface PaginateOptions {

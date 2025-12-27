@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import type { StoreResponse } from '@/types/store-response';
-import { billingRepository as billGraph } from '@/repositories/graph/billingRepository';
+import { billingRepository as billGraph } from '@/repositories/v2/billingRepository';
 import type { BillingItemFromCsv } from '@/types/billing-from-csv';
 
 interface PaginateOptions {

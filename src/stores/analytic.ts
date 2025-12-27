@@ -1,4 +1,4 @@
-import { AnalyticRepository } from '@/repositories/analyticRepoository';
+import { AnalyticRepository } from '@/repositories/v1/analyticRepoository';
 import type { Line } from '@/types/line';
 import type { Total } from '@/types/total';
 import { defineStore } from 'pinia';

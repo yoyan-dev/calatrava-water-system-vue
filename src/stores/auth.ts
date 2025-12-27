@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { auth } from '@/plugins/firebase';
 import { ref } from 'vue';
 import { signInWithEmailAndPassword, type User } from 'firebase/auth';
-import { consumerRepository } from '@/repositories/graph/consumerRepository';
+import { consumerRepository } from '@/repositories/v2/consumerRepository';
 
 export const useAuthStore = defineStore('auth', () => {
 	// state'

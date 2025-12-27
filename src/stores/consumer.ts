@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import type { StoreResponse } from '@/types/store-response';
-import { consumerRepository as consumerGraph } from '@/repositories/graph/consumerRepository';
+import { consumerRepository as consumerGraph } from '@/repositories/v2/consumerRepository';
 import type { Consumer } from '@/types/consumer';
 import type { CreateConsumerVariables } from '@/dataconnect-generated';
 

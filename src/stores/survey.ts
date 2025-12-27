@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import type { StoreResponse } from '@/types/store-response';
-import { surveyRepository as surveyGraph } from '@/repositories/graph/surveyRepository';
+import { surveyRepository as surveyGraph } from '@/repositories/v2/surveyRepository';
 import type { Survey, Question, SurveyItem } from '@/types/survey';
 import type {
 	CreateQuestionVariables,
