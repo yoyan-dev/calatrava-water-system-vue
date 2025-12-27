@@ -1,78 +1,3 @@
-<script setup lang="ts">
-	import { onMounted, toRefs } from 'vue';
-	import { useToast } from 'primevue/usetoast';
-	import { useUserStore } from '@/stores/user';
-	import UserModalForm from './modals/user-modal-form.vue';
-	import { useConfirm } from 'primevue/useconfirm';
-	import { useDialog } from 'primevue/usedialog';
-
-	const toast = useToast();
-	const userStore = useUserStore();
-	const confirmUserDelete = useConfirm();
-	const dialog = useDialog();
-
-	const handleDialog = (user: any) => {
-		dialog.open(UserModalForm, {
-			props: {
-				header: `${user ? 'Edit' : 'Create'} User`,
-				style: { width: '30vw' },
-				dismissableMask: true,
-			},
-			data: { mode: user ? 'edit' : 'create', user },
-		});
-	};
-
-	const handleDelete = (user: any) => {
-		confirmUserDelete.require({
-			message: `Are you sure you want to delete user ${user.email}?`,
-			header: 'Confirmation',
-			icon: 'pi pi-exclamation-triangle',
-			rejectProps: {
-				label: 'Cancel',
-				severity: 'secondary',
-				outlined: true,
-			},
-			acceptProps: {
-				label: 'Delete',
-				severity: 'danger',
-			},
-			accept: () => onDelete(user),
-			reject: () => {
-				/* Do nothing on reject */
-			},
-		});
-	};
-
-	const { users, isLoading } = toRefs(userStore);
-
-	const fetchUsers = () => {
-		userStore.fetchUsers();
-	};
-
-	const onDelete = async (user: any) => {
-		const result = await userStore.deleteUser(user.uid);
-		if (result.status === 'success') {
-			toast.add({
-				severity: 'success',
-				summary: 'Success',
-				detail: result.message,
-				life: 3000,
-			});
-		} else {
-			toast.add({
-				severity: 'error',
-				summary: 'Error',
-				detail: result.message,
-				life: 3000,
-			});
-		}
-	};
-
-	onMounted(() => {
-		fetchUsers();
-	});
-</script>
-
 <template>
 	<div>
 		<div class="flex justify-end items-center gap-4 mb-4">
@@ -129,8 +54,76 @@
 				</template>
 			</Column>
 		</DataTable>
-
-		<!-- Dynamic Dialog Service -->
-		<!-- <DynamicDialog /> -->
 	</div>
 </template>
+<script setup lang="ts">
+	import { computed, ref, onMounted } from 'vue';
+	import { useUserStore } from '@/stores/user';
+	import { useDialog } from 'primevue/usedialog';
+	import UserModalForm from './modals/user-modal-form.vue';
+	import { useConfirm } from 'primevue/useconfirm';
+	import { useToast } from 'primevue/usetoast';
+
+	const userStore = useUserStore();
+	const users = computed(() => userStore.users);
+	const isLoading = ref(false);
+	const dialog = useDialog();
+	const confirmUserDelete = useConfirm();
+	const toast = useToast();
+
+	function handleDialog(user: any) {
+		dialog.open(UserModalForm, {
+			props: {
+				header: `${user ? 'Edit' : 'Create'} User`,
+				style: { width: '30vw' },
+				dismissableMask: true,
+			},
+			data: { mode: user ? 'edit' : 'create', user },
+		});
+	}
+
+	function handleDelete(user: any) {
+		confirmUserDelete.require({
+			message: `Are you sure you want to delete user ${user.email}?`,
+			header: 'Confirmation',
+			icon: 'pi pi-exclamation-triangle',
+			rejectProps: {
+				label: 'Cancel',
+				severity: 'secondary',
+				outlined: true,
+			},
+			acceptProps: {
+				label: 'Delete',
+				severity: 'danger',
+			},
+			accept: () => onDelete(user),
+			reject: () => {
+				/* Do nothing on reject */
+			},
+		});
+	}
+
+	async function onDelete(user: any) {
+		const result = await userStore.deleteUser(user.uid);
+		if (result.status === 'success') {
+			toast.add({
+				severity: 'success',
+				summary: 'Success',
+				detail: result.message,
+				life: 3000,
+			});
+		} else {
+			toast.add({
+				severity: 'error',
+				summary: 'Error',
+				detail: result.message,
+				life: 3000,
+			});
+		}
+	}
+
+	onMounted(() => {
+		/* Fetch users when component is mounted */
+		userStore.fetchPaginatedUsers();
+	});
+</script>

@@ -6,7 +6,7 @@ export interface User {
 	customClaims?: { [key: string]: any };
 }
 
-export interface InserUser {
+export interface InsertUser {
 	email: string;
 	password: string;
 	displayName: string;

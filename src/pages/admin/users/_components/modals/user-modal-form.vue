@@ -98,7 +98,7 @@
 
 			let response;
 			if (mode.value === 'create') {
-				response = await store.addUser(userData as User);
+				response = await store.addUser(userData as any);
 			} else {
 				response = await store.updateUser(user.value!.uid!, userData);
 			}
