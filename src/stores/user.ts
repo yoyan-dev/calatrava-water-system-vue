@@ -6,6 +6,7 @@ import type { StoreResponse } from '@/types/store-response';
 
 export const useUserStore = defineStore('user', () => {
 	const users = ref<User[]>([]);
+	const userSearch = ref<User | null>(null);
 
 	// actions
 	async function addUser(userData: InsertUser): Promise<StoreResponse> {
@@ -97,12 +98,26 @@ export const useUserStore = defineStore('user', () => {
 		}
 	}
 
+	async function searchUser(payload: { uid: string } | { email: string }) {
+		try {
+			const response = await userRepository.searchUser(payload);
+			if (response) {
+				userSearch.value = response;
+				return true;
+			}
+		} catch (error) {
+			console.error('Error finding users:', error);
+		}
+	}
+
 	return {
 		users,
+		userSearch,
 
 		addUser,
 		updateUser,
 		deleteUser,
 		fetchPaginatedUsers,
+		searchUser,
 	};
 });

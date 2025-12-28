@@ -1,6 +1,8 @@
 <template>
 	<div>
-		<div class="flex justify-end items-center gap-4 mb-4">
+		<Header page-title="User Management" />
+		<div class="flex justify-between items-center gap-4 mb-4">
+			<SearchInput />
 			<Button
 				label="Create User"
 				icon="pi pi-plus"
@@ -63,6 +65,8 @@
 	import UserModalForm from './modals/user-modal-form.vue';
 	import { useConfirm } from 'primevue/useconfirm';
 	import { useToast } from 'primevue/usetoast';
+	import Header from '@/components/globals/header.vue';
+	import SearchInput from './search-input.vue';
 
 	const userStore = useUserStore();
 	const users = computed(() => userStore.users);

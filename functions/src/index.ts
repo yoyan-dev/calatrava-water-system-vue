@@ -1,5 +1,9 @@
 import { setGlobalOptions } from 'firebase-functions';
-import { HttpsError, onCall } from 'firebase-functions/v2/https';
+import {
+	CallableRequest,
+	HttpsError,
+	onCall,
+} from 'firebase-functions/v2/https';
 import * as logger from 'firebase-functions/logger';
 import { getApps, initializeApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
@@ -12,27 +16,36 @@ const auth = getAuth();
 
 setGlobalOptions({ maxInstances: 10 });
 
-// User Management: Create User
+// Validation helper functions, types could be added here if needed
+
+type AdminRequest = CallableRequest<any> & {
+	auth: { uid: string; token: { role: string } };
+};
+
+function requireAdmin(
+	request: CallableRequest<any>,
+): asserts request is AdminRequest {
+	// Check authentication
+	if (!request.auth) {
+		throw new HttpsError('unauthenticated', 'You must be logged in.');
+	}
+
+	// Check admin role (adjust based on your custom claim structure)
+	if (request.auth.token.role !== 'admin') {
+		throw new HttpsError(
+			'permission-denied',
+			'Only admins can perform this action.',
+		);
+	}
+}
+
+// User Management
 export const createUser = onCall(
 	{ enforceAppCheck: false },
 	async (request) => {
-		// 1. Check if caller is authenticated
-		if (!request.auth) {
-			throw new HttpsError(
-				'unauthenticated',
-				'You must be logged in to create a user.',
-			);
-		}
+		// Validate admin privileges
+		requireAdmin(request);
 
-		// 2. Check if caller has admin privileges (via custom claims)
-		if (request.auth.token.role !== 'admin') {
-			throw new HttpsError(
-				'permission-denied',
-				'Only admins can create users.',
-			);
-		}
-
-		// 3. Extract and validate data from client
 		const { email, password, displayName, customClaims } = request.data;
 		if (!email || !password) {
 			throw new HttpsError(
@@ -48,7 +61,6 @@ export const createUser = onCall(
 			);
 		}
 
-		// 4. Create the user using Admin SDK
 		try {
 			const userRecord = await auth.createUser({
 				email,
@@ -80,23 +92,10 @@ export const createUser = onCall(
 export const deleteUser = onCall(
 	{ enforceAppCheck: false },
 	async (request) => {
-		// 1. Check if caller is authenticated
-		if (!request.auth) {
-			throw new HttpsError(
-				'unauthenticated',
-				'You must be logged in to delete a user.',
-			);
-		}
+		// Validate admin privileges
+		requireAdmin(request);
 
-		// 2. Check if caller has admin privileges (via custom claims)
-		if (request.auth.token.role !== 'admin') {
-			throw new HttpsError(
-				'permission-denied',
-				'Only admins can delete users.',
-			);
-		}
-
-		// 3. Extract and validate data from client
+		// Extract and validate data from client
 		const { uid } = request.data;
 		if (!uid) {
 			throw new HttpsError(
@@ -105,13 +104,13 @@ export const deleteUser = onCall(
 			);
 		}
 
-		// 4. Delete the user using Admin SDK
+		// Delete the user using Admin SDK
 		try {
 			await auth.deleteUser(uid);
 
 			logger.info(`User ${uid} deleted successfully.`);
 
-			// 5. Return success response
+			// Return success response
 			return { uid };
 		} catch (error: any) {
 			logger.error('Error deleting user:', error);
@@ -123,23 +122,10 @@ export const deleteUser = onCall(
 export const updateUser = onCall(
 	{ enforceAppCheck: false },
 	async (request) => {
-		// 1. Check if caller is authenticated
-		if (!request.auth) {
-			throw new HttpsError(
-				'unauthenticated',
-				'You must be logged in to update a user.',
-			);
-		}
+		// Validate admin privileges
+		requireAdmin(request);
 
-		// 2. Check if caller has admin privileges (via custom claims)
-		if (request.auth.token.role !== 'admin') {
-			throw new HttpsError(
-				'permission-denied',
-				'Only admins can update users.',
-			);
-		}
-
-		// 3. Extract and validate data from client
+		// Extract and validate data from client
 		const { uid, email, displayName, customClaims } = request.data;
 		if (!uid) {
 			throw new HttpsError(
@@ -148,7 +134,7 @@ export const updateUser = onCall(
 			);
 		}
 
-		// 4. Update the user using Admin SDK
+		// Update the user using Admin SDK
 		try {
 			const updateParams: any = {};
 			if (email) updateParams.email = email;
@@ -156,14 +142,14 @@ export const updateUser = onCall(
 
 			const userRecord = await auth.updateUser(uid, updateParams);
 
-			// 5. Update custom claims if provided
+			// Update custom claims if provided
 			if (customClaims && typeof customClaims === 'object') {
 				await auth.setCustomUserClaims(userRecord.uid, customClaims);
 			}
 
 			logger.info(`User ${userRecord.uid} updated successfully.`);
 
-			// 6. Return success response
+			// Return success response
 			return {
 				uid: userRecord.uid,
 				email: userRecord.email,
@@ -177,26 +163,15 @@ export const updateUser = onCall(
 	},
 );
 
-// User Management: List Users
 export const listUsers = onCall({ enforceAppCheck: false }, async (request) => {
-	// 1. Check if caller is authenticated
-	if (!request.auth) {
-		throw new HttpsError(
-			'unauthenticated',
-			'You must be logged in to list users.',
-		);
-	}
+	// Validate admin privileges
+	requireAdmin(request);
 
-	// 2. Check if caller has admin privileges (via custom claims)
-	if (request.auth.token.role !== 'admin') {
-		throw new HttpsError('permission-denied', 'Only admins can list users.');
-	}
-
-	// 3. Extract pagination parameters
+	// Extract pagination parameters
 	const pageSize = Math.min(request.data.pageSize || 10, 100); // Max 100
 	const pageToken = request.data.pageToken || undefined;
 
-	// 4. List users using Admin SDK
+	// List users using Admin SDK
 	try {
 		const listUsersResult = await auth.listUsers(pageSize, pageToken);
 
@@ -223,7 +198,7 @@ export const listUsers = onCall({ enforceAppCheck: false }, async (request) => {
 
 		logger.info(`Fetched ${users.length} users (pageSize: ${pageSize})`);
 
-		// 5. Return users and next page token
+		// Return users and next page token
 		return {
 			users,
 			nextPageToken: listUsersResult.pageToken || null,
@@ -235,3 +210,66 @@ export const listUsers = onCall({ enforceAppCheck: false }, async (request) => {
 		throw new HttpsError('internal', 'Error listing users: ' + error.message);
 	}
 });
+
+export const searchUser = onCall(
+	{ enforceAppCheck: false },
+	async (request) => {
+		// Validate admin privileges
+		requireAdmin(request);
+
+		// Extract and validate data from client
+		const { uid, email } = request.data;
+		console.log(request.data);
+		if (!uid && !email) {
+			throw new HttpsError(
+				'invalid-argument',
+				'Either User ID (uid) or email is required to search for a user.',
+			);
+		}
+
+		// Search for the user using Admin SDK
+		try {
+			let userRecord;
+			if (uid) {
+				userRecord = await auth.getUser(uid);
+			} else if (email) {
+				userRecord = await auth.getUserByEmail(email);
+			}
+
+			if (!userRecord) {
+				throw new HttpsError('not-found', 'User not found.');
+			}
+
+			logger.info(`User ${userRecord.uid} found.`);
+
+			// Return user details
+			return {
+				uid: userRecord.uid,
+				email: userRecord.email,
+				emailVerified: userRecord.emailVerified,
+				displayName: userRecord.displayName,
+				photoURL: userRecord.photoURL,
+				disabled: userRecord.disabled,
+				createdAt: userRecord.metadata.creationTime,
+				metadata: {
+					creationTime: userRecord.metadata.creationTime,
+					lastSignInTime: userRecord.metadata.lastSignInTime,
+					lastRefreshTime: userRecord.metadata.lastRefreshTime,
+				},
+				providerData: userRecord.providerData.map((provider) => ({
+					providerId: provider.providerId,
+					email: provider.email,
+					displayName: provider.displayName,
+					photoURL: provider.photoURL,
+				})),
+				customClaims: userRecord.customClaims || {},
+			};
+		} catch (error: any) {
+			logger.error('Error searching for user:', error);
+			throw new HttpsError(
+				'internal',
+				'Error searching for user: ' + error.message,
+			);
+		}
+	},
+);

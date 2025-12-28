@@ -57,6 +57,17 @@ class UserRepository {
 			}
 		} while (pageToken);
 	}
+
+	async searchUser(payload: { uid: string } | { email: string }) {
+		try {
+			const searchUser = httpsCallable(functions, 'searchUser');
+			const result = await searchUser(payload);
+			return result.data;
+		} catch (error) {
+			console.error('Error searching user:', error);
+			throw error;
+		}
+	}
 }
 
 export const userRepository = new UserRepository();
