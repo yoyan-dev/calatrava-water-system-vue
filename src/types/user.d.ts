@@ -8,6 +8,16 @@ export interface User {
 	createdAt?: string;
 }
 
+export interface UserFirestore {
+	uid: string;
+	email: string | null;
+	displayName: string | null;
+	photoURL: string | null;
+	role: 'user' | 'admin' | 'staff'; // Adjust roles as needed
+	createdAt: Timestamp;
+	updatedAt?: Timestamp;
+}
+
 export interface InsertUser {
 	email: string;
 	password: string;

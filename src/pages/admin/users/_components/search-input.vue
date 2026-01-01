@@ -5,6 +5,7 @@
 				<i class="pi pi-search" />
 			</InputIcon>
 			<InputText
+				placeholder="Search any type of users"
 				@click="handleDialog"
 				readonly />
 		</IconField>

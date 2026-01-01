@@ -1,12 +1,13 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { InsertUser, User } from '@/types/user';
+import type { InsertUser, User, UserFirestore } from '@/types/user';
 import { userRepository } from '@/repositories/v2/userRepository';
 import type { StoreResponse } from '@/types/store-response';
 
 export const useUserStore = defineStore('user', () => {
 	const users = ref<User[]>([]);
 	const userSearch = ref<User | null>(null);
+	const systemUsers = ref<UserFirestore[]>([]);
 
 	// actions
 	async function addUser(userData: InsertUser): Promise<StoreResponse> {
@@ -98,6 +99,17 @@ export const useUserStore = defineStore('user', () => {
 		}
 	}
 
+	async function fetchSystemUsers() {
+		try {
+			const response = await userRepository.getSystemUsers();
+			if (response) {
+				systemUsers.value = response.data;
+			}
+		} catch (error) {
+			console.error('Error fetching paginated users:', error);
+		}
+	}
+
 	async function searchUser(payload: { uid: string } | { email: string }) {
 		try {
 			const response = await userRepository.searchUser(payload);
@@ -113,11 +125,13 @@ export const useUserStore = defineStore('user', () => {
 	return {
 		users,
 		userSearch,
+		systemUsers,
 
 		addUser,
 		updateUser,
 		deleteUser,
 		fetchPaginatedUsers,
+		fetchSystemUsers,
 		searchUser,
 	};
 });

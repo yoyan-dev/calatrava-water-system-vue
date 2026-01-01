@@ -42,6 +42,10 @@ export const updateUser = onCall(
 			if (displayName !== undefined)
 				profileUpdates.displayName = displayName || null;
 
+			if (customClaims.role) {
+				profileUpdates.role = customClaims.role || null;
+			}
+
 			if (Object.keys(profileUpdates).length > 0) {
 				await db.collection('users').doc(uid).update(profileUpdates);
 				log.info('Firestore profile synced from admin update', {

@@ -1,9 +1,9 @@
 import * as functions from 'firebase-functions/v1'; // ← v1 import
-import { getFirestore } from 'firebase-admin/firestore';
+import { FieldValue, getFirestore } from 'firebase-admin/firestore';
 import { log } from '../../utils/logger';
 
 export const onUserCreate = functions.auth.user().onCreate(async (user) => {
-	const { uid, email, displayName, photoURL } = user;
+	const { uid, email, displayName, photoURL, customClaims } = user;
 
 	try {
 		await getFirestore()
@@ -14,7 +14,8 @@ export const onUserCreate = functions.auth.user().onCreate(async (user) => {
 				email: email || null,
 				displayName: displayName || null,
 				photoURL: photoURL || null,
-				createdAt: new Date(),
+				createdAt: FieldValue.serverTimestamp(),
+				role: customClaims?.role ?? 'user',
 				// Add any defaults, e.g., role: 'user'
 			});
 

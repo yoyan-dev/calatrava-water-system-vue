@@ -10,7 +10,16 @@
 				@click="handleDialog(null)" />
 		</div>
 
-		<!-- User Table -->
+		<!-- System User Table -->
+		<div class="mb-4">
+			<h1 class="text-md font-medium text-gray-900 dark:text-white">
+				System Users
+			</h1>
+			<p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+				Admins and staff with elevated privileges
+			</p>
+		</div>
+
 		<DataTable
 			:value="users"
 			data-key="uid"
@@ -19,6 +28,17 @@
 			<template #empty>
 				<div class="flex items-center justify-center p-4">No users found.</div>
 			</template>
+			<Column
+				field="uid"
+				header="UID">
+				<template #body="slotProps">
+					<span
+						:title="slotProps.data.uid"
+						class="block max-w-32 truncate text-xs font-mono">
+						{{ slotProps.data.uid }}
+					</span>
+				</template>
+			</Column>
 
 			<Column
 				field="displayName"
@@ -33,7 +53,7 @@
 					<span
 						class="capitalize"
 						:class="data.role === 'admin' ? 'text-red-600' : 'text-primary'">
-						{{ data.customClaims?.role }}
+						{{ data.role }}
 					</span>
 				</template>
 			</Column>
@@ -69,7 +89,7 @@
 	import SearchInput from './search-input.vue';
 
 	const userStore = useUserStore();
-	const users = computed(() => userStore.users);
+	const users = computed(() => userStore.systemUsers);
 	const isLoading = ref(false);
 	const dialog = useDialog();
 	const confirmUserDelete = useConfirm();
@@ -128,6 +148,6 @@
 
 	onMounted(() => {
 		/* Fetch users when component is mounted */
-		userStore.fetchPaginatedUsers();
+		userStore.fetchSystemUsers();
 	});
 </script>

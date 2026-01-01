@@ -58,6 +58,22 @@ class UserRepository {
 		} while (pageToken);
 	}
 
+	async getSystemUsers() {
+		const getSystemUsers = httpsCallable(functions, 'getSystemUsers');
+		try {
+			const result = await getSystemUsers();
+			const data = result.data as {
+				users: any[];
+			};
+
+			return {
+				data: data.users,
+			};
+		} catch (error) {
+			console.error('Error listing system users:', error);
+		}
+	}
+
 	async searchUser(payload: { uid: string } | { email: string }) {
 		try {
 			const searchUser = httpsCallable(functions, 'searchUser');

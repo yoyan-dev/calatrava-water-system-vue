@@ -1,3 +1,4 @@
+import { getSystemUsers } from './user/getSystemUsers';
 import { setGlobalOptions } from 'firebase-functions';
 import { getApps, initializeApp } from 'firebase-admin/app';
 
@@ -12,7 +13,9 @@ export {
 	updateUser,
 	deleteUser,
 	listUsers,
+	getSystemUsers,
 	searchUser,
+	setUserRole,
 } from './user';
 
 // Triggers
