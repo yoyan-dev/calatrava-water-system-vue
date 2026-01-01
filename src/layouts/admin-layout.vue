@@ -61,6 +61,12 @@
 			route: '/admin/concerns',
 		},
 		{
+			label: 'Announcements',
+			name: 'admin-announcement',
+			icon: 'pi pi-megaphone',
+			route: '/admin/announcement',
+		},
+		{
 			label: 'FAQs',
 			name: 'admin-faq',
 			icon: 'pi pi-question-circle',
