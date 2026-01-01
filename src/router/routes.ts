@@ -6,44 +6,6 @@ const routes = [
 		meta: { requiresGuest: true },
 	},
 	{
-		path: '/resident',
-		name: 'resident',
-		component: () => import('@/pages/resident/index.vue'),
-		meta: { requiresAuth: true },
-		children: [
-			{
-				path: '',
-				name: 'resident-home',
-				component: () => import('@/pages/resident/home/index.vue'),
-			},
-			{
-				path: 'bills',
-				name: 'resident-bills',
-				component: () => import('@/pages/resident/billing/index.vue'),
-			},
-			{
-				path: 'collection',
-				name: 'resident-collection',
-				component: () => import('@/pages/resident/collection/index.vue'),
-			},
-			{
-				path: 'ledger',
-				name: 'resident-ledger',
-				component: () => import('@/pages/resident/ledger/index.vue'),
-			},
-			{
-				path: 'concern',
-				name: 'resident-concern',
-				component: () => import('@/pages/resident/concern/index.vue'),
-			},
-			{
-				path: 'faq',
-				name: 'resident-faq',
-				component: () => import('@/pages/resident/faq/index.vue'),
-			},
-		],
-	},
-	{
 		path: '/auth/admin',
 		name: 'admin-auth',
 		component: () => import('@/pages/admin/Auth.vue'),
@@ -84,6 +46,11 @@ const routes = [
 				path: 'concerns',
 				name: 'admin-concerns',
 				component: () => import('@/pages/admin/concern/index.vue'),
+			},
+			{
+				path: 'announcement',
+				name: 'admin-announcement',
+				component: () => import('@/pages/admin/announcement/index.vue'),
 			},
 			{
 				path: 'ledger',

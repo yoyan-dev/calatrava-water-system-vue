@@ -1,61 +1,55 @@
-import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import { AnnouncementRepository } from '@/repositories/v1/announcementRepository';
-import { watchDebounced } from '@vueuse/core';
-import type { StoreResponse } from '@/types/store-response';
+import { announcementRepository } from '@/repositories/v2/announcementRepository';
+import { ref } from 'vue';
 import type { Announcement } from '@/types/announcement';
+import { auth } from '@/plugins/firebase';
 
 export const useAnnouncementStore = defineStore('announcement', () => {
-	const isLoading = ref(false);
-	const announcement = ref();
-	const searchQuery = ref<boolean>(true);
+	const announcements = ref<Announcement[]>([]);
 
-	async function fetchAnnouncements() {
-		isLoading.value = true;
-		const response = await AnnouncementRepository.fetchAnnouncements({
-			isAll: searchQuery.value,
-		});
+	const fetchAnnouncements = async (filters?: {
+		status?: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED' | null;
+	}) => {
+		const data = await announcementRepository.getAll(filters);
+		announcements.value = data;
+	};
 
-		announcement.value = response?.data || [];
-		isLoading.value = false;
-	}
+	const createAnnouncement = async (data: Partial<Announcement>) => {
+		if (auth.currentUser) data.createdBy = auth.currentUser.uid;
+		else return;
+		const result = await announcementRepository.create(data);
+		announcements.value.unshift(result);
+	};
 
-	async function addAnnouncement(
-		payload: Announcement,
-	): Promise<StoreResponse> {
-		isLoading.value = true;
-		const response = await AnnouncementRepository.addAnnouncement(payload);
-		console.log(payload);
-		if (response?.statusCode == 200) {
-			await fetchAnnouncements();
-			console.log(response);
-			isLoading.value = false;
-			return {
-				status: 'success',
-				message: response.message,
-				statusMessage: response.statusMessage ?? '',
-			};
-		}
-		isLoading.value = false;
-		return {
-			status: 'error',
-			message: response?.message,
-			statusMessage: response?.statusMessage ?? '',
-		};
-	}
+	const updateAnnouncement = async (
+		id: string,
+		data: Partial<Announcement>,
+	) => {
+		await announcementRepository.update(id, data);
+		const index = announcements.value.findIndex((item) => item.id === id);
+		if (index > -1) Object.assign(announcements.value[index], data);
+	};
 
-	watchDebounced(
-		[searchQuery],
-		(newQuery) => {
-			fetchAnnouncements();
-		},
-		{ debounce: 300 },
-	);
+	const deleteAnnouncement = async (id: string) => {
+		return await announcementRepository.delete(id);
+	};
+
+	const archiveAnnouncement = async (id: string) => {
+		return await announcementRepository.archive(id);
+	};
+
+	const getAnnouncementById = async (id: string) => {
+		return await announcementRepository.getById(id);
+	};
 
 	return {
-		isLoading,
-		announcement,
+		announcements,
+
+		createAnnouncement,
+		updateAnnouncement,
+		deleteAnnouncement,
+		archiveAnnouncement,
+		getAnnouncementById,
 		fetchAnnouncements,
-		addAnnouncement,
 	};
 });
