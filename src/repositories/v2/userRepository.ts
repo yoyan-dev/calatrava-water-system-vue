@@ -45,7 +45,7 @@ class UserRepository {
 					users: any[];
 					pageToken?: string;
 				};
-				console.log('Fetched users:', data.users);
+
 				pageToken = data.pageToken;
 				return {
 					data: data.users,
