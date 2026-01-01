@@ -1,50 +1,81 @@
+// functions/src/user/updateUser.ts
+
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { getAuth } from 'firebase-admin/auth';
+import { getFirestore } from 'firebase-admin/firestore';
 import { log } from '../utils/logger';
 import { requireAdmin } from '../utils/requireAdmin';
 
 const auth = getAuth();
+const db = getFirestore();
 
 export const updateUser = onCall(
 	{ enforceAppCheck: false },
 	async (request) => {
-		// Validate admin privileges
 		requireAdmin(request);
 
-		// Extract and validate data from client
 		const { uid, email, displayName, customClaims } = request.data;
+
 		if (!uid) {
-			throw new HttpsError(
-				'invalid-argument',
-				'User ID (uid) is required to update a user.',
-			);
+			throw new HttpsError('invalid-argument', 'User ID (uid) is required.');
 		}
 
-		// Update the user using Admin SDK
 		try {
-			const updateParams: any = {};
-			if (email) updateParams.email = email;
-			if (displayName) updateParams.displayName = displayName;
+			// Prepare Auth updates
+			const authUpdates: any = {};
+			if (email !== undefined) authUpdates.email = email || null;
+			if (displayName !== undefined)
+				authUpdates.displayName = displayName || null;
 
-			const userRecord = await auth.updateUser(uid, updateParams);
+			// Update Firebase Auth
+			const userRecord = await auth.updateUser(uid, authUpdates);
 
 			// Update custom claims if provided
 			if (customClaims && typeof customClaims === 'object') {
-				await auth.setCustomUserClaims(userRecord.uid, customClaims);
+				await auth.setCustomUserClaims(uid, customClaims);
+				log.info('Custom claims updated', { uid, customClaims });
 			}
 
-			log.info(`User ${userRecord.uid} updated successfully.`);
+			// Sync relevant fields to Firestore profile
+			const profileUpdates: any = {};
+			if (email !== undefined) profileUpdates.email = email || null;
+			if (displayName !== undefined)
+				profileUpdates.displayName = displayName || null;
 
-			// Return success response
+			if (Object.keys(profileUpdates).length > 0) {
+				await db.collection('users').doc(uid).update(profileUpdates);
+				log.info('Firestore profile synced from admin update', {
+					uid,
+					profileUpdates,
+				});
+			}
+
+			log.info('User updated successfully by admin', {
+				uid,
+				updatedBy: request?.auth?.uid,
+			});
+
 			return {
 				uid: userRecord.uid,
 				email: userRecord.email,
 				displayName: userRecord.displayName,
-				customClaims: customClaims || {},
+				customClaims: customClaims || userRecord.customClaims || {},
 			};
 		} catch (error: any) {
-			log.error('Error updating user:', error);
-			throw new HttpsError('internal', 'Error updating user: ' + error.message);
+			log.error('Error updating user', { uid, error: error.message });
+
+			// Friendly error messages
+			if (error.code === 'auth/user-not-found') {
+				throw new HttpsError('not-found', 'User not found.');
+			}
+			if (error.code === 'auth/email-already-exists') {
+				throw new HttpsError('already-exists', 'This email is already in use.');
+			}
+
+			throw new HttpsError(
+				'internal',
+				`Failed to update user: ${error.message}`,
+			);
 		}
 	},
 );

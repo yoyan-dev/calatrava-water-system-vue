@@ -14,3 +14,6 @@ export {
 	listUsers,
 	searchUser,
 } from './user';
+
+// Triggers
+export { onUserCreate, onProfileUpdate, onUserDelete } from './triggers';
