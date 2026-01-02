@@ -31,11 +31,22 @@ export const useAnnouncementStore = defineStore('announcement', () => {
 	};
 
 	const deleteAnnouncement = async (id: string) => {
-		return await announcementRepository.delete(id);
+		await announcementRepository.delete(id);
+
+		// Instantly remove from local state — no extra read!
+		announcements.value = announcements.value.filter((ann) => ann.id !== id);
 	};
 
 	const archiveAnnouncement = async (id: string) => {
-		return await announcementRepository.archive(id);
+		await announcementRepository.archive(id);
+
+		// Update local state: change status to ARCHIVED
+		const index = announcements.value.findIndex((ann) => ann.id === id);
+		if (index !== -1) {
+			announcements.value[index].status = 'ARCHIVED';
+			// Optional: force reactivity (Vue 3 usually handles this, but safe)
+			announcements.value = [...announcements.value];
+		}
 	};
 
 	const getAnnouncementById = async (id: string) => {

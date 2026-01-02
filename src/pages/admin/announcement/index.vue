@@ -31,15 +31,15 @@
 				:announcements="store.announcements"
 				:loading="isLoading"
 				@open-edit-dialog="handleAnnouncementDialog"
-				@delete="confirmDelete" />
+				@delete="confirmDelete"
+				@archive="confirmArchive" />
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 	import { onMounted, ref, watch } from 'vue';
-	import { useToast } from 'primevue/usetoast';
-	import { useDialog } from 'primevue';
+	import { useConfirm, useDialog, useToast } from 'primevue';
 
 	import Header from '@/components/globals/header.vue';
 	import AnnouncementCards from './_components/announcement-cards.vue';
@@ -50,6 +50,7 @@
 	const store = useAnnouncementStore();
 	const dialog = useDialog();
 	const toast = useToast();
+	const confirm = useConfirm();
 	const isLoading = ref(false);
 
 	// Dialog state
@@ -85,41 +86,76 @@
 		});
 	};
 
-	// After save (create/update)
-	const onAnnouncementSaved = async () => {
-		toast.add({
-			severity: 'success',
-			summary: 'Success',
-			detail: 'Announcement saved successfully',
-			life: 3000,
+	// Confirm delete
+	const confirmDelete = (id: string) => {
+		confirm.require({
+			message: 'Are you sure you want to delete this announcement?',
+			header: 'Delete Confirmation',
+			icon: 'pi pi-exclamation-triangle',
+			acceptLabel: 'Yes, Delete',
+			rejectLabel: 'Cancel',
+			acceptClass: 'p-button-danger',
+			accept: async () => {
+				try {
+					await store.deleteAnnouncement(id);
+
+					toast.add({
+						severity: 'success',
+						summary: 'Deleted',
+						detail: 'Announcement deleted successfully',
+						life: 3000,
+					});
+				} catch (err: any) {
+					toast.add({
+						severity: 'error',
+						summary: 'Error',
+						detail: err.message || 'Failed to delete announcement',
+						life: 5000,
+					});
+				}
+			},
+			reject: () => {
+				// Optional: add a toast on cancel
+				// toast.add({ severity: 'info', summary: 'Cancelled', detail: 'Delete cancelled', life: 3000 });
+			},
 		});
-		dialogVisible.value = false;
-		selectedAnnouncement.value = null;
-		await loadAnnouncements();
 	};
 
-	// Confirm delete
-	const confirmDelete = async (id: string) => {
-		// You can replace this with PrimeVue ConfirmDialog if preferred
-		if (confirm('Are you sure you want to delete this announcement?')) {
-			try {
-				await store.deleteAnnouncement(id);
-				toast.add({
-					severity: 'success',
-					summary: 'Deleted',
-					detail: 'Announcement deleted',
-					life: 3000,
-				});
-				await loadAnnouncements();
-			} catch (err: any) {
-				toast.add({
-					severity: 'error',
-					summary: 'Error',
-					detail: err.message || 'Failed to delete announcement',
-					life: 5000,
-				});
-			}
-		}
+	// Confirm archive
+	const confirmArchive = (id: string) => {
+		confirm.require({
+			message: 'Are you sure you want to archive this announcement?',
+			header: 'Archive Confirmation',
+			icon: 'pi pi-info-circle',
+			acceptLabel: 'Yes, Archive',
+			rejectLabel: 'Cancel',
+			acceptClass: 'p-button-warning', // Yellow/orange button for archive
+			accept: async () => {
+				try {
+					await store.archiveAnnouncement(id);
+
+					toast.add({
+						severity: 'success',
+						summary: 'Archived',
+						detail: 'Announcement has been archived',
+						life: 3000,
+					});
+
+					// No need to refetch — archiveAnnouncement already updates local state
+				} catch (err: any) {
+					toast.add({
+						severity: 'error',
+						summary: 'Error',
+						detail: err.message || 'Failed to archive announcement',
+						life: 5000,
+					});
+				}
+			},
+			reject: () => {
+				// Optional: feedback on cancel
+				// toast.add({ severity: 'info', summary: 'Cancelled', detail: 'Archive cancelled', life: 2000 });
+			},
+		});
 	};
 
 	// Fetch announcements (with optional status filter)

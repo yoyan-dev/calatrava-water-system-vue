@@ -45,12 +45,21 @@
 				<div
 					class="flex justify-end gap-2 mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
 					<Button
+						v-tooltip.bottom="'Edit'"
 						icon="pi pi-pencil"
 						severity="secondary"
 						text
 						rounded
 						@click="$emit('open-edit-dialog', ann)" />
 					<Button
+						v-tooltip.bottom="'Archive'"
+						icon="pi pi-inbox"
+						severity="info"
+						text
+						rounded
+						@click="$emit('archive', ann.id)" />
+					<Button
+						v-tooltip.bottom="'Delete Permanently'"
 						icon="pi pi-trash"
 						severity="danger"
 						text
@@ -82,6 +91,7 @@
 	defineEmits<{
 		(e: 'open-edit-dialog', announcement: Announcement): void;
 		(e: 'delete', id: string): void;
+		(e: 'archive', id: string): void;
 	}>();
 
 	const formatDate = (iso: string) => {
