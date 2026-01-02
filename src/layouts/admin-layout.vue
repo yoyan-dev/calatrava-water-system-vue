@@ -46,6 +46,12 @@
 					icon: 'pi pi-inbox',
 					route: '/admin/concerns',
 				},
+				{
+					label: 'Area Locations',
+					name: 'admin-areas',
+					icon: 'pi pi-map-marker',
+					route: '/admin/areas',
+				},
 			],
 		},
 		{

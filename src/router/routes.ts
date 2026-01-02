@@ -48,6 +48,11 @@ const routes = [
 				component: () => import('@/pages/admin/concern/index.vue'),
 			},
 			{
+				path: 'areas',
+				name: 'admin-areas',
+				component: () => import('@/pages/admin/area/index.vue'),
+			},
+			{
 				path: 'announcement',
 				name: 'admin-announcement',
 				component: () => import('@/pages/admin/announcement/index.vue'),
