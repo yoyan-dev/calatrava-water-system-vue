@@ -1,9 +1,7 @@
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
-import { getAuth } from 'firebase-admin/auth';
 import { log } from '../utils/logger';
 import { requireAdmin } from '../utils/requireAdmin';
-
-const auth = getAuth();
+import { auth } from '../config/firebaseAdmin';
 
 export const deleteUser = onCall(
 	{ enforceAppCheck: false },

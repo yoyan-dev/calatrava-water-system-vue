@@ -38,30 +38,36 @@ class AnnouncementRepository {
 	}
 
 	/** Update an existing announcement */
-	async update(
-		id: string,
-		data: Partial<
-			Pick<
-				Announcement,
-				| 'title'
-				| 'content'
-				| 'status'
-				| 'priority'
-				| 'targetBooks'
-				| 'targetZones'
-				| 'imageUrl'
-				| 'attachmentUrls'
-				| 'publishedAt'
-				| 'expiresAt'
-			>
-		>,
-	): Promise<void> {
+	async update(id: string, data: Partial<Announcement>): Promise<void> {
 		const docRef = doc(this.collection, id);
+		const previousSnapshot = await getDoc(docRef);
+		const previousData = previousSnapshot.data() as Announcement | undefined;
 
 		await updateDoc(docRef, {
 			...data,
 			updatedAt: serverTimestamp(),
 		});
+
+		// Detect if status changed to PUBLISHED → trigger push notification
+		const wasDraft = previousData?.status === 'DRAFT';
+		const nowPublished = data.status === 'PUBLISHED';
+
+		if (wasDraft && nowPublished && data.title && data.content) {
+			try {
+				await sendAnnouncementPush({
+					announcementId: id,
+					title: data.title,
+					body:
+						data.content.slice(0, 100) +
+						(data.content.length > 100 ? '...' : ''),
+					imageUrl: data.imageUrl || null,
+					targetZones: data.targetZones || null,
+				});
+			} catch (error) {
+				console.error('Failed to send push notification:', error);
+				// Don't throw — announcement save should not fail due to notification
+			}
+		}
 	}
 
 	/** Soft or hard delete */

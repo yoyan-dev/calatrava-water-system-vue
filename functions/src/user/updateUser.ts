@@ -1,13 +1,9 @@
 // functions/src/user/updateUser.ts
 
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
-import { getAuth } from 'firebase-admin/auth';
-import { getFirestore } from 'firebase-admin/firestore';
 import { log } from '../utils/logger';
 import { requireAdmin } from '../utils/requireAdmin';
-
-const auth = getAuth();
-const db = getFirestore();
+import { auth, db } from '../config/firebaseAdmin';
 
 export const updateUser = onCall(
 	{ enforceAppCheck: false },
