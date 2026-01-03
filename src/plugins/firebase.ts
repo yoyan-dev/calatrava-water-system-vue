@@ -14,6 +14,7 @@ import {
 	getDataConnect,
 } from 'firebase/data-connect';
 import { connectorConfig } from '@/dataconnect-generated';
+import { connectStorageEmulator, getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
 	apiKey: import.meta.env.VITE_API_KEY,
@@ -30,6 +31,7 @@ const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
 const dc = getDataConnect(connectorConfig);
 const functions = getFunctions(firebaseApp);
+const storage = getStorage(firebaseApp);
 
 // Connect to emulators in development mode
 if (process.env.NODE_ENV === 'development') {
@@ -39,10 +41,11 @@ if (process.env.NODE_ENV === 'development') {
 	connectFirestoreEmulator(db, '127.0.0.1', 8080);
 	connectDataConnectEmulator(dc, 'localhost', 9399);
 	connectFunctionsEmulator(functions, '127.0.0.1', 5001);
+	connectStorageEmulator(storage, '127.0.0.1', 9199);
 }
 
 setPersistence(auth, indexedDBLocalPersistence).catch(() =>
 	setPersistence(auth, browserLocalPersistence),
 );
 
-export { firebaseApp, messaging, auth, db, dc, functions };
+export { firebaseApp, messaging, auth, db, dc, functions, storage };

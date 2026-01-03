@@ -13,59 +13,166 @@ import {
 	getDocs,
 	Timestamp,
 } from 'firebase/firestore';
-import { db } from '@/plugins/firebase';
+import { db, storage } from '@/plugins/firebase';
 import type { Announcement } from '@/types/announcement';
+import { httpsCallable } from 'firebase/functions';
+import { functions } from '@/plugins/firebase';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
 const ANNOUNCEMENTS_COLLECTION = 'announcements';
 
 class AnnouncementRepository {
 	private collection = collection(db, ANNOUNCEMENTS_COLLECTION);
 
+	// Move callable outside the method (better performance + cleaner)
+	private sendAnnouncementPush = httpsCallable(
+		functions,
+		'sendAnnouncementPush',
+	);
+
+	/** Helper: Upload image if a File is provided, return URL string */
+	private async uploadImageIfNeeded(
+		image: File | string | null | undefined,
+		basePath: string = 'announcements/images',
+	): Promise<string | null> {
+		if (!image) return null;
+
+		// If it's already a URL string (edit mode), skip upload
+		if (typeof image === 'string') {
+			return image;
+		}
+
+		// It's a File → upload it
+		if (image instanceof File) {
+			if (!image.type.startsWith('image/')) {
+				throw new Error('Selected file must be an image');
+			}
+
+			if (image.size > 10 * 1024 * 1024) {
+				throw new Error('Image must be less than 10MB');
+			}
+
+			const timestamp = Date.now();
+			const random = Math.random().toString(36).substring(2, 8);
+			const ext = image.name.split('.').pop()?.toLowerCase() || 'jpg';
+			const fileName = `${timestamp}_${random}.${ext}`;
+
+			// Organized path: announcements/images/2026/01/filename.jpg
+			const year = new Date().getFullYear();
+			const month = String(new Date().getMonth() + 1).padStart(2, '0');
+			const path = `${basePath}/${year}/${month}/${fileName}`;
+
+			const imageRef = ref(storage, path);
+
+			const snapshot = await uploadBytes(imageRef, image, {
+				contentType: image.type,
+				// Optional: add metadata
+				// customMetadata: { uploadedBy: auth.currentUser?.uid || 'unknown' },
+			});
+
+			return await getDownloadURL(snapshot.ref);
+		}
+
+		return null;
+	}
+
 	/** Create a new announcement (draft by default) */
-	async create(data: Partial<Announcement>) {
+	async create(
+		data: Partial<Announcement> & {
+			imageFile?: File | null; // Temporary field for upload
+		},
+	): Promise<Announcement> {
+		let imageUrl: string | null = null;
+
+		// Handle image upload if a File was provided
+		if (data.imageFile) {
+			imageUrl = await this.uploadImageIfNeeded(data.imageFile);
+		} else if (data.imageUrl && typeof data.imageUrl === 'string') {
+			imageUrl = data.imageUrl; // Keep existing URL (shouldn't happen on create)
+		}
+
+		// Clean up temporary field
+		const { imageFile, ...cleanData } = data;
+
 		const docRef = await addDoc(this.collection, {
-			...data,
+			...cleanData,
+			imageUrl,
 			status: 'DRAFT' as const,
 			createdAt: serverTimestamp(),
-			updatedAt: serverTimestamp(),
 		});
 
 		return {
-			...data,
+			...cleanData,
 			id: docRef.id,
+			imageUrl,
 			createdAt: Timestamp.now(),
 		} as Announcement;
 	}
 
 	/** Update an existing announcement */
-	async update(id: string, data: Partial<Announcement>): Promise<void> {
+	async update(
+		id: string,
+		data: Partial<Announcement> & {
+			imageFile?: File | null; // Optional: for new image upload
+		},
+	): Promise<void> {
 		const docRef = doc(this.collection, id);
+
+		// Fetch previous state to detect status transition
 		const previousSnapshot = await getDoc(docRef);
-		const previousData = previousSnapshot.data() as Announcement | undefined;
+		if (!previousSnapshot.exists()) {
+			throw new Error('Announcement not found');
+		}
 
-		await updateDoc(docRef, {
-			...data,
+		const previousData = previousSnapshot.data() as Announcement;
+
+		let finalImageUrl: string | null | undefined = data.imageUrl;
+
+		// Handle new image upload (if File provided)
+		if (data.imageFile) {
+			finalImageUrl = await this.uploadImageIfNeeded(data.imageFile);
+		}
+
+		// Prepare clean update payload
+		const { imageFile, ...cleanData } = data;
+
+		const updatePayload: any = {
+			...cleanData,
+			...(finalImageUrl !== undefined && { imageUrl: finalImageUrl }),
 			updatedAt: serverTimestamp(),
-		});
+		};
 
-		// Detect if status changed to PUBLISHED → trigger push notification
-		const wasDraft = previousData?.status === 'DRAFT';
-		const nowPublished = data.status === 'PUBLISHED';
+		// Perform the update
+		await updateDoc(docRef, updatePayload);
 
-		if (wasDraft && nowPublished && data.title && data.content) {
+		// === Push Notification Logic (only on DRAFT → PUBLISHED transition) ===
+		const wasDraft = previousData.status === 'DRAFT';
+		const nowPublished = cleanData.status === 'PUBLISHED';
+
+		if (wasDraft && nowPublished) {
+			// Use the latest values (prefer updated ones, fallback to previous)
+			const title = cleanData.title ?? previousData.title;
+			const content = cleanData.content ?? previousData.content;
+
+			if (!title || !content) {
+				console.warn(
+					'Cannot send push: missing title or content after publish',
+				);
+				return;
+			}
+
 			try {
-				await sendAnnouncementPush({
+				await this.sendAnnouncementPush({
 					announcementId: id,
-					title: data.title,
-					body:
-						data.content.slice(0, 100) +
-						(data.content.length > 100 ? '...' : ''),
-					imageUrl: data.imageUrl || null,
-					targetZones: data.targetZones || null,
+					title,
+					body: content.slice(0, 100) + (content.length > 100 ? '...' : ''),
+					imageUrl: finalImageUrl ?? previousData.imageUrl ?? null,
+					targetZones:
+						cleanData.targetZones ?? previousData.targetZones ?? null,
 				});
 			} catch (error) {
 				console.error('Failed to send push notification:', error);
-				// Don't throw — announcement save should not fail due to notification
+				// Non-critical: don't fail the update
 			}
 		}
 	}

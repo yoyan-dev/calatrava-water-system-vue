@@ -1,8 +1,6 @@
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { requireAdmin } from '../utils/requireAdmin';
-import { getFirestore } from 'firebase-admin/firestore';
-
-const db = getFirestore();
+import { messaging, db } from '../config/firebaseAdmin';
 
 export const sendAnnouncementPush = onCall(
 	{ enforceAppCheck: false },
@@ -56,7 +54,7 @@ export const sendAnnouncementPush = onCall(
 
 		const chunks = chunkArray(tokens, 500); // FCM limit per request
 		const promises = chunks.map((chunk) =>
-			admin.messaging().sendToDevice(chunk, payload),
+			messaging.sendToDevice(chunk, payload),
 		);
 
 		const results = await Promise.all(promises);

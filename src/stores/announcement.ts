@@ -14,7 +14,9 @@ export const useAnnouncementStore = defineStore('announcement', () => {
 		announcements.value = data;
 	};
 
-	const createAnnouncement = async (data: Partial<Announcement>) => {
+	const createAnnouncement = async (
+		data: Partial<Announcement> & { imageFile?: File | null },
+	) => {
 		if (auth.currentUser) data.createdBy = auth.currentUser.uid;
 		else return;
 		const result = await announcementRepository.create(data);
@@ -23,7 +25,7 @@ export const useAnnouncementStore = defineStore('announcement', () => {
 
 	const updateAnnouncement = async (
 		id: string,
-		data: Partial<Announcement>,
+		data: Partial<Announcement> & { imageFile?: File | null },
 	) => {
 		await announcementRepository.update(id, data);
 		const index = announcements.value.findIndex((item) => item.id === id);

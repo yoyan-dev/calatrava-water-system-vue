@@ -8,10 +8,9 @@ export interface Announcement {
 	targetZones?: string[] | null;
 
 	imageUrl?: string | null;
-	attachmentUrls?: string[] | null;
 
-	publishedAt: string | null; // ISO string, e.g. "2025-12-12T10:00:00Z"
-	expiresAt: string | null; // ISO string or null
+	publishedAt: string | Date | null; // ISO string, e.g. "2025-12-12T10:00:00Z"
+	expiresAt: string | Date | null; // ISO string or null
 
 	createdBy: string;
 	createdAt: Timestamp;

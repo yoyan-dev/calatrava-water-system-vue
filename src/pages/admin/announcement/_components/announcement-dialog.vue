@@ -1,108 +1,30 @@
 <!-- _components/announcement-dialog.vue -->
 <template>
-	<div>
+	<div class="max-w-4xl mx-auto">
 		<form
 			@submit.prevent="handleSubmit"
-			class="space-y-6">
-			<!-- Title -->
-			<div>
-				<label
-					class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-					Title <span class="text-red-500">*</span>
-				</label>
-				<InputText
-					v-model="form.title"
-					class="w-full"
-					placeholder="Enter Title"
-					:invalid="!form.title" />
-			</div>
+			class="space-y-8">
+			<AnnouncementBasicInfo v-model="form" />
 
-			<!-- Content -->
-			<div>
-				<label
-					class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-					Content <span class="text-red-500">*</span>
-				</label>
-				<Textarea
-					v-model="form.content"
-					rows="5"
-					class="w-full"
-					placeholder="Write the content..."
-					:invalid="!form.content" />
-			</div>
+			<AnnouncementTargeting v-model:target-zones="form.targetZones" />
 
-			<!-- Priority & Status -->
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-				<div>
-					<label
-						class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-						Priority
-					</label>
-					<Select
-						v-model="form.priority"
-						:options="priorityOptions"
-						optionLabel="label"
-						optionValue="value"
-						placeholder="Select priority"
-						class="w-full" />
-				</div>
+			<AnnouncementMediaUpload
+				v-model:image-url="form.imageUrl"
+				v-model:imageFile="imageFile" />
 
-				<div>
-					<label
-						class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-						Status
-					</label>
-					<Select
-						v-model="form.status"
-						:options="statusOptions"
-						optionLabel="label"
-						optionValue="value"
-						placeholder="Select status"
-						class="w-full" />
-				</div>
-			</div>
+			<AnnouncementScheduling
+				v-model:published-at="publishedAtDate"
+				v-model:expires-at="expiresAtDate" />
 
-			<!-- Dates -->
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-				<div>
-					<label
-						class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-						Published At
-					</label>
-					<DatePicker
-						v-model="form.publishedAt"
-						showTime
-						hourFormat="12"
-						dateFormat="yy-mm-dd"
-						placeholder="Select date & time"
-						class="w-full" />
-				</div>
-
-				<div>
-					<label
-						class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-						Expires At
-					</label>
-					<DatePicker
-						v-model="form.expiresAt"
-						showTime
-						hourFormat="12"
-						dateFormat="yy-mm-dd"
-						placeholder="Optional expiry"
-						class="w-full" />
-				</div>
-			</div>
-
-			<!-- Actions -->
-			<div class="flex justify-end gap-3 pt-4">
+			<div
+				class="flex justify-end gap-3 pt-6 border-t border-surface-200 dark:border-surface-700">
 				<Button
-					type="button"
 					label="Cancel"
 					severity="secondary"
-					@click="$emit('closed')" />
+					@click="closeDialog" />
 				<Button
 					type="submit"
-					label="Save"
+					label="Save Announcement"
 					:loading="saving" />
 			</div>
 		</form>
@@ -110,93 +32,65 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ref, watch, inject, onMounted } from 'vue';
+	import { ref, computed, onMounted, inject } from 'vue';
 	import { useToast } from 'primevue/usetoast';
 	import { useAnnouncementStore } from '@/stores/announcement';
 	import type { Announcement } from '@/types/announcement';
 
+	import AnnouncementBasicInfo from './announcement-basic-info.vue';
+	import AnnouncementTargeting from './announcement-targeting.vue';
+	import AnnouncementMediaUpload from './announcement-media-upload.vue';
+	import AnnouncementScheduling from './announcement-scheduling.vue';
+
 	const dialogRef = inject<any>('dialogRef');
-	const announcement = ref<Announcement>();
-
-	const store = useAnnouncementStore();
 	const toast = useToast();
-
+	const announcementStore = useAnnouncementStore();
 	const saving = ref(false);
+	const imagePreview = ref<string | null>(null);
 
-	const priorityOptions = [
-		{ label: 'Normal', value: 'NORMAL' },
-		{ label: 'Important', value: 'IMPORTANT' },
-		{ label: 'Critical', value: 'CRITICAL' },
-	];
-
-	const statusOptions = [
-		{ label: 'Draft', value: 'DRAFT' },
-		{ label: 'Published', value: 'PUBLISHED' },
-		{ label: 'Archived', value: 'ARCHIVED' },
-	];
-
-	const form = ref({
+	const form = ref<Partial<Announcement>>({
 		title: '',
 		content: '',
-		priority: 'NORMAL' as 'NORMAL' | 'IMPORTANT' | 'CRITICAL',
-		status: 'DRAFT' as 'DRAFT' | 'PUBLISHED' | 'ARCHIVED',
-		publishedAt: null as Date | null,
-		expiresAt: null as Date | null,
+		status: 'DRAFT',
+		priority: 'NORMAL',
+		targetZones: null,
+		imageUrl: null,
 	});
 
-	// Computed to convert Date → string for saving
-	const publishedAtString = computed({
-		get: () =>
-			form.value.publishedAt ? form.value.publishedAt.toISOString() : null,
-		set: (val: string | null) => {
-			form.value.publishedAt = val ? new Date(val) : null;
-		},
-	});
+	const imageFile = ref(null);
 
-	const expiresAtString = computed({
-		get: () =>
-			form.value.expiresAt ? form.value.expiresAt.toISOString() : null,
-		set: (val: string | null) => {
-			form.value.expiresAt = val ? new Date(val) : null;
-		},
-	});
+	const publishedAtDate = ref<Date | null>(null);
+	const expiresAtDate = ref<Date | null>(null);
 
-	// Watch announcement prop and convert string → Date
-	watch(
-		() => announcement.value,
-		(ann) => {
-			if (ann) {
-				form.value = {
-					title: ann.title,
-					content: ann.content,
-					priority: ann.priority,
-					status: ann.status,
-					publishedAt: ann.publishedAt ? new Date(ann.publishedAt) : null,
-					expiresAt: ann.expiresAt ? new Date(ann.expiresAt) : null,
-				};
-			} else {
-				// Reset for create mode
-				form.value = {
-					title: '',
-					content: '',
-					priority: 'NORMAL',
-					status: 'DRAFT',
-					publishedAt: null,
-					expiresAt: null,
-				};
-			}
-		},
-		{ immediate: true },
+	const currentAnnouncement = computed(
+		() => dialogRef.value?.data?.announcement as Announcement | undefined,
 	);
 
-	// Close Modal
-	const closeModal = () => {
-		dialogRef.value?.close();
-	};
+	// Load data when dialog opens
+	onMounted(async () => {
+		if (currentAnnouncement.value) {
+			const ann = currentAnnouncement.value;
+			form.value = {
+				title: ann.title,
+				content: ann.content,
+				status: ann.status,
+				priority: ann.priority,
+				targetZones: ann.targetZones ?? null,
+				imageUrl: ann.imageUrl ?? null,
+			};
 
-	// In handleSubmit, use the computed string values
+			publishedAtDate.value = ann.publishedAt
+				? new Date(ann.publishedAt)
+				: null;
+			expiresAtDate.value = ann.expiresAt ? new Date(ann.expiresAt) : null;
+			imagePreview.value = ann.imageUrl || null;
+		}
+	});
+
+	const closeDialog = () => dialogRef.value?.close();
+
 	const handleSubmit = async () => {
-		if (!form.value.title || !form.value.content) {
+		if (!form.value.title?.trim() || !form.value.content?.trim()) {
 			toast.add({
 				severity: 'warn',
 				summary: 'Required',
@@ -208,29 +102,30 @@
 
 		saving.value = true;
 		try {
-			const payload = {
-				title: form.value.title,
-				content: form.value.content,
-				priority: form.value.priority,
-				status: form.value.status,
-				publishedAt: publishedAtString.value,
-				expiresAt: expiresAtString.value,
+			const payload: Partial<Announcement> & { imageFile?: File | null } = {
+				...form.value,
+				publishedAt: publishedAtDate.value?.toISOString() || null,
+				expiresAt: expiresAtDate.value?.toISOString() || null,
+
+				imageFile: imageFile.value,
 			};
 
-			if (announcement.value) {
-				await store.updateAnnouncement(announcement.value.id, payload);
-				closeModal();
+			if (currentAnnouncement.value) {
+				await announcementStore.updateAnnouncement(
+					currentAnnouncement.value.id,
+					payload,
+				);
 			} else {
-				await store.createAnnouncement(payload);
-				closeModal();
+				await announcementStore.createAnnouncement(payload);
 			}
 
 			toast.add({
 				severity: 'success',
-				summary: 'Saved',
-				detail: 'Announcement saved successfully',
+				summary: 'Success',
+				detail: 'Announcement saved!',
 				life: 3000,
 			});
+			closeDialog();
 		} catch (err: any) {
 			toast.add({
 				severity: 'error',
@@ -242,8 +137,4 @@
 			saving.value = false;
 		}
 	};
-
-	onMounted(() => {
-		announcement.value = dialogRef.value.data.announcement;
-	});
 </script>
