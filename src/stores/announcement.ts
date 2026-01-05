@@ -29,6 +29,7 @@ export const useAnnouncementStore = defineStore('announcement', () => {
 	) => {
 		await announcementRepository.update(id, data);
 		const index = announcements.value.findIndex((item) => item.id === id);
+		if (data.imageFile) delete data.imageFile;
 		if (index > -1) Object.assign(announcements.value[index], data);
 	};
 
