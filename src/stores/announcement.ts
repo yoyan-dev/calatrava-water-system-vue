@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia';
 import { announcementRepository } from '@/repositories/v2/announcementRepository';
-import { ref } from 'vue';
+import { ref as vueRef } from 'vue';
 import type { Announcement } from '@/types/announcement';
 import { auth } from '@/plugins/firebase';
 
 export const useAnnouncementStore = defineStore('announcement', () => {
-	const announcements = ref<Announcement[]>([]);
+	const announcements = vueRef<Announcement[]>([]);
 
 	const fetchAnnouncements = async (filters?: {
 		status?: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED' | null;

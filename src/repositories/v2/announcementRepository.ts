@@ -13,11 +13,15 @@ import {
 	getDocs,
 	Timestamp,
 } from 'firebase/firestore';
-import { db, storage } from '@/plugins/firebase';
+import { db, fireStorage } from '@/plugins/firebase';
 import type { Announcement } from '@/types/announcement';
 import { httpsCallable } from 'firebase/functions';
 import { functions } from '@/plugins/firebase';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import {
+	getDownloadURL,
+	ref as storageRef,
+	uploadBytes,
+} from 'firebase/storage';
 
 const ANNOUNCEMENTS_COLLECTION = 'announcements';
 
@@ -52,25 +56,29 @@ class AnnouncementRepository {
 				throw new Error('Image must be less than 10MB');
 			}
 
-			const timestamp = Date.now();
-			const random = Math.random().toString(36).substring(2, 8);
-			const ext = image.name.split('.').pop()?.toLowerCase() || 'jpg';
-			const fileName = `${timestamp}_${random}.${ext}`;
+			try {
+				const timestamp = Date.now();
+				const random = Math.random().toString(36).substring(2, 8);
+				const ext = image.name.split('.').pop()?.toLowerCase() || 'jpg';
+				const fileName = `${timestamp}_${random}.${ext}`;
 
-			// Organized path: announcements/images/2026/01/filename.jpg
-			const year = new Date().getFullYear();
-			const month = String(new Date().getMonth() + 1).padStart(2, '0');
-			const path = `${basePath}/${year}/${month}/${fileName}`;
+				// Organized path: announcements/images/2026/01/filename.jpg
+				const year = new Date().getFullYear();
+				const month = String(new Date().getMonth() + 1).padStart(2, '0');
+				const filePath = `${basePath}/${year}/${month}/${fileName}`;
 
-			const imageRef = ref(storage, path);
+				console.log('imageref', fireStorage);
+				const imageRef = storageRef(fireStorage, 'test/debug.jpg');
+				const snapshot = await uploadBytes(imageRef, image, {
+					contentType: image.type,
+					// Optional: add metadata
+					// customMetadata: { uploadedBy: auth.currentUser?.uid || 'unknown' },
+				});
 
-			const snapshot = await uploadBytes(imageRef, image, {
-				contentType: image.type,
-				// Optional: add metadata
-				// customMetadata: { uploadedBy: auth.currentUser?.uid || 'unknown' },
-			});
-
-			return await getDownloadURL(snapshot.ref);
+				return await getDownloadURL(snapshot.ref);
+			} catch (error) {
+				console.log(error);
+			}
 		}
 
 		return null;
@@ -131,6 +139,7 @@ class AnnouncementRepository {
 		// Handle new image upload (if File provided)
 		if (data.imageFile) {
 			finalImageUrl = await this.uploadImageIfNeeded(data.imageFile);
+			console.log(finalImageUrl);
 		}
 
 		// Prepare clean update payload
