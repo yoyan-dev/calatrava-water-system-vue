@@ -22,6 +22,24 @@
 					class="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
 					{{ ann.title }}
 				</h3>
+				<div
+					class="relative w-full aspect-4/3 sm:aspect-video overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800">
+					<img
+						v-if="ann.imageUrl"
+						:src="ann.imageUrl"
+						class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+						alt="Announcement image"
+						loading="lazy" />
+					<img
+						v-else
+						src="/images/image-placeholder.svg"
+						class="absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 opacity-40"
+						alt="No image" />
+
+					<!-- Optional nice overlay gradient -->
+					<div
+						class="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+				</div>
 
 				<p class="text-sm text-gray-600 dark:text-gray-300 line-clamp-3 mb-4">
 					{{ ann.content }}
@@ -82,6 +100,7 @@
 
 <script setup lang="ts">
 	import type { Announcement } from '@/types/announcement';
+	import { formatDate } from '@/composables/formatDate';
 
 	defineProps<{
 		announcements: Announcement[];
@@ -93,14 +112,4 @@
 		(e: 'delete', id: string): void;
 		(e: 'archive', id: string): void;
 	}>();
-
-	const formatDate = (iso: string) => {
-		return new Date(iso).toLocaleDateString(undefined, {
-			month: 'short',
-			day: 'numeric',
-			year: 'numeric',
-			hour: '2-digit',
-			minute: '2-digit',
-		});
-	};
 </script>
