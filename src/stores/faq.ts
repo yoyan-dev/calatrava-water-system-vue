@@ -2,7 +2,7 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import type { Faq } from '@/types/faq';
 import type { StoreResponse } from '@/types/store-response';
-import { faqRepository } from '@/repositories/v1/faqRepository';
+import { faqRepository } from '@/repositories/v2/faqRepository';
 
 export const useFaqStore = defineStore('faq', () => {
 	const faqs = ref<Faq[]>([]);
@@ -11,20 +11,19 @@ export const useFaqStore = defineStore('faq', () => {
 
 	async function fetchFaqs() {
 		isLoading.value = true;
-		const response = await faqRepository.fetchFaqs();
-		faqs.value = response?.data || [];
-		totalFaqs.value = response?.total || 0;
+		const result = await faqRepository.getAll();
+		faqs.value = result || [];
+		totalFaqs.value = result.length || 0;
 		isLoading.value = false;
 	}
 
 	async function addFaq(faq: Faq): Promise<StoreResponse> {
 		isLoading.value = true;
 		try {
-			const response = await faqRepository.addFaq(faq);
+			const response = await faqRepository.create(faq);
 			return {
 				status: 'success',
-				message: response?.message,
-				statusMessage: response?.statusMessage ?? '',
+				message: 'Successfully added.',
 			};
 		} catch (error) {
 			console.error('Error adding faq:', error);
@@ -41,12 +40,11 @@ export const useFaqStore = defineStore('faq', () => {
 	async function updateFaq(uid: string, faq: Faq): Promise<StoreResponse> {
 		isLoading.value = true;
 		try {
-			const response = await faqRepository.editFaq(uid, faq);
+			const response = await faqRepository.update(uid, faq);
 			fetchFaqs();
 			return {
 				status: 'success',
-				message: response?.message,
-				statusMessage: response?.statusMessage ?? '',
+				message: 'Successfully updated!',
 			};
 		} catch (error) {
 			console.error('Error updating faq:', error);
@@ -63,12 +61,11 @@ export const useFaqStore = defineStore('faq', () => {
 	async function deleteFaq(uid: string): Promise<StoreResponse> {
 		isLoading.value = true;
 		try {
-			const response = await faqRepository.deleteFaq(uid);
+			const response = await faqRepository.delete(uid);
 			fetchFaqs();
 			return {
 				status: 'success',
-				message: response?.message,
-				statusMessage: response?.statusMessage ?? '',
+				message: 'Successfully deleted!',
 			};
 		} catch (error) {
 			console.error('Error deleting faq:', error);
