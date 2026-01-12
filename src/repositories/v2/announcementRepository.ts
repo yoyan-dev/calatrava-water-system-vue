@@ -13,7 +13,7 @@ import {
 	getDocs,
 	Timestamp,
 } from 'firebase/firestore';
-import { db, fireStorage } from '@/plugins/firebase';
+import { db, storage } from '@/plugins/firebase';
 import type { Announcement } from '@/types/announcement';
 import { httpsCallable } from 'firebase/functions';
 import { functions } from '@/plugins/firebase';
@@ -67,8 +67,7 @@ class AnnouncementRepository {
 				const month = String(new Date().getMonth() + 1).padStart(2, '0');
 				const filePath = `${basePath}/${year}/${month}/${fileName}`;
 
-				console.log('imageref', fireStorage);
-				const imageRef = storageRef(fireStorage, 'test/debug.jpg');
+				const imageRef = storageRef(storage, filePath);
 				const snapshot = await uploadBytes(imageRef, image, {
 					contentType: image.type,
 					// Optional: add metadata
@@ -139,7 +138,6 @@ class AnnouncementRepository {
 		// Handle new image upload (if File provided)
 		if (data.imageFile) {
 			finalImageUrl = await this.uploadImageIfNeeded(data.imageFile);
-			console.log(finalImageUrl);
 		}
 
 		// Prepare clean update payload

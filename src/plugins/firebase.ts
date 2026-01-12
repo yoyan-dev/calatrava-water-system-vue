@@ -31,21 +31,21 @@ export const firebaseApp = initializeApp(firebaseConfig);
 // Initialize services
 export const auth = getAuth(firebaseApp);
 export const db = getFirestore(firebaseApp);
-export const fireStorage = getStorage(firebaseApp);
+export const storage = getStorage(firebaseApp);
 export const functions = getFunctions(firebaseApp);
 export const messaging = getMessaging(firebaseApp);
 export const dc = getDataConnect(connectorConfig);
 
 // Connect emulators in dev mode
-// if (import.meta.env.DEV) {
-// 	console.log('Connecting Firebase emulators...');
+if (import.meta.env.DEV) {
+	console.log('Connecting Firebase emulators...');
 
-// 	connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
-// 	connectFirestoreEmulator(db, '127.0.0.1', 8080);
-// 	connectFunctionsEmulator(functions, '127.0.0.1', 5001);
-// 	connectStorageEmulator(storage, '127.0.0.1', 9199);
-// 	connectDataConnectEmulator(dc, 'localhost', 9399);
-// }
+	connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
+	connectFirestoreEmulator(db, '127.0.0.1', 8080);
+	connectFunctionsEmulator(functions, '127.0.0.1', 5001);
+	connectStorageEmulator(storage, '127.0.0.1', 9199);
+	connectDataConnectEmulator(dc, 'localhost', 9399);
+}
 
 // Auth persistence (optional but good)
 setPersistence(auth, indexedDBLocalPersistence).catch(() =>

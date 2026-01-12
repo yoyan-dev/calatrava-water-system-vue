@@ -3,6 +3,7 @@ import { announcementRepository } from '@/repositories/v2/announcementRepository
 import { ref as vueRef } from 'vue';
 import type { Announcement } from '@/types/announcement';
 import { auth } from '@/plugins/firebase';
+import { fileToURL } from '@/composables/fileToURL';
 
 export const useAnnouncementStore = defineStore('announcement', () => {
 	const announcements = vueRef<Announcement[]>([]);
@@ -29,7 +30,10 @@ export const useAnnouncementStore = defineStore('announcement', () => {
 	) => {
 		await announcementRepository.update(id, data);
 		const index = announcements.value.findIndex((item) => item.id === id);
-		if (data.imageFile) delete data.imageFile;
+		if (data.imageFile) {
+			data.imageUrl = fileToURL(data.imageFile);
+			delete data.imageFile;
+		}
 		if (index > -1) Object.assign(announcements.value[index], data);
 	};
 
