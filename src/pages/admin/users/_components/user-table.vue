@@ -1,33 +1,34 @@
 <template>
 	<div>
 		<Header page-title="User Management" />
-		<div class="flex justify-between items-center gap-4 mb-4">
+
+		<div class="flex justify-between items-center gap-4 mb-6">
 			<SearchInput />
 			<Button
 				label="Create User"
 				icon="pi pi-plus"
-				class="mt-4"
 				@click="handleDialog(null)" />
 		</div>
 
-		<!-- System User Table -->
-		<div class="mb-4">
-			<h1 class="text-md font-medium text-gray-900 dark:text-white">
-				System Users
-			</h1>
-			<p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-				Admins and staff with elevated privileges
-			</p>
+		<div class="mb-5">
+			<h2 class="text-lg font-semibold">System Users</h2>
+			<p class="text-sm text-gray-500">Admins and staff accounts</p>
 		</div>
 
 		<DataTable
 			:value="users"
-			data-key="uid"
-			:rows="10"
-			:loading="isLoading">
+			dataKey="uid"
+			:loading="userStore.isLoading"
+			class="p-datatable-sm"
+			scrollable
+			scrollHeight="65vh"
+			:virtualScrollerOptions="{ itemSize: 48 }">
+			<!-- your existing columns -->
+
 			<template #empty>
-				<div class="flex items-center justify-center p-4">No users found.</div>
+				<div class="p-8 text-center text-gray-500">No users found</div>
 			</template>
+
 			<Column
 				field="uid"
 				header="UID">
@@ -75,7 +76,33 @@
 					</div>
 				</template>
 			</Column>
+
+			<template #loading>
+				<div class="p-8 text-center">Loading users...</div>
+			</template>
 		</DataTable>
+
+		<!-- Load More area -->
+		<div
+			v-if="userStore.hasMore || userStore.isLoadingMore"
+			class="mt-6 text-center">
+			<Button
+				v-if="userStore.hasMore && !userStore.isLoadingMore"
+				label="Load More Users"
+				icon="pi pi-arrow-down"
+				class="p-button-outlined p-button-secondary"
+				@click="userStore.loadMore(15)" />
+
+			<ProgressSpinner
+				v-if="userStore.isLoadingMore"
+				style="width: 2.5rem; height: 2.5rem" />
+
+			<p
+				v-if="!userStore.hasMore && users.length > 0"
+				class="mt-3 text-sm text-gray-500">
+				All users loaded
+			</p>
+		</div>
 	</div>
 </template>
 <script setup lang="ts">
@@ -87,10 +114,10 @@
 	import { useToast } from 'primevue/usetoast';
 	import Header from '@/components/globals/header.vue';
 	import SearchInput from './search-input.vue';
+	import { ProgressSpinner } from 'primevue';
 
 	const userStore = useUserStore();
-	const users = computed(() => userStore.systemUsers);
-	const isLoading = ref(false);
+	const users = computed(() => userStore.users);
 	const dialog = useDialog();
 	const confirmUserDelete = useConfirm();
 	const toast = useToast();
@@ -148,6 +175,6 @@
 
 	onMounted(() => {
 		/* Fetch users when component is mounted */
-		userStore.fetchSystemUsers();
+		userStore.loadInitialUsers(10);
 	});
 </script>

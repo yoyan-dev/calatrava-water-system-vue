@@ -6,6 +6,11 @@ import type { StoreResponse } from '@/types/store-response';
 
 export const useUserStore = defineStore('user', () => {
 	const users = ref<User[]>([]);
+	const nextPageToken = ref<string | null>(null);
+	const hasMore = ref(false);
+	const isLoading = ref(false);
+	const isLoadingMore = ref(false);
+
 	const userSearch = ref<User | null>(null);
 	const systemUsers = ref<UserFirestore[]>([]);
 
@@ -88,14 +93,45 @@ export const useUserStore = defineStore('user', () => {
 		}
 	}
 
-	async function fetchPaginatedUsers() {
+	async function loadInitialUsers(pageSize = 15) {
+		if (isLoading.value) return;
+		isLoading.value = true;
+
 		try {
-			const response = await userRepository.getPaginatedUsers(10);
-			if (response && response.data) {
-				users.value = response.data;
-			}
-		} catch (error) {
-			console.error('Error fetching paginated users:', error);
+			const {
+				users: newUsers,
+				nextPageToken: token,
+				hasMore: more,
+			} = await userRepository.getUsersPage(pageSize);
+
+			users.value = newUsers;
+			nextPageToken.value = token;
+			hasMore.value = more;
+		} catch (err) {
+			console.error(err);
+		} finally {
+			isLoading.value = false;
+		}
+	}
+
+	async function loadMore(pageSize = 15) {
+		if (!hasMore.value || isLoadingMore.value) return;
+		isLoadingMore.value = true;
+
+		try {
+			const {
+				users: newUsers,
+				nextPageToken: token,
+				hasMore: more,
+			} = await userRepository.getUsersPage(pageSize, nextPageToken.value);
+
+			users.value = [...users.value, ...newUsers];
+			nextPageToken.value = token;
+			hasMore.value = more;
+		} catch (err) {
+			console.error(err);
+		} finally {
+			isLoadingMore.value = false;
 		}
 	}
 
@@ -126,11 +162,16 @@ export const useUserStore = defineStore('user', () => {
 		users,
 		userSearch,
 		systemUsers,
+		hasMore,
+		isLoading,
+		isLoadingMore,
+
+		loadInitialUsers,
+		loadMore,
 
 		addUser,
 		updateUser,
 		deleteUser,
-		fetchPaginatedUsers,
 		fetchSystemUsers,
 		searchUser,
 	};

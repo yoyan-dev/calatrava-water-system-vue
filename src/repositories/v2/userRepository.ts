@@ -36,26 +36,21 @@ class UserRepository {
 		}
 	}
 
-	async getPaginatedUsers(pageSize: number, pageToken?: string) {
+	async getUsersPage(pageSize: number, pageToken?: string | null) {
 		const listUsers = httpsCallable(functions, 'listUsers');
-		do {
-			try {
-				const result = await listUsers({ pageSize, pageToken });
-				const data = result.data as {
-					users: any[];
-					pageToken?: string;
-				};
 
-				pageToken = data.pageToken;
-				return {
-					data: data.users,
-					pageToken: data.pageToken,
-				};
-			} catch (error) {
-				console.error('Error listing users:', error);
-				break;
-			}
-		} while (pageToken);
+		const result = await listUsers({ pageSize, pageToken });
+		const data = result.data as {
+			users: any[];
+			nextPageToken: string | null;
+			hasMore: boolean;
+		};
+
+		return {
+			users: data.users,
+			nextPageToken: data.nextPageToken,
+			hasMore: data.hasMore,
+		};
 	}
 
 	async getSystemUsers() {
